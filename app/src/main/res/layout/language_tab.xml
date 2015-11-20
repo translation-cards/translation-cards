@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:layout_marginTop="13dp"
+        android:textSize="16dp"
+        android:textColor="@color/unselectedLanguageTabText"
+        android:id="@+id/tab_label_text" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/language_tab_border_width"
+        android:id="@+id/tab_border" />
+</LinearLayout>

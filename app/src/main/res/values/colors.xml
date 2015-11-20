@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#01579b</color>
+    <color name="colorPrimaryDark">#013a68</color>
+    <color name="colorAccent">#9b5701</color>
+    <color name="textColor">#fcfcfc</color>
+    <color name="unselectedLanguageTabText">#89b0cf</color>
+    <color name="backgroundColor">#ffffff</color>
+    <color name="borderColor">#bbbbbb</color>
+    <color name="navBarColor">#d8d8d8</color>
+    <color name="primaryTextColor">#212121</color>
+    <color name="navBarTextDisabled">#868686</color>
+</resources>

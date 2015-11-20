@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:id="@+id/recording_instructions_titlebar">
+
+        <ImageButton
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="24dp"
+            android:background="@drawable/back"
+            android:id="@+id/recording_instructions_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="20dp"
+            android:textColor="@color/textColor"
+            android:id="@+id/recording_instructions_title" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_below="@+id/recording_instructions_titlebar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/recording_instructions_image" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/recording_instructions_image"
+        android:layout_marginTop="20dp"
+        android:text="@string/recording_instructions_header"
+        android:id="@+id/recording_instructions_header"
+        android:textSize="24dp"
+        android:textColor="@color/primaryTextColor"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recording_instructions_detail"
+        android:id="@+id/recording_instructions_detail"
+        android:layout_below="@+id/recording_instructions_header"
+        android:textSize="14dp"
+        android:lineSpacingExtra="3dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_below="@+id/recording_instructions_detail"
+        android:layout_marginTop="24dp"
+        android:textSize="14dp"
+        android:textColor="@color/textColor"
+        android:background="@color/colorPrimary"
+        android:text="@string/recording_instructions_button_getstarted"
+        android:id="@+id/recording_instructions_start"
+        android:layout_centerHorizontal="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@id/recording_instructions_start"/>
+
+</RelativeLayout>
+</ScrollView>

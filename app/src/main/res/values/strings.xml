@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Translation Cards</string>
+    <string name="main_instructions">Tap a phrase to hear it, tap again to stop.\nMake sure your volume is turned up.</string>
+    <string name="main_feedback_request">Is this app useful for you?\nLet us know how it can be improved.</string>
+    <string name="main_feedback_button_text">GIVE FEEDBACK</string>
+    <string name="recording_instructions_title">%s Flashcard Maker</string>
+    <string name="recording_instructions_header">Make your own flashcards</string>
+    <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
+    <string name="recording_instructions_button_getstarted">GET STARTED</string>
+    <string name="recording_label_create_title">Write your phrase</string>
+    <string name="recording_label_edit_title">Update or delete your flashcard</string>
+    <string name="recording_label_detail">An effective flashcard phrase is short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
+    <string name="recording_label_hint_text">Flashcard phrase</string>
+    <string name="recording_audio_title">Record your %s phrase</string>
+    <string name="recording_audio_detail">When you\'re ready, press record. Speak clearly at a normal speed. When you\'re all done, press stop. You can listen back and record again until you\'re happy to save.</string>
+    <string name="recording_done_title">New %s flashcard created</string>
+    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category. To make changes to the phrase or delete it, just tap the pencil icon on the flashcard.</string>
+    <string name="navigation_button_back">BACK</string>
+    <string name="navigation_button_done">DONE</string>
+    <string name="navigation_button_next">NEXT</string>
+    <string name="navigation_button_save">SAVE</string>
+</resources>
