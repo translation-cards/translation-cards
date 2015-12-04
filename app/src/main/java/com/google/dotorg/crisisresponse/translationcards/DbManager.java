@@ -225,8 +225,8 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Farsi", new Dictionary.Translation[] {}),
             new Dictionary("Arabic", new Dictionary.Translation[] {}),
+            new Dictionary("Farsi", new Dictionary.Translation[] {}),
             new Dictionary("Pashto", new Dictionary.Translation[] {}),
     };
 }
