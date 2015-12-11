@@ -26,7 +26,7 @@ public class ImportActivity extends AppCompatActivity {
 
     private static final String TAG = "ImportActivity";
 
-    private static final String INDEX_FILENAME = "index";
+    private static final String INDEX_FILENAME = "card_deck.csv";
     private static final int BUFFER_SIZE = 2048;
 
     @Override
@@ -48,6 +48,10 @@ public class ImportActivity extends AppCompatActivity {
             return;
         }
         List<ImportItem> index = getIndex(targetDir);
+        if (index == null) {
+            alertUserOfFailure();
+            return;
+        }
         confirmAndLoadData(targetDir, index);
     }
 
@@ -117,7 +121,7 @@ public class ImportActivity extends AppCompatActivity {
         List<ImportItem> results = new ArrayList<>();
         Scanner s;
         try {
-            s = new Scanner(new File(dir, "index"));
+            s = new Scanner(new File(dir, INDEX_FILENAME));
         } catch (FileNotFoundException e) {
             return null;
         }

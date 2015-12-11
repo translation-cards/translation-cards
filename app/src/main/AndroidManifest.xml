@@ -28,14 +28,22 @@
                     android:host="*"
                     android:pathPattern=".*\\.txc" />
             </intent-filter>
-            <!-- To support opening email attachments. -->
+            <!-- To support opening downloaded files.
+                 It appears that downloaded files are re-assigned numeric filenames, so we can't
+                 filter by path pattern here. Also, mimetypes sometimes get lost somewhere along the
+                 way, so I include application/octet-stream in addition to zip files. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:scheme="content"
-                    android:mimeType="application/octet-stream"
-                    android:pathPattern=".*\\.txc" />
+                    android:mimeType="application/octet-stream" />
+                <data
+                    android:scheme="content"
+                    android:mimeType="application/zip" />
+                <data
+                    android:scheme="content"
+                    android:mimeType="application/x-zip" />
             </intent-filter>
         </activity>
     </application>
