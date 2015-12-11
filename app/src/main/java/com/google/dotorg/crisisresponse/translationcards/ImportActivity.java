@@ -1,19 +1,18 @@
 package com.google.dotorg.crisisresponse.translationcards;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +20,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class ImportActivity extends AppCompatActivity {
@@ -32,43 +29,26 @@ public class ImportActivity extends AppCompatActivity {
     private static final String INDEX_FILENAME = "index";
     private static final int BUFFER_SIZE = 2048;
 
-    private TextView infoText;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
         importData(getIntent().getData());
     }
 
-    private void initView() {
-        setContentView(R.layout.activity_import);
-        infoText = (TextView) findViewById(R.id.info);
-    }
-
     private void importData(Uri source) {
-        Log.d(TAG, source.toString());
-        if (false) return;
         ZipInputStream zip = getZip(source);
         if (zip == null) {
-            // TODO(nworden): dialog to tell user about this
-            Log.d(TAG, "Failed to get txc file; aborting import.");
+            alertUserOfFailure();
             return;
         }
         String filename = source.getLastPathSegment();
         File targetDir = getTargetDirectory(filename);
         if (!readFiles(zip, targetDir)) {
-            Log.d(TAG, "Could not read txc file.");
+            alertUserOfFailure();
             return;
         }
         List<ImportItem> index = getIndex(targetDir);
-        // TODO(nworden): ask user for confirmation
-        if (loadData(targetDir, index)) {
-            infoText.setText(String.format(
-                    "Loaded %d translations from %s", index.size(), filename));
-        } else {
-            infoText.setText("Failure");
-        }
+        confirmAndLoadData(targetDir, index);
     }
 
     private ZipInputStream getZip(Uri source) {
@@ -135,7 +115,7 @@ public class ImportActivity extends AppCompatActivity {
 
     private List<ImportItem> getIndex(File dir) {
         List<ImportItem> results = new ArrayList<>();
-        Scanner s = null;
+        Scanner s;
         try {
             s = new Scanner(new File(dir, "index"));
         } catch (FileNotFoundException e) {
@@ -155,7 +135,7 @@ public class ImportActivity extends AppCompatActivity {
         return results;
     }
 
-    private boolean loadData(File dir, List<ImportItem> index) {
+    private void loadData(File dir, List<ImportItem> index) {
         DbManager dbm = new DbManager(this);
         Map<String, Long> dictionaryLookup = getDictionaryLookup(dbm);
         // Iterate backwards through the list, because we're adding each translation at the top of
@@ -166,7 +146,6 @@ public class ImportActivity extends AppCompatActivity {
             long dictionaryId = dictionaryLookup.get(item.language.toLowerCase());
             dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath());
         }
-        return true;
     }
 
     private Map<String, Long> getDictionaryLookup(DbManager dbm) {
@@ -175,6 +154,44 @@ public class ImportActivity extends AppCompatActivity {
             results.put(dictionary.getLabel().toLowerCase(), dictionary.getDbId());
         }
         return results;
+    }
+
+    private void alertUserOfFailure() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.import_failure_alert_title)
+                .setMessage(R.string.import_failure_alert_message)
+                .setNeutralButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ImportActivity.this.finish();
+                    }
+                })
+                .show();
+    }
+
+    private void confirmAndLoadData(final File targetDir, final List<ImportItem> index) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.import_confirm_alert_title)
+                .setMessage(getString(R.string.import_confirm_alert_message, index.size()))
+                .setPositiveButton(R.string.import_confirm_alert_positive,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        loadData(targetDir, index);
+                        Intent intent = new Intent(ImportActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.import_confirm_alert_negative,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ImportActivity.this.finish();
+                    }
+                })
+                .show();
     }
 
     private class ImportItem {

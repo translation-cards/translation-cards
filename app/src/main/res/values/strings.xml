@@ -19,4 +19,11 @@
     <string name="navigation_button_done">DONE</string>
     <string name="navigation_button_next">NEXT</string>
     <string name="navigation_button_save">SAVE</string>
+    <string name="import_confirm_alert_title">Confirm import</string>
+    <string name="import_confirm_alert_message">Are you sure you want to import %d cards?</string>
+    <string name="import_confirm_alert_positive">Import</string>
+    <string name="import_confirm_alert_negative">Cancel</string>
+    <string name="import_failure_alert_title">Failure</string>
+    <string name="import_failure_alert_message">Importing failed.</string>
+    <string name="misc_ok">OK</string>
 </resources>

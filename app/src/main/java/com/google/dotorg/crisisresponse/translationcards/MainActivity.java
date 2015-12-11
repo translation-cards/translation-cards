@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate called! yay");
         dbm = new DbManager(this);
         dictionaries = dbm.getAllDictionaries();
         currentDictionaryIndex = -1;
