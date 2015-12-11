@@ -1,6 +1,7 @@
 package com.google.dotorg.crisisresponse.translationcards;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +23,7 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class ImportActivity extends AppCompatActivity {
 
@@ -35,7 +38,7 @@ public class ImportActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        importData(getIntent().getScheme(), getIntent().getData());
+        importData(getIntent().getData());
     }
 
     private void initView() {
@@ -43,17 +46,24 @@ public class ImportActivity extends AppCompatActivity {
         infoText = (TextView) findViewById(R.id.info);
     }
 
-    private void importData(String scheme, Uri source) {
-        ZipFile zip = getZip(scheme, source);
+    private void importData(Uri source) {
+        Log.d(TAG, source.toString());
+        if (false) return;
+        ZipInputStream zip = getZip(source);
         if (zip == null) {
             // TODO(nworden): dialog to tell user about this
-            Log.d(TAG, "Failed to obtain zip file; aborting import.");
+            Log.d(TAG, "Failed to get txc file; aborting import.");
             return;
         }
         String filename = source.getLastPathSegment();
-        List<ImportItem> index = readIndex(zip);
+        File targetDir = getTargetDirectory(filename);
+        if (!readFiles(zip, targetDir)) {
+            Log.d(TAG, "Could not read txc file.");
+            return;
+        }
+        List<ImportItem> index = getIndex(targetDir);
         // TODO(nworden): ask user for confirmation
-        if (loadData(zip, index)) {
+        if (loadData(targetDir, index)) {
             infoText.setText(String.format(
                     "Loaded %d translations from %s", index.size(), filename));
         } else {
@@ -61,35 +71,76 @@ public class ImportActivity extends AppCompatActivity {
         }
     }
 
-    private ZipFile getZip(String scheme, Uri source) {
-        if (scheme.equals(ContentResolver.SCHEME_FILE)) {
-            try {
-                return new ZipFile(new File(source.getPath()));
-            } catch (ZipException e) {
-                Log.d(TAG, "Error handling zip file.");
-            } catch (IOException e) {
-                Log.d(TAG, "Error opening file.");
+    private ZipInputStream getZip(Uri source) {
+        InputStream inputStream = null;
+        try {
+            inputStream = getContentResolver().openInputStream(source);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+        return new ZipInputStream(inputStream);
+    }
+
+    private File getTargetDirectory(String filename) {
+        File recordingsDir = new File(getFilesDir(), "recordings");
+        File targetDir = new File(recordingsDir, String.format("%s-%d",
+                filename, (new Random()).nextInt()));
+        targetDir.mkdirs();
+        return targetDir;
+    }
+
+    private boolean readFiles(ZipInputStream zip, File targetDir) {
+        boolean foundIndex = false;
+        FileOutputStream outputStream = null;
+        try {
+            ZipEntry zipEntry = null;
+            while ((zipEntry = zip.getNextEntry()) != null) {
+                String name = zipEntry.getName();
+                if (INDEX_FILENAME.equals(name)) {
+                    foundIndex = true;
+                }
+                outputStream = new FileOutputStream(new File(targetDir, name));
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int read;
+                while ((read = zip.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, read);
+                }
+                outputStream.flush();
+                outputStream.close();
+                outputStream = null;
             }
-            return null;
-        } else if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
-            return null;
+        } catch (IOException e) {
+        } finally {
+            try {
+                zip.close();
+            } catch (IOException e) {
+                return false;
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    return false;
+                }
+            }
+        }
+        if (foundIndex) {
+            return true;
         } else {
-            Log.d(TAG, String.format("Unexpected scheme: %s", scheme));
-            return null;
+            targetDir.delete();
+            Log.d(TAG, "Failed to find index.");
+            return false;
         }
     }
 
-    private List<ImportItem> readIndex(ZipFile zip) {
-        InputStream inputStream = null;
+    private List<ImportItem> getIndex(File dir) {
+        List<ImportItem> results = new ArrayList<>();
+        Scanner s = null;
         try {
-            // TODO(nworden): handle the possibility of everything being wrapped up in a directory
-            inputStream = zip.getInputStream(zip.getEntry(INDEX_FILENAME));
-        } catch (IOException e) {
-            Log.d(TAG, "Failed to open index.");
+            s = new Scanner(new File(dir, "index"));
+        } catch (FileNotFoundException e) {
             return null;
         }
-        List<ImportItem> results = new ArrayList<>();
-        Scanner s = new Scanner(inputStream);
         while (s.hasNextLine()) {
             String line = s.nextLine();
             String[] split = line.trim().split("\\|");
@@ -104,47 +155,14 @@ public class ImportActivity extends AppCompatActivity {
         return results;
     }
 
-    private boolean loadData(ZipFile zip, List<ImportItem> index) {
+    private boolean loadData(File dir, List<ImportItem> index) {
         DbManager dbm = new DbManager(this);
         Map<String, Long> dictionaryLookup = getDictionaryLookup(dbm);
-        File recordingsDir = new File(getFilesDir(), "recordings");
-        File targetDir = new File(recordingsDir, String.format("%s-%d",
-                zip.getName().replace('.', '-'), (new Random()).nextInt()));
-        targetDir.mkdirs();
         // Iterate backwards through the list, because we're adding each translation at the top of
         // the list and want them to appear in the correct order.
         for (int i = index.size() - 1; i >= 0; i--) {
             ImportItem item = index.get(i);
-            File targetFile = new File(targetDir, item.name);
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                inputStream = zip.getInputStream(zip.getEntry(item.name));
-                outputStream = new FileOutputStream(targetFile);
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int read;
-                while ((read = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, read);
-                }
-                outputStream.flush();
-            } catch(IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        return false;
-                    }
-                }
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (IOException e) {
-                        return false;
-                    }
-                }
-            }
+            File targetFile = new File(dir, item.name);
             long dictionaryId = dictionaryLookup.get(item.language.toLowerCase());
             dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath());
         }
