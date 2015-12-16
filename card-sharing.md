@@ -12,7 +12,7 @@ A zipfile (with .txc extension) is created, which includes all audio and card te
 2. User creates a CSV file, titled card_deck.csv with the card text, and name of associated audio file 
 3. User creates a zip file which contains all audio files, and card_deck.csv 
 4. User gives zip file a descriptive name, changes extension to .txc 
-5. Users shares zipfile (in .txc format) with users, open that file on their phone *adds* those cards and audio to existing card deck 
+5. Users shares zipfile (in .txc format) with users, opening that file on their phone *adds* those cards and audio to their existing card deck.
 
 **Implementation details**  
 
