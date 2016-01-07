@@ -26,7 +26,8 @@ public class ImportActivity extends AppCompatActivity {
 
     private static final String TAG = "ImportActivity";
 
-    private static final String INDEX_FILENAME = "card_deck.csv";
+    private static final String INDEX_FILENAME_1 = "card_deck.csv";
+    private static final String INDEX_FILENAME_2 = "card_deck.txt";
     private static final int BUFFER_SIZE = 2048;
 
     @Override
@@ -43,11 +44,12 @@ public class ImportActivity extends AppCompatActivity {
         }
         String filename = source.getLastPathSegment();
         File targetDir = getTargetDirectory(filename);
-        if (!readFiles(zip, targetDir)) {
+        String indexFilename = readFiles(zip, targetDir);
+        if (indexFilename == null) {
             alertUserOfFailure();
             return;
         }
-        List<ImportItem> index = getIndex(targetDir);
+        List<ImportItem> index = getIndex(targetDir, indexFilename);
         if (index == null) {
             alertUserOfFailure();
             return;
@@ -73,15 +75,15 @@ public class ImportActivity extends AppCompatActivity {
         return targetDir;
     }
 
-    private boolean readFiles(ZipInputStream zip, File targetDir) {
-        boolean foundIndex = false;
+    private String readFiles(ZipInputStream zip, File targetDir) {
+        String indexFilename = null;
         FileOutputStream outputStream = null;
         try {
             ZipEntry zipEntry = null;
             while ((zipEntry = zip.getNextEntry()) != null) {
                 String name = zipEntry.getName();
-                if (INDEX_FILENAME.equals(name)) {
-                    foundIndex = true;
+                if (INDEX_FILENAME_1.equals(name) || INDEX_FILENAME_2.equals(name)) {
+                    indexFilename = name;
                 }
                 outputStream = new FileOutputStream(new File(targetDir, name));
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -98,30 +100,28 @@ public class ImportActivity extends AppCompatActivity {
             try {
                 zip.close();
             } catch (IOException e) {
-                return false;
+                return null;
             }
             if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
-                    return false;
+                    return null;
                 }
             }
         }
-        if (foundIndex) {
-            return true;
-        } else {
+        if (indexFilename == null) {
             targetDir.delete();
             Log.d(TAG, "Failed to find index.");
-            return false;
         }
+        return indexFilename;
     }
 
-    private List<ImportItem> getIndex(File dir) {
+    private List<ImportItem> getIndex(File dir, String indexFilename) {
         List<ImportItem> results = new ArrayList<>();
         Scanner s;
         try {
-            s = new Scanner(new File(dir, INDEX_FILENAME));
+            s = new Scanner(new File(dir, indexFilename));
         } catch (FileNotFoundException e) {
             return null;
         }
