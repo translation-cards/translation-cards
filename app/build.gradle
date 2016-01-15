@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.google.dotorg.crisisresponse.translationcards"
+        applicationId "org.mercycorps.translationcards"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 2

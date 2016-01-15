@@ -1,4 +1,4 @@
-package com.google.dotorg.crisisresponse.translationcards;
+package org.mercycorps.translationcards;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

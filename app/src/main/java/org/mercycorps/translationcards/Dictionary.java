@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.dotorg.crisisresponse.translationcards;
+package org.mercycorps.translationcards;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
