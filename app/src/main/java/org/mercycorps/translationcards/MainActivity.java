@@ -202,6 +202,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onExportButtonPress(View v) {
+        Intent intent = new Intent(this, ExportActivity.class);
+        startActivity(intent);
+    }
+
     private class CardListAdapter extends ArrayAdapter<String> {
 
         private final View.OnClickListener clickListener;

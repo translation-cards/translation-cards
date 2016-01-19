@@ -3,6 +3,7 @@
     <string name="main_instructions">Tap a phrase to hear it, tap again to stop.\nMake sure your volume is turned up.</string>
     <string name="main_feedback_request">Is this app useful for you?\nLet us know how it can be improved.</string>
     <string name="main_feedback_button_text">GIVE FEEDBACK</string>
+    <string name="main_export_button_text">EXPORT</string>
     <string name="recording_instructions_title">%s Flashcard Maker</string>
     <string name="recording_instructions_header">Make your own flashcards</string>
     <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
