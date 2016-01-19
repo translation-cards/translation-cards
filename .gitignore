@@ -10,3 +10,6 @@
 
 # Audio
 /app/src/main/assets/recordings/*.m4a
+
+#Release Binaries
+app/app-release.apk
