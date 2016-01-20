@@ -18,7 +18,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecordingActivity" />
-        <activity android:name=".ExportActivity" />
         <activity android:name=".ImportActivity">
             <!-- To support opening from a file manager. -->
             <intent-filter>

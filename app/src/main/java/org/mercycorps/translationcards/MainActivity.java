@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +204,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onExportButtonPress(View v) {
-        Intent intent = new Intent(this, ExportActivity.class);
+        File targetFile = new File(getExternalCacheDir(), "export.txc");
+        if (targetFile.exists()) {
+            targetFile.delete();
+        }
+        TxcPortingUtility portingUtility = new TxcPortingUtility();
+        DbManager dbm = new DbManager(this);
+        try {
+            portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
+        } catch (TxcPortingUtility.ExportException e) {
+            Log.d(TAG, "Failed to build file.");
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
         startActivity(intent);
     }
 
