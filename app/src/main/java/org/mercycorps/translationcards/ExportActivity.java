@@ -31,7 +31,7 @@ public class ExportActivity extends AppCompatActivity {
         }
         DbManager dbm = new DbManager(this);
         try {
-            portingUtility.writeTxcFile(dbm.getAllDictionaries(), targetFile);
+            portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
         } catch (TxcPortingUtility.ExportException e) {
             return e;
         }
