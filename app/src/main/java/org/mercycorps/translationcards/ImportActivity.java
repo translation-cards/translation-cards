@@ -62,9 +62,22 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private void alertUserOfFailure(TxcPortingUtility.ImportException error) {
+        String errorMessage = getString(R.string.import_failure_default_error_message);
+        if (error.getProblem() == TxcPortingUtility.ImportException.ImportProblem.FILE_NOT_FOUND) {
+            errorMessage = getString(R.string.import_failure_file_not_found_error_message);
+        } else if (error.getProblem() ==
+                TxcPortingUtility.ImportException.ImportProblem.NO_INDEX_FILE) {
+            errorMessage = getString(R.string.import_failure_no_index_file_error_message);
+        } else if (error.getProblem() ==
+                TxcPortingUtility.ImportException.ImportProblem.INVALID_INDEX_FILE) {
+            errorMessage = getString(R.string.import_failure_invalid_index_file_error_message);
+        } else if (error.getProblem() ==
+                TxcPortingUtility.ImportException.ImportProblem.READ_ERROR) {
+            errorMessage = getString(R.string.import_failure_read_error_error_message);
+        }
         new AlertDialog.Builder(this)
                 .setTitle(R.string.import_failure_alert_title)
-                .setMessage(R.string.import_failure_alert_message)
+                .setMessage(errorMessage)
                 .setNeutralButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
