@@ -16,11 +16,13 @@
 
 package org.mercycorps.translationcards;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -204,22 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onExportButtonPress(View v) {
-        File targetFile = new File(getExternalCacheDir(), "export.txc");
-        if (targetFile.exists()) {
-            targetFile.delete();
-        }
-        TxcPortingUtility portingUtility = new TxcPortingUtility();
-        DbManager dbm = new DbManager(this);
-        try {
-            portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
-        } catch (TxcPortingUtility.ExportException e) {
-            Log.d(TAG, "Failed to build file.");
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
-        startActivity(intent);
+        (new ExportTask()).execute();
     }
 
     private class CardListAdapter extends ArrayAdapter<String> {
@@ -389,6 +376,44 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCompletion(MediaPlayer mp) {
             manager.stop();
+        }
+    }
+
+    private class ExportTask extends AsyncTask<Void, Void, Void> {
+
+        private File targetFile;
+        private ProgressDialog loadingDialog;
+
+        protected void onPreExecute() {
+            loadingDialog = ProgressDialog.show(
+                    MainActivity.this,
+                    getString(R.string.export_progress_dialog_title),
+                    getString(R.string.export_progress_dialog_message),
+                    true);
+        }
+
+        protected Void doInBackground(Void... params) {
+            targetFile = new File(getExternalCacheDir(), "export.txc");
+            if (targetFile.exists()) {
+                targetFile.delete();
+            }
+            TxcPortingUtility portingUtility = new TxcPortingUtility();
+            DbManager dbm = new DbManager(MainActivity.this);
+            try {
+                portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
+            } catch (TxcPortingUtility.ExportException e) {
+                Log.d(TAG, "Failed to build file.");
+                return null;
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            loadingDialog.cancel();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
+            startActivity(intent);
         }
     }
 }
