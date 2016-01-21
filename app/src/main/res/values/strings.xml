@@ -32,5 +32,8 @@
     <string name="import_failure_read_error_error_message">Error reading TXC file or its contents.</string>
     <string name="export_progress_dialog_title">Export in progress</string>
     <string name="export_progress_dialog_message">Please wait, building file...</string>
+    <string name="export_failure_target_file_not_found_error_message">Target file not found.</string>
+    <string name="export_failure_write_error_error_message">Target file not found.</string>
+    <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
 </resources>

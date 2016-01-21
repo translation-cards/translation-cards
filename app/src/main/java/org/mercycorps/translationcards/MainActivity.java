@@ -16,8 +16,10 @@
 
 package org.mercycorps.translationcards;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -402,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
             } catch (TxcPortingUtility.ExportException e) {
-                Log.d(TAG, "Failed to build file.");
+                alertUserOfExportFailure(e);
                 return null;
             }
             return null;
@@ -415,5 +417,24 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
             startActivity(intent);
         }
+    }
+
+    private void alertUserOfExportFailure(TxcPortingUtility.ExportException error) {
+        String errorMessage = getString(R.string.import_failure_default_error_message);
+        if (error.getProblem() ==
+                TxcPortingUtility.ExportException.ExportProblem.TARGET_FILE_NOT_FOUND) {
+            errorMessage = getString(R.string.export_failure_target_file_not_found_error_message);
+        } else if (error.getProblem() ==
+                TxcPortingUtility.ExportException.ExportProblem.WRITE_ERROR) {
+            errorMessage = getString(R.string.export_failure_write_error_error_message);
+        } else if (error.getProblem() ==
+                TxcPortingUtility.ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES) {
+            errorMessage = getString(
+                    R.string.export_failure_too_many_duplicate_filenames_error_message);
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.import_failure_alert_title)
+                .setMessage(errorMessage)
+                .show();
     }
 }
