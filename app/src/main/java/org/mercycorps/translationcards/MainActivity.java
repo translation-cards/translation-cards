@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
             DbManager dbm = new DbManager(MainActivity.this);
             try {
                 portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
-            } catch (TxcPortingUtility.ExportException e) {
+            } catch (ExportException e) {
                 alertUserOfExportFailure(e);
                 return null;
             }
@@ -419,16 +419,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void alertUserOfExportFailure(TxcPortingUtility.ExportException error) {
+    private void alertUserOfExportFailure(ExportException error) {
         String errorMessage = getString(R.string.import_failure_default_error_message);
-        if (error.getProblem() ==
-                TxcPortingUtility.ExportException.ExportProblem.TARGET_FILE_NOT_FOUND) {
+        if (error.getProblem() == ExportException.ExportProblem.TARGET_FILE_NOT_FOUND) {
             errorMessage = getString(R.string.export_failure_target_file_not_found_error_message);
-        } else if (error.getProblem() ==
-                TxcPortingUtility.ExportException.ExportProblem.WRITE_ERROR) {
+        } else if (error.getProblem() == ExportException.ExportProblem.WRITE_ERROR) {
             errorMessage = getString(R.string.export_failure_write_error_error_message);
         } else if (error.getProblem() ==
-                TxcPortingUtility.ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES) {
+                ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES) {
             errorMessage = getString(
                     R.string.export_failure_too_many_duplicate_filenames_error_message);
         }

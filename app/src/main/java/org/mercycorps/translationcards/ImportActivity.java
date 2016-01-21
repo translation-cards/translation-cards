@@ -41,7 +41,7 @@ public class ImportActivity extends AppCompatActivity {
                                 TxcPortingUtility portingUtility = new TxcPortingUtility();
                                 try {
                                     portingUtility.importData(ImportActivity.this, source);
-                                } catch (TxcPortingUtility.ImportException e) {
+                                } catch (ImportException e) {
                                     alertUserOfFailure(e);
                                     return;
                                 }
@@ -61,18 +61,15 @@ public class ImportActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void alertUserOfFailure(TxcPortingUtility.ImportException error) {
+    private void alertUserOfFailure(ImportException error) {
         String errorMessage = getString(R.string.import_failure_default_error_message);
-        if (error.getProblem() == TxcPortingUtility.ImportException.ImportProblem.FILE_NOT_FOUND) {
+        if (error.getProblem() == ImportException.ImportProblem.FILE_NOT_FOUND) {
             errorMessage = getString(R.string.import_failure_file_not_found_error_message);
-        } else if (error.getProblem() ==
-                TxcPortingUtility.ImportException.ImportProblem.NO_INDEX_FILE) {
+        } else if (error.getProblem() == ImportException.ImportProblem.NO_INDEX_FILE) {
             errorMessage = getString(R.string.import_failure_no_index_file_error_message);
-        } else if (error.getProblem() ==
-                TxcPortingUtility.ImportException.ImportProblem.INVALID_INDEX_FILE) {
+        } else if (error.getProblem() == ImportException.ImportProblem.INVALID_INDEX_FILE) {
             errorMessage = getString(R.string.import_failure_invalid_index_file_error_message);
-        } else if (error.getProblem() ==
-                TxcPortingUtility.ImportException.ImportProblem.READ_ERROR) {
+        } else if (error.getProblem() == ImportException.ImportProblem.READ_ERROR) {
             errorMessage = getString(R.string.import_failure_read_error_error_message);
         }
         new AlertDialog.Builder(this)
@@ -85,18 +82,5 @@ public class ImportActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-    }
-
-    private class ImportItem {
-
-        public final String text;
-        public final String name;
-        public final String language;
-
-        public ImportItem(String text, String name, String language) {
-            this.text = text;
-            this.name = name;
-            this.language = language;
-        }
     }
 }

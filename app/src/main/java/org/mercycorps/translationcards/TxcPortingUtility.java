@@ -208,7 +208,7 @@ public class TxcPortingUtility {
         try {
             s = new Scanner(new File(dir, indexFilename));
         } catch (FileNotFoundException e) {
-            return null;
+            throw new ImportException(ImportException.ImportProblem.NO_INDEX_FILE, e);
         }
         while (s.hasNextLine()) {
             String line = s.nextLine();
@@ -244,26 +244,6 @@ public class TxcPortingUtility {
         return results;
     }
 
-    public static class ExportException extends Exception {
-
-        public enum ExportProblem {
-            TARGET_FILE_NOT_FOUND,
-            WRITE_ERROR,
-            TOO_MANY_DUPLICATE_FILENAMES
-        }
-
-        private final ExportProblem problem;
-
-        public ExportException(ExportProblem problem, Throwable cause) {
-            super(cause);
-            this.problem = problem;
-        }
-
-        public ExportProblem getProblem() {
-            return problem;
-        }
-    }
-
     private class ImportItem {
 
         public final String text;
@@ -274,27 +254,6 @@ public class TxcPortingUtility {
             this.text = text;
             this.name = name;
             this.language = language;
-        }
-    }
-
-    public static class ImportException extends Exception {
-
-        public enum ImportProblem {
-            FILE_NOT_FOUND,
-            READ_ERROR,
-            NO_INDEX_FILE,
-            INVALID_INDEX_FILE
-        }
-
-        private final ImportProblem problem;
-
-        public ImportException(ImportProblem problem, Throwable cause) {
-            super(cause);
-            this.problem = problem;
-        }
-
-        public ImportProblem getProblem() {
-            return problem;
         }
     }
 }
