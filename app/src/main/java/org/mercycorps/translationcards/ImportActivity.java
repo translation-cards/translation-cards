@@ -128,12 +128,15 @@ public class ImportActivity extends AppCompatActivity {
         while (s.hasNextLine()) {
             String line = s.nextLine();
             String[] split = line.trim().split("\\|");
-            if (split.length != 3) {
+            if (split.length == 3) {
+                results.add(new ImportItem(split[0], split[1], split[2], ""));
+            } else if (split.length == 4) {
+                results.add(new ImportItem(split[0], split[1], split[2], split[3]));
+            } else {
                 Log.d(TAG, String.format("Improper index line: " + line));
                 s.close();
                 return null;
             }
-            results.add(new ImportItem(split[0], split[1], split[2]));
         }
         s.close();
         return results;
@@ -148,7 +151,7 @@ public class ImportActivity extends AppCompatActivity {
             ImportItem item = index.get(i);
             File targetFile = new File(dir, item.name);
             long dictionaryId = dictionaryLookup.get(item.language.toLowerCase());
-            dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath());
+            dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath(), item.translatedText);
         }
     }
 
@@ -203,11 +206,13 @@ public class ImportActivity extends AppCompatActivity {
         public final String text;
         public final String name;
         public final String language;
+        public final String translatedText;
 
-        public ImportItem(String text, String name, String language) {
+        public ImportItem(String text, String name, String language, String translatedText) {
             this.text = text;
             this.name = name;
             this.language = language;
+            this.translatedText = translatedText;
         }
     }
 }

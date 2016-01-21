@@ -69,16 +69,19 @@ public class Dictionary {
         private final boolean isAsset;
         private final String filename;
         private final long dbId;
+        private final String translatedText;
 
-        public Translation(String label, boolean isAsset, String filename, long dbId) {
+
+        public Translation(String label, boolean isAsset, String filename, long dbId, String translatedText) {
             this.label = label;
             this.isAsset = isAsset;
             this.filename = filename;
             this.dbId = dbId;
+            this.translatedText = translatedText;
         }
 
-        public Translation(String label, boolean isAsset, String filename) {
-            this(label, isAsset, filename, -1);
+        public Translation(String label, boolean isAsset, String filename, String translatedText) {
+            this(label, isAsset, filename, -1, translatedText);
         }
 
         public String getLabel() {
@@ -96,6 +99,11 @@ public class Dictionary {
         public long getDbId() {
             return dbId;
         }
+
+        public String getTranslatedText() {
+            return translatedText;
+        }
+
 
         public void setMediaPlayerDataSource(Context context, MediaPlayer mp) throws IOException {
             if (isAsset) {

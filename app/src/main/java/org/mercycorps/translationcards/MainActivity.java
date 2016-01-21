@@ -287,6 +287,8 @@ public class MainActivity extends AppCompatActivity {
                     RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translation.getIsAsset());
             intent.putExtra(
                     RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
+            intent.putExtra(
+                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }

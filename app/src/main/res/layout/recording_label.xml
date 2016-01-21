@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/recording_label_field"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="24dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_below="@+id/recording_label_detail"
@@ -64,6 +64,24 @@
         android:imeOptions="actionDone"
         android:text="@string/recording_label_hint_text" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recording_translated_text_field"
+        android:layout_marginTop="34dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/recording_label_field"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="text"
+        android:textColor="@color/borderColor"
+        android:textColorHighlight="@color/colorPrimary"
+        android:imeOptions="actionDone"
+        android:text="@string/recording_text_hint_text" />
+
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such
          that not everything fits). This frame layout (which must be at least as tall as the
@@ -72,7 +90,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/recording_label_field" />
+        android:layout_below="@id/recording_translated_text_field" />
 
     <RelativeLayout
         android:layout_width="match_parent"
