@@ -21,9 +21,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,27 +153,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void play(int translationIndex, final ProgressBar progressBar) {
+    private void play(int translationIndex, final ProgressBar progressBar, TextView cardText) {
         if (lastMediaPlayerManager != null) {
             lastMediaPlayerManager.stop();
         }
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(translationIndex);
         try {
-            dictionaries[currentDictionaryIndex]
-                    .getTranslation(translationIndex)
+            translationCard
                     .setMediaPlayerDataSource(this, mediaPlayer);
             mediaPlayer.prepare();
         } catch (IOException e) {
             Log.d(TAG, "Error getting audio asset: " + e);
             return;
         }
-        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
+        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar, cardText, translationCard);
         mediaPlayer.setOnCompletionListener(
                 new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
         progressBar.setMax(mediaPlayer.getDuration());
         mediaPlayer.start();
         new Thread(lastMediaPlayerManager).start();
+
+        displayTranslationText(cardText, translationCard);
+    }
+
+    private void displayTranslationText(TextView cardText, Dictionary.Translation translationCard) {
+        if (!translationCard.getTranslatedText().isEmpty()) {
+            cardText.setText(translationCard.getTranslatedText());
+        }
     }
 
     private void showAddTranslationDialog() {
@@ -255,17 +262,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             lastPlayedPosition = itemIndex;
-            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
-            displayTranslatedText(itemIndex);
+            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar), (TextView) listItem.findViewById(R.id.card_text));
         }
-    }
-
-    private void displayTranslatedText(int itemIndex) {
-        Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
-
-        Snackbar.make(findViewById(R.id.list), translationCard.getTranslatedText(),
-                Snackbar.LENGTH_SHORT)
-                .show();
     }
 
     private class CardEditClickListener implements View.OnClickListener {
@@ -309,12 +307,16 @@ public class MainActivity extends AppCompatActivity {
         private boolean running;
         private final MediaPlayer mediaPlayer;
         private final ProgressBar progressBar;
+        private final TextView cardText;
+        private Dictionary.Translation translation;
 
-        public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar) {
+        public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar, TextView cardText, Dictionary.Translation translation) {
             lock = new ReentrantLock();
             running = true;
             this.mediaPlayer = mediaPlayer;
             this.progressBar = progressBar;
+            this.cardText = cardText;
+            this.translation = translation;
         }
 
         public boolean stop() {
@@ -337,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             lock.unlock();
+            cardText.setText(translation.getLabel());
             return true;
         }
 
