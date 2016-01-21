@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -255,7 +256,16 @@ public class MainActivity extends AppCompatActivity {
             }
             lastPlayedPosition = itemIndex;
             play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
+            displayTranslatedText(itemIndex);
         }
+    }
+
+    private void displayTranslatedText(int itemIndex) {
+        Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
+
+        Snackbar.make(findViewById(R.id.list), translationCard.getTranslatedText(),
+                Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     private class CardEditClickListener implements View.OnClickListener {
