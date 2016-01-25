@@ -17,10 +17,13 @@
 package org.mercycorps.translationcards;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -179,13 +182,23 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.start();
         new Thread(lastMediaPlayerManager).start();
 
-        displayTranslationText(cardText, translationCard);
+        displayTranslationText(translationCard);
     }
 
-    private void displayTranslationText(TextView cardText, Dictionary.Translation translationCard) {
-        if (!translationCard.getTranslatedText().isEmpty()) {
-            cardText.setText(translationCard.getTranslatedText());
-        }
+    private void displayTranslationText(Dictionary.Translation translationCard) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("Translation Text", translationCard.getTranslatedText());
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        PlayTranslationCard playTranslationCard = new PlayTranslationCard();
+        playTranslationCard.setArguments(bundle);
+        fragmentTransaction.add(R.id.mainActivity, playTranslationCard);
+        fragmentTransaction.addToBackStack("playTranslationCard");
+        fragmentTransaction.commit();
     }
 
     private void showAddTranslationDialog() {
@@ -270,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             lastPlayedPosition = itemIndex;
+
             play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar), (TextView) listItem.findViewById(R.id.card_text));
         }
     }
