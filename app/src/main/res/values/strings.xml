@@ -3,6 +3,7 @@
     <string name="main_instructions">Tap a phrase to hear it, tap again to stop.\nMake sure your volume is turned up.</string>
     <string name="main_feedback_request">Is this app useful for you?\nLet us know how it can be improved.</string>
     <string name="main_feedback_button_text">GIVE FEEDBACK</string>
+    <string name="main_export_button_text">EXPORT</string>
     <string name="recording_instructions_title">%s Flashcard Maker</string>
     <string name="recording_instructions_header">Make your own flashcards</string>
     <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
@@ -22,10 +23,19 @@
     <string name="navigation_button_next">NEXT</string>
     <string name="navigation_button_save">SAVE</string>
     <string name="import_confirm_alert_title">Confirm import</string>
-    <string name="import_confirm_alert_message">Are you sure you want to import %d cards?</string>
+    <string name="import_confirm_alert_message">Are you sure you want to import these cards?</string>
     <string name="import_confirm_alert_positive">Import</string>
     <string name="import_confirm_alert_negative">Cancel</string>
     <string name="import_failure_alert_title">Failure</string>
-    <string name="import_failure_alert_message">Importing failed.</string>
+    <string name="import_failure_default_error_message">Importing failed.</string>
+    <string name="import_failure_file_not_found_error_message">Target file could not be found.</string>
+    <string name="import_failure_no_index_file_error_message">TXC file did not have an index.</string>
+    <string name="import_failure_invalid_index_file_error_message">TXC file index was invalid.</string>
+    <string name="import_failure_read_error_error_message">Error reading TXC file or its contents.</string>
+    <string name="export_progress_dialog_title">Export in progress</string>
+    <string name="export_progress_dialog_message">Please wait, building file...</string>
+    <string name="export_failure_target_file_not_found_error_message">Target file not found.</string>
+    <string name="export_failure_write_error_error_message">Target file not found.</string>
+    <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
 </resources>

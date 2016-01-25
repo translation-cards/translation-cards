@@ -16,11 +16,15 @@
 
 package org.mercycorps.translationcards;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,6 +38,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    public void onExportButtonPress(View v) {
+        (new ExportTask()).execute();
     }
 
     private class CardListAdapter extends ArrayAdapter<String> {
@@ -384,5 +393,60 @@ public class MainActivity extends AppCompatActivity {
         public void onCompletion(MediaPlayer mp) {
             manager.stop();
         }
+    }
+
+    private class ExportTask extends AsyncTask<Void, Void, Void> {
+
+        private File targetFile;
+        private ProgressDialog loadingDialog;
+
+        protected void onPreExecute() {
+            loadingDialog = ProgressDialog.show(
+                    MainActivity.this,
+                    getString(R.string.export_progress_dialog_title),
+                    getString(R.string.export_progress_dialog_message),
+                    true);
+        }
+
+        protected Void doInBackground(Void... params) {
+            targetFile = new File(getExternalCacheDir(), "export.txc");
+            if (targetFile.exists()) {
+                targetFile.delete();
+            }
+            TxcPortingUtility portingUtility = new TxcPortingUtility();
+            DbManager dbm = new DbManager(MainActivity.this);
+            try {
+                portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
+            } catch (ExportException e) {
+                alertUserOfExportFailure(e);
+                return null;
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            loadingDialog.cancel();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
+            startActivity(intent);
+        }
+    }
+
+    private void alertUserOfExportFailure(ExportException error) {
+        String errorMessage = getString(R.string.import_failure_default_error_message);
+        if (error.getProblem() == ExportException.ExportProblem.TARGET_FILE_NOT_FOUND) {
+            errorMessage = getString(R.string.export_failure_target_file_not_found_error_message);
+        } else if (error.getProblem() == ExportException.ExportProblem.WRITE_ERROR) {
+            errorMessage = getString(R.string.export_failure_write_error_error_message);
+        } else if (error.getProblem() ==
+                ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES) {
+            errorMessage = getString(
+                    R.string.export_failure_too_many_duplicate_filenames_error_message);
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.import_failure_alert_title)
+                .setMessage(errorMessage)
+                .show();
     }
 }
