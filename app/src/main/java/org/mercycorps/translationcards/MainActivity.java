@@ -161,8 +161,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(translationIndex);
         try {
-            translationCard
-                    .setMediaPlayerDataSource(this, mediaPlayer);
+            translationCard.setMediaPlayerDataSource(this, mediaPlayer);
             mediaPlayer.prepare();
         } catch (IOException e) {
             Log.d(TAG, "Error getting audio asset: " + e);

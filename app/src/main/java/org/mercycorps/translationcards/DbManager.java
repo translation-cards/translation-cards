@@ -47,7 +47,8 @@ public class DbManager {
         // Getting translations.
         Map<Long, List<Dictionary.Translation>> translations = new HashMap<>();
         String[] columns = {TranslationsTable.ID, TranslationsTable.DICTIONARY_ID,
-                TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME, TranslationsTable.TRANSLATED_TEXT};
+                TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME,
+                TranslationsTable.TRANSLATED_TEXT};
         Cursor c = dbh.getReadableDatabase().query(
                 TranslationsTable.TABLE_NAME, columns,
                 null, null, null, null,
@@ -223,7 +224,7 @@ public class DbManager {
                 "ALTER TABLE" + TranslationsTable.TABLE_NAME + "ADD " +TranslationsTable.TRANSLATED_TEXT +" TEXT";
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if (oldVersion == 1 && newVersion == 2) {
+            if (oldVersion == 1) {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
             }
         }
