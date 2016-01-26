@@ -122,7 +122,7 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
         public void run() {
             while (tryUpdate()) {
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     // Do nothing.
                 }
@@ -159,9 +159,10 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        lastMediaPlayerManager.stop();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.popBackStack();
-        lastMediaPlayerManager.stop();
+
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }
