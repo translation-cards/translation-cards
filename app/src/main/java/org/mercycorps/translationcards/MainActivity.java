@@ -17,11 +17,9 @@
 package org.mercycorps.translationcards;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
@@ -29,6 +27,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void play(int translationIndex, final ProgressBar progressBar, TextView cardText) {
+    private void play(int translationIndex, final ProgressBar progressBar) {
         if (lastMediaPlayerManager != null) {
             lastMediaPlayerManager.stop();
         }
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Error getting audio asset: " + e);
             return;
         }
-        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar, cardText, translationCard);
+        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
         mediaPlayer.setOnCompletionListener(
                 new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
         progressBar.setMax(mediaPlayer.getDuration());
@@ -186,18 +185,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayTranslationText(Dictionary.Translation translationCard) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         Bundle bundle = new Bundle();
-        bundle.putString("Translation Text", translationCard.getTranslatedText());
+        bundle.putString("translationText", translationCard.getTranslatedText());
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        PlayTranslationCard playTranslationCard = new PlayTranslationCard();
-        playTranslationCard.setArguments(bundle);
-        fragmentTransaction.add(R.id.mainActivity, playTranslationCard);
-        fragmentTransaction.addToBackStack("playTranslationCard");
+        PlayCardFragment playCardFragment = new PlayCardFragment();
+        playCardFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.mainActivity, playCardFragment);
+        fragmentTransaction.addToBackStack("playCardFragment");
         fragmentTransaction.commit();
     }
 
@@ -284,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
             }
             lastPlayedPosition = itemIndex;
 
-            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar), (TextView) listItem.findViewById(R.id.card_text));
+            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
         }
     }
 
@@ -329,16 +326,12 @@ public class MainActivity extends AppCompatActivity {
         private boolean running;
         private final MediaPlayer mediaPlayer;
         private final ProgressBar progressBar;
-        private final TextView cardText;
-        private Dictionary.Translation translation;
 
-        public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar, TextView cardText, Dictionary.Translation translation) {
+        public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar) {
             lock = new ReentrantLock();
             running = true;
             this.mediaPlayer = mediaPlayer;
             this.progressBar = progressBar;
-            this.cardText = cardText;
-            this.translation = translation;
         }
 
         public boolean stop() {
@@ -361,7 +354,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             lock.unlock();
-            cardText.setText(translation.getLabel());
             return true;
         }
 
