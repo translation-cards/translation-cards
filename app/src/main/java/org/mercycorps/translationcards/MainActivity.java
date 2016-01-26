@@ -239,7 +239,8 @@ public class MainActivity extends AppCompatActivity {
             }
             int itemIndex = position - 1;
 
-            Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
+            Dictionary.Translation translationCard =
+                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
             displayAndPlayTranslation(translationCard);
         }
     }

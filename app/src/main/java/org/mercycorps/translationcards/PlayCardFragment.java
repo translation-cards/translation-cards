@@ -30,14 +30,22 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View playCardView = inflater.inflate(R.layout.play_card_view, container, false);
         translationCard = (Dictionary.Translation) getArguments().getSerializable("TranslationCard");
 
-        setLandscapeScreenOrientation();
-        View playCardView = inflater.inflate(R.layout.play_card_view, container, false);
-        setTranslationText(playCardView);
-        playTranslationAudio(playCardView);
+        if (screenIsPortraitOriented()) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setTranslationText(playCardView);
+            playTranslationAudio(playCardView);
+        }
 
         return playCardView;
+    }
+
+    private boolean screenIsPortraitOriented() {
+        return getContext().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_PORTRAIT;
     }
 
     private void playTranslationAudio(View playCardView) {
@@ -148,13 +156,6 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
         TextView playCardText = (TextView) playCardView.findViewById(R.id.play_card_text);
         playCardText.setText(translationCard.getTranslatedText());
         playCardText.setOnClickListener(this);
-    }
-
-    private void setLandscapeScreenOrientation() {
-        if (getContext().getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
     }
 
     @Override
