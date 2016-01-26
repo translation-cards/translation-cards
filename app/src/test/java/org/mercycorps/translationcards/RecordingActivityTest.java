@@ -26,22 +26,25 @@ public class RecordingActivityTest {
 
     @Test
     public void moveToInstructionsStep_shouldShowHeaderWhenMakingATranslationCard() {
-        TextView instructionsHeader = (TextView) recordingActivity.findViewById(R.id.recording_instructions_header);
+        TextView instructionsHeader = (TextView) recordingActivity
+                .findViewById(R.id.recording_instructions_header);
 
         assertThat(instructionsHeader.getText().toString(), is("Make your own flashcards"));
     }
 
     @Test
     public void moveToInstructionsStep_shouldDisplayInstructionsToMakeTranslattionCard() {
-        TextView instructionsDetail = (TextView) recordingActivity.findViewById(R.id.recording_instructions_detail);
+        TextView instructionsDetail = (TextView) recordingActivity
+                .findViewById(R.id.recording_instructions_detail);
 
-        assertThat(instructionsDetail.getText().toString(), is("Write your script, record your phrase," +
-                "\\nand use your flashcard in the field."));
+        assertThat(instructionsDetail.getText().toString()
+                , is("Write your script, record your phrase,\\nand use your flashcard in the field."));
     }
 
     @Test
     public void moveToInsturctionsStep_shouldHaveCardCreationButton() {
-        Button recordingButton = (Button) recordingActivity.findViewById(R.id.recording_instructions_start);
+        Button recordingButton = (Button) recordingActivity
+                .findViewById(R.id.recording_instructions_start);
 
         assertThat(recordingButton.getText().toString(), is("GET STARTED"));
     }
