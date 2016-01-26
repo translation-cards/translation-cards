@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
         Bundle bundle = new Bundle();
-        bundle.putString("translationText", translationCard.getTranslatedText());
         bundle.putSerializable("TranslationCard", translationCard);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
