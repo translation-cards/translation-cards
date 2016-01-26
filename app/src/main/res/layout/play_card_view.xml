@@ -4,9 +4,21 @@
     android:layout_height="match_parent"
     android:id="@+id/play_card">
 
+    <ProgressBar
+        android:id="@+id/play_card_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/play_progress"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:minHeight="3dp"
+        android:maxHeight="3dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/play_card_progress_bar"
         android:background="@color/backgroundColor"
         android:textColor="@color/primaryTextColor"
         android:gravity="center"

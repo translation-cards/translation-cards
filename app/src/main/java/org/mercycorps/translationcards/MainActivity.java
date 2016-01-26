@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -160,33 +159,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void play(int translationIndex, final ProgressBar progressBar) {
-        if (lastMediaPlayerManager != null) {
-            lastMediaPlayerManager.stop();
-        }
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(translationIndex);
-        try {
-            translationCard.setMediaPlayerDataSource(this, mediaPlayer);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            return;
-        }
-        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
-        mediaPlayer.setOnCompletionListener(
-                new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-        progressBar.setMax(mediaPlayer.getDuration());
-        mediaPlayer.start();
-        new Thread(lastMediaPlayerManager).start();
-
-        displayTranslationText(translationCard);
-    }
-
-    private void displayTranslationText(Dictionary.Translation translationCard) {
+    private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
         Bundle bundle = new Bundle();
         bundle.putString("translationText", translationCard.getTranslatedText());
+        bundle.putSerializable("TranslationCard", translationCard);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -276,12 +252,14 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             int itemIndex = position - 1;
-            if (lastPlayedPosition == itemIndex && lastMediaPlayerManager.stop()) {
-                return;
-            }
-            lastPlayedPosition = itemIndex;
+//            if (lastPlayedPosition == itemIndex && lastMediaPlayerManager.stop()) {
+//                return;
+//            }
+//            lastPlayedPosition = itemIndex;
 
-            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
+//            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
+            Dictionary.Translation translationCard = dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
+            displayAndPlayTranslation(translationCard);
         }
     }
 

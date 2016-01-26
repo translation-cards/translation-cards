@@ -22,6 +22,7 @@ import android.media.MediaPlayer;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -63,7 +64,7 @@ public class Dictionary {
     /**
      * Contains information about a single phrase.
      */
-    public static class Translation {
+    public static class Translation implements Serializable {
 
         private final String label;
         private final boolean isAsset;
