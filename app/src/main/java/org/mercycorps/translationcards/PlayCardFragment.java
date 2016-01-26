@@ -42,6 +42,21 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
 
         return playCardView;
     }
+    
+    @Override
+    public void onClick(View v) {
+        lastMediaPlayerManager.stop();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack();
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
+    private void setTranslationText(View playCardView) {
+        TextView playCardText = (TextView) playCardView.findViewById(R.id.play_card_text);
+        playCardText.setText(translationCard.getTranslatedText());
+        playCardText.setOnClickListener(this);
+    }
 
     private boolean screenIsPortraitOriented() {
         return getContext().getResources().getConfiguration().orientation
@@ -150,20 +165,5 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
         public void onCompletion(MediaPlayer mp) {
             manager.stop();
         }
-    }
-
-    private void setTranslationText(View playCardView) {
-        TextView playCardText = (TextView) playCardView.findViewById(R.id.play_card_text);
-        playCardText.setText(translationCard.getTranslatedText());
-        playCardText.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        lastMediaPlayerManager.stop();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.popBackStack();
-
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }
