@@ -21,6 +21,8 @@
         android:layout_below="@+id/play_card_progress_bar"
         android:background="@color/backgroundColor"
         android:textColor="@color/primaryTextColor"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:gravity="center"
         android:textSize="50sp"
         android:id="@+id/play_card_text"/>
