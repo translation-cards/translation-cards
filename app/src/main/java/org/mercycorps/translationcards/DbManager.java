@@ -47,7 +47,8 @@ public class DbManager {
         // Getting translations.
         Map<Long, List<Dictionary.Translation>> translations = new HashMap<>();
         String[] columns = {TranslationsTable.ID, TranslationsTable.DICTIONARY_ID,
-                TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME};
+                TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME,
+                TranslationsTable.TRANSLATED_TEXT};
         Cursor c = dbh.getReadableDatabase().query(
                 TranslationsTable.TABLE_NAME, columns,
                 null, null, null, null,
@@ -61,8 +62,9 @@ public class DbManager {
             translations.get(dictionaryId).add(new Dictionary.Translation(
                     c.getString(c.getColumnIndex(TranslationsTable.LABEL)),
                     c.getInt(c.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
-                    c.getString(c.getColumnIndex((TranslationsTable.FILENAME))),
-                    c.getLong(c.getColumnIndex(TranslationsTable.ID))));
+                    c.getString(c.getColumnIndex(TranslationsTable.FILENAME)),
+                    c.getLong(c.getColumnIndex(TranslationsTable.ID)),
+                    c.getString(c.getColumnIndex(TranslationsTable.TRANSLATED_TEXT))));
             go = c.moveToNext();
         }
         c.close();
@@ -101,7 +103,7 @@ public class DbManager {
     }
 
     public long addTranslation(SQLiteDatabase writableDatabase,
-            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex) {
+            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
         Log.d(TAG, "Inserting translation...");
         ContentValues values = new ContentValues();
         values.put(TranslationsTable.DICTIONARY_ID, dictionaryId);
@@ -109,17 +111,18 @@ public class DbManager {
         values.put(TranslationsTable.IS_ASSET, isAsset ? 1 : 0);
         values.put(TranslationsTable.FILENAME, filename);
         values.put(TranslationsTable.ITEM_INDEX, itemIndex);
+        values.put(TranslationsTable.TRANSLATED_TEXT, translatedText);
         return writableDatabase.insert(TranslationsTable.TABLE_NAME, null, values);
     }
 
     public long addTranslation(
-            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex) {
+            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
         return addTranslation(
-                dbh.getWritableDatabase(), dictionaryId, label, isAsset, filename, itemIndex);
+                dbh.getWritableDatabase(), dictionaryId, label, isAsset, filename, itemIndex, translatedText);
     }
 
     public long addTranslationAtTop(
-            long dictionaryId, String label, boolean isAsset, String filename) {
+            long dictionaryId, String label, boolean isAsset, String filename, String translatedText) {
         String maxColumnName = String.format("MAX(%s)", TranslationsTable.ITEM_INDEX);
         Cursor c = dbh.getReadableDatabase().query(
                 TranslationsTable.TABLE_NAME, new String[] {maxColumnName},
@@ -127,19 +130,20 @@ public class DbManager {
                 new String[] {String.format("%d", dictionaryId)},
                 null, null, null);
         if (!c.moveToFirst()) {
-            return addTranslation(dictionaryId, label, isAsset, filename, 0);
+            return addTranslation(dictionaryId, label, isAsset, filename, 0, translatedText);
         }
         int itemIndex = c.getInt(c.getColumnIndex(maxColumnName)) + 1;
         c.close();
-        return addTranslation(dictionaryId, label, isAsset, filename, itemIndex);
+        return addTranslation(dictionaryId, label, isAsset, filename, itemIndex, translatedText);
     }
 
     public void updateTranslation(
-            long translationId, String label, boolean isAsset, String filename) {
+            long translationId, String label, boolean isAsset, String filename, String translatedText) {
         ContentValues values = new ContentValues();
         values.put(TranslationsTable.LABEL, label);
         values.put(TranslationsTable.IS_ASSET, isAsset);
         values.put(TranslationsTable.FILENAME, filename);
+        values.put(TranslationsTable.TRANSLATED_TEXT, translatedText);
         String whereClause = String.format("%s = ?", TranslationsTable.ID);
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         dbh.getWritableDatabase().update(
@@ -167,12 +171,13 @@ public class DbManager {
         public static final String IS_ASSET = "isAsset";
         public static final String FILENAME = "filename";
         public static final String ITEM_INDEX = "itemIndex";
+        public static final String TRANSLATED_TEXT = "translationText";
     }
 
     private class DbHelper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "TranslationCards.db";
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 2;
 
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
@@ -187,8 +192,9 @@ public class DbManager {
                 TranslationsTable.LABEL + " TEXT," +
                 TranslationsTable.IS_ASSET + " INTEGER," +
                 TranslationsTable.FILENAME + " TEXT," +
-                TranslationsTable.ITEM_INDEX + " INTEGER" +
-                ")";
+                TranslationsTable.ITEM_INDEX + " INTEGER," +
+                TranslationsTable.TRANSLATED_TEXT + " TEXT" +
+                        ")";
 
         public DbHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -210,13 +216,17 @@ public class DbManager {
                     Dictionary.Translation translation = dictionary.getTranslation(translationIndex);
                     int itemIndex = dictionary.getTranslationCount() - translationIndex - 1;
                     addTranslation(db, dictionaryId, translation.getLabel(),
-                            translation.getIsAsset(), translation.getFilename(), itemIndex);
+                            translation.getIsAsset(), translation.getFilename(), itemIndex, translation.getTranslatedText());
                 }
             }
         }
+        private static final String ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN =
+                "ALTER TABLE" + TranslationsTable.TABLE_NAME + "ADD " +TranslationsTable.TRANSLATED_TEXT +" TEXT";
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // Do nothing.
+            if (oldVersion == 1) {
+                db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
+            }
         }
 
         public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
