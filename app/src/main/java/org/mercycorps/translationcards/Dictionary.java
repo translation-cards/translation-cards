@@ -34,15 +34,13 @@ public class Dictionary {
     private final String label;
     private final Translation[] translations;
     private final long dbId;
+    private final long deckId;
 
-    public Dictionary(String label, Translation[] translations, long dbId) {
+    public Dictionary(String label, Translation[] translations, long dbId, long deckId) {
         this.label = label;
         this.translations = translations;
         this.dbId = dbId;
-    }
-
-    public Dictionary(String label, Translation[] translations) {
-        this(label, translations, -1);
+        this.deckId = deckId;
     }
 
     public String getLabel() {
@@ -59,6 +57,10 @@ public class Dictionary {
 
     public long getDbId() {
         return dbId;
+    }
+
+    public long getDeckId() {
+        return deckId;
     }
 
     /**
@@ -79,10 +81,6 @@ public class Dictionary {
             this.filename = filename;
             this.dbId = dbId;
             this.translatedText = translatedText;
-        }
-
-        public Translation(String label, boolean isAsset, String filename, String translatedText) {
-            this(label, isAsset, filename, -1, translatedText);
         }
 
         public String getLabel() {

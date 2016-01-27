@@ -37,6 +37,10 @@ public class DbManager {
 
     private static final String TAG = "DbManager";
 
+    // It'd be better to use a string resource for this, but we don't have a Context available when
+    // we need to use it, and I don't know another way to get the string value.
+    private static final String DEFAULT_DECK_NAME = "Default";
+
     private final DbHelper dbh;
 
     public DbManager(Context context) {
@@ -69,7 +73,8 @@ public class DbManager {
         }
         c.close();
         // Getting languages.
-        columns = new String[] {DictionariesTable.ID, DictionariesTable.LABEL};
+        columns = new String[] {DictionariesTable.ID, DictionariesTable.LABEL,
+                DictionariesTable.DECK_ID};
         c = dbh.getReadableDatabase().query(
                 DictionariesTable.TABLE_NAME, columns,
                 null, null, null, null, DictionariesTable.ITEM_INDEX);
@@ -79,27 +84,38 @@ public class DbManager {
         while (dictionaryIndex < res.length) {
             long dictionaryId = c.getLong(c.getColumnIndex(DictionariesTable.ID));
             String label = c.getString(c.getColumnIndex(DictionariesTable.LABEL));
+            long deckId = c.getLong(c.getColumnIndex(DictionariesTable.DECK_ID));
             Dictionary.Translation[] languageTranslations = {};
             if (translations.containsKey(dictionaryId)) {
                 languageTranslations = translations.get(dictionaryId)
                         .toArray(new Dictionary.Translation[] {});
             }
-            res[dictionaryIndex] = new Dictionary(label, languageTranslations, dictionaryId);
+            res[dictionaryIndex] = new Dictionary(
+                    label, languageTranslations, dictionaryId, deckId);
             c.moveToNext();
             dictionaryIndex++;
         }
         return res;
     }
 
-    public long addLanguage(SQLiteDatabase writableDatabase, String label, int itemIndex) {
+    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher) {
+        ContentValues values = new ContentValues();
+        values.put(DecksTable.LABEL, label);
+        values.put(DecksTable.PUBLISHER, publisher);
+        return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
+    }
+
+    public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
+                              long deckId) {
         ContentValues values = new ContentValues();
         values.put(DictionariesTable.LABEL, label);
         values.put(DictionariesTable.ITEM_INDEX, itemIndex);
+        values.put(DictionariesTable.DECK_ID, deckId);
         return writableDatabase.insert(DictionariesTable.TABLE_NAME, null, values);
     }
 
-    public long addLanguage(String label, int itemIndex) {
-        return addLanguage(dbh.getWritableDatabase(), label, itemIndex);
+    public long addDictionary(String label, int itemIndex, long deckId) {
+        return addDictionary(dbh.getWritableDatabase(), label, itemIndex, deckId);
     }
 
     public long addTranslation(SQLiteDatabase writableDatabase,
@@ -156,9 +172,17 @@ public class DbManager {
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
     }
 
+    private class DecksTable {
+        public static final String TABLE_NAME = "decks";
+        public static final String ID = "id";
+        public static final String LABEL = "label";
+        public static final String PUBLISHER = "publisher";
+    }
+
     private class DictionariesTable {
         public static final String TABLE_NAME = "dictionaries";
         public static final String ID = "id";
+        public static final String DECK_ID = "deckId";
         public static final String LABEL = "label";
         public static final String ITEM_INDEX = "itemIndex";
     }
@@ -179,9 +203,17 @@ public class DbManager {
         private static final String DATABASE_NAME = "TranslationCards.db";
         private static final int DATABASE_VERSION = 2;
 
+        // Initialization SQL.
+        private static final String INIT_DECKS_SQL =
+                "CREATE TABLE " + DecksTable.TABLE_NAME + "( " +
+                DecksTable.ID + " INTEGER PRIMARY KEY," +
+                DecksTable.LABEL + " TEXT," +
+                DecksTable.PUBLISHER + " TEXT" +
+                ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
                 DictionariesTable.ID + " INTEGER PRIMARY KEY," +
+                DictionariesTable.DECK_ID + " INTEGER," +
                 DictionariesTable.LABEL + " TEXT," +
                 DictionariesTable.ITEM_INDEX + " INTEGER" +
                 ")";
@@ -194,38 +226,57 @@ public class DbManager {
                 TranslationsTable.FILENAME + " TEXT," +
                 TranslationsTable.ITEM_INDEX + " INTEGER," +
                 TranslationsTable.TRANSLATED_TEXT + " TEXT" +
-                        ")";
+                ")";
+
+        // Update SQL.
+        private static final String ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN =
+                "ALTER TABLE" + TranslationsTable.TABLE_NAME + "ADD " +
+                TranslationsTable.TRANSLATED_TEXT +" TEXT";
+        private static final String ALTER_TABLE_ADD_DECK_FOREIGN_KEY =
+                "ALTER TABLE " + DictionariesTable.TABLE_NAME + " ADD " +
+                DictionariesTable.DECK_ID + " INTEGER";
 
         public DbHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         public void onCreate(SQLiteDatabase db) {
+            db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            populateIncludedData(db);
+            long defaultDeckId = addDeck(db, DEFAULT_DECK_NAME, "");
+            populateIncludedData(db, defaultDeckId);
         }
 
-        private void populateIncludedData(SQLiteDatabase db) {
-            for (int dictionaryIndex = 0; dictionaryIndex < INCLUDED_DATA.length; dictionaryIndex++) {
+        private void populateIncludedData(SQLiteDatabase db, long defaultDeckId) {
+            for (int dictionaryIndex = 0; dictionaryIndex < INCLUDED_DATA.length;
+                 dictionaryIndex++) {
                 Dictionary dictionary = INCLUDED_DATA[dictionaryIndex];
-                long dictionaryId = addLanguage(db, dictionary.getLabel(), dictionaryIndex);
+                long dictionaryId = addDictionary(db, dictionary.getLabel(), dictionaryIndex,
+                        defaultDeckId);
                 for (int translationIndex = 0;
                      translationIndex < dictionary.getTranslationCount();
                      translationIndex++) {
-                    Dictionary.Translation translation = dictionary.getTranslation(translationIndex);
+                    Dictionary.Translation translation =
+                            dictionary.getTranslation(translationIndex);
                     int itemIndex = dictionary.getTranslationCount() - translationIndex - 1;
                     addTranslation(db, dictionaryId, translation.getLabel(),
-                            translation.getIsAsset(), translation.getFilename(), itemIndex, translation.getTranslatedText());
+                            translation.getIsAsset(), translation.getFilename(), itemIndex,
+                            translation.getTranslatedText());
                 }
             }
         }
-        private static final String ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN =
-                "ALTER TABLE" + TranslationsTable.TABLE_NAME + "ADD " +TranslationsTable.TRANSLATED_TEXT +" TEXT";
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // Translation text and the decks table were added in v2 of the database.
             if (oldVersion == 1) {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
+                db.execSQL(INIT_DECKS_SQL);
+                db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
+                long defaultDeckId = addDeck(db, DEFAULT_DECK_NAME, "");
+                ContentValues defaultDeckUpdateValues = new ContentValues();
+                defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
+                db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);
             }
         }
 
@@ -235,8 +286,8 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Arabic", new Dictionary.Translation[] {}),
-            new Dictionary("Farsi", new Dictionary.Translation[] {}),
-            new Dictionary("Pashto", new Dictionary.Translation[] {}),
+            new Dictionary("Arabic", new Dictionary.Translation[] {}, -1, -1),
+            new Dictionary("Farsi", new Dictionary.Translation[] {}, -1, -1),
+            new Dictionary("Pashto", new Dictionary.Translation[] {}, -1, -1),
     };
 }
