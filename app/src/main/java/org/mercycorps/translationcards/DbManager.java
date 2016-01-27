@@ -229,8 +229,8 @@ public class DbManager {
 
         // Update SQL.
         private static final String ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN =
-                "ALTER TABLE" + TranslationsTable.TABLE_NAME + "ADD " +
-                TranslationsTable.TRANSLATED_TEXT +" TEXT";
+                "ALTER TABLE " + TranslationsTable.TABLE_NAME + " ADD " +
+                TranslationsTable.TRANSLATED_TEXT + " TEXT";
         private static final String ALTER_TABLE_ADD_DECK_FOREIGN_KEY =
                 "ALTER TABLE " + DictionariesTable.TABLE_NAME + " ADD " +
                 DictionariesTable.DECK_ID + " INTEGER";
