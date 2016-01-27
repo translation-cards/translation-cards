@@ -51,4 +51,12 @@ public class CollectionsActivityTest {
         Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=0.2.1"));
         assertThat(shadowOf(collectionsActivity).getNextStartedActivity(), is(expectedIntent));
     }
+
+    @Test
+    public void initCollectionsList_shouldHaveDefaultCollection() {
+        ListView cardCollections = (ListView) collectionsActivity.findViewById(R.id.collections_list);
+
+        assertThat(cardCollections.getAdapter().getCount(), is(2));
+        assertThat((String) cardCollections.getAdapter().getItem(0), is("Default"));
+    }
 }

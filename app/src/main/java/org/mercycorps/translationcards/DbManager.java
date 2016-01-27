@@ -171,6 +171,48 @@ public class DbManager {
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
     }
 
+    public List<Deck> getAllCollections() {
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DecksTable.TABLE_NAME, null,
+                null, null, null, null,
+                String.format("%s DESC", DecksTable.ID));
+        List<Deck> collections = new ArrayList<>();
+        boolean hasNext = cursor.moveToFirst();
+        while(hasNext){
+            long collectionId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
+            Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
+                    getAllDictionaryIdsForCollection(collectionId),
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)));
+            collections.add(deck);
+            hasNext = cursor.moveToNext();
+        }
+        cursor.close();
+        return collections;
+    }
+
+    private long[] getAllDictionaryIdsForCollection(long collectionId) {
+        String[] columns = {DictionariesTable.ID};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DictionariesTable.TABLE_NAME, columns,
+                DictionariesTable.DECK_ID + " = ?",
+                new String[]{String.valueOf(collectionId)}, null, null,
+                String.format("%s DESC", DictionariesTable.ITEM_INDEX));
+        long[] dictionaryIds = new long[cursor.getCount()];
+
+        int i = 0;
+        boolean hasNext = cursor.moveToFirst();
+        while (hasNext) {
+            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
+            dictionaryIds[i] = dictionaryId;
+            hasNext = cursor.moveToNext();
+            i++;
+        }
+        cursor.close();
+
+        return dictionaryIds;
+    }
+
     private class DecksTable {
         public static final String TABLE_NAME = "decks";
         public static final String ID = "id";
