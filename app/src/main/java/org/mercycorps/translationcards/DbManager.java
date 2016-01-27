@@ -37,10 +37,6 @@ public class DbManager {
 
     private static final String TAG = "DbManager";
 
-    // It'd be better to use a string resource for this, but we don't have a Context available when
-    // we need to use it, and I don't know another way to get the string value.
-    private static final String DEFAULT_DECK_NAME = "Default";
-
     private final DbHelper dbh;
 
     public DbManager(Context context) {
@@ -236,15 +232,19 @@ public class DbManager {
                 "ALTER TABLE " + DictionariesTable.TABLE_NAME + " ADD " +
                 DictionariesTable.DECK_ID + " INTEGER";
 
+        private final Context context;
+
         public DbHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            this.context = context;
         }
 
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            long defaultDeckId = addDeck(db, DEFAULT_DECK_NAME, "");
+            long defaultDeckId = addDeck(
+                    db, context.getString(R.string.data_default_deck_name), "");
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -273,7 +273,8 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
-                long defaultDeckId = addDeck(db, DEFAULT_DECK_NAME, "");
+                long defaultDeckId = addDeck(
+                        db, context.getString(R.string.data_default_deck_name), "");
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

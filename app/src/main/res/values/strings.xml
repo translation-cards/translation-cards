@@ -38,4 +38,5 @@
     <string name="export_failure_write_error_error_message">Target file not found.</string>
     <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
+    <string name="data_default_deck_name">Default</string>
 </resources>
