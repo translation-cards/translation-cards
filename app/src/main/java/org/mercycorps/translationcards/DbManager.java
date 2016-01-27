@@ -37,6 +37,9 @@ public class DbManager {
 
     private static final String TAG = "DbManager";
 
+    // The value used in place of database IDs for items not yet in the database.
+    private static final long NO_VALUE_ID = -1;
+
     private final DbHelper dbh;
 
     public DbManager(Context context) {
@@ -287,8 +290,8 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Arabic", new Dictionary.Translation[] {}, -1, -1),
-            new Dictionary("Farsi", new Dictionary.Translation[] {}, -1, -1),
-            new Dictionary("Pashto", new Dictionary.Translation[] {}, -1, -1),
+            new Dictionary("Arabic", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("Farsi", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("Pashto", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
     };
 }
