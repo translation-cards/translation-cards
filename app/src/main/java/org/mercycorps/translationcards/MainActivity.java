@@ -19,15 +19,13 @@ package org.mercycorps.translationcards;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +33,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Activity for the main screen, with lists of phrases to play.
@@ -64,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private DbManager dbm;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
-    private MediaPlayerManager lastMediaPlayerManager;
-    private int lastPlayedPosition;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     private ArrayAdapter<String> listAdapter;
@@ -76,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         dbm = new DbManager(this);
         dictionaries = dbm.getAllDictionaries();
         currentDictionaryIndex = -1;
-        lastPlayedPosition = -1;
         setContentView(R.layout.activity_main);
         initTabs();
         initList();
@@ -98,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
             textFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (lastMediaPlayerManager != null) {
-                        lastMediaPlayerManager.stop();
-                        lastPlayedPosition = -1;
-                    }
                     setDictionary(index);
                 }
             });
@@ -158,27 +145,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void play(int translationIndex, final ProgressBar progressBar) {
-        if (lastMediaPlayerManager != null) {
-            lastMediaPlayerManager.stop();
-        }
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            dictionaries[currentDictionaryIndex]
-                    .getTranslation(translationIndex)
-                    .setMediaPlayerDataSource(this, mediaPlayer);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            return;
-        }
-        lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
-        mediaPlayer.setOnCompletionListener(
-                new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-        progressBar.setMax(mediaPlayer.getDuration());
-        mediaPlayer.start();
-        new Thread(lastMediaPlayerManager).start();
+    private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("TranslationCard", translationCard);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        PlayCardFragment playCardFragment = new PlayCardFragment();
+        playCardFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.mainActivity, playCardFragment);
+        fragmentTransaction.addToBackStack("playCardFragment");
+        fragmentTransaction.commit();
     }
 
     private void showAddTranslationDialog() {
@@ -259,11 +237,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             int itemIndex = position - 1;
-            if (lastPlayedPosition == itemIndex && lastMediaPlayerManager.stop()) {
-                return;
-            }
-            lastPlayedPosition = itemIndex;
-            play(itemIndex, (ProgressBar) listItem.findViewById(R.id.list_item_progress_bar));
+
+            Dictionary.Translation translationCard =
+                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
+            displayAndPlayTranslation(translationCard);
         }
     }
 
@@ -296,90 +273,15 @@ public class MainActivity extends AppCompatActivity {
                     RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translation.getIsAsset());
             intent.putExtra(
                     RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
+            intent.putExtra(
+                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }
 
-    private class MediaPlayerManager implements Runnable {
 
-        private final Lock lock;
-        private boolean running;
-        private final MediaPlayer mediaPlayer;
-        private final ProgressBar progressBar;
 
-        public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar) {
-            lock = new ReentrantLock();
-            running = true;
-            this.mediaPlayer = mediaPlayer;
-            this.progressBar = progressBar;
-        }
 
-        public boolean stop() {
-            lock.lock();
-            if (!running) {
-                // Already stopped, just return false.
-                lock.unlock();
-                return false;
-            }
-            running = false;
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            progressBar.post(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setProgress(0);
-                }
-            });
-            lock.unlock();
-            return true;
-        }
-
-        private boolean tryUpdate() {
-            lock.lock();
-            if (!running) {
-                lock.unlock();
-                return false;
-            }
-            final int currentPosition = mediaPlayer.getCurrentPosition();
-            progressBar.post(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setProgress(currentPosition);
-                }
-            });
-            lock.unlock();
-            return true;
-        }
-
-        @Override
-        public void run() {
-            while (tryUpdate()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    // Do nothing.
-                }
-            }
-        }
-    }
-
-    private class ManagedMediaPlayerCompletionListener implements MediaPlayer.OnCompletionListener {
-
-        private MediaPlayerManager manager;
-
-        public ManagedMediaPlayerCompletionListener(MediaPlayerManager manager) {
-            super();
-            this.manager = manager;
-        }
-
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            manager.stop();
-        }
-    }
 
     private class ExportTask extends AsyncTask<Void, Void, Void> {
 

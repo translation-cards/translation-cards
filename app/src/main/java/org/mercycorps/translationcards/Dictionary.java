@@ -22,6 +22,7 @@ import android.media.MediaPlayer;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -33,15 +34,13 @@ public class Dictionary {
     private final String label;
     private final Translation[] translations;
     private final long dbId;
+    private final long deckId;
 
-    public Dictionary(String label, Translation[] translations, long dbId) {
+    public Dictionary(String label, Translation[] translations, long dbId, long deckId) {
         this.label = label;
         this.translations = translations;
         this.dbId = dbId;
-    }
-
-    public Dictionary(String label, Translation[] translations) {
-        this(label, translations, -1);
+        this.deckId = deckId;
     }
 
     public String getLabel() {
@@ -60,25 +59,28 @@ public class Dictionary {
         return dbId;
     }
 
+    public long getDeckId() {
+        return deckId;
+    }
+
     /**
      * Contains information about a single phrase.
      */
-    public static class Translation {
+    public static class Translation implements Serializable {
 
         private final String label;
         private final boolean isAsset;
         private final String filename;
         private final long dbId;
+        private final String translatedText;
 
-        public Translation(String label, boolean isAsset, String filename, long dbId) {
+
+        public Translation(String label, boolean isAsset, String filename, long dbId, String translatedText) {
             this.label = label;
             this.isAsset = isAsset;
             this.filename = filename;
             this.dbId = dbId;
-        }
-
-        public Translation(String label, boolean isAsset, String filename) {
-            this(label, isAsset, filename, -1);
+            this.translatedText = translatedText;
         }
 
         public String getLabel() {
@@ -96,6 +98,11 @@ public class Dictionary {
         public long getDbId() {
             return dbId;
         }
+
+        public String getTranslatedText() {
+            return translatedText;
+        }
+
 
         public void setMediaPlayerDataSource(Context context, MediaPlayer mp) throws IOException {
             if (isAsset) {

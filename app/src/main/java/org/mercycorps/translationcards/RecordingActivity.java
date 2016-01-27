@@ -63,6 +63,7 @@ public class RecordingActivity extends AppCompatActivity {
     public static final String INTENT_KEY_TRANSLATION_LABEL = "translationLabel";
     public static final String INTENT_KEY_TRANSLATION_IS_ASSET = "translationIsAsset";
     public static final String INTENT_KEY_TRANSLATION_FILENAME = "translationFilename";
+    public static final String INTENT_KEY_TRANSLATION_TEXT = "translatedText";
 
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
@@ -91,6 +92,7 @@ public class RecordingActivity extends AppCompatActivity {
     private String filename;
     private boolean savedIsAsset;
     private String savedFilename;
+    private String translatedText;
     private MediaRecorder mediaRecorder;
     private MediaPlayer mediaPlayer;
     private ImageButton recordButton;
@@ -106,6 +108,7 @@ public class RecordingActivity extends AppCompatActivity {
         dictionaryLabel = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_LABEL);
         translationId = getIntent().getLongExtra(INTENT_KEY_TRANSLATION_ID, -1);
         label = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_LABEL);
+        translatedText = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_TEXT);
         isAsset = savedIsAsset = getIntent().getBooleanExtra(
                 INTENT_KEY_TRANSLATION_IS_ASSET, false);
         filename = savedFilename = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_FILENAME);
@@ -185,12 +188,9 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView = (ImageView) findViewById(R.id.recording_label_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
-        if (label != null) {
-            labelField.setText(label);
-            labelField.setTextColor(Color.BLACK);
-            labelField.setSelection(label.length());
-            setLabelNextButtonEnabled(true);
-        }
+        final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
+        fillPrepopulatedField(label, labelField);
+        fillPrepopulatedField(translatedText, translatedTextField);
         if (inEditMode) {
             ImageView deleteButton = (ImageView) findViewById(R.id.recording_label_delete_image);
             deleteButton.setVisibility(View.VISIBLE);
@@ -217,23 +217,17 @@ public class RecordingActivity extends AppCompatActivity {
         labelField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus && labelField.getText().toString().equals(
-                        getString(R.string.recording_label_hint_text))) {
-                    labelField.setText("");
-                    labelField.setTextColor(Color.BLACK);
-                } else if (!hasFocus && labelField.getText().toString().equals("")) {
-                    labelField.setText(getString(R.string.recording_label_hint_text));
-                    labelField.setTextColor(getResources().getColor(R.color.borderColor));
-                }
-                if (hasFocus) {
-                    InputMethodManager inputMethodManager =
-                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInputFromWindow(
-                            labelField.getApplicationWindowToken(),
-                            InputMethodManager.SHOW_FORCED, 0);
-                }
+                setFieldBasedOnFocus(hasFocus, labelField, R.string.recording_label_hint_text);
             }
         });
+
+        translatedTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                setFieldBasedOnFocus(hasFocus, translatedTextField, R.string.recording_text_hint_text);
+            }
+        });
+
         labelField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -263,10 +257,39 @@ public class RecordingActivity extends AppCompatActivity {
                         label.equals(getString(R.string.recording_label_hint_text))) {
                     return;
                 }
+                translatedText = translatedTextField.getText().toString();
+
                 moveToAudioStep();
             }
         });
         stepHistory.push(Step.LABEL);
+    }
+
+    private void setFieldBasedOnFocus(boolean hasFocus, EditText field, int hintText) {
+        if (hasFocus && field.getText().toString().equals(
+                getString(hintText))) {
+            field.setText("");
+            field.setTextColor(Color.BLACK);
+        } else if (!hasFocus && field.getText().toString().equals("")) {
+            field.setText(getString(hintText));
+            field.setTextColor(getResources().getColor(R.color.borderColor));
+        }
+        if (hasFocus) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInputFromWindow(
+                    field.getApplicationWindowToken(),
+                    InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    private void fillPrepopulatedField(String fieldValue, EditText field) {
+        if (fieldValue != null) {
+            field.setText(fieldValue);
+            field.setTextColor(Color.BLACK);
+            field.setSelection(fieldValue.length());
+            setLabelNextButtonEnabled(true);
+        }
     }
 
     private void setLabelNextButtonEnabled(boolean enabled) {
@@ -348,9 +371,9 @@ public class RecordingActivity extends AppCompatActivity {
                 }
                 DbManager dbm = new DbManager(RecordingActivity.this);
                 if (translationId == -1) {
-                    translationId = dbm.addTranslationAtTop(dictionaryId, label, false, filename);
+                    translationId = dbm.addTranslationAtTop(dictionaryId, label, false, filename, translatedText);
                 } else {
-                    dbm.updateTranslation(translationId, label, isAsset, filename);
+                    dbm.updateTranslation(translationId, label, isAsset, filename, translatedText);
                     // If we're replacing the audio and the prior file wasn't an included audio
                     // asset, delete it.
                     if (filename != null && savedFilename != null &&
