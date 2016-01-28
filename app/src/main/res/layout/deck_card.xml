@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/card_background"
-    android:id="@+id/collection_card">
+    android:id="@+id/deck_card">
 
     <TextView
-        android:id="@+id/collection_name"
+        android:id="@+id/deck_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

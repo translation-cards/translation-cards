@@ -9,5 +9,5 @@
         android:layout_height="match_parent"
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
-        android:id="@+id/collections_list"/>
+        android:id="@+id/decks_list"/>
 </RelativeLayout>

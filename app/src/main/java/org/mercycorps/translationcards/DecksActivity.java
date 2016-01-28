@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class DecksActivity extends AppCompatActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.2.1";
@@ -25,19 +25,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_decks);
         initFeedbackButton();
         dbManager = new DbManager(this);
-        initCollectionsList();
+        initDecks();
     }
 
-    private void initCollectionsList() {
-        ListView collectionsList = (ListView) findViewById(R.id.collections_list);
-        List<Deck> decks = dbManager.getAllCollections();
+    private void initDecks() {
+        ListView decksListView = (ListView) findViewById(R.id.decks_list);
+        List<Deck> decks = dbManager.getAllDecks();
         ArrayList<String> listItems = new ArrayList<>();
-        ArrayAdapter<String> listAdapter = new CollectionsListAdapter(this,
-                R.layout.collection_item, R.id.collection_name, listItems, collectionsList);
-        collectionsList.setAdapter(listAdapter);
+        ArrayAdapter<String> listAdapter = new DecksAdapter(this,
+                R.layout.deck_item, R.id.deck_name, listItems, decksListView);
+        decksListView.setAdapter(listAdapter);
 
         for (Deck deck : decks) {
             listAdapter.add(deck.getLabel());
@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFeedbackButton() {
-        ListView collectionsList = (ListView) findViewById(R.id.collections_list);
+        ListView decksListView = (ListView) findViewById(R.id.decks_list);
 
-        collectionsList.addFooterView(getLayoutInflater()
-                .inflate(R.layout.collections_footer, collectionsList, false));
+        decksListView.addFooterView(getLayoutInflater()
+                .inflate(R.layout.decks_footer, decksListView, false));
         findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class CollectionsListAdapter extends ArrayAdapter<String> {
+    private class DecksAdapter extends ArrayAdapter<String> {
 
-        public CollectionsListAdapter(Context context, int resource, int textViewResourceId,
-                                      List<String> objects, ListView collectionsList) {
+        public DecksAdapter(Context context, int resource, int textViewResourceId,
+                            List<String> objects, ListView decks) {
             super(context, resource, textViewResourceId, objects);
         }
 
@@ -69,19 +69,19 @@ public class MainActivity extends AppCompatActivity {
         public View getView (int position, View convertView, ViewGroup parent){
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                convertView = layoutInflater.inflate(R.layout.collection_item, parent, false);
-                convertView.findViewById(R.id.collection_name).setOnClickListener(new View.OnClickListener() {
+                convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
+                convertView.findViewById(R.id.deck_name).setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, TranslationsActivity.class);
-                        MainActivity.this.startActivity(intent);
+                        Intent intent = new Intent(DecksActivity.this, TranslationsActivity.class);
+                        DecksActivity.this.startActivity(intent);
                     }
                 });
             }
 
-            TextView collectionName = (TextView) convertView.findViewById(R.id.collection_name);
-            collectionName.setText(getItem(position));
+            TextView deckName = (TextView) convertView.findViewById(R.id.deck_name);
+            deckName.setText(getItem(position));
             return convertView;
         }
 

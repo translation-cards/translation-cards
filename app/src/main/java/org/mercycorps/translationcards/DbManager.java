@@ -171,32 +171,32 @@ public class DbManager {
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public List<Deck> getAllCollections() {
+    public List<Deck> getAllDecks() {
         Cursor cursor = dbh.getReadableDatabase().query(
                 DecksTable.TABLE_NAME, null,
                 null, null, null, null,
                 String.format("%s DESC", DecksTable.ID));
-        List<Deck> collections = new ArrayList<>();
+        List<Deck> decks = new ArrayList<>();
         boolean hasNext = cursor.moveToFirst();
         while(hasNext){
-            long collectionId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
+            long deckId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
-                    getAllDictionaryIdsForCollection(collectionId),
+                    getAllDictionaryIdsForDeck(deckId),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)));
-            collections.add(deck);
+            decks.add(deck);
             hasNext = cursor.moveToNext();
         }
         cursor.close();
-        return collections;
+        return decks;
     }
 
-    private long[] getAllDictionaryIdsForCollection(long collectionId) {
+    private long[] getAllDictionaryIdsForDeck(long deckId) {
         String[] columns = {DictionariesTable.ID};
         Cursor cursor = dbh.getReadableDatabase().query(
                 DictionariesTable.TABLE_NAME, columns,
                 DictionariesTable.DECK_ID + " = ?",
-                new String[]{String.valueOf(collectionId)}, null, null,
+                new String[]{String.valueOf(deckId)}, null, null,
                 String.format("%s DESC", DictionariesTable.ITEM_INDEX));
         long[] dictionaryIds = new long[cursor.getCount()];
 
