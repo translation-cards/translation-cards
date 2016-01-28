@@ -1,9 +1,11 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.net.Uri;
+import android.widget.TextView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,5 +60,27 @@ public class CollectionsActivityTest {
 
         assertThat(cardCollections.getAdapter().getCount(), is(2));
         assertThat((String) cardCollections.getAdapter().getItem(0), is("Default"));
+    }
+
+    @Test
+    public void initCollectionsList_shouldPopulateCollectionNameTextView() {
+        ListView cardCollections = (ListView) collectionsActivity.findViewById(R.id.collections_list);
+        View cardCollectionsListItem = cardCollections.getAdapter().getView(0, null, cardCollections);
+
+        TextView collectionName = (TextView) cardCollectionsListItem.findViewById(R.id.collection_name);
+        assertThat(collectionName, is(notNullValue()));
+        assertThat(collectionName.getText().toString(), is("Default"));
+    }
+
+    @Test
+    public void initCollectionsList_shouldOpenMainActivityWhenItemClicked() {
+        ListView cardCollections = (ListView) collectionsActivity.findViewById(R.id.collections_list);
+        View cardCollectionsListItem = cardCollections.getAdapter().getView(0, null, cardCollections);
+
+        TextView collectionName = (TextView) cardCollectionsListItem.findViewById(R.id.collection_name);
+        collectionName.performClick();
+
+        Intent expectedIntent = new Intent(collectionsActivity, MainActivity.class);
+        assertThat(shadowOf(collectionsActivity).getNextStartedActivity(), is(expectedIntent));
     }
 }

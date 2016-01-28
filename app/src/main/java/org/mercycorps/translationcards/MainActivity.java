@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
     private void initList() {
         ListView list = (ListView) findViewById(R.id.list);
         LayoutInflater layoutInflater = getLayoutInflater();
-        list.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, list, false));
-        list.addFooterView(layoutInflater.inflate(R.layout.main_list_footer, list, false));
+        list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
+        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
                 this, R.layout.list_item, R.id.card_text, new ArrayList<String>(), list);
         list.setAdapter(listAdapter);

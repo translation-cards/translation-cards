@@ -1,14 +1,16 @@
 package org.mercycorps.translationcards;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,6 @@ public class CollectionsActivity extends AppCompatActivity {
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.2.1";
     private DbManager dbManager;
-    private ArrayAdapter<String> listAdapter;
 
 
     @Override
@@ -34,9 +35,8 @@ public class CollectionsActivity extends AppCompatActivity {
         ListView collectionsList = (ListView) findViewById(R.id.collections_list);
         List<Deck> decks = dbManager.getAllCollections();
         ArrayList<String> listItems = new ArrayList<>();
-        listAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                listItems);
+        ArrayAdapter<String> listAdapter = new CollectionsListAdapter(this,
+                R.layout.collection_item, R.id.collection_name, listItems, collectionsList);
         collectionsList.setAdapter(listAdapter);
 
         for (Deck deck : decks) {
@@ -49,12 +49,41 @@ public class CollectionsActivity extends AppCompatActivity {
         ListView collectionsList = (ListView) findViewById(R.id.collections_list);
 
         collectionsList.addFooterView(getLayoutInflater()
-                .inflate(R.layout.main_list_footer, collectionsList, false));
+                .inflate(R.layout.card_list_footer, collectionsList, false));
         findViewById(R.id.main_feedback_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
             }
         });
+    }
+
+    private class CollectionsListAdapter extends ArrayAdapter<String> {
+
+        public CollectionsListAdapter(Context context, int resource, int textViewResourceId,
+                                      List<String> objects, ListView collectionsList) {
+            super(context, resource, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getView (int position, View convertView, ViewGroup parent){
+            if (convertView == null) {
+                LayoutInflater layoutInflater = getLayoutInflater();
+                convertView = layoutInflater.inflate(R.layout.collection_item, parent, false);
+                convertView.findViewById(R.id.collection_name).setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CollectionsActivity.this, MainActivity.class);
+                        CollectionsActivity.this.startActivity(intent);
+                    }
+                });
+            }
+
+            TextView collectionName = (TextView) convertView.findViewById(R.id.collection_name);
+            collectionName.setText(getItem(position));
+            return convertView;
+        }
+
     }
 }
