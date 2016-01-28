@@ -6,21 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class ImportActivity extends AppCompatActivity {
 
@@ -45,7 +30,7 @@ public class ImportActivity extends AppCompatActivity {
                                     alertUserOfFailure(e);
                                     return;
                                 }
-                                Intent intent = new Intent(ImportActivity.this, MainActivity.class);
+                                Intent intent = new Intent(ImportActivity.this, TranslationsActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
