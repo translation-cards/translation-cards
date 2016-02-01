@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +27,9 @@ public class TranslationsActivityTest {
 
     @Before
     public void setUp() {
-        translationsActivity = Robolectric.setupActivity(TranslationsActivity.class);
+        Intent intent = new Intent();
+        intent.putExtra("DeckId", 1);
+        translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
     }
 
     @Test
@@ -51,4 +54,5 @@ public class TranslationsActivityTest {
 
         assertThat(translationCardText, is(nullValue()));
     }
+
 }

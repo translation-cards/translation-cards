@@ -81,12 +81,8 @@ public class DecksActivityTest {
         deckName.performClick();
 
         Intent expectedIntent = new Intent(decksActivity, TranslationsActivity.class);
-        String dictionaryArray [] = new String[]{"3", "2", "1"};
-        expectedIntent.putExtra("DictionaryIds", dictionaryArray);
+        expectedIntent.putExtra("DeckId", 1);
         Intent nextStartedActivity = shadowOf(decksActivity).getNextStartedActivity();
-        assertThat(nextStartedActivity.getStringArrayExtra("DictionaryIds"),
-                is(dictionaryArray));
-        assertThat(nextStartedActivity.getComponent().getClassName(),
-                is(expectedIntent.getComponent().getClassName()));
+        assertThat(nextStartedActivity, is(expectedIntent));
     }
 }

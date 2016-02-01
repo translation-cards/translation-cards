@@ -76,7 +76,7 @@ public class DecksActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra("DictionaryIds", dbManager.getAllDictionaryIdsForDeck(position+1));
+                        decksIntent.putExtra("DeckId", position+1);
                         DecksActivity.this.startActivity(decksIntent);
                     }
                 });

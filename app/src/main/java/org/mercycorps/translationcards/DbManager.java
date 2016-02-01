@@ -99,6 +99,28 @@ public class DbManager {
         return res;
     }
 
+    public Dictionary[] getAllDictionariesForDeck(long deckId) {
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DictionariesTable.TABLE_NAME, null,
+                DictionariesTable.DECK_ID + " = ?",
+                new String[]{String.valueOf(deckId)}, null, null,
+                null);
+
+        Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
+        boolean hasNext = cursor.moveToFirst();
+        int i = 0;
+        while (hasNext) {
+            String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
+            Long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
+            Dictionary dictionary = new Dictionary(label, getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
+            dictionaries[i] = dictionary;
+            i++;
+            hasNext = cursor.moveToNext();
+        }
+        cursor.close();
+        return dictionaries;
+    }
+
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
@@ -168,6 +190,7 @@ public class DbManager {
     }
 
     public void deleteTranslation(long translationId) {
+
         String whereClause = String.format("%s = ?", TranslationsTable.ID);
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
@@ -190,25 +213,6 @@ public class DbManager {
         }
         cursor.close();
         return decks;
-    }
-
-    public String[] getAllDictionaryIdsForDeck(long deckId) {
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME, new String[]{DictionariesTable.ID},
-                DictionariesTable.DECK_ID + " = ?",
-                new String[]{String.valueOf(deckId)}, null, null,
-                String.format("%s DESC", DictionariesTable.ITEM_INDEX));
-
-        String[] dictionaryIds = new String[cursor.getCount()];
-        boolean hasNext = cursor.moveToFirst();
-        int i = 0;
-        while (hasNext) {
-            dictionaryIds[i] = String.valueOf(cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID)));
-            i++;
-            hasNext = cursor.moveToNext();
-        }
-        cursor.close();
-        return dictionaryIds;
     }
 
     private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
