@@ -54,5 +54,4 @@ public class TranslationsActivityTest {
 
         assertThat(translationCardText, is(nullValue()));
     }
-
 }

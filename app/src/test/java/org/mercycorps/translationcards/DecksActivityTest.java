@@ -36,7 +36,9 @@ public class DecksActivityTest {
         assertNotNull(decksActivity);
 
         ListView decksListView = (ListView) decksActivity.findViewById(R.id.decks_list);
+        TextView decksTitle = (TextView) decksActivity.findViewById(R.id.decks_title);
         assertThat(decksListView, is(notNullValue()));
+        assertThat(decksTitle.getText().toString(), is("My Decks"));
     }
 
     @Test
