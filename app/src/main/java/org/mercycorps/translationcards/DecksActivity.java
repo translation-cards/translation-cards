@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class DecksActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView (int position, View convertView, ViewGroup parent){
+        public View getView (final int position, View convertView, ViewGroup parent){
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
@@ -74,8 +75,9 @@ public class DecksActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        DecksActivity.this.startActivity(intent);
+                        Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
+                        decksIntent.putExtra("DictionaryIds", dbManager.getAllDictionaryIdsForDeck(position+1));
+                        DecksActivity.this.startActivity(decksIntent);
                     }
                 });
             }

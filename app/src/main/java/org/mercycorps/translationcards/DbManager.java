@@ -21,9 +21,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.TransitionRes;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,9 +142,9 @@ public class DbManager {
             long dictionaryId, String label, boolean isAsset, String filename, String translatedText) {
         String maxColumnName = String.format("MAX(%s)", TranslationsTable.ITEM_INDEX);
         Cursor c = dbh.getReadableDatabase().query(
-                TranslationsTable.TABLE_NAME, new String[] {maxColumnName},
+                TranslationsTable.TABLE_NAME, new String[]{maxColumnName},
                 String.format("%s = ?", TranslationsTable.DICTIONARY_ID),
-                new String[] {String.format("%d", dictionaryId)},
+                new String[]{String.format("%d", dictionaryId)},
                 null, null, null);
         if (!c.moveToFirst()) {
             return addTranslation(dictionaryId, label, isAsset, filename, 0, translatedText);
@@ -182,7 +184,6 @@ public class DbManager {
             long deckId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
-                    getAllDictionaryIdsForDeck(deckId),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)));
             decks.add(deck);
             hasNext = cursor.moveToNext();
@@ -191,26 +192,46 @@ public class DbManager {
         return decks;
     }
 
-    private long[] getAllDictionaryIdsForDeck(long deckId) {
-        String[] columns = {DictionariesTable.ID};
+    public String[] getAllDictionaryIdsForDeck(long deckId) {
         Cursor cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME, columns,
+                DictionariesTable.TABLE_NAME, new String[]{DictionariesTable.ID},
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
                 String.format("%s DESC", DictionariesTable.ITEM_INDEX));
-        long[] dictionaryIds = new long[cursor.getCount()];
 
-        int i = 0;
+        String[] dictionaryIds = new String[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
+        int i = 0;
         while (hasNext) {
-            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
-            dictionaryIds[i] = dictionaryId;
-            hasNext = cursor.moveToNext();
+            dictionaryIds[i] = String.valueOf(cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID)));
             i++;
+            hasNext = cursor.moveToNext();
         }
         cursor.close();
-
         return dictionaryIds;
+    }
+
+    private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
+        Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
+                TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},
+                null, null, String.format("%s DESC", TranslationsTable.ITEM_INDEX));
+        Dictionary.Translation[] translations = new Dictionary.Translation[cursor.getCount()];
+        boolean hasNext = cursor.moveToFirst();
+        int i=0;
+        while(hasNext){
+            Dictionary.Translation translation = new Dictionary.Translation(
+                    cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
+                    cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
+                    cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
+                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                    cursor.getString(cursor.getColumnIndex(TranslationsTable.TRANSLATED_TEXT))
+            );
+            translations[i] = translation;
+            i++;
+            hasNext = cursor.moveToNext();
+        }
+        cursor.close();
+        return translations;
     }
 
     private class DecksTable {

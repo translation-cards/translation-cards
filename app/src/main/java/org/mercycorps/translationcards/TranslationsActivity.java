@@ -66,6 +66,8 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
+        String[] dictionaryIds = getIntent().getStringArrayExtra("DictionaryIds");
+//        dictionaries = dbm.getDictionariesWithIds(dictionaryIds);
         dictionaries = dbm.getAllDictionaries();
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
