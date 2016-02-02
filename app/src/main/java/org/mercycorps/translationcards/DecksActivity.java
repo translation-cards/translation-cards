@@ -78,7 +78,7 @@ public class DecksActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra("DeckId", position+1);
+                        decksIntent.putExtra("DeckId", position + 1);
                         DecksActivity.this.startActivity(decksIntent);
                     }
                 });
@@ -89,8 +89,12 @@ public class DecksActivity extends AppCompatActivity {
 
             Deck deck = getItem(position);
             String deckInformation = deck.getPublisher() + ", " + deck.getCreationDate();
-            TextView deckPublisher = (TextView) convertView.findViewById(R.id.deck_information);
-            deckPublisher.setText(deckInformation);
+            TextView deckInformationView = (TextView) convertView.findViewById(R.id.deck_information);
+            deckInformationView.setText(deckInformation);
+
+            TextView translationLanguagesView =
+                    (TextView) convertView.findViewById(R.id.translation_languages);
+            translationLanguagesView.setText(dbManager.getTranslationLanguagesForDeck(deck.getDbId()));
             return convertView;
         }
 

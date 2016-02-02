@@ -239,6 +239,26 @@ public class DbManager {
         return translations;
     }
 
+    public String getTranslationLanguagesForDeck(long deckDbId) {
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DictionariesTable.TABLE_NAME,
+                new String[]{DictionariesTable.LABEL},
+                DictionariesTable.DECK_ID + " = ?",
+                new String[]{String.valueOf(deckDbId)}, null, null, null);
+
+        String translationLanguages = "";
+        String delimiter = "   ";
+        boolean hasNext = cursor.moveToFirst();
+        while(hasNext) {
+            String translationLanguage = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
+            translationLanguages += translationLanguage.toUpperCase() + delimiter;
+            hasNext = cursor.moveToNext();
+        }
+        cursor.close();
+
+        return translationLanguages.trim();
+    }
+
     private class DecksTable {
         public static final String TABLE_NAME = "decks";
         public static final String ID = "id";

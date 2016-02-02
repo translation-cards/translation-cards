@@ -71,11 +71,16 @@ public class DecksActivityTest {
         View decksListItem = decksListView.getAdapter().getView(0, null, decksListView);
 
         TextView deckName = (TextView) decksListItem.findViewById(R.id.deck_name);
-        assertThat(deckName, is(notNullValue()));
         assertThat(deckName.getText().toString(), is("Default"));
 
         TextView deckPublisher = (TextView) decksListItem.findViewById(R.id.deck_information);
         assertThat(deckPublisher.getText().toString(), is("My Deck, 02/02/16"));
+
+        TextView originLanguage = (TextView) decksListItem.findViewById(R.id.origin_language);
+        assertThat(originLanguage.getText().toString(), is("ENGLISH"));
+
+        TextView translationLanguages = (TextView) decksListItem.findViewById(R.id.translation_languages);
+        assertThat(translationLanguages.getText().toString(), is("ARABIC   FARSI   PASHTO"));
     }
 
     @Test

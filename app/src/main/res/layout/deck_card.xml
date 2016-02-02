@@ -27,4 +27,52 @@
         android:textSize="13dp"
         android:gravity="top" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:background="@color/borderColor"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"
+            android:layout_centerVertical ="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/origin_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:textColor="@color/primaryTextColor"
+            android:text="@string/default_origin_language"/>
+
+        <FrameLayout
+            android:id="@+id/translation_arrow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toRightOf="@+id/origin_language">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/forward_arrow"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/translation_languages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/translation_arrow"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:lineSpacingExtra="3dp"/>
+    </RelativeLayout>
+
 </LinearLayout>
