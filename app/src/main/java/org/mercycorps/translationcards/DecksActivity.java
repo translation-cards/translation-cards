@@ -34,14 +34,14 @@ public class DecksActivity extends AppCompatActivity {
 
     private void initDecks() {
         ListView decksListView = (ListView) findViewById(R.id.decks_list);
-        List<Deck> decks = dbManager.getAllDecks();
-        ArrayList<String> listItems = new ArrayList<>();
-        ArrayAdapter<String> listAdapter = new DecksAdapter(this,
+        ArrayList<Deck> listItems = new ArrayList<>();
+        ArrayAdapter<Deck> listAdapter = new DecksAdapter(this,
                 R.layout.deck_item, R.id.deck_name, listItems, decksListView);
         decksListView.setAdapter(listAdapter);
 
+        List<Deck> decks = dbManager.getAllDecks();
         for (Deck deck : decks) {
-            listAdapter.add(deck.getLabel());
+            listAdapter.add(deck);
         }
 
     }
@@ -59,11 +59,14 @@ public class DecksActivity extends AppCompatActivity {
         });
     }
 
-    private class DecksAdapter extends ArrayAdapter<String> {
+    private class DecksAdapter extends ArrayAdapter<Deck> {
+
+        private ListView decks;
 
         public DecksAdapter(Context context, int resource, int textViewResourceId,
-                            List<String> objects, ListView decks) {
+                            List<Deck> objects, ListView decks) {
             super(context, resource, textViewResourceId, objects);
+            this.decks = decks;
         }
 
         @Override
@@ -83,7 +86,9 @@ public class DecksActivity extends AppCompatActivity {
             }
 
             TextView deckName = (TextView) convertView.findViewById(R.id.deck_name);
-            deckName.setText(getItem(position));
+            deckName.setText(getItem(position).getLabel());
+            TextView deckPublisher = (TextView) convertView.findViewById(R.id.deck_publisher);
+            deckPublisher.setText(getItem(position).getPublisher());
             return convertView;
         }
 

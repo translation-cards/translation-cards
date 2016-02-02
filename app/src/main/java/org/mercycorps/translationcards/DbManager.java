@@ -314,7 +314,7 @@ public class DbManager {
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
             long defaultDeckId = addDeck(
-                    db, context.getString(R.string.data_default_deck_name), "");
+                    db, context.getString(R.string.data_default_deck_name), context.getString(R.string.data_default_deck_publisher));
             populateIncludedData(db, defaultDeckId);
         }
 
