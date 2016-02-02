@@ -3,7 +3,6 @@ package org.mercycorps.translationcards;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.net.Uri;
 import android.widget.TextView;
@@ -75,11 +74,8 @@ public class DecksActivityTest {
         assertThat(deckName, is(notNullValue()));
         assertThat(deckName.getText().toString(), is("Default"));
 
-        TextView deckPublisher = (TextView) decksListItem.findViewById(R.id.deck_publisher);
-        assertThat(deckPublisher.getText().toString(), is("My Deck"));
-
-//        ImageView shareIcon = (ImageView) decksListItem.findViewById(R.id.deck_share);
-//        assertThat(shareIcon, is(notNullValue()));
+        TextView deckPublisher = (TextView) decksListItem.findViewById(R.id.deck_information);
+        assertThat(deckPublisher.getText().toString(), is("My Deck, 02/02/16"));
     }
 
     @Test

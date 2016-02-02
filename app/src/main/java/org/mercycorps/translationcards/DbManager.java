@@ -21,11 +21,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.TransitionRes;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,10 +121,11 @@ public class DbManager {
         return dictionaries;
     }
 
-    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher) {
+    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher, String date) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
+        values.put(DecksTable.CREATION_DATE, date);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
@@ -204,10 +205,10 @@ public class DbManager {
         List<Deck> decks = new ArrayList<>();
         boolean hasNext = cursor.moveToFirst();
         while(hasNext){
-            long deckId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)));
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.CREATION_DATE)));
             decks.add(deck);
             hasNext = cursor.moveToNext();
         }
@@ -243,6 +244,7 @@ public class DbManager {
         public static final String ID = "id";
         public static final String LABEL = "label";
         public static final String PUBLISHER = "publisher";
+        public static final String CREATION_DATE = "creationDate";
     }
 
     private class DictionariesTable {
@@ -274,7 +276,8 @@ public class DbManager {
                 "CREATE TABLE " + DecksTable.TABLE_NAME + "( " +
                 DecksTable.ID + " INTEGER PRIMARY KEY," +
                 DecksTable.LABEL + " TEXT," +
-                DecksTable.PUBLISHER + " TEXT" +
+                DecksTable.PUBLISHER + " TEXT," +
+                DecksTable.CREATION_DATE + " TEXT" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
@@ -313,8 +316,10 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+            String date = dateFormat.format(new Date());
             long defaultDeckId = addDeck(
-                    db, context.getString(R.string.data_default_deck_name), context.getString(R.string.data_default_deck_publisher));
+                    db, context.getString(R.string.data_default_deck_name), context.getString(R.string.data_default_deck_publisher), date);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -343,8 +348,11 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+                String date = dateFormat.format(new Date());
                 long defaultDeckId = addDeck(
-                        db, context.getString(R.string.data_default_deck_name), "");
+                        db, context.getString(R.string.data_default_deck_name),
+                        context.getString(R.string.data_default_deck_publisher), date);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

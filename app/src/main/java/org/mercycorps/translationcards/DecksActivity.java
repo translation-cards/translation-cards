@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,8 +86,11 @@ public class DecksActivity extends AppCompatActivity {
 
             TextView deckName = (TextView) convertView.findViewById(R.id.deck_name);
             deckName.setText(getItem(position).getLabel());
-            TextView deckPublisher = (TextView) convertView.findViewById(R.id.deck_publisher);
-            deckPublisher.setText(getItem(position).getPublisher());
+
+            Deck deck = getItem(position);
+            String deckInformation = deck.getPublisher() + ", " + deck.getCreationDate();
+            TextView deckPublisher = (TextView) convertView.findViewById(R.id.deck_information);
+            deckPublisher.setText(deckInformation);
             return convertView;
         }
 
