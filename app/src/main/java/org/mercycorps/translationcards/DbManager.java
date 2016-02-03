@@ -104,6 +104,10 @@ public class DbManager {
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
+    public long addDeck(String label, String publisher) {
+        return addDeck(dbh.getWritableDatabase(), label, publisher);
+    }
+
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
                               long deckId) {
         ContentValues values = new ContentValues();
