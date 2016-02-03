@@ -14,6 +14,9 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -73,8 +76,10 @@ public class DecksActivityTest {
         TextView deckName = (TextView) decksListItem.findViewById(R.id.deck_name);
         assertThat(deckName.getText().toString(), is("Default"));
 
-        TextView deckPublisher = (TextView) decksListItem.findViewById(R.id.deck_information);
-        assertThat(deckPublisher.getText().toString(), is("My Deck, 02/02/16"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        String date = dateFormat.format(new Date());
+        TextView deckInformation = (TextView) decksListItem.findViewById(R.id.deck_information);
+        assertThat(deckInformation.getText().toString(), is("My Deck, "+ date));
 
         TextView originLanguage = (TextView) decksListItem.findViewById(R.id.origin_language);
         assertThat(originLanguage.getText().toString(), is("ENGLISH"));
