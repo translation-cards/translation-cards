@@ -1,7 +1,7 @@
 package org.mercycorps.translationcards;
 
+import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,18 +21,20 @@ import static org.junit.Assert.assertThat;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-public class MainActivityTest {
+public class TranslationsActivityTest {
 
-    private MainActivity mainActivity;
+    private TranslationsActivity translationsActivity;
 
     @Before
     public void setUp() {
-        mainActivity = Robolectric.setupActivity(MainActivity.class);
+        Intent intent = new Intent();
+        intent.putExtra("DeckId", 1);
+        translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
     }
 
     @Test
     public void initTabs_shouldShowLanguageTabsWhenOnHomeScreen() {
-        LinearLayout tabContainer = (LinearLayout) mainActivity.findViewById(R.id.tabs);
+        LinearLayout tabContainer = (LinearLayout) translationsActivity.findViewById(R.id.tabs);
 
         assertThat(tabContainer.getChildCount(), is(3));
 
@@ -47,15 +49,8 @@ public class MainActivityTest {
     }
 
     @Test
-    public void initFeedbackButton_shouldShowFeedbackButtonOnHomeScreen() {
-        Button feedbackButton = (Button) mainActivity.findViewById(R.id.main_feedback_button);
-
-        assertThat(feedbackButton.getText().toString(), is("GIVE FEEDBACK"));
-    }
-
-    @Test
     public void setDictionary_shouldNotHaveAnyTranslationCardsWhenNoneHaveBeenCreated() {
-        TextView translationCardText = (TextView) mainActivity.findViewById(R.id.card_text);
+        TextView translationCardText = (TextView) translationsActivity.findViewById(R.id.card_text);
 
         assertThat(translationCardText, is(nullValue()));
     }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/listBackgroundColor">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:paddingLeft="16dp"
+        android:textColor="@color/textColor"
+        android:background="@color/colorPrimary"
+        android:textSize="20dp"
+        android:text="@string/my_decks"
+        android:id="@+id/decks_title"
+        />
+
+    <ListView
+        android:paddingTop="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@color/listBackgroundColor"
+        android:dividerHeight="20dp"
+        android:layout_below="@+id/decks_title"
+        android:id="@+id/decks_list"/>
+</RelativeLayout>

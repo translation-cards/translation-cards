@@ -45,9 +45,9 @@ import java.util.List;
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class MainActivity extends AppCompatActivity {
+public class TranslationsActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "TranslationsActivity";
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
@@ -67,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        dictionaries = dbm.getAllDictionaries();
+        long deckId = getIntent().getIntExtra("DeckId", -1);
+        dictionaries = dbm.getAllDictionariesForDeck(deckId);
         currentDictionaryIndex = -1;
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_translations);
         initTabs();
         initList();
-        initFeedbackButton();
         setDictionary(0);
     }
 
@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
     private void initList() {
         ListView list = (ListView) findViewById(R.id.list);
         LayoutInflater layoutInflater = getLayoutInflater();
-        list.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, list, false));
-        list.addFooterView(layoutInflater.inflate(R.layout.main_list_footer, list, false));
+        list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
+        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
                 this, R.layout.list_item, R.id.card_text, new ArrayList<String>(), list);
         list.setAdapter(listAdapter);
@@ -112,15 +112,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showAddTranslationDialog();
-            }
-        });
-    }
-
-    private void initFeedbackButton() {
-        findViewById(R.id.main_feedback_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
             }
         });
     }
@@ -263,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             int itemIndex = position - 1;
-            Intent intent = new Intent(MainActivity.this, RecordingActivity.class);
+            Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
             Dictionary.Translation translation = dictionary.getTranslation(itemIndex);
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
@@ -291,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             loadingDialog = ProgressDialog.show(
-                    MainActivity.this,
+                    TranslationsActivity.this,
                     getString(R.string.export_progress_dialog_title),
                     getString(R.string.export_progress_dialog_message),
                     true);
@@ -303,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 targetFile.delete();
             }
             TxcPortingUtility portingUtility = new TxcPortingUtility();
-            DbManager dbm = new DbManager(MainActivity.this);
+            DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
                 portingUtility.exportData(
                         // TODO(nworden): use real Deck after merge with Pat and Natasha's work

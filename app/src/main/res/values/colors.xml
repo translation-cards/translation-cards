@@ -6,6 +6,7 @@
     <color name="textColor">#fcfcfc</color>
     <color name="unselectedLanguageTabText">#89b0cf</color>
     <color name="backgroundColor">#ffffff</color>
+    <color name="listBackgroundColor">#f2f2f2</color>
     <color name="borderColor">#bbbbbb</color>
     <color name="navBarColor">#d8d8d8</color>
     <color name="primaryTextColor">#212121</color>

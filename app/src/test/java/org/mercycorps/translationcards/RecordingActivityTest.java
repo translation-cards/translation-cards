@@ -42,7 +42,7 @@ public class RecordingActivityTest {
     }
 
     @Test
-    public void moveToInsturctionsStep_shouldHaveCardCreationButton() {
+    public void moveToInstructionsStep_shouldHaveCardCreationButton() {
         Button recordingButton = (Button) recordingActivity
                 .findViewById(R.id.recording_instructions_start);
 

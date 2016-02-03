@@ -9,18 +9,18 @@ public class Deck {
 
     private final String label;
     private final String publisher;
-    private final Dictionary[] dictionaries;
     private final long dbId;
+    private String creationDate;
 
-    public Deck(String label, String publisher, Dictionary[] dictionaries, long dbId) {
+    public Deck(String label, String publisher, long dbId, String creationDate) {
         this.label = label;
         this.publisher = publisher;
-        this.dictionaries = dictionaries;
         this.dbId = dbId;
+        this.creationDate = creationDate;
     }
 
-    public Deck(String label, String publisher, Dictionary[] dictionaries) {
-        this(label, publisher, dictionaries, -1);
+    public Deck(String label, String publisher, String creationDate) {
+        this(label, publisher, -1, creationDate);
     }
 
     public String getLabel() {
@@ -31,11 +31,11 @@ public class Deck {
         return publisher;
     }
 
-    public Dictionary[] getDictionaries() {
-        return dictionaries;
-    }
-
     public long getDbId() {
         return dbId;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
     }
 }

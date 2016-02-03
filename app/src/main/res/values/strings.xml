@@ -39,4 +39,7 @@
     <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
     <string name="data_default_deck_name">Default</string>
+    <string name="my_decks">My Decks</string>
+    <string name="data_default_deck_publisher">My Deck</string>
+    <string name="default_origin_language">ENGLISH</string>
 </resources>
