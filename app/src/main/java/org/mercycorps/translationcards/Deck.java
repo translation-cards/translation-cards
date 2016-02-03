@@ -1,11 +1,15 @@
 package org.mercycorps.translationcards;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Contains information about a collection of phrases in one or more languages.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class Deck {
+public class Deck implements Serializable {
 
     private final String label;
     private final String publisher;

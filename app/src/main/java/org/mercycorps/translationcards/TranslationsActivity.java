@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,13 +67,16 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        long deckId = getIntent().getIntExtra("DeckId", -1);
-        dictionaries = dbm.getAllDictionariesForDeck(deckId);
+        Deck deck = (Deck) getIntent().getSerializableExtra("Deck");
+        dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();
         setDictionary(0);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(deck.getLabel());
     }
 
     private void initTabs() {

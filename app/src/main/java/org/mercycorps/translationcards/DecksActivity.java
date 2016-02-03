@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,9 @@ public class DecksActivity extends AppCompatActivity {
         initFeedbackButton();
         dbManager = new DbManager(this);
         initDecks();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.my_decks);
     }
 
     private void initDecks() {
@@ -78,7 +82,7 @@ public class DecksActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra("DeckId", position + 1);
+                        decksIntent.putExtra("Deck", getItem(position));
                         DecksActivity.this.startActivity(decksIntent);
                     }
                 });

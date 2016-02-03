@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -41,8 +43,8 @@ public class DecksActivityTest {
         ListView decksListView = (ListView) decksActivity.findViewById(R.id.decks_list);
         assertThat(decksListView, is(notNullValue()));
 
-        TextView decksTitle = (TextView) decksActivity.findViewById(R.id.decks_title);
-        assertThat(decksTitle.getText().toString(), is("My Decks"));
+        Toolbar toolbar = (Toolbar) decksActivity.findViewById(R.id.translation_cards_toolbar);
+        assertThat(toolbar.getTitle().toString(), is("My Decks"));
     }
 
     @Test
@@ -89,16 +91,16 @@ public class DecksActivityTest {
     }
 
     @Test
-    public void initDecksList_shouldOpenMainActivityWhenItemClicked() {
+    public void initDecksList_shouldOpenTranslationsActivityWhenItemClicked() {
         ListView decksListView = (ListView) decksActivity.findViewById(R.id.decks_list);
         View decksListItem = decksListView.getAdapter().getView(0, null, decksListView);
 
         TextView deckName = (TextView) decksListItem.findViewById(R.id.deck_name);
         deckName.performClick();
 
-        Intent expectedIntent = new Intent(decksActivity, TranslationsActivity.class);
-        expectedIntent.putExtra("DeckId", 1);
         Intent nextStartedActivity = shadowOf(decksActivity).getNextStartedActivity();
-        assertThat(nextStartedActivity, is(expectedIntent));
+        Deck deck = (Deck) nextStartedActivity.getSerializableExtra("Deck");
+        assertThat(deck.getLabel(), is("Default"));
+        assertThat(deck.getDbId(), is((long) 1));
     }
 }

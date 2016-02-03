@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,13 +24,23 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricGradleTestRunner.class)
 public class TranslationsActivityTest {
 
+    public static final int DEFAULT_DECK_ID = 1;
+    public static final String DEFAULT_DECK_NAME = "Default";
+    public static final String NO_VALUE = "";
     private TranslationsActivity translationsActivity;
 
     @Before
     public void setUp() {
         Intent intent = new Intent();
-        intent.putExtra("DeckId", 1);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, NO_VALUE);
+        intent.putExtra("Deck", deck);
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+    }
+
+    @Test
+    public void shouldShowDeckNameInToolbar() throws Exception {
+        Toolbar toolbar = (Toolbar) translationsActivity.findViewById(R.id.translation_cards_toolbar);
+        assertThat(toolbar.getTitle().toString(), is("Default"));
     }
 
     @Test

@@ -8,11 +8,14 @@
     android:background="@color/listBackgroundColor"
     android:id="@+id/mainActivity">
 
+    <include layout="@layout/toolbar"/>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:fillViewport="true"
-        android:id="@+id/tabScroll">
+        android:id="@+id/tabScroll"
+        android:layout_below="@+id/translation_cards_toolbar">
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
