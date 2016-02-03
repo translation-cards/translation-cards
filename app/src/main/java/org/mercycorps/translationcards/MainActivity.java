@@ -305,7 +305,10 @@ public class MainActivity extends AppCompatActivity {
             TxcPortingUtility portingUtility = new TxcPortingUtility();
             DbManager dbm = new DbManager(MainActivity.this);
             try {
-                portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
+                portingUtility.exportData(
+                        // TODO(nworden): use real Deck after merge with Pat and Natasha's work
+                        new Deck("Label", "Publisher", null, -1),
+                        dbm.getAllDictionaries(), targetFile);
             } catch (final ExportException e) {
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override

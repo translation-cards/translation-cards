@@ -32,7 +32,7 @@ public class TxcPortingUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final int BUFFER_SIZE = 2048;
 
-    public void exportData(Dictionary[] dictionaries, File file) throws ExportException {
+    public void exportData(Deck deck, Dictionary[] dictionaries, File file) throws ExportException {
         ZipOutputStream zos = null;
         try {
             OutputStream os;
@@ -43,7 +43,7 @@ public class TxcPortingUtility {
             }
             zos = new ZipOutputStream(os);
             Map<String, Dictionary.Translation> translationFilenames =
-                    buildIndex(dictionaries, zos);
+                    buildIndex(deck, dictionaries, zos);
             for (String filename : translationFilenames.keySet()) {
                 addFileToZip(filename, translationFilenames.get(filename), zos);
             }
@@ -66,10 +66,12 @@ public class TxcPortingUtility {
     }
 
     private Map<String, Dictionary.Translation> buildIndex(
-            Dictionary[] dictionaries, ZipOutputStream zos) throws ExportException {
+            Deck deck, Dictionary[] dictionaries, ZipOutputStream zos) throws ExportException {
         Map<String, Dictionary.Translation> translationFilenames = new HashMap<>();
         try {
             zos.putNextEntry(new ZipEntry(INDEX_FILENAME));
+            String metaLine = String.format("META:%s|%s\n", deck.getLabel(), deck.getPublisher());
+            zos.write(metaLine.getBytes());
             for (Dictionary dictionary : dictionaries) {
                 String language = dictionary.getLabel();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
