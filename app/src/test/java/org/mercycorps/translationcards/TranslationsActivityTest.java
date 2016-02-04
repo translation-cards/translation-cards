@@ -11,11 +11,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowIntent;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -64,5 +69,13 @@ public class TranslationsActivityTest {
         TextView translationCardText = (TextView) translationsActivity.findViewById(R.id.card_text);
 
         assertThat(translationCardText, is(nullValue()));
+    }
+
+    @Test
+    public void shouldGoToDecksActivityWhenBackButtonPressed(){
+        ShadowActivity shadowActivity = Shadows.shadowOf(translationsActivity);
+
+        shadowActivity.onBackPressed();
+        assertTrue(shadowActivity.isFinishing());
     }
 }

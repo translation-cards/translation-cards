@@ -7,6 +7,7 @@
     android:elevation="4dp"
     android:textColor="@color/textColor"
     android:theme="@style/AppTheme"
+    android:titleTextColor="@color/textColor"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" />

@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -75,8 +76,11 @@ public class TranslationsActivity extends AppCompatActivity {
         initList();
         setDictionary(0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.textColor));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(deck.getLabel());
+        ActionBar actionBar =getSupportActionBar();
+        actionBar.setTitle(deck.getLabel());
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void initTabs() {
