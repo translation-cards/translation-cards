@@ -67,7 +67,7 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        long deckId = getIntent().getIntExtra("DeckId", -1);
+        int deckId = getIntent().getIntExtra("DeckId", -1);
         dictionaries = dbm.getAllDictionariesForDeck(deckId);
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -296,12 +296,12 @@ public class TranslationsActivity extends AppCompatActivity {
             TxcPortingUtility portingUtility = new TxcPortingUtility();
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
+                // TODO(nworden): use the actual deck ID and creation date
                 portingUtility.exportData(
-                        // TODO(nworden): use real Deck after merge with Pat and Natasha's work
-                        new Deck("Label", "Publisher", null, -1),
+                        new Deck("Label", "Publisher", -1, -1),
                         dbm.getAllDictionaries(), targetFile);
             } catch (final ExportException e) {
-                MainActivity.this.runOnUiThread(new Runnable() {
+                TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         alertUserOfExportFailure(e);

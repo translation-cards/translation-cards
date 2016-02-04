@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,7 +247,8 @@ public class TxcPortingUtility {
 
     private void loadData(Context context, File dir, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
-        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher);
+        long creationTime = (new Date()).getTime() / 1000;
+        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, creationTime);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of

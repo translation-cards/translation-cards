@@ -10,16 +10,16 @@ public class Deck {
     private final String label;
     private final String publisher;
     private final long dbId;
-    private String creationDate;
+    private long creationDate;
 
-    public Deck(String label, String publisher, long dbId, String creationDate) {
+    public Deck(String label, String publisher, long dbId, long creationDate) {
         this.label = label;
         this.publisher = publisher;
         this.dbId = dbId;
         this.creationDate = creationDate;
     }
 
-    public Deck(String label, String publisher, String creationDate) {
+    public Deck(String label, String publisher, long creationDate) {
         this(label, publisher, -1, creationDate);
     }
 
@@ -35,7 +35,7 @@ public class Deck {
         return dbId;
     }
 
-    public String getCreationDate() {
+    public long getCreationDate() {
         return creationDate;
     }
 }
