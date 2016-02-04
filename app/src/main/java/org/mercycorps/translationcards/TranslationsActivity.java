@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -282,7 +283,7 @@ public class TranslationsActivity extends AppCompatActivity {
 
 
 
-    private class ExportTask extends AsyncTask<Void, Void, Void> {
+    private class ExportTask extends AsyncTask<Void, Void, Boolean> {
 
         private File targetFile;
         private ProgressDialog loadingDialog;
@@ -295,7 +296,7 @@ public class TranslationsActivity extends AppCompatActivity {
                     true);
         }
 
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             targetFile = new File(getExternalCacheDir(), "export.txc");
             if (targetFile.exists()) {
                 targetFile.delete();
@@ -303,20 +304,30 @@ public class TranslationsActivity extends AppCompatActivity {
             TxcPortingUtility portingUtility = new TxcPortingUtility();
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
-                portingUtility.exportData(dbm.getAllDictionaries(), targetFile);
-            } catch (ExportException e) {
-                alertUserOfExportFailure(e);
-                return null;
+                // TODO(nworden): use the actual deck ID and creation date
+                portingUtility.exportData(
+                        new Deck("Label", "Publisher", -1, -1),
+                        dbm.getAllDictionaries(), targetFile);
+            } catch (final ExportException e) {
+                TranslationsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertUserOfExportFailure(e);
+                    }
+                });
+                return false;
             }
-            return null;
+            return true;
         }
 
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Boolean result) {
             loadingDialog.cancel();
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
-            startActivity(intent);
+            if (result) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
+                startActivity(intent);
+            }
         }
     }
 
