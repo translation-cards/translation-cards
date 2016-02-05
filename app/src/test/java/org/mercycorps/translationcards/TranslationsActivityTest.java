@@ -32,12 +32,13 @@ public class TranslationsActivityTest {
     public static final int DEFAULT_DECK_ID = 1;
     public static final String DEFAULT_DECK_NAME = "Default";
     public static final String NO_VALUE = "";
+    public static final long DEFAULT_LONG = -1;
     private TranslationsActivity translationsActivity;
 
     @Before
     public void setUp() {
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, NO_VALUE);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
         intent.putExtra("Deck", deck);
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
     }

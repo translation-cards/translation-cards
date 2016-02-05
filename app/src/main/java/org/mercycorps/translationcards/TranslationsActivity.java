@@ -306,7 +306,7 @@ public class TranslationsActivity extends AppCompatActivity {
             try {
                 // TODO(nworden): use the actual deck ID and creation date
                 portingUtility.exportData(
-                        new Deck("Label", "Publisher", -1, -1),
+                        new Deck("Label", "Publisher", -1, (long) -1),
                         dbm.getAllDictionaries(), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {

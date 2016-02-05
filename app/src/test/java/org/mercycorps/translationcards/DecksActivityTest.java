@@ -78,7 +78,7 @@ public class DecksActivityTest {
         TextView deckName = (TextView) decksListItem.findViewById(R.id.deck_name);
         assertThat(deckName.getText().toString(), is("Default"));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy h:mm a");
         String date = dateFormat.format(new Date());
         TextView deckInformation = (TextView) decksListItem.findViewById(R.id.deck_information);
         assertThat(deckInformation.getText().toString(), is("My Deck, "+ date));

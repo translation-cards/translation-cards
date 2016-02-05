@@ -3,6 +3,8 @@ package org.mercycorps.translationcards;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -14,16 +16,16 @@ public class Deck implements Serializable {
     private final String label;
     private final String publisher;
     private final long dbId;
-    private String creationDate;
+    private long creationDate;
 
-    public Deck(String label, String publisher, long dbId, String creationDate) {
+    public Deck(String label, String publisher, long dbId, long creationDate) {
         this.label = label;
         this.publisher = publisher;
         this.dbId = dbId;
         this.creationDate = creationDate;
     }
 
-    public Deck(String label, String publisher, String creationDate) {
+    public Deck(String label, String publisher, long creationDate) {
         this(label, publisher, -1, creationDate);
     }
 
@@ -40,6 +42,9 @@ public class Deck implements Serializable {
     }
 
     public String getCreationDate() {
-        return creationDate;
+        Date date = new Date(creationDate*1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy h:mm a");
+        String formattedDate = dateFormat.format(date);
+        return formattedDate;
     }
 }
