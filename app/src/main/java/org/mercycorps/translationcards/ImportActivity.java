@@ -25,12 +25,16 @@ public class ImportActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 TxcPortingUtility portingUtility = new TxcPortingUtility();
                                 try {
-                                    portingUtility.importData(ImportActivity.this, source);
+                                    TxcPortingUtility.ImportInfo importInfo =
+                                            portingUtility.prepareImport(
+                                                    ImportActivity.this, source);
+                                    portingUtility.executeImport(ImportActivity.this, importInfo);
                                 } catch (ImportException e) {
                                     alertUserOfFailure(e);
                                     return;
                                 }
-                                Intent intent = new Intent(ImportActivity.this, DecksActivity.class);
+                                Intent intent = new Intent(
+                                        ImportActivity.this, DecksActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();

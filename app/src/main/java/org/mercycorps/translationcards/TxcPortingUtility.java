@@ -137,14 +137,17 @@ public class TxcPortingUtility {
         }
     }
 
-    public void importData(Context context, Uri source) throws ImportException {
+    public ImportInfo prepareImport(Context context, Uri source) throws ImportException {
         String hash = getFileHash(context, source);
         ZipInputStream zip = getZip(context, source);
         String filename = source.getLastPathSegment();
         File targetDir = getImportTargetDirectory(context, filename);
         String indexFilename = readFiles(zip, targetDir);
-        ImportInfo importInfo = getIndex(targetDir, indexFilename, filename);
-        loadData(context, targetDir, importInfo, hash);
+        return getIndex(targetDir, indexFilename, filename, hash);
+    }
+
+    public void executeImport(Context context, ImportInfo importInfo) throws ImportException {
+        loadData(context, importInfo);
     }
 
     private String getFileHash(Context context, Uri source) throws ImportException {
@@ -237,7 +240,7 @@ public class TxcPortingUtility {
         return indexFilename;
     }
 
-    private ImportInfo getIndex(File dir, String indexFilename, String defaultLabel)
+    private ImportInfo getIndex(File dir, String indexFilename, String defaultLabel, String hash)
             throws ImportException {
         String label = defaultLabel;
         String publisher = null;
@@ -276,21 +279,21 @@ public class TxcPortingUtility {
             }
         }
         s.close();
-        return new ImportInfo(label, publisher, externalId, version, items);
+        return new ImportInfo(label, publisher, externalId, version, hash, items, dir);
     }
 
-    private void loadData(Context context, File dir, ImportInfo importInfo, String hash) {
+    private void loadData(Context context, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
         long creationTime = (new Date()).getTime() / 1000;
         long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, creationTime,
-                importInfo.externalId, importInfo.version, hash);
+                importInfo.externalId, importInfo.version, importInfo.hash);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
         // the list and want them to appear in the correct order.
         for (int i = importInfo.items.size() - 1; i >= 0; i--) {
             ImportItem item = importInfo.items.get(i);
-            File targetFile = new File(dir, item.name);
+            File targetFile = new File(importInfo.dir, item.name);
             String dictionaryLookupKey = item.language.toLowerCase();
             if (!dictionaryLookup.containsKey(dictionaryLookupKey)) {
                 long dictionaryId = dbm.addDictionary(item.language, dictionaryIndex, deckId);
@@ -303,21 +306,25 @@ public class TxcPortingUtility {
         }
     }
 
-    private class ImportInfo {
+    public class ImportInfo {
 
         public final String label;
         public final String publisher;
         public final String externalId;
         public final String version;
+        public final String hash;
         public final List<ImportItem> items;
+        public final File dir;
 
         public ImportInfo(String label, String publisher, String externalId, String version,
-                          List<ImportItem> items) {
+                          String hash, List<ImportItem> items, File dir) {
             this.label = label;
             this.publisher = publisher;
             this.externalId = externalId;
             this.version = version;
+            this.hash = hash;
             this.items = items;
+            this.dir = dir;
         }
     }
 
