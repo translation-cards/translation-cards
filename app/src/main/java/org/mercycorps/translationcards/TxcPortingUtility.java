@@ -150,6 +150,15 @@ public class TxcPortingUtility {
         loadData(context, importInfo);
     }
 
+    public void abortImport(Context context, ImportInfo importInfo) {
+        importInfo.dir.delete();
+    }
+
+    public boolean isExistingDeck(Context context, ImportInfo importInfo) {
+        DbManager dbm = new DbManager(context);
+        return dbm.hasDeckWithHash(importInfo.hash);
+    }
+
     private String getFileHash(Context context, Uri source) throws ImportException {
         InputStream inputStream = null;
         try {

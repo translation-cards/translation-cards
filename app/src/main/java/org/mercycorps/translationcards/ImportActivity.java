@@ -23,21 +23,7 @@ public class ImportActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                TxcPortingUtility portingUtility = new TxcPortingUtility();
-                                try {
-                                    TxcPortingUtility.ImportInfo importInfo =
-                                            portingUtility.prepareImport(
-                                                    ImportActivity.this, source);
-                                    portingUtility.executeImport(ImportActivity.this, importInfo);
-                                } catch (ImportException e) {
-                                    alertUserOfFailure(e);
-                                    return;
-                                }
-                                Intent intent = new Intent(
-                                        ImportActivity.this, DecksActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
+                                attemptImport(source);
                             }
                         })
                 .setNegativeButton(R.string.import_confirm_alert_negative,
@@ -50,17 +36,38 @@ public class ImportActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void alertUserOfFailure(ImportException error) {
-        String errorMessage = getString(R.string.import_failure_default_error_message);
-        if (error.getProblem() == ImportException.ImportProblem.FILE_NOT_FOUND) {
-            errorMessage = getString(R.string.import_failure_file_not_found_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.NO_INDEX_FILE) {
-            errorMessage = getString(R.string.import_failure_no_index_file_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.INVALID_INDEX_FILE) {
-            errorMessage = getString(R.string.import_failure_invalid_index_file_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.READ_ERROR) {
-            errorMessage = getString(R.string.import_failure_read_error_error_message);
+    private void attemptImport(Uri source) {
+        TxcPortingUtility portingUtility = new TxcPortingUtility();
+        try {
+            TxcPortingUtility.ImportInfo importInfo =
+                    portingUtility.prepareImport(ImportActivity.this, source);
+            if (portingUtility.isExistingDeck(this, importInfo)) {
+                portingUtility.abortImport(this, importInfo);
+                alertUserOfFailure(getString(R.string.import_failure_existing_deck));
+                return;
+            }
+            portingUtility.executeImport(this, importInfo);
+        } catch (ImportException e) {
+            String errorMessage = getString(R.string.import_failure_default_error_message);
+            if (e.getProblem() == ImportException.ImportProblem.FILE_NOT_FOUND) {
+                errorMessage = getString(R.string.import_failure_file_not_found_error_message);
+            } else if (e.getProblem() == ImportException.ImportProblem.NO_INDEX_FILE) {
+                errorMessage = getString(R.string.import_failure_no_index_file_error_message);
+            } else if (e.getProblem() == ImportException.ImportProblem.INVALID_INDEX_FILE) {
+                errorMessage = getString(R.string.import_failure_invalid_index_file_error_message);
+            } else if (e.getProblem() == ImportException.ImportProblem.READ_ERROR) {
+                errorMessage = getString(R.string.import_failure_read_error_error_message);
+            }
+            alertUserOfFailure(errorMessage);
+            return;
         }
+        Intent intent = new Intent(this, DecksActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void alertUserOfFailure(String errorMessage) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.import_failure_alert_title)
                 .setMessage(errorMessage)

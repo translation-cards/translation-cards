@@ -226,6 +226,17 @@ public class DbManager {
         return decks;
     }
 
+    public boolean hasDeckWithHash(String hash) {
+        String[] columns = new String[] {DecksTable.ID};
+        String selection = DecksTable.HASH + " = ?";
+        String[] selectionArgs = new String[] {hash};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        return result;
+    }
+
     private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
         Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
                 TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},
