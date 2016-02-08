@@ -38,7 +38,6 @@ public class TxcPortingUtility {
     private static final String INDEX_FILENAME = "card_deck.csv";
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final int BUFFER_SIZE = 2048;
-    private static final Pattern META_LINE_PATTERN = Pattern.compile("META:(.*)|(.*)|(.*)|(.*)");
 
     public void exportData(Deck deck, Dictionary[] dictionaries, File file) throws ExportException {
         ZipOutputStream zos = null;
@@ -144,7 +143,7 @@ public class TxcPortingUtility {
         String filename = source.getLastPathSegment();
         File targetDir = getImportTargetDirectory(context, filename);
         String indexFilename = readFiles(zip, targetDir);
-        ImportInfo importInfo = getIndex(targetDir, indexFilename);
+        ImportInfo importInfo = getIndex(targetDir, indexFilename, filename);
         loadData(context, targetDir, importInfo, hash);
     }
 
@@ -238,8 +237,9 @@ public class TxcPortingUtility {
         return indexFilename;
     }
 
-    private ImportInfo getIndex(File dir, String indexFilename) throws ImportException {
-        String label = null;
+    private ImportInfo getIndex(File dir, String indexFilename, String defaultLabel)
+            throws ImportException {
+        String label = defaultLabel;
         String publisher = null;
         String externalId = null;
         String version = null;
@@ -256,12 +256,12 @@ public class TxcPortingUtility {
             if (isFirstLine) {
                 isFirstLine = false;
                 // It was the first line; see if it's meta information.
-                Matcher matcher = META_LINE_PATTERN.matcher(line);
-                if (matcher.find()) {
-                    label = matcher.group(0);
-                    publisher = matcher.group(1);
-                    externalId = matcher.group(2);
-                    version = matcher.group(3);
+                if (line.startsWith("META:")) {
+                    String[] metaLine = line.substring(5).split("|");
+                    label = metaLine[0];
+                    publisher = metaLine[1];
+                    externalId = metaLine[2];
+                    version = metaLine[3];
                     continue;
                 }
             }
