@@ -30,7 +30,7 @@ public class ImportActivity extends AppCompatActivity {
                                     alertUserOfFailure(e);
                                     return;
                                 }
-                                Intent intent = new Intent(ImportActivity.this, TranslationsActivity.class);
+                                Intent intent = new Intent(ImportActivity.this, DecksActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
