@@ -30,9 +30,6 @@ public class DecksActivity extends AppCompatActivity {
         initFeedbackButton();
         dbManager = new DbManager(this);
         initDecks();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.textColor));
-        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.my_decks);
     }
 

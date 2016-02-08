@@ -8,8 +8,6 @@
     android:background="@color/listBackgroundColor"
     android:id="@+id/mainActivity">
 
-    <include layout="@layout/toolbar"/>
-
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="56dp"

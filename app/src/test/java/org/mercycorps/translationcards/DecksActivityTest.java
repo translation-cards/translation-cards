@@ -44,8 +44,7 @@ public class DecksActivityTest {
         ListView decksListView = (ListView) decksActivity.findViewById(R.id.decks_list);
         assertThat(decksListView, is(notNullValue()));
 
-        Toolbar toolbar = (Toolbar) decksActivity.findViewById(R.id.translation_cards_toolbar);
-        assertThat(toolbar.getTitle().toString(), is("My Decks"));
+        assertThat(decksActivity.getSupportActionBar().getTitle().toString(), is("My Decks"));
     }
 
     @Test

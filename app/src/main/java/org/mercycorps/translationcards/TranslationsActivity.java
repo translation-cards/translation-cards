@@ -75,10 +75,8 @@ public class TranslationsActivity extends AppCompatActivity {
         initTabs();
         initList();
         setDictionary(0);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.textColor));
-        setSupportActionBar(toolbar);
-        ActionBar actionBar =getSupportActionBar();
+
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
     }

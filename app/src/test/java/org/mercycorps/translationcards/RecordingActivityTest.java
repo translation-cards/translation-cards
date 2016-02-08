@@ -25,6 +25,11 @@ public class RecordingActivityTest {
     }
 
     @Test
+    public void onCreate_shouldHideActionBar() {
+        assertThat(recordingActivity.getSupportActionBar().isShowing(), is(false));
+    }
+
+    @Test
     public void moveToInstructionsStep_shouldShowHeaderWhenMakingATranslationCard() {
         TextView instructionsHeader = (TextView) recordingActivity
                 .findViewById(R.id.recording_instructions_header);

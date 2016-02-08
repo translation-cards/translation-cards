@@ -121,6 +121,7 @@ public class RecordingActivity extends AppCompatActivity {
             inEditMode = true;
             moveToLabelStep();
         }
+        getSupportActionBar().hide();
     }
 
     @Override
