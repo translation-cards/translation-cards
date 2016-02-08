@@ -37,16 +37,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import roboguice.activity.RoboActionBarActivity;
+import roboguice.activity.RoboActivity;
 
 /**
  * Activity for the main screen, with lists of phrases to play.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class TranslationsActivity extends AppCompatActivity {
+public class TranslationsActivity extends RoboActionBarActivity {
 
     private static final String TAG = "TranslationsActivity";
 
@@ -57,7 +62,7 @@ public class TranslationsActivity extends AppCompatActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
 
-    private DbManager dbm;
+    @Inject DbManager dbm;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
@@ -67,7 +72,6 @@ public class TranslationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbm = new DbManager(this);
         Deck deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;

@@ -1,29 +1,34 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.inject.AbstractModule;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowIntent;
 
 import java.util.Arrays;
 import java.util.List;
 
+import roboguice.RoboGuice;
+
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -33,14 +38,31 @@ public class TranslationsActivityTest {
     public static final String DEFAULT_DECK_NAME = "Default";
     public static final String NO_VALUE = "";
     public static final long DEFAULT_LONG = -1;
+    public static final String DICTIONARY_TEST_LABEL = "TestLabel";
     private TranslationsActivity translationsActivity;
+    private DbManager dbManagerMock;
 
     @Before
     public void setUp() {
+        RoboGuice.setUseAnnotationDatabases(false);
         Intent intent = new Intent();
         Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
         intent.putExtra("Deck", deck);
+        initializeMockDbManager();
+        RoboGuice.overrideApplicationInjector(RuntimeEnvironment.application,
+                new TranslationsActivityTestModule());
+        RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+    }
+
+    private void initializeMockDbManager() {
+        dbManagerMock = mock(DbManager.class);
+        Dictionary[] dictionaries = new Dictionary[1];
+        Dictionary.Translation[] translations = new Dictionary.Translation[1];
+        translations[0] = new Dictionary.Translation("TranslationLabel", false, "", DEFAULT_LONG,
+                "TranslatedText");
+        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
+        when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
 
     @Test
@@ -49,19 +71,19 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void initTabs_shouldShowLanguageTabsWhenOnHomeScreen() {
+    public void onCreate_dbmGetsCalled() {
+        verify(dbManagerMock).getAllDictionariesForDeck(DEFAULT_DECK_ID);
+    }
+
+    @Test
+    public void initTabs_shouldShowLanguageTabWhenOnHomeScreen() {
         LinearLayout tabContainer = (LinearLayout) translationsActivity.findViewById(R.id.tabs);
 
-        assertThat(tabContainer.getChildCount(), is(3));
+        assertThat(tabContainer.getChildCount(), is(1));
 
-        List<String> languages = Arrays.asList("ARABIC", "FARSI", "PASHTO");
-        int tabIndex = 0;
-        for (String language : languages) {
-            View languageTab = tabContainer.getChildAt(tabIndex);
-            TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
-            assertThat(languageTabText.getText().toString(), is(language));
-            tabIndex++;
-        }
+        View languageTab = tabContainer.getChildAt(0);
+        TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
+        assertThat(languageTabText.getText().toString(), is(DICTIONARY_TEST_LABEL.toUpperCase()));
     }
 
     @Test
@@ -72,10 +94,17 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldGoToDecksActivityWhenBackButtonPressed(){
+    public void shouldGoToDecksActivityWhenBackButtonPressed() {
         ShadowActivity shadowActivity = Shadows.shadowOf(translationsActivity);
 
         shadowActivity.onBackPressed();
         assertTrue(shadowActivity.isFinishing());
+    }
+
+    public class TranslationsActivityTestModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(DbManager.class).toInstance(dbManagerMock);
+        }
     }
 }
