@@ -122,16 +122,21 @@ public class DbManager {
     }
 
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationDate) {
+                        long creationDate, String externalId, String version, String hash) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
         values.put(DecksTable.CREATION_DATE, creationDate);
+        values.put(DecksTable.EXTERNAL_ID, externalId);
+        values.put(DecksTable.VERSION, version);
+        values.put(DecksTable.HASH, hash);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
-    public long addDeck(String label, String publisher, long creationDate) {
-        return addDeck(dbh.getWritableDatabase(), label, publisher, creationDate);
+    public long addDeck(String label, String publisher, long creationDate, String externalId,
+                        String version, String hash) {
+        return addDeck(dbh.getWritableDatabase(), label, publisher, creationDate, externalId,
+                version, hash);
     }
 
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
@@ -270,6 +275,9 @@ public class DbManager {
         public static final String LABEL = "label";
         public static final String PUBLISHER = "publisher";
         public static final String CREATION_DATE = "creationDate";
+        public static final String EXTERNAL_ID = "externalId";
+        public static final String VERSION = "version";
+        public static final String HASH = "hash";
     }
 
     private class DictionariesTable {
@@ -302,7 +310,10 @@ public class DbManager {
                 DecksTable.ID + " INTEGER PRIMARY KEY," +
                 DecksTable.LABEL + " TEXT," +
                 DecksTable.PUBLISHER + " TEXT," +
-                DecksTable.CREATION_DATE + " INTEGER" +
+                DecksTable.CREATION_DATE + " INTEGER," +
+                DecksTable.EXTERNAL_ID + " TEXT," +
+                DecksTable.VERSION + " TEXT," +
+                DecksTable.HASH + " TEXT" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
@@ -347,7 +358,7 @@ public class DbManager {
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationDate);
+                    creationDate, null, null, null);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -381,7 +392,7 @@ public class DbManager {
                 long defaultDeckId = addDeck(
                         db, context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationDate);
+                        creationDate, null, null, null);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);
