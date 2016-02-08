@@ -79,6 +79,7 @@ public class TranslationsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(0);
     }
 
     private void initTabs() {

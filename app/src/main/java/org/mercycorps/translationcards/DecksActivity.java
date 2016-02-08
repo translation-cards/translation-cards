@@ -31,6 +31,7 @@ public class DecksActivity extends AppCompatActivity {
         dbManager = new DbManager(this);
         initDecks();
         getSupportActionBar().setTitle(R.string.my_decks);
+        getSupportActionBar().setElevation(0);
     }
 
     private void initDecks() {
