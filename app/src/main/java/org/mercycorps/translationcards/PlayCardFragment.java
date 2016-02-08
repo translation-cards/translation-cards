@@ -32,17 +32,18 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View playCardView = inflater.inflate(R.layout.play_card_view, container, false);
         translationCard = (Dictionary.Translation) getArguments().getSerializable("TranslationCard");
-
-        if (screenIsPortraitOriented()) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            setTranslationText(playCardView);
-            playTranslationAudio(playCardView);
-        }
-
+        
+        setTranslationText(playCardView);
+        playTranslationAudio(playCardView);
         return playCardView;
     }
-    
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lastMediaPlayerManager.stop();
+    }
+
     @Override
     public void onClick(View v) {
         lastMediaPlayerManager.stop();
@@ -54,7 +55,11 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
 
     private void setTranslationText(View playCardView) {
         TextView playCardText = (TextView) playCardView.findViewById(R.id.play_card_text);
-        playCardText.setText(translationCard.getTranslatedText());
+        String translatedText = translationCard.getTranslatedText();
+        if (translatedText.isEmpty()) {
+            translatedText = "No Translation Provided";
+        }
+        playCardText.setText(translatedText);
         playCardText.setOnClickListener(this);
     }
 
