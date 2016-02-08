@@ -43,7 +43,7 @@ public class Deck implements Serializable {
 
     public String getCreationDate() {
         Date date = new Date(creationDate);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy h:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         String formattedDate = dateFormat.format(date);
         return formattedDate;
     }

@@ -12,6 +12,6 @@ public class DeckTest {
         long aDate = 1454946439262L;
         Deck deck = new Deck("", "", -1, aDate);
 
-        assertThat(deck.getCreationDate(), is("02/08/16 9:47 AM"));
+        assertThat(deck.getCreationDate(), is("02/08/16"));
     }
 }
