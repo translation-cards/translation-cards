@@ -341,9 +341,7 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-            long creationDate = (new Date()).getTime() / 1000;
-            String date = dateFormat.format(new Date());
+            long creationDate = (new Date()).getTime();
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
