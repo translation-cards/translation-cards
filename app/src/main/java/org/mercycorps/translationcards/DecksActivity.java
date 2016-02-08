@@ -78,7 +78,7 @@ public class DecksActivity extends AppCompatActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
-                convertView.findViewById(R.id.deck_name).setOnClickListener(new View.OnClickListener() {
+                convertView.findViewById(R.id.deck_card).setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
