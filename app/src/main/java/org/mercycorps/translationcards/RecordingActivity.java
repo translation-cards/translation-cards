@@ -183,6 +183,8 @@ public class RecordingActivity extends AppCompatActivity {
 
     private void moveToLabelStep() {
         setContentView(R.layout.recording_label);
+        TextView labelTitle = (TextView) findViewById(R.id.recording_label_title);
+        labelTitle.setText(getString(R.string.recording_label_create_title, dictionaryLabel));
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(
                 getResources(), R.drawable.recording_label_image);

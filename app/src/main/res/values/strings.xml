@@ -8,7 +8,7 @@
     <string name="recording_instructions_header">Make your own flashcards</string>
     <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
     <string name="recording_instructions_button_getstarted">GET STARTED</string>
-    <string name="recording_label_create_title">Write your phrase and translation</string>
+    <string name="recording_label_create_title">Write your %s phrase and translation</string>
     <string name="recording_label_edit_title">Update or delete your flashcard</string>
     <string name="recording_label_detail">An effective flashcard phrase is short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
     <string name="recording_label_hint_text">Flashcard phrase</string>
