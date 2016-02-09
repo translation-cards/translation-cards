@@ -21,6 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -138,6 +139,10 @@ public class DbManager {
                 hash);
     }
 
+    public void deleteDeck(long deckId) {
+        // TODO(nworden): implement
+    }
+
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
                               long deckId) {
         ContentValues values = new ContentValues();
@@ -237,6 +242,25 @@ public class DbManager {
         return result;
     }
 
+    public long hasDeckWithExternalId(String externalId) {
+        // TODO(nworden): consider handling this better when there's multiple existing decks with
+        // this external ID
+        String[] columns = new String[] {DecksTable.ID};
+        String selection = DecksTable.EXTERNAL_ID + " = ?";
+        String[] selectionArgs = new String[] {externalId};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null,
+                String.format("%s DESC", DecksTable.CREATION_TIMESTAMP), "1");
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return -1;
+        }
+        cursor.moveToFirst();
+        long result = cursor.getLong(cursor.getColumnIndexOrThrow(DecksTable.ID));
+        cursor.close();
+        return result;
+    }
+
     private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
         Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
                 TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},
@@ -287,7 +311,6 @@ public class DbManager {
         public static final String PUBLISHER = "publisher";
         public static final String CREATION_TIMESTAMP = "creationTimestamp";
         public static final String EXTERNAL_ID = "externalId";
-        public static final String VERSION = "version";
         public static final String HASH = "hash";
     }
 

@@ -2,6 +2,8 @@ package org.mercycorps.translationcards;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.util.Pair;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -158,6 +160,11 @@ public class TxcPortingUtility {
         return dbm.hasDeckWithHash(importInfo.hash);
     }
 
+    public long otherVersionExists(Context context, ImportInfo importInfo) {
+        DbManager dbm = new DbManager(context);
+        return dbm.hasDeckWithExternalId(importInfo.externalId);
+    }
+
     private String getFileHash(Context context, Uri source) throws ImportException {
         InputStream inputStream = null;
         try {
@@ -263,12 +270,12 @@ public class TxcPortingUtility {
         }
         boolean isFirstLine = true;
         while (s.hasNextLine()) {
-            String line = s.nextLine();
+            String line = s.nextLine().trim();
             if (isFirstLine) {
                 isFirstLine = false;
                 // It was the first line; see if it's meta information.
                 if (line.startsWith("META:")) {
-                    String[] metaLine = line.substring(5).split("|");
+                    String[] metaLine = line.substring(5).split("\\|");
                     if (metaLine.length == 4) {
                         label = metaLine[0];
                         publisher = metaLine[1];
