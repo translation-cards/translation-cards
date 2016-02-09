@@ -24,6 +24,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,7 +141,29 @@ public class DbManager {
     }
 
     public void deleteDeck(long deckId) {
-        // TODO(nworden): implement
+        Dictionary[] dictionaries = getAllDictionariesForDeck(deckId);
+        for (Dictionary dictionary : dictionaries) {
+            // Delete all the files.
+            for (int i = 0; i < dictionary.getTranslationCount(); i++) {
+                Dictionary.Translation translation = dictionary.getTranslation(i);
+                File file = new File(translation.getFilename());
+                if (file.exists()) {
+                    // It should always exist, but check to be safe.
+                    file.delete();
+                }
+            }
+            // Delete the rows in the translations table.
+            String whereClause = TranslationsTable.DICTIONARY_ID + " = ?";
+            String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
+            dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
+        }
+        // Delete the rows in the dictionaries table.
+        String whereClause = DictionariesTable.DECK_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deckId)};
+        dbh.getWritableDatabase().delete(DictionariesTable.TABLE_NAME, whereClause, whereArgs);
+        // Delete the row from the deck table.
+        whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
+        dbh.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
