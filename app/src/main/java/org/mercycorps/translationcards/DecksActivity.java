@@ -93,7 +93,7 @@ public class DecksActivity extends AppCompatActivity {
             deckName.setText(getItem(position).getLabel());
 
             Deck deck = getItem(position);
-            String deckInformation = deck.getPublisher() + ", " + deck.getCreationDate();
+            String deckInformation = deck.getPublisher() + ", " + deck.getCreationDateString();
             TextView deckInformationView = (TextView) convertView.findViewById(R.id.deck_information);
             deckInformationView.setText(deckInformation);
 

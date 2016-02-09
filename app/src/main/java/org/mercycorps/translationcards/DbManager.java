@@ -122,21 +122,20 @@ public class DbManager {
     }
 
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationDate, String externalId, String version, String hash) {
+                        long creationTimestamp, String externalId, String hash) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
-        values.put(DecksTable.CREATION_DATE, creationDate);
+        values.put(DecksTable.CREATION_TIMESTAMP, creationTimestamp);
         values.put(DecksTable.EXTERNAL_ID, externalId);
-        values.put(DecksTable.VERSION, version);
         values.put(DecksTable.HASH, hash);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
-    public long addDeck(String label, String publisher, long creationDate, String externalId,
-                        String version, String hash) {
-        return addDeck(dbh.getWritableDatabase(), label, publisher, creationDate, externalId,
-                version, hash);
+    public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
+                        String hash) {
+        return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
+                hash);
     }
 
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
@@ -217,8 +216,9 @@ public class DbManager {
         while(hasNext){
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_DATE)));
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)));
             decks.add(deck);
             hasNext = cursor.moveToNext();
         }
@@ -285,7 +285,7 @@ public class DbManager {
         public static final String ID = "id";
         public static final String LABEL = "label";
         public static final String PUBLISHER = "publisher";
-        public static final String CREATION_DATE = "creationDate";
+        public static final String CREATION_TIMESTAMP = "creationTimestamp";
         public static final String EXTERNAL_ID = "externalId";
         public static final String VERSION = "version";
         public static final String HASH = "hash";
@@ -321,9 +321,8 @@ public class DbManager {
                 DecksTable.ID + " INTEGER PRIMARY KEY," +
                 DecksTable.LABEL + " TEXT," +
                 DecksTable.PUBLISHER + " TEXT," +
-                DecksTable.CREATION_DATE + " INTEGER," +
+                DecksTable.CREATION_TIMESTAMP + " INTEGER," +
                 DecksTable.EXTERNAL_ID + " TEXT," +
-                DecksTable.VERSION + " TEXT," +
                 DecksTable.HASH + " TEXT" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
@@ -364,12 +363,12 @@ public class DbManager {
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-            long creationDate = (new Date()).getTime() / 1000;
+            long creationTimestamp = (new Date()).getTime() / 1000;
             String date = dateFormat.format(new Date());
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationDate, null, null, null);
+                    creationTimestamp, null, null);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -398,12 +397,11 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-                long creationDate = (new Date()).getTime() / 1000;
+                long creationTimestamp = (new Date()).getTime() / 1000;
                 long defaultDeckId = addDeck(
                         db, context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationDate, null, null, null);
+                        creationTimestamp, null, null);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

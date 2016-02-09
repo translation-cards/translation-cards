@@ -2,8 +2,6 @@ package org.mercycorps.translationcards;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Message;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -77,7 +73,10 @@ public class TxcPortingUtility {
         Map<String, Dictionary.Translation> translationFilenames = new HashMap<>();
         try {
             zos.putNextEntry(new ZipEntry(INDEX_FILENAME));
-            String metaLine = String.format("META:%s|%s\n", deck.getLabel(), deck.getPublisher());
+            String metaLine = String.format("META:%s|%s|%s|%d\n",
+                    deck.getLabel(), deck.getPublisher(),
+                    deck.getExternalId() == null ? "" : deck.getExternalId(),
+                    deck.getTimestamp());
             zos.write(metaLine.getBytes());
             for (Dictionary dictionary : dictionaries) {
                 String language = dictionary.getLabel();
@@ -254,7 +253,7 @@ public class TxcPortingUtility {
         String label = defaultLabel;
         String publisher = null;
         String externalId = null;
-        String version = null;
+        long timestamp = -1;
         List<ImportItem> items = new ArrayList<>();
         Scanner s;
         try {
@@ -270,11 +269,13 @@ public class TxcPortingUtility {
                 // It was the first line; see if it's meta information.
                 if (line.startsWith("META:")) {
                     String[] metaLine = line.substring(5).split("|");
-                    label = metaLine[0];
-                    publisher = metaLine[1];
-                    externalId = metaLine[2];
-                    version = metaLine[3];
-                    continue;
+                    if (metaLine.length == 4) {
+                        label = metaLine[0];
+                        publisher = metaLine[1];
+                        externalId = metaLine[2];
+                        timestamp = Long.valueOf(metaLine[3]);
+                        continue;
+                    }
                 }
             }
             String[] split = line.trim().split("\\|");
@@ -288,14 +289,13 @@ public class TxcPortingUtility {
             }
         }
         s.close();
-        return new ImportInfo(label, publisher, externalId, version, hash, items, dir);
+        return new ImportInfo(label, publisher, externalId, timestamp, hash, items, dir);
     }
 
     private void loadData(Context context, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
-        long creationTime = (new Date()).getTime() / 1000;
-        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, creationTime,
-                importInfo.externalId, importInfo.version, importInfo.hash);
+        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
+                importInfo.externalId, importInfo.hash);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
@@ -320,17 +320,17 @@ public class TxcPortingUtility {
         public final String label;
         public final String publisher;
         public final String externalId;
-        public final String version;
+        public final long timestamp;
         public final String hash;
         public final List<ImportItem> items;
         public final File dir;
 
-        public ImportInfo(String label, String publisher, String externalId, String version,
+        public ImportInfo(String label, String publisher, String externalId, long timestamp,
                           String hash, List<ImportItem> items, File dir) {
             this.label = label;
             this.publisher = publisher;
             this.externalId = externalId;
-            this.version = version;
+            this.timestamp = timestamp;
             this.hash = hash;
             this.items = items;
             this.dir = dir;

@@ -58,6 +58,7 @@ public class TranslationsActivity extends AppCompatActivity {
     private static final int REQUEST_KEY_EDIT_CARD = 2;
 
     private DbManager dbm;
+    private Deck deck;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
@@ -68,7 +69,7 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        Deck deck = (Deck) getIntent().getSerializableExtra("Deck");
+        deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -278,10 +279,6 @@ public class TranslationsActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
     private class ExportTask extends AsyncTask<Void, Void, Boolean> {
 
         private File targetFile;
@@ -303,10 +300,10 @@ public class TranslationsActivity extends AppCompatActivity {
             TxcPortingUtility portingUtility = new TxcPortingUtility();
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
-                // TODO(nworden): use the actual deck ID and creation date
                 portingUtility.exportData(
-                        new Deck("Label", "Publisher", -1, (long) -1),
-                        dbm.getAllDictionaries(), targetFile);
+                        new Deck(deck.getLabel(), deck.getPublisher(), deck.getExternalId(),
+                                deck.getDbId(), deck.getTimestamp()),
+                        dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override
