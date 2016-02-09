@@ -26,8 +26,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,20 +34,15 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActionBarActivity;
-import roboguice.activity.RoboActivity;
 
 /**
  * Activity for the main screen, with lists of phrases to play.
@@ -72,9 +65,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
-    private SimpleExpandableListAdapter listAdapter;
-    private ArrayList<Map<String, String>> groupData;
-    private ArrayList<List<Map<String, String>>> childData;
+    private TranslationsAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,17 +109,11 @@ public class TranslationsActivity extends RoboActionBarActivity {
     }
 
     private void initList() {
-        ExpandableListView list = (ExpandableListView) findViewById(R.id.list);
+        ExpandableListView list = (ExpandableListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
-//        listAdapter = new CardListAdapter(
-//                this, R.layout.list_item, R.id.card_text, new ArrayList<String>(), list);
-        groupData = new ArrayList<>();
-        childData = new ArrayList<>();
-        listAdapter = new SimpleExpandableListAdapter(getApplicationContext(),
-                groupData, R.layout.list_item, new String[]{"Name"}, new int[]{R.id.card_text},
-                childData, -1, new String[0], new int[0]);
+        listAdapter = new TranslationsAdapter(getApplicationContext(), dictionaries[0]);
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         addTranslationButton.setOnClickListener(new View.OnClickListener() {
@@ -150,14 +135,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
         languageTabBorders[dictionaryIndex].setBackgroundColor(
                 getResources().getColor(R.color.textColor));
         currentDictionaryIndex = dictionaryIndex;
-        Dictionary dictionary = dictionaries[dictionaryIndex];
-
-        for (int translationIndex = 0; translationIndex < dictionary.getTranslationCount();
-             translationIndex++) {
-            HashMap<String, String> group = new HashMap<String, String>();
-            group.put("Name", dictionary.getTranslation(translationIndex).getLabel());
-            groupData.add(group);
-        }
+        listAdapter.setDictionary(dictionaries[currentDictionaryIndex]);
         listAdapter.notifyDataSetChanged();
     }
 

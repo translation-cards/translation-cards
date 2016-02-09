@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background">
+    <TextView
+        android:id="@+id/origin_translation_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingTop="25dp"
+        android:paddingBottom="23dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="24dp"
+        android:textColor="@color/primaryTextColor"/>
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:paddingLeft="22dp"
+        android:id="@+id/parent_indicator">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_button" />
+    </FrameLayout>
+</LinearLayout>

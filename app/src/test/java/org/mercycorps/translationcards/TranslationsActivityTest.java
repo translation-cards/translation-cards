@@ -2,7 +2,6 @@ package org.mercycorps.translationcards;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,13 +19,12 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import roboguice.RoboGuice;
 
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -35,6 +33,7 @@ import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -82,6 +81,19 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    public void onCreate_shouldInitializeTranslationsAdapter() {
+        ExpandableListView translationsList = (ExpandableListView) translationsActivity
+                .findViewById(R.id.translations_list);
+
+        assertThat(translationsList, is(notNullValue()));
+
+        View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
+        TextView originTranslationText =
+                (TextView) translationsListItem.findViewById(R.id.origin_translation_text);
+        MatcherAssert.assertThat(originTranslationText.getText().toString(), is("TranslationLabel"));
+    }
+
+    @Test
     public void initTabs_shouldShowLanguageTabWhenOnHomeScreen() {
         LinearLayout tabContainer = (LinearLayout) translationsActivity.findViewById(R.id.tabs);
 
@@ -112,13 +124,6 @@ public class TranslationsActivityTest {
         protected void configure() {
             bind(DbManager.class).toInstance(dbManagerMock);
         }
-    }
 
-    @Test
-    public void onCreate_shouldHaveATranslationShowing() {
-        ExpandableListView translationsList = (ExpandableListView) translationsActivity.findViewById(R.id.list);
-
-        assertThat(translationsList, is(notNullValue()));
-        assertThat(((Map<String,String>)translationsList.getAdapter().getItem(1)).get("Name"), is("TranslationLabel"));
     }
 }
