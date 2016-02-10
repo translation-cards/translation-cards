@@ -148,20 +148,6 @@ public class TranslationsActivity extends RoboActionBarActivity {
         }
     }
 
-    private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("TranslationCard", translationCard);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        PlayCardFragment playCardFragment = new PlayCardFragment();
-        playCardFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.mainActivity, playCardFragment);
-        fragmentTransaction.addToBackStack("playCardFragment");
-        fragmentTransaction.commit();
-    }
-
     private void showAddTranslationDialog() {
         Intent intent = new Intent(this, RecordingActivity.class);
         intent.putExtra(
@@ -195,33 +181,29 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
 
         private final View.OnClickListener clickListener;
-        private final View.OnClickListener editClickListener;
 
         public CardListAdapter(
                 Context context, int resource, int textViewResourceId, List<Dictionary.Translation> objects,
                 ListView list) {
             super(context, resource, textViewResourceId, objects);
             clickListener = new CardClickListener(list);
-            editClickListener = new CardEditClickListener(list);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = null;
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                view = layoutInflater.inflate(R.layout.translation_item, parent, false);
-                view.setOnClickListener(clickListener);
-//                view.findViewById(R.id.card_edit).setOnClickListener(editClickListener);
-            } else {
-                view = convertView;
+                convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
+                convertView.setOnClickListener(clickListener);
+                convertView.findViewById(R.id.edit_card_layout).setOnClickListener(new CardEditClickListener(getItem(position)));
             }
-            TextView cardTextView = (TextView) view.findViewById(R.id.origin_translation_text);
+
+            TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
 
-            TextView translatedText = (TextView) view.findViewById(R.id.translated_text);
+            TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             translatedText.setText(getItem(position).getTranslatedText());
-            return view;
+            return convertView;
         }
     }
 
@@ -235,6 +217,23 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         @Override
         public void onClick(View view) {
+            if (view.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
+                view.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.translation_child).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private class CardEditClickListener implements View.OnClickListener {
+        private Dictionary.Translation translationCard;
+
+        public CardEditClickListener(Dictionary.Translation translationCard) {
+            this.translationCard = translationCard;
+        }
+
+        @Override
+        public void onClick(View view) {
 //            View listItem = (View) view.getParent().getParent().getParent();
 //            int position = list.getPositionForView(listItem);
 //            if (position == 0 ||
@@ -242,50 +241,19 @@ public class TranslationsActivity extends RoboActionBarActivity {
 //                // It's a click on the header or footer bumper, ignore it.
 //                return;
 //            }
-//            int itemIndex = position - 1;
 //
-//            Dictionary.Translation translationCard =
-//                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
-            if (view.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
-                view.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-            } else {
-                view.findViewById(R.id.translation_child).setVisibility(View.GONE);
-            }
-//            displayAndPlayTranslation(translationCard);
-        }
-    }
-
-    private class CardEditClickListener implements View.OnClickListener {
-
-        private final ListView list;
-
-        public CardEditClickListener(ListView list) {
-            this.list = list;
-        }
-
-        @Override
-        public void onClick(View view) {
-            View listItem = (View) view.getParent().getParent().getParent();
-            int position = list.getPositionForView(listItem);
-            if (position == 0 ||
-                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
-                // It's a click on the header or footer bumper, ignore it.
-                return;
-            }
-            int itemIndex = position - 1;
             Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            Dictionary.Translation translation = dictionary.getTranslation(itemIndex);
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translation.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL, translation.getLabel());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL, translationCard.getLabel());
             intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translation.getIsAsset());
+                    RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translationCard.getIsAsset());
             intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
+                    RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translationCard.getFilename());
             intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
+                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translationCard.getTranslatedText());
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }

@@ -1,8 +1,11 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -80,7 +83,7 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void onCreate_shouldInitializeTranslationsAdapter() {
+    public void onCreate_shouldInitializeCards() {
         ListView translationsList = (ListView) translationsActivity
                 .findViewById(R.id.translations_list);
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
@@ -90,6 +93,25 @@ public class TranslationsActivityTest {
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
         assertThat(translatedText.getText().toString(), is(TRANSLATED_TEXT));
+
+        ImageView editCardIcon = (ImageView) translationsListItem.findViewById(R.id.edit_card_icon);
+        assertThat(editCardIcon, is(notNullValue()));
+
+        TextView editCardLabel = (TextView) translationsListItem.findViewById(R.id.edit_card_label);
+        assertThat(editCardLabel.getText().toString(), is("Edit this flashcard"));
+    }
+
+    @Test
+    public void onClick_shouldStartRecordingActivityWhenEditLayoutIsClicked() {
+        ListView translationsList = (ListView) translationsActivity
+                .findViewById(R.id.translations_list);
+        View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
+
+        translationsListItem.findViewById(R.id.edit_card_layout).performClick();
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        String dictionaryLabel = nextStartedActivity.getStringExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
+        assertThat(dictionaryLabel, is(DICTIONARY_TEST_LABEL));
     }
 
     @Test
