@@ -23,22 +23,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -195,8 +190,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
                 convertView.setOnClickListener(clickListener);
-                convertView.findViewById(R.id.edit_card_layout).setOnClickListener(new CardEditClickListener(getItem(position)));
             }
+            convertView.findViewById(R.id.translation_card_edit).setOnClickListener(
+                    new CardEditClickListener(getItem(position)));
+
+            convertView.findViewById(R.id.translation_card_delete).setOnClickListener(
+                    new CardDeleteClickListener());
 
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
@@ -258,9 +257,26 @@ public class TranslationsActivity extends RoboActionBarActivity {
         }
     }
 
+    private class CardDeleteClickListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View view) {
+            new AlertDialog.Builder(TranslationsActivity.this)
+                    .setTitle("Delete Flashcard")
+                    .setMessage("Are you sure you want to delete this translation card?").show();
+//                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // continue with delete
+//                        }
+//                    })
+//                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // do nothing
+//                        }
+//                    })
 
-
+        }
+    }
 
     private class ExportTask extends AsyncTask<Void, Void, Boolean> {
 

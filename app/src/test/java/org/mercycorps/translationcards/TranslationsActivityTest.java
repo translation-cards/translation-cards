@@ -1,10 +1,8 @@
 package org.mercycorps.translationcards;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.View;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +19,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowAlertDialog;
 
 import roboguice.RoboGuice;
 
@@ -46,6 +44,7 @@ public class TranslationsActivityTest {
     public static final String DICTIONARY_TEST_LABEL = "TestLabel";
     public static final String TRANSLATED_TEXT = "TranslatedText";
     public static final String TRANSLATION_LABEL = "TranslationLabel";
+    private static final String DELETE_MESSAGE = "Are you sure you want to delete this translation card?";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
 
@@ -99,6 +98,9 @@ public class TranslationsActivityTest {
 
         TextView editCardLabel = (TextView) translationsListItem.findViewById(R.id.edit_card_label);
         assertThat(editCardLabel.getText().toString(), is("Edit this flashcard"));
+
+        TextView deleteCardLabel = (TextView) translationsListItem.findViewById(R.id.delete_card_label);
+        assertThat(deleteCardLabel.getText().toString(), is("Delete this flashcard"));
     }
 
     @Test
@@ -107,11 +109,22 @@ public class TranslationsActivityTest {
                 .findViewById(R.id.translations_list);
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
 
-        translationsListItem.findViewById(R.id.edit_card_layout).performClick();
+        translationsListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         String dictionaryLabel = nextStartedActivity.getStringExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
         assertThat(dictionaryLabel, is(DICTIONARY_TEST_LABEL));
+    }
+
+    @Test
+    public void onClick_shouldShowDeleteConfirmationDialogWhenDeleteLayoutIsClicked(){
+        ListView translationsList = (ListView) translationsActivity.findViewById(R.id.translations_list);
+
+        View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
+        translationsListItem.findViewById(R.id.translation_card_delete).performClick();
+
+        ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
+        assertThat(shadowAlertDialog.getMessage().toString(), is(DELETE_MESSAGE));
     }
 
     @Test

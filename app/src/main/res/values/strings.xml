@@ -43,4 +43,5 @@
     <string name="data_default_deck_publisher">My Deck</string>
     <string name="default_origin_language">ENGLISH</string>
     <string name="edit_label">Edit this flashcard</string>
+    <string name="delete_label">Delete this flashcard</string>
 </resources>

@@ -201,7 +201,7 @@ public class RecordingActivity extends AppCompatActivity {
                     DbManager dbm = new DbManager(RecordingActivity.this);
                     dbm.deleteTranslation(translationId);
                     if (!isAsset) {
-                        File oldFile = new File(filename);
+                        File oldFile = new File( filename);
                         oldFile.delete();
                         if (!savedIsAsset && (savedFilename != null) &&
                                 !savedFilename.equals(filename)) {

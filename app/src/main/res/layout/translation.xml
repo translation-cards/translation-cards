@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/translation_child"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
         <View
             android:background="@color/lineColor"
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/edit_card_layout">
+            android:id="@+id/translation_card_edit">
 
             <FrameLayout
                 android:layout_width="30dp"
@@ -109,6 +109,26 @@
                 android:fontFamily="Roboto-Medium"
                 android:textColor="@color/colorSecondaryLight"
                 android:text="@string/edit_label"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/translation_card_delete">
+
+            <TextView
+                android:id="@+id/delete_card_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                android:textSize="14dp"
+                android:fontFamily="Roboto-Medium"
+                android:textColor="@color/colorSecondaryLight"
+                android:text="@string/delete_label"/>
 
         </LinearLayout>
 
