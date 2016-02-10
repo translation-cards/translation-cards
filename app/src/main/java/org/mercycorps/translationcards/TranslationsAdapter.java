@@ -8,7 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 /**
- * Created by njimenez on 2/9/16.
+ * Created by njimenez & pdale on 2/9/16.
  */
 public class TranslationsAdapter extends BaseExpandableListAdapter {
 
@@ -73,7 +73,15 @@ public class TranslationsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        return null;
+        if (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.translation_child_item, parent, false);
+        }
+
+        TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
+        translatedText.setText(((Dictionary.Translation)getGroup(groupPosition)).getTranslatedText());
+
+        return convertView;
     }
 
     @Override

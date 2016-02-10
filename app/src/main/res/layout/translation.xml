@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background">
+    android:background="@drawable/card_background"
+    android:id="@+id/translation_card">
     <TextView
         android:id="@+id/origin_translation_text"
         android:layout_width="fill_parent"

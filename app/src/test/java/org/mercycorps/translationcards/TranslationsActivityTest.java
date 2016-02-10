@@ -19,17 +19,13 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 
-import java.util.Map;
-
 import roboguice.RoboGuice;
 
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,6 +40,8 @@ public class TranslationsActivityTest {
     public static final String NO_VALUE = "";
     public static final long DEFAULT_LONG = -1;
     public static final String DICTIONARY_TEST_LABEL = "TestLabel";
+    public static final String TRANSLATED_TEXT = "TranslatedText";
+    public static final String TRANSLATION_LABEL = "TranslationLabel";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
 
@@ -64,8 +62,8 @@ public class TranslationsActivityTest {
         dbManagerMock = mock(DbManager.class);
         Dictionary[] dictionaries = new Dictionary[1];
         Dictionary.Translation[] translations = new Dictionary.Translation[1];
-        translations[0] = new Dictionary.Translation("TranslationLabel", false, "", DEFAULT_LONG,
-                "TranslatedText");
+        translations[0] = new Dictionary.Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG,
+                TRANSLATED_TEXT);
         dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
@@ -88,9 +86,14 @@ public class TranslationsActivityTest {
         assertThat(translationsList, is(notNullValue()));
 
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
-        TextView originTranslationText =
-                (TextView) translationsListItem.findViewById(R.id.origin_translation_text);
-        MatcherAssert.assertThat(originTranslationText.getText().toString(), is("TranslationLabel"));
+        TextView originTranslationText = (TextView) translationsListItem.findViewById(R.id.origin_translation_text);
+        assertThat(originTranslationText.getText().toString(), is(TRANSLATION_LABEL));
+        translationsList.expandGroup(1);
+
+        TextView child = (TextView) translationsList.getChildAt(1).findViewById(R.id.translated_text);
+
+        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
+        assertThat(child.getText().toString(), is(TRANSLATED_TEXT));
     }
 
     @Test
