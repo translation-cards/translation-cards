@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/card_background"
-    android:id="@+id/translation_card">
+    android:id="@+id/deck_card">
+
+
     <TextView
         android:id="@+id/origin_translation_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="center_vertical"
-        android:paddingTop="25dp"
-        android:paddingBottom="23dp"
+        android:paddingTop="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textSize="24dp"
-        android:textColor="@color/primaryTextColor"/>
-    <FrameLayout
-        android:layout_width="48dp"
-        android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:paddingLeft="22dp"
-        android:id="@+id/parent_indicator">
-        <ImageView
+        android:textColor="@color/deckTitleColor"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/translation_child"
+        android:visibility="gone">
+        <View
+            android:background="@color/lineColor"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"
+            android:layout_centerVertical ="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/translated_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/add_button" />
-    </FrameLayout>
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="16dp"
+            android:textSize="14dp"
+            android:fontFamily="Roboto-Medium"
+            android:textColor="@color/colorSecondaryLight"
+            android:text="@string/default_origin_language"/>
+    </RelativeLayout>
+
 </LinearLayout>

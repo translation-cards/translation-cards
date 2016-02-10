@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
@@ -80,20 +81,31 @@ public class TranslationsActivityTest {
 
     @Test
     public void onCreate_shouldInitializeTranslationsAdapter() {
-        ExpandableListView translationsList = (ExpandableListView) translationsActivity
+        ListView translationsList = (ListView) translationsActivity
                 .findViewById(R.id.translations_list);
-
-        assertThat(translationsList, is(notNullValue()));
-
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
+
         TextView originTranslationText = (TextView) translationsListItem.findViewById(R.id.origin_translation_text);
         assertThat(originTranslationText.getText().toString(), is(TRANSLATION_LABEL));
-        translationsList.expandGroup(1);
-
-        TextView child = (TextView) translationsList.getChildAt(1).findViewById(R.id.translated_text);
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-        assertThat(child.getText().toString(), is(TRANSLATED_TEXT));
+        assertThat(translatedText.getText().toString(), is(TRANSLATED_TEXT));
+    }
+
+    @Test
+    public void onClick_shouldInflateAndDeflateTranslationListItem() {
+        ListView translationsList = (ListView) translationsActivity
+                .findViewById(R.id.translations_list);
+
+        View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
+
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+
+        translationsListItem.performClick();
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
+
+        translationsListItem.performClick();
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
     }
 
     @Test

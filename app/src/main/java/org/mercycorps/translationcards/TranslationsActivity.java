@@ -38,7 +38,10 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.RoboGuice;
@@ -65,7 +68,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
-    private TranslationsAdapter listAdapter;
+    private CardListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,11 +112,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
     }
 
     private void initList() {
-        ExpandableListView list = (ExpandableListView) findViewById(R.id.translations_list);
+        ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
-        listAdapter = new TranslationsAdapter(getApplicationContext(), dictionaries[0]);
+        listAdapter = new CardListAdapter(
+                this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>(), list);
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         addTranslationButton.setOnClickListener(new View.OnClickListener() {
@@ -135,8 +139,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
         languageTabBorders[dictionaryIndex].setBackgroundColor(
                 getResources().getColor(R.color.textColor));
         currentDictionaryIndex = dictionaryIndex;
-        listAdapter.setDictionary(dictionaries[currentDictionaryIndex]);
-        listAdapter.notifyDataSetChanged();
+        Dictionary dictionary = dictionaries[dictionaryIndex];
+        listAdapter.clear();
+        for (int translationIndex = 0;
+             translationIndex < dictionary.getTranslationCount();
+             translationIndex++) {
+            listAdapter.add(dictionary.getTranslation(translationIndex));
+        }
     }
 
     private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
@@ -183,13 +192,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
         (new ExportTask()).execute();
     }
 
-    private class CardListAdapter extends ArrayAdapter<String> {
+    private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
 
         private final View.OnClickListener clickListener;
         private final View.OnClickListener editClickListener;
 
         public CardListAdapter(
-                Context context, int resource, int textViewResourceId, List<String> objects,
+                Context context, int resource, int textViewResourceId, List<Dictionary.Translation> objects,
                 ListView list) {
             super(context, resource, textViewResourceId, objects);
             clickListener = new CardClickListener(list);
@@ -201,14 +210,17 @@ public class TranslationsActivity extends RoboActionBarActivity {
             View view = null;
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                view = layoutInflater.inflate(R.layout.list_item, parent, false);
-                view.findViewById(R.id.card_text).setOnClickListener(clickListener);
-                view.findViewById(R.id.card_edit).setOnClickListener(editClickListener);
+                view = layoutInflater.inflate(R.layout.translation_item, parent, false);
+                view.setOnClickListener(clickListener);
+//                view.findViewById(R.id.card_edit).setOnClickListener(editClickListener);
             } else {
                 view = convertView;
             }
-            TextView cardTextView = (TextView) view.findViewById(R.id.card_text);
-            cardTextView.setText(getItem(position));
+            TextView cardTextView = (TextView) view.findViewById(R.id.origin_translation_text);
+            cardTextView.setText(getItem(position).getLabel());
+
+            TextView translatedText = (TextView) view.findViewById(R.id.translated_text);
+            translatedText.setText(getItem(position).getTranslatedText());
             return view;
         }
     }
@@ -223,18 +235,23 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         @Override
         public void onClick(View view) {
-            View listItem = (View) view.getParent().getParent().getParent();
-            int position = list.getPositionForView(listItem);
-            if (position == 0 ||
-                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
-                // It's a click on the header or footer bumper, ignore it.
-                return;
+//            View listItem = (View) view.getParent().getParent().getParent();
+//            int position = list.getPositionForView(listItem);
+//            if (position == 0 ||
+//                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
+//                // It's a click on the header or footer bumper, ignore it.
+//                return;
+//            }
+//            int itemIndex = position - 1;
+//
+//            Dictionary.Translation translationCard =
+//                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
+            if (view.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
+                view.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.translation_child).setVisibility(View.GONE);
             }
-            int itemIndex = position - 1;
-
-            Dictionary.Translation translationCard =
-                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
-            displayAndPlayTranslation(translationCard);
+//            displayAndPlayTranslation(translationCard);
         }
     }
 
