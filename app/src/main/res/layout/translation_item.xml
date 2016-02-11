@@ -10,5 +10,15 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
         <include layout="@layout/translation" />
+        <ProgressBar
+            android:id="@+id/list_item_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/play_progress"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:minHeight="1dp"
+            android:maxHeight="1dp" />
     </RelativeLayout>
 </FrameLayout>
