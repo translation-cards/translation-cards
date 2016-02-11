@@ -104,14 +104,14 @@ public class DbManager {
                 DictionariesTable.TABLE_NAME, null,
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
-                null);
+                String.format("%s DESC", DictionariesTable.ID));
 
         Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while (hasNext) {
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
-            Long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
+            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
             Dictionary dictionary = new Dictionary(label, getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
             dictionaries[i] = dictionary;
             i++;
@@ -207,20 +207,22 @@ public class DbManager {
         dbh.close();
     }
 
-    public List<Deck> getAllDecks() {
+    public Deck[] getAllDecks() {
         Cursor cursor = dbh.getReadableDatabase().query(
                 DecksTable.TABLE_NAME, null,
                 null, null, null, null,
                 String.format("%s DESC", DecksTable.ID));
-        List<Deck> decks = new ArrayList<>();
+        Deck[] decks = new Deck[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
+        int i = 0;
         while(hasNext){
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_DATE)));
-            decks.add(deck);
+            decks[i] = deck;
             hasNext = cursor.moveToNext();
+            i++;
         }
         cursor.close();
         dbh.close();

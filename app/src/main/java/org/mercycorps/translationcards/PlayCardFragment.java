@@ -57,7 +57,7 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
         TextView playCardText = (TextView) playCardView.findViewById(R.id.play_card_text);
         String translatedText = translationCard.getTranslatedText();
         if (translatedText.isEmpty()) {
-            translatedText = "No Translation Provided";
+            translatedText = getString(R.string.no_translation_text);
         }
         playCardText.setText(translatedText);
         playCardText.setOnClickListener(this);

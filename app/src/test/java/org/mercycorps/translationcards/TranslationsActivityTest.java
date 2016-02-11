@@ -54,7 +54,7 @@ public class TranslationsActivityTest {
 
         assertThat(tabContainer.getChildCount(), is(3));
 
-        List<String> languages = Arrays.asList("ARABIC", "FARSI", "PASHTO");
+        List<String> languages = Arrays.asList("PASHTO", "FARSI", "ARABIC");
         int tabIndex = 0;
         for (String language : languages) {
             View languageTab = tabContainer.getChildAt(tabIndex);

@@ -20,6 +20,7 @@ public class DecksActivity extends AppCompatActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.2.1";
+    public static final String INTENT_KEY_DECK_ID = "Deck";
     private DbManager dbManager;
 
 
@@ -41,8 +42,7 @@ public class DecksActivity extends AppCompatActivity {
                 R.layout.deck_item, R.id.deck_name, listItems, decksListView);
         decksListView.setAdapter(listAdapter);
 
-        List<Deck> decks = dbManager.getAllDecks();
-        for (Deck deck : decks) {
+        for (Deck deck : dbManager.getAllDecks()) {
             listAdapter.add(deck);
         }
 
@@ -72,7 +72,7 @@ public class DecksActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView (final int position, View convertView, ViewGroup parent){
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
@@ -81,7 +81,7 @@ public class DecksActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra("Deck", getItem(position));
+                        decksIntent.putExtra(INTENT_KEY_DECK_ID, getItem(position));
                         DecksActivity.this.startActivity(decksIntent);
                     }
                 });
