@@ -198,23 +198,26 @@ public class DbManager {
 
     public long addTranslation(
             long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
-        return addTranslation(
+        long translationId = addTranslation(
                 dbh.getWritableDatabase(), dictionaryId, label, isAsset, filename, itemIndex, translatedText);
+        dbh.close();
+        return translationId;
     }
 
     public long addTranslationAtTop(
             long dictionaryId, String label, boolean isAsset, String filename, String translatedText) {
         String maxColumnName = String.format("MAX(%s)", TranslationsTable.ITEM_INDEX);
-        Cursor c = dbh.getReadableDatabase().query(
+        Cursor cursor = dbh.getReadableDatabase().query(
                 TranslationsTable.TABLE_NAME, new String[]{maxColumnName},
                 String.format("%s = ?", TranslationsTable.DICTIONARY_ID),
                 new String[]{String.format("%d", dictionaryId)},
                 null, null, null);
-        if (!c.moveToFirst()) {
+        if (!cursor.moveToFirst()) {
             return addTranslation(dictionaryId, label, isAsset, filename, 0, translatedText);
         }
-        int itemIndex = c.getInt(c.getColumnIndex(maxColumnName)) + 1;
-        c.close();
+        int itemIndex = cursor.getInt(cursor.getColumnIndex(maxColumnName)) + 1;
+        cursor.close();
+        dbh.close();
         return addTranslation(dictionaryId, label, isAsset, filename, itemIndex, translatedText);
     }
 
@@ -229,6 +232,7 @@ public class DbManager {
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         dbh.getWritableDatabase().update(
                 TranslationsTable.TABLE_NAME, values, whereClause, whereArgs);
+        dbh.close();
     }
 
     public void deleteTranslation(long translationId) {
@@ -236,6 +240,7 @@ public class DbManager {
         String whereClause = String.format("%s = ?", TranslationsTable.ID);
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
+        dbh.close();
     }
 
     public List<Deck> getAllDecks() {
@@ -255,6 +260,7 @@ public class DbManager {
             hasNext = cursor.moveToNext();
         }
         cursor.close();
+        dbh.close();
         return decks;
     }
 
@@ -308,6 +314,7 @@ public class DbManager {
             hasNext = cursor.moveToNext();
         }
         cursor.close();
+        dbh.close();
         return translations;
     }
 
@@ -327,7 +334,7 @@ public class DbManager {
             hasNext = cursor.moveToNext();
         }
         cursor.close();
-
+        dbh.close();
         return translationLanguages.trim();
     }
 
@@ -412,9 +419,7 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
             long creationTimestamp = (new Date()).getTime() / 1000;
-            String date = dateFormat.format(new Date());
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),

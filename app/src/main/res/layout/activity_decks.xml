@@ -4,15 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/listBackgroundColor">
 
-    <include layout="@layout/toolbar" />
-
-
     <ListView
         android:paddingTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
-        android:layout_below="@+id/translation_cards_toolbar"
         android:id="@+id/decks_list"/>
 </RelativeLayout>

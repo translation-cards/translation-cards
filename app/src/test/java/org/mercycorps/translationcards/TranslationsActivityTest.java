@@ -44,9 +44,8 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldShowDeckNameInToolbar() throws Exception {
-        Toolbar toolbar = (Toolbar) translationsActivity.findViewById(R.id.translation_cards_toolbar);
-        assertThat(toolbar.getTitle().toString(), is("Default"));
+    public void onCreate_shouldShowDeckNameInToolbar() throws Exception {
+        assertThat(translationsActivity.getSupportActionBar().getTitle().toString(), is("Default"));
     }
 
     @Test

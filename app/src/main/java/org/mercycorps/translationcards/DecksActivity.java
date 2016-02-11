@@ -30,10 +30,8 @@ public class DecksActivity extends AppCompatActivity {
         initFeedbackButton();
         dbManager = new DbManager(this);
         initDecks();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.translation_cards_toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.textColor));
-        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.my_decks);
+        getSupportActionBar().setElevation(0);
     }
 
     private void initDecks() {
@@ -78,7 +76,7 @@ public class DecksActivity extends AppCompatActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
-                convertView.findViewById(R.id.deck_name).setOnClickListener(new View.OnClickListener() {
+                convertView.findViewById(R.id.deck_card).setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
