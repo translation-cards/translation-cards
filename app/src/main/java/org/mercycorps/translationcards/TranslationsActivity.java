@@ -19,6 +19,7 @@ package org.mercycorps.translationcards;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,12 +65,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     private CardListAdapter listAdapter;
+    private Deck deck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RoboGuice.setUseAnnotationDatabases(false);
         super.onCreate(savedInstanceState);
-        Deck deck = (Deck) getIntent().getSerializableExtra("Deck");
+        deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -160,7 +162,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
             case REQUEST_KEY_ADD_CARD:
             case REQUEST_KEY_EDIT_CARD:
                 if (resultCode == RESULT_OK) {
-                    dictionaries = dbm.getAllDictionaries();
+                    dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
                     setDictionary(currentDictionaryIndex);
                 }
                 break;
@@ -195,7 +197,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     new CardEditClickListener(getItem(position)));
 
             convertView.findViewById(R.id.translation_card_delete).setOnClickListener(
-                    new CardDeleteClickListener());
+                    new CardDeleteClickListener(getItem(position).getDbId()));
 
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
@@ -259,22 +261,29 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private class CardDeleteClickListener implements View.OnClickListener {
 
+        long translationId;
+
+        public CardDeleteClickListener(long translationId) {
+            this.translationId = translationId;
+        }
+
         @Override
         public void onClick(View view) {
             new AlertDialog.Builder(TranslationsActivity.this)
                     .setTitle("Delete Flashcard")
-                    .setMessage("Are you sure you want to delete this translation card?").show();
-//                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            // continue with delete
-//                        }
-//                    })
-//                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            // do nothing
-//                        }
-//                    })
-
+                    .setMessage("Are you sure you want to delete this translation card?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbm.deleteTranslation(translationId);
+                            dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+                            setDictionary(currentDictionaryIndex);
+                            listAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
         }
     }
 

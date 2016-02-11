@@ -28,7 +28,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -47,6 +49,7 @@ public class TranslationsActivityTest {
     private static final String DELETE_MESSAGE = "Are you sure you want to delete this translation card?";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
+    private Dictionary.Translation translation;
 
     @Before
     public void setUp() {
@@ -65,8 +68,9 @@ public class TranslationsActivityTest {
         dbManagerMock = mock(DbManager.class);
         Dictionary[] dictionaries = new Dictionary[1];
         Dictionary.Translation[] translations = new Dictionary.Translation[1];
-        translations[0] = new Dictionary.Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG,
+        translation = new Dictionary.Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG,
                 TRANSLATED_TEXT);
+        translations[0] = translation;
         dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
@@ -99,6 +103,9 @@ public class TranslationsActivityTest {
         TextView editCardLabel = (TextView) translationsListItem.findViewById(R.id.edit_card_label);
         assertThat(editCardLabel.getText().toString(), is("Edit this flashcard"));
 
+        ImageView deleteCardIcon = (ImageView) translationsListItem.findViewById(R.id.delete_card_icon);
+        assertThat(deleteCardIcon, is(notNullValue()));
+
         TextView deleteCardLabel = (TextView) translationsListItem.findViewById(R.id.delete_card_label);
         assertThat(deleteCardLabel.getText().toString(), is("Delete this flashcard"));
     }
@@ -125,6 +132,10 @@ public class TranslationsActivityTest {
 
         ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
         assertThat(shadowAlertDialog.getMessage().toString(), is(DELETE_MESSAGE));
+
+        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        verify(dbManagerMock).deleteTranslation(translation.getDbId());
+        verify(dbManagerMock, times(2)).getAllDictionariesForDeck(DEFAULT_DECK_ID);
     }
 
     @Test

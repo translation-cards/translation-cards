@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/translation_child"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
         <View
             android:background="@color/lineColor"
@@ -117,6 +117,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/translation_card_delete">
+
+            <FrameLayout
+                android:layout_width="30dp"
+                android:layout_height="56dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/delete_card_icon"
+                    android:src="@drawable/delete"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/delete_card_label"
