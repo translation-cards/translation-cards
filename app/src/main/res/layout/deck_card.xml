@@ -26,6 +26,7 @@
         android:paddingBottom="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+
         android:fontFamily="Roboto-Medium"
         android:textSize="14dp"
         android:textColor="@color/colorSecondaryLight"

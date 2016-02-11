@@ -7,53 +7,58 @@
     android:background="@drawable/card_background"
     android:id="@+id/deck_card">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <TextView
-        android:id="@+id/origin_translation_text"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:paddingTop="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textSize="24dp"
-        android:textColor="@color/deckTitleColor"/>
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/origin_translation_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="16dp"
+            android:textSize="20dp"
+            android:maxWidth="253dp"
+            android:fontFamily="Roboto-Regular"
+            android:textColor="@color/deckTitleColor"/>
 
-    <FrameLayout
-        android:layout_width="1dip"
-        android:layout_height="match_parent">
-        <View
-            android:background="@color/lineColor"
-            android:layout_width = "match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_centerVertical ="true"
-            android:layout_alignParentTop="true"/>
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="1dip"
+            android:layout_height="match_parent">
+            <View
+                android:background="@color/lineColor"
+                android:layout_width = "match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+        </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/translation_arrow"
-        android:layout_width="30dp"
-        android:layout_height="56dp">
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center"
-            android:id="@+id/card_indicator"
-            android:src="@drawable/forward_arrow"/>
-    </FrameLayout>
-</LinearLayout>
-
+        <FrameLayout
+            android:id="@+id/translation_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:id="@+id/card_indicator"
+                android:src="@drawable/forward_arrow"/>
+        </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/translation_child"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
         <View
             android:background="@color/lineColor"
@@ -71,9 +76,11 @@
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:paddingLeft="16dp"
-                android:textSize="14dp"
-                android:fontFamily="Roboto-Medium"
-                android:textColor="@color/colorSecondaryLight"/>
+                android:paddingRight="20dp"
+                android:textSize="20dp"
+                android:maxWidth="253dp"
+                android:fontFamily="Roboto-Regular"
+                android:textColor="@color/deckTitleColor"/>
         </LinearLayout>
 
         <View
@@ -85,14 +92,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="16dp"
             android:id="@+id/translation_card_edit">
 
             <FrameLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp">
+                android:layout_height="56dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:id="@+id/edit_card_icon"
                     android:src="@drawable/edit"/>
@@ -102,11 +112,11 @@
                 android:id="@+id/edit_card_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="25dp"
                 android:paddingBottom="20dp"
-                android:paddingLeft="16dp"
-                android:textSize="14dp"
-                android:fontFamily="Roboto-Medium"
+                android:paddingLeft="10dp"
+                android:textSize="12dp"
+                android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
                 android:text="@string/edit_label"/>
 
@@ -116,14 +126,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="16dp"
+
             android:id="@+id/translation_card_delete">
 
             <FrameLayout
                 android:layout_width="30dp"
-                android:layout_height="56dp">
+                android:layout_height="56dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="10dp">
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:id="@+id/delete_card_icon"
                     android:src="@drawable/delete"/>
@@ -133,11 +147,11 @@
                 android:id="@+id/delete_card_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="15dp"
                 android:paddingBottom="20dp"
-                android:paddingLeft="16dp"
-                android:textSize="14dp"
-                android:fontFamily="Roboto-Medium"
+                android:paddingLeft="10dp"
+                android:textSize="12dp"
+                android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
                 android:text="@string/delete_label"/>
 

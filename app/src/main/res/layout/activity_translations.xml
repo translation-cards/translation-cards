@@ -22,7 +22,8 @@
     </HorizontalScrollView>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="328dp"
+        android:layout_centerHorizontal="true"
         android:layout_height="match_parent"
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
@@ -31,7 +32,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="8dp"
+        android:layout_height="4dp"
         android:background="#00000000"
         android:src="@drawable/main_tabbar_shadow"
         android:scaleType="fitXY"
