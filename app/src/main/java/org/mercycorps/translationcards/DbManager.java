@@ -422,7 +422,7 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            long creationTimestamp = (new Date()).getTime() / 1000;
+            long creationTimestamp = (new Date()).getTime();
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),

@@ -175,7 +175,7 @@ public class TranslationsActivity extends AppCompatActivity {
             case REQUEST_KEY_ADD_CARD:
             case REQUEST_KEY_EDIT_CARD:
                 if (resultCode == RESULT_OK) {
-                    dictionaries = dbm.getAllDictionaries();
+                    dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
                     setDictionary(currentDictionaryIndex);
                 }
                 break;

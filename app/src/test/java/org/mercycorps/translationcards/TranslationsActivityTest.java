@@ -38,7 +38,7 @@ public class TranslationsActivityTest {
     @Before
     public void setUp() {
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
         intent.putExtra("Deck", deck);
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
     }
