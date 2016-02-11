@@ -5,13 +5,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import java.util.Date;
 
 public class ImportActivity extends AppCompatActivity {
+
+    private TxcPortingUtility portingUtility;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        portingUtility = new TxcPortingUtility();
         confirmAndLoadData(getIntent().getData());
     }
 
@@ -23,17 +30,7 @@ public class ImportActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                TxcPortingUtility portingUtility = new TxcPortingUtility();
-                                try {
-                                    portingUtility.importData(ImportActivity.this, source);
-                                } catch (ImportException e) {
-                                    alertUserOfFailure(e);
-                                    return;
-                                }
-                                Intent intent = new Intent(ImportActivity.this, TranslationsActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
+                                attemptImport(source);
                             }
                         })
                 .setNegativeButton(R.string.import_confirm_alert_negative,
@@ -46,17 +43,83 @@ public class ImportActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void alertUserOfFailure(ImportException error) {
+    private void attemptImport(Uri source) {
+        try {
+            TxcPortingUtility.ImportInfo importInfo =
+                    portingUtility.prepareImport(ImportActivity.this, source);
+            // Check if it's a deck we've already imported.
+            if (false && portingUtility.isExistingDeck(this, importInfo)) {
+                portingUtility.abortImport(this, importInfo);
+                alertUserOfFailure(getString(R.string.import_failure_existing_deck));
+                return;
+            }
+            // Check if it's a different version of a deck we've already imported.
+            if (importInfo.externalId != null && !importInfo.externalId.isEmpty()) {
+                long otherVersion = portingUtility.otherVersionExists(this, importInfo);
+                if (otherVersion != -1) {
+                    handleVersionOverride(importInfo, otherVersion);
+                    return;
+                }
+            }
+            portingUtility.executeImport(this, importInfo);
+        } catch (ImportException e) {
+            handleError(e);
+            return;
+        }
+        goToMainScreen();
+    }
+
+    private void handleVersionOverride(
+            final TxcPortingUtility.ImportInfo importInfo, final long otherVersion) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.import_version_override_title)
+                .setItems(R.array.version_override_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                finish();
+                                break;
+                            case 1:
+                                try {
+                                    portingUtility.executeImport(ImportActivity.this, importInfo);
+                                } catch (ImportException e) {
+                                    handleError(e);
+                                    return;
+                                }
+                                goToMainScreen();
+                                break;
+                            case 2:
+                                try {
+                                    portingUtility.executeImport(ImportActivity.this, importInfo);
+                                } catch (ImportException e) {
+                                    handleError(e);
+                                    return;
+                                }
+                                DbManager dbm = new DbManager(ImportActivity.this);
+                                dbm.deleteDeck(otherVersion);
+                                goToMainScreen();
+                                break;
+                        }
+                    }
+                });
+        builder.show();
+    }
+
+    private void handleError(ImportException e) {
         String errorMessage = getString(R.string.import_failure_default_error_message);
-        if (error.getProblem() == ImportException.ImportProblem.FILE_NOT_FOUND) {
+        if (e.getProblem() == ImportException.ImportProblem.FILE_NOT_FOUND) {
             errorMessage = getString(R.string.import_failure_file_not_found_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.NO_INDEX_FILE) {
+        } else if (e.getProblem() == ImportException.ImportProblem.NO_INDEX_FILE) {
             errorMessage = getString(R.string.import_failure_no_index_file_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.INVALID_INDEX_FILE) {
+        } else if (e.getProblem() == ImportException.ImportProblem.INVALID_INDEX_FILE) {
             errorMessage = getString(R.string.import_failure_invalid_index_file_error_message);
-        } else if (error.getProblem() == ImportException.ImportProblem.READ_ERROR) {
+        } else if (e.getProblem() == ImportException.ImportProblem.READ_ERROR) {
             errorMessage = getString(R.string.import_failure_read_error_error_message);
         }
+        alertUserOfFailure(errorMessage);
+    }
+
+    private void alertUserOfFailure(String errorMessage) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.import_failure_alert_title)
                 .setMessage(errorMessage)
@@ -67,5 +130,12 @@ public class ImportActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private void goToMainScreen() {
+        Intent intent = new Intent(this, DecksActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }
