@@ -146,6 +146,10 @@ public class DbManager {
             // Delete all the files.
             for (int i = 0; i < dictionary.getTranslationCount(); i++) {
                 Dictionary.Translation translation = dictionary.getTranslation(i);
+                if (translation.getIsAsset()) {
+                    // Don't delete the built-in assets.
+                    continue;
+                }
                 File file = new File(translation.getFilename());
                 if (file.exists()) {
                     // It should always exist, but check to be safe.
