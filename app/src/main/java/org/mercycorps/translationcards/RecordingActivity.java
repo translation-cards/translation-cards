@@ -18,6 +18,7 @@ package org.mercycorps.translationcards;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -66,6 +67,8 @@ public class RecordingActivity extends AppCompatActivity {
     public static final String INTENT_KEY_TRANSLATION_TEXT = "translatedText";
 
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+    private Deck deck;
+    private Intent intent;
 
     private enum Step {
         INSTRUCTIONS,
@@ -109,6 +112,9 @@ public class RecordingActivity extends AppCompatActivity {
         translationId = getIntent().getLongExtra(INTENT_KEY_TRANSLATION_ID, -1);
         label = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_LABEL);
         translatedText = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_TEXT);
+        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
+        intent = new Intent();
+        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
         isAsset = savedIsAsset = getIntent().getBooleanExtra(
                 INTENT_KEY_TRANSLATION_IS_ASSET, false);
         filename = savedFilename = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_FILENAME);
@@ -161,7 +167,7 @@ public class RecordingActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
         });
@@ -211,7 +217,7 @@ public class RecordingActivity extends AppCompatActivity {
                             oldFile.delete();
                         }
                     }
-                    setResult(RESULT_OK);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             });
@@ -511,7 +517,7 @@ public class RecordingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 recycleBitmap();
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -547,7 +553,7 @@ public class RecordingActivity extends AppCompatActivity {
                         grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     moveToLabelStep();
                 } else {
-                    setResult(RESULT_CANCELED);
+                    setResult(RESULT_CANCELED, intent);
                     finish();
                 }
                 break;

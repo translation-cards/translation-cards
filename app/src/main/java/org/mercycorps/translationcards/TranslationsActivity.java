@@ -69,7 +69,7 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        Deck deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -166,6 +166,7 @@ public class TranslationsActivity extends AppCompatActivity {
         intent.putExtra(
                 RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
+        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
@@ -274,6 +275,7 @@ public class TranslationsActivity extends AppCompatActivity {
                     RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
             intent.putExtra(
                     RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
+            intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }
