@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Fragment to play translation card audio and show translated text
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 public class PlayCardFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "PlayCardFragment";

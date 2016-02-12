@@ -25,6 +25,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test for TranslationsActivity
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class TranslationsActivityTest {

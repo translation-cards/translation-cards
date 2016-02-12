@@ -26,6 +26,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.robolectric.Shadows.shadowOf;
 
+/**
+ * Tests for DecksActivity
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class DecksActivityTest {

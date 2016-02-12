@@ -16,6 +16,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for the main screen, with a list of Decks that contain translation cards
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 public class DecksActivity extends AppCompatActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
