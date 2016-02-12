@@ -2,6 +2,7 @@ package org.mercycorps.translationcards;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
 import java.io.File;
@@ -11,7 +12,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,7 @@ public class TxcPortingUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final int BUFFER_SIZE = 2048;
 
-    public void exportData(Dictionary[] dictionaries, File file) throws ExportException {
+    public void exportData(Deck deck, Dictionary[] dictionaries, File file) throws ExportException {
         ZipOutputStream zos = null;
         try {
             OutputStream os;
@@ -43,7 +48,7 @@ public class TxcPortingUtility {
             }
             zos = new ZipOutputStream(os);
             Map<String, Dictionary.Translation> translationFilenames =
-                    buildIndex(dictionaries, zos);
+                    buildIndex(deck, dictionaries, zos);
             for (String filename : translationFilenames.keySet()) {
                 addFileToZip(filename, translationFilenames.get(filename), zos);
             }
@@ -66,10 +71,15 @@ public class TxcPortingUtility {
     }
 
     private Map<String, Dictionary.Translation> buildIndex(
-            Dictionary[] dictionaries, ZipOutputStream zos) throws ExportException {
+            Deck deck, Dictionary[] dictionaries, ZipOutputStream zos) throws ExportException {
         Map<String, Dictionary.Translation> translationFilenames = new HashMap<>();
         try {
             zos.putNextEntry(new ZipEntry(INDEX_FILENAME));
+            String metaLine = String.format("META:%s|%s|%s|%d\n",
+                    deck.getLabel(), deck.getPublisher(),
+                    deck.getExternalId() == null ? "" : deck.getExternalId(),
+                    deck.getTimestamp());
+            zos.write(metaLine.getBytes());
             for (Dictionary dictionary : dictionaries) {
                 String language = dictionary.getLabel();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
@@ -128,13 +138,56 @@ public class TxcPortingUtility {
         }
     }
 
-    public void importData(Context context, Uri source) throws ImportException {
+    public ImportInfo prepareImport(Context context, Uri source) throws ImportException {
+        String hash = getFileHash(context, source);
         ZipInputStream zip = getZip(context, source);
         String filename = source.getLastPathSegment();
         File targetDir = getImportTargetDirectory(context, filename);
         String indexFilename = readFiles(zip, targetDir);
-        List<ImportItem> index = getIndex(targetDir, indexFilename);
-        loadData(context, targetDir, index);
+        return getIndex(targetDir, indexFilename, filename, hash);
+    }
+
+    public void executeImport(Context context, ImportInfo importInfo) throws ImportException {
+        loadData(context, importInfo);
+    }
+
+    public void abortImport(Context context, ImportInfo importInfo) {
+        importInfo.dir.delete();
+    }
+
+    public boolean isExistingDeck(Context context, ImportInfo importInfo) {
+        DbManager dbm = new DbManager(context);
+        return dbm.hasDeckWithHash(importInfo.hash);
+    }
+
+    public long otherVersionExists(Context context, ImportInfo importInfo) {
+        DbManager dbm = new DbManager(context);
+        return dbm.hasDeckWithExternalId(importInfo.externalId);
+    }
+
+    private String getFileHash(Context context, Uri source) throws ImportException {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(source);
+        } catch (FileNotFoundException e) {
+            throw new ImportException(ImportException.ImportProblem.FILE_NOT_FOUND, e);
+        }
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new ImportException(null, e);
+        }
+        try {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                md.update(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            throw new ImportException(ImportException.ImportProblem.READ_ERROR, e);
+        }
+        return (new BigInteger(md.digest())).toString(16);
     }
 
     private ZipInputStream getZip(Context context, Uri source) throws ImportException {
@@ -202,50 +255,93 @@ public class TxcPortingUtility {
         return indexFilename;
     }
 
-    private List<ImportItem> getIndex(File dir, String indexFilename) throws ImportException {
-        List<ImportItem> results = new ArrayList<>();
+    private ImportInfo getIndex(File dir, String indexFilename, String defaultLabel, String hash)
+            throws ImportException {
+        String label = defaultLabel;
+        String publisher = null;
+        String externalId = null;
+        long timestamp = -1;
+        List<ImportItem> items = new ArrayList<>();
         Scanner s;
         try {
             s = new Scanner(new File(dir, indexFilename));
         } catch (FileNotFoundException e) {
             throw new ImportException(ImportException.ImportProblem.NO_INDEX_FILE, e);
         }
+        boolean isFirstLine = true;
         while (s.hasNextLine()) {
-            String line = s.nextLine();
+            String line = s.nextLine().trim();
+            if (isFirstLine) {
+                isFirstLine = false;
+                // It was the first line; see if it's meta information.
+                if (line.startsWith("META:")) {
+                    String[] metaLine = line.substring(5).split("\\|");
+                    if (metaLine.length == 4) {
+                        label = metaLine[0];
+                        publisher = metaLine[1];
+                        externalId = metaLine[2];
+                        timestamp = Long.valueOf(metaLine[3]);
+                        continue;
+                    }
+                }
+            }
             String[] split = line.trim().split("\\|");
             if (split.length == 3) {
-                results.add(new ImportItem(split[0], split[1], split[2], ""));
+                items.add(new ImportItem(split[0], split[1], split[2], ""));
             } else if (split.length == 4) {
-                results.add(new ImportItem(split[0], split[1], split[2], split[3]));
+                items.add(new ImportItem(split[0], split[1], split[2], split[3]));
             } else {
                 s.close();
                 throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
         }
         s.close();
-        return results;
+        return new ImportInfo(label, publisher, externalId, timestamp, hash, items, dir);
     }
 
-    private void loadData(Context context, File dir, List<ImportItem> index) {
+    private void loadData(Context context, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
-        Map<String, Long> dictionaryLookup = getDictionaryLookup(dbm);
+        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
+                importInfo.externalId, importInfo.hash);
+        Map<String, Long> dictionaryLookup = new HashMap<>();
+        int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
         // the list and want them to appear in the correct order.
-        for (int i = index.size() - 1; i >= 0; i--) {
-            ImportItem item = index.get(i);
-            File targetFile = new File(dir, item.name);
-            long dictionaryId = dictionaryLookup.get(item.language.toLowerCase());
+        for (int i = importInfo.items.size() - 1; i >= 0; i--) {
+            ImportItem item = importInfo.items.get(i);
+            File targetFile = new File(importInfo.dir, item.name);
+            String dictionaryLookupKey = item.language.toLowerCase();
+            if (!dictionaryLookup.containsKey(dictionaryLookupKey)) {
+                long dictionaryId = dbm.addDictionary(item.language, dictionaryIndex, deckId);
+                dictionaryIndex++;
+                dictionaryLookup.put(dictionaryLookupKey, dictionaryId);
+            }
+            long dictionaryId = dictionaryLookup.get(dictionaryLookupKey);
             dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath(),
                     item.translatedText);
         }
     }
 
-    private Map<String, Long> getDictionaryLookup(DbManager dbm) {
-        Map<String, Long> results = new HashMap<>();
-        for (Dictionary dictionary : dbm.getAllDictionaries()) {
-            results.put(dictionary.getLabel().toLowerCase(), dictionary.getDbId());
+    public class ImportInfo {
+
+        public final String label;
+        public final String publisher;
+        public final String externalId;
+        public final long timestamp;
+        public final String hash;
+        public final List<ImportItem> items;
+        public final File dir;
+
+        public ImportInfo(String label, String publisher, String externalId, long timestamp,
+                          String hash, List<ImportItem> items, File dir) {
+            this.label = label;
+            this.publisher = publisher;
+            this.externalId = externalId;
+            this.timestamp = timestamp;
+            this.hash = hash;
+            this.items = items;
+            this.dir = dir;
         }
-        return results;
     }
 
     private class ImportItem {

@@ -8,7 +8,7 @@
     <string name="recording_instructions_header">Make your own flashcards</string>
     <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
     <string name="recording_instructions_button_getstarted">GET STARTED</string>
-    <string name="recording_label_create_title">Write your phrase and translation</string>
+    <string name="recording_label_create_title">Write your %s phrase and translation</string>
     <string name="recording_label_edit_title">Update or delete your flashcard</string>
     <string name="recording_label_detail">An effective flashcard phrase is short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
     <string name="recording_label_hint_text">Flashcard phrase</string>
@@ -32,11 +32,23 @@
     <string name="import_failure_no_index_file_error_message">TXC file did not have an index.</string>
     <string name="import_failure_invalid_index_file_error_message">TXC file index was invalid.</string>
     <string name="import_failure_read_error_error_message">Error reading TXC file or its contents.</string>
+    <string name="import_failure_existing_deck">Deck has already been imported.</string>
     <string name="export_progress_dialog_title">Export in progress</string>
     <string name="export_progress_dialog_message">Please wait, building file...</string>
     <string name="export_failure_target_file_not_found_error_message">Target file not found.</string>
-    <string name="export_failure_write_error_error_message">Target file not found.</string>
+    <string name="export_failure_write_error_error_message">Error writing file.</string>
     <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
     <string name="data_default_deck_name">Default</string>
+    <string name="my_decks">My Decks</string>
+    <string name="data_default_deck_publisher">My Deck</string>
+    <string name="default_origin_language">ENGLISH</string>
+    <string name="no_translation_text">No Translation Provided</string>
+    <string name="import_version_override_title">Override other version?</string>
+    <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
+    <string-array name="version_override_options">
+        <item>Cancel import</item>
+        <item>Import this, but keep existing deck</item>
+        <item>Import this and delete existing deck</item>
+    </string-array>
 </resources>

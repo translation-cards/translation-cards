@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background"
+    android:id="@+id/deck_card">
+
+    <TextView
+        android:id="@+id/deck_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="20dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="24dp"
+        android:textColor="@color/deckTitleColor"
+        />
+
+    <TextView
+        android:id="@+id/deck_information"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:fontFamily="Roboto-Medium"
+        android:textSize="14dp"
+        android:textColor="@color/colorSecondaryLight"
+        android:gravity="top" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:background="@color/lineColor"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"
+            android:layout_centerVertical ="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/origin_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="16dp"
+            android:textSize="14dp"
+            android:fontFamily="Roboto-Medium"
+            android:textColor="@color/colorSecondaryLight"
+            android:text="@string/default_origin_language"/>
+
+        <FrameLayout
+            android:id="@+id/translation_arrow"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:layout_toRightOf="@+id/origin_language">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/forward_arrow"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/translation_languages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/translation_arrow"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="26dp"
+            android:textSize="14dp"
+            android:fontFamily="Roboto-Medium"
+            android:textColor="@color/colorPrimary"
+            android:lineSpacingExtra="10dp"/>
+    </RelativeLayout>
+
+</LinearLayout>
