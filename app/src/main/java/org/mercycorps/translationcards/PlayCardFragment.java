@@ -61,7 +61,6 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("NICK", "onStop called");
         lastMediaPlayerManager.stop();
     }
 
