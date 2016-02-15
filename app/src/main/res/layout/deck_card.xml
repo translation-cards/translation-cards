@@ -55,7 +55,7 @@
             android:text="@string/default_origin_language"/>
 
         <FrameLayout
-            android:id="@+id/translation_indicator"
+            android:id="@+id/translation_indicator_layout"
             android:layout_width="30dp"
             android:layout_height="56dp"
             android:layout_toRightOf="@+id/origin_language">
@@ -70,7 +70,7 @@
             android:id="@+id/translation_languages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/translation_indicator"
+            android:layout_toRightOf="@+id/translation_indicator_layout"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:paddingRight="26dp"

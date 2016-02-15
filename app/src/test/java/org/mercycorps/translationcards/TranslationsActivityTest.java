@@ -1,8 +1,11 @@
 package org.mercycorps.translationcards;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -147,10 +150,10 @@ public class TranslationsActivityTest {
 
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
 
-        translationsListItem.findViewById(R.id.translation_indicator).performClick();
+        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
 
-        translationsListItem.findViewById(R.id.translation_indicator).performClick();
+        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
     }
 

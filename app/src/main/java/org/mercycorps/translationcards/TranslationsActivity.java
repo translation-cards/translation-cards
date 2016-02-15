@@ -194,8 +194,9 @@ public class TranslationsActivity extends RoboActionBarActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
-                convertView.findViewById(R.id.translation_indicator)
+                convertView.findViewById(R.id.translation_indicator_layout)
                         .setOnClickListener(new CardIndicatorClickListener(convertView));
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
             }
             convertView.findViewById(R.id.translation_card_edit)
                     .setOnClickListener(new CardEditClickListener(getItem(position)));
@@ -230,10 +231,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         @Override
         public void onClick(View view) {
-            if (translationItem.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
-                translationItem.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+            View translationChild = translationItem.findViewById(R.id.translation_child);
+            if (translationChild.getVisibility() == View.GONE) {
+                translationChild.setVisibility(View.VISIBLE);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.back_arrow);
             } else {
-                translationItem.findViewById(R.id.translation_child).setVisibility(View.GONE);
+                translationChild.setVisibility(View.GONE);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
             }
         }
     }
