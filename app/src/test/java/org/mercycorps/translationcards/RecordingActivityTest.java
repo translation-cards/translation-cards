@@ -13,6 +13,11 @@ import org.robolectric.annotation.Config;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+/**
+ * Test for RecordingActivity
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class RecordingActivityTest {

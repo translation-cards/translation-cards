@@ -25,7 +25,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -107,14 +107,14 @@ public class DbManager {
                 DictionariesTable.TABLE_NAME, null,
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
-                null);
+                String.format("%s DESC", DictionariesTable.ID));
 
         Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while (hasNext) {
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
-            Long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
+            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
             Dictionary dictionary = new Dictionary(label, getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
             dictionaries[i] = dictionary;
             i++;
@@ -125,16 +125,50 @@ public class DbManager {
     }
 
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationDate) {
+                        long creationTimestamp, String externalId, String hash) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
-        values.put(DecksTable.CREATION_DATE, creationDate);
+        values.put(DecksTable.CREATION_TIMESTAMP, creationTimestamp);
+        values.put(DecksTable.EXTERNAL_ID, externalId);
+        values.put(DecksTable.HASH, hash);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
-    public long addDeck(String label, String publisher, long creationDate) {
-        return addDeck(dbh.getWritableDatabase(), label, publisher, creationDate);
+    public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
+                        String hash) {
+        return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
+                hash);
+    }
+
+    public void deleteDeck(long deckId) {
+        Dictionary[] dictionaries = getAllDictionariesForDeck(deckId);
+        for (Dictionary dictionary : dictionaries) {
+            // Delete all the files.
+            for (int i = 0; i < dictionary.getTranslationCount(); i++) {
+                Dictionary.Translation translation = dictionary.getTranslation(i);
+                if (translation.getIsAsset()) {
+                    // Don't delete the built-in assets.
+                    continue;
+                }
+                File file = new File(translation.getFilename());
+                if (file.exists()) {
+                    // It should always exist, but check to be safe.
+                    file.delete();
+                }
+            }
+            // Delete the rows in the translations table.
+            String whereClause = TranslationsTable.DICTIONARY_ID + " = ?";
+            String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
+            dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
+        }
+        // Delete the rows in the dictionaries table.
+        String whereClause = DictionariesTable.DECK_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deckId)};
+        dbh.getWritableDatabase().delete(DictionariesTable.TABLE_NAME, whereClause, whereArgs);
+        // Delete the row from the deck table.
+        whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
+        dbh.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
     public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
@@ -210,24 +244,58 @@ public class DbManager {
         dbh.close();
     }
 
-    public List<Deck> getAllDecks() {
+    public Deck[] getAllDecks() {
         Cursor cursor = dbh.getReadableDatabase().query(
                 DecksTable.TABLE_NAME, null,
                 null, null, null, null,
                 String.format("%s DESC", DecksTable.ID));
-        List<Deck> decks = new ArrayList<>();
+        Deck[] decks = new Deck[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
+        int i = 0;
         while(hasNext){
             Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_DATE)));
-            decks.add(deck);
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)));
+
+            decks[i] = deck;
             hasNext = cursor.moveToNext();
+            i++;
         }
         cursor.close();
         dbh.close();
         return decks;
+    }
+
+    public boolean hasDeckWithHash(String hash) {
+        String[] columns = new String[] {DecksTable.ID};
+        String selection = DecksTable.HASH + " = ?";
+        String[] selectionArgs = new String[] {hash};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        return result;
+    }
+
+    public long hasDeckWithExternalId(String externalId) {
+        // TODO(nworden): consider handling this better when there's multiple existing decks with
+        // this external ID
+        String[] columns = new String[] {DecksTable.ID};
+        String selection = DecksTable.EXTERNAL_ID + " = ?";
+        String[] selectionArgs = new String[] {externalId};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null,
+                String.format("%s DESC", DecksTable.CREATION_TIMESTAMP), "1");
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return -1;
+        }
+        cursor.moveToFirst();
+        long result = cursor.getLong(cursor.getColumnIndexOrThrow(DecksTable.ID));
+        cursor.close();
+        return result;
     }
 
     private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
@@ -279,7 +347,9 @@ public class DbManager {
         public static final String ID = "id";
         public static final String LABEL = "label";
         public static final String PUBLISHER = "publisher";
-        public static final String CREATION_DATE = "creationDate";
+        public static final String CREATION_TIMESTAMP = "creationTimestamp";
+        public static final String EXTERNAL_ID = "externalId";
+        public static final String HASH = "hash";
     }
 
     private class DictionariesTable {
@@ -312,7 +382,9 @@ public class DbManager {
                 DecksTable.ID + " INTEGER PRIMARY KEY," +
                 DecksTable.LABEL + " TEXT," +
                 DecksTable.PUBLISHER + " TEXT," +
-                DecksTable.CREATION_DATE + " INTEGER" +
+                DecksTable.CREATION_TIMESTAMP + " INTEGER," +
+                DecksTable.EXTERNAL_ID + " TEXT," +
+                DecksTable.HASH + " TEXT" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
@@ -351,11 +423,11 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            long creationDate = (new Date()).getTime();
+            long creationTimestamp = (new Date()).getTime();
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationDate);
+                    creationTimestamp, null, null);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -384,12 +456,11 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-                long creationDate = (new Date()).getTime() / 1000;
+                long creationTimestamp = (new Date()).getTime() / 1000;
                 long defaultDeckId = addDeck(
                         db, context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationDate);
+                        creationTimestamp, null, null);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

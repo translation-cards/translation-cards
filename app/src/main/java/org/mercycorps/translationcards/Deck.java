@@ -15,18 +15,20 @@ public class Deck implements Serializable {
 
     private final String label;
     private final String publisher;
+    private final String externalId;
     private final long dbId;
-    private long creationDate;
+    private long timestamp;
 
-    public Deck(String label, String publisher, long dbId, long creationDate) {
+    public Deck(String label, String publisher, String externalId, long dbId, long timestamp) {
         this.label = label;
         this.publisher = publisher;
+        this.externalId = externalId;
         this.dbId = dbId;
-        this.creationDate = creationDate;
+        this.timestamp = timestamp;
     }
 
-    public Deck(String label, String publisher, long creationDate) {
-        this(label, publisher, -1, creationDate);
+    public Deck(String label, String publisher, String externalId, long timestamp) {
+        this(label, publisher, externalId, -1, timestamp);
     }
 
     public String getLabel() {
@@ -37,12 +39,20 @@ public class Deck implements Serializable {
         return publisher;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
     public long getDbId() {
         return dbId;
     }
 
-    public String getCreationDate() {
-        Date date = new Date(creationDate);
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public String getCreationDateString() {
+        Date date = new Date(timestamp);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         String formattedDate = dateFormat.format(date);
         return formattedDate;

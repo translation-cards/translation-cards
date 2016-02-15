@@ -159,6 +159,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
         intent.putExtra(
                 RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
+        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
@@ -263,6 +264,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translationCard.getFilename());
             intent.putExtra(
                     RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translationCard.getTranslatedText());
+            intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }
@@ -316,10 +319,10 @@ public class TranslationsActivity extends RoboActionBarActivity {
             TxcPortingUtility portingUtility = new TxcPortingUtility();
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
-                // TODO(nworden): use the actual deck ID and creation date
                 portingUtility.exportData(
-                        new Deck("Label", "Publisher", -1, (long) -1),
-                        dbm.getAllDictionaries(), targetFile);
+                        new Deck(deck.getLabel(), deck.getPublisher(), deck.getExternalId(),
+                                deck.getDbId(), deck.getTimestamp()),
+                        dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override

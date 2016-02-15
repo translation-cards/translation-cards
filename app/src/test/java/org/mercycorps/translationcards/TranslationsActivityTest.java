@@ -24,6 +24,9 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 
+import java.util.Arrays;
+import java.util.List;
+
 import roboguice.RoboGuice;
 
 import static junit.framework.Assert.assertTrue;
@@ -38,6 +41,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
+/**
+ * Test for TranslationsActivity
+ *
+ * @author patdale216@gmail.com (Pat Dale)
+ */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class TranslationsActivityTest {
@@ -58,7 +66,7 @@ public class TranslationsActivityTest {
     public void setUp() {
         RoboGuice.setUseAnnotationDatabases(false);
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
         intent.putExtra("Deck", deck);
         initializeMockDbManager();
         RoboGuice.overrideApplicationInjector(RuntimeEnvironment.application,
