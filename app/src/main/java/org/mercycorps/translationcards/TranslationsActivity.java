@@ -21,10 +21,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +35,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +71,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private View[] languageTabBorders;
     private CardListAdapter listAdapter;
     private Deck deck;
+    private MediaPlayerManager lastMediaPlayerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +120,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
-                this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>(), list);
+                this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         addTranslationButton.setOnClickListener(new View.OnClickListener() {
@@ -177,13 +183,10 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
 
-        private final View.OnClickListener clickListener;
-
         public CardListAdapter(
-                Context context, int resource, int textViewResourceId, List<Dictionary.Translation> objects,
-                ListView list) {
+                Context context, int resource, int textViewResourceId,
+                List<Dictionary.Translation> objects) {
             super(context, resource, textViewResourceId, objects);
-            clickListener = new CardClickListener(list);
         }
 
         @Override
@@ -191,37 +194,46 @@ public class TranslationsActivity extends RoboActionBarActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
-                convertView.setOnClickListener(clickListener);
+                convertView.findViewById(R.id.translation_indicator)
+                        .setOnClickListener(new CardIndicatorClickListener(convertView));
             }
-            convertView.findViewById(R.id.translation_card_edit).setOnClickListener(
-                    new CardEditClickListener(getItem(position)));
+            convertView.findViewById(R.id.translation_card_edit)
+                    .setOnClickListener(new CardEditClickListener(getItem(position)));
 
-            convertView.findViewById(R.id.translation_card_delete).setOnClickListener(
-                    new CardDeleteClickListener(getItem(position).getDbId()));
+            convertView.findViewById(R.id.translation_card_delete)
+                    .setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
 
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
 
+            ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.list_item_progress_bar);
+            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             translatedText.setText(getItem(position).getTranslatedText());
+
+            convertView.findViewById(R.id.translated_text_layout)
+                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+
             return convertView;
         }
     }
 
-    private class CardClickListener implements View.OnClickListener {
+    private class CardIndicatorClickListener implements View.OnClickListener {
 
-        private final ListView list;
+        private View translationItem;
 
-        public CardClickListener(ListView list) {
-            this.list = list;
+        public CardIndicatorClickListener(View translationItem) {
+
+            this.translationItem = translationItem;
         }
 
         @Override
         public void onClick(View view) {
-            if (view.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
-                view.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+            if (translationItem.findViewById(R.id.translation_child).getVisibility() == View.GONE) {
+                translationItem.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
             } else {
-                view.findViewById(R.id.translation_child).setVisibility(View.GONE);
+                translationItem.findViewById(R.id.translation_child).setVisibility(View.GONE);
             }
         }
     }
@@ -235,14 +247,6 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         @Override
         public void onClick(View view) {
-//            View listItem = (View) view.getParent().getParent().getParent();
-//            int position = list.getPositionForView(listItem);
-//            if (position == 0 ||
-//                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
-//                // It's a click on the header or footer bumper, ignore it.
-//                return;
-//            }
-//
             Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
@@ -350,5 +354,38 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 .setTitle(R.string.import_failure_alert_title)
                 .setMessage(errorMessage)
                 .show();
+    }
+
+    private class CardAudioClickListener implements View.OnClickListener {
+        private Dictionary.Translation translationCard;
+        private final ProgressBar progressBar;
+
+        public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar) {
+            this.translationCard = translationCard;
+            this.progressBar = progressBar;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (lastMediaPlayerManager != null) {
+                lastMediaPlayerManager.stop();
+            }
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
+                translationCard.setMediaPlayerDataSource(TranslationsActivity.this, mediaPlayer);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                Log.d(TAG, "Error getting audio asset: " + e);
+                return;
+            }
+
+            lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
+            mediaPlayer.setOnCompletionListener(
+                    new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
+            progressBar.setMax(mediaPlayer.getDuration());
+            mediaPlayer.start();
+            new Thread(lastMediaPlayerManager).start();
+        }
     }
 }

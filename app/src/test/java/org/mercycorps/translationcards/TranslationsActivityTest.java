@@ -147,10 +147,10 @@ public class TranslationsActivityTest {
 
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
 
-        translationsListItem.performClick();
+        translationsListItem.findViewById(R.id.translation_indicator).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
 
-        translationsListItem.performClick();
+        translationsListItem.findViewById(R.id.translation_indicator).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
     }
 

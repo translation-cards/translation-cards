@@ -38,7 +38,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/translation_arrow"
+            android:id="@+id/translation_indicator"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingRight="16dp"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/translation_child"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
         <View
             android:background="@color/lineColor"
@@ -68,7 +68,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/translated_text_layout">
             <TextView
                 android:id="@+id/translated_text"
                 android:layout_width="wrap_content"
@@ -93,7 +94,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:id="@+id/translation_card_edit">
+            android:id="@+id/translation_card_edit"
+            android:weightSum="1">
 
             <FrameLayout
                 android:layout_width="30dp"
@@ -110,7 +112,7 @@
 
             <TextView
                 android:id="@+id/edit_card_label"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="25dp"
                 android:paddingBottom="20dp"
@@ -118,7 +120,7 @@
                 android:textSize="12dp"
                 android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
-                android:text="@string/edit_label"/>
+                android:text="@string/edit_label" />
 
         </LinearLayout>
 
@@ -145,7 +147,7 @@
 
             <TextView
                 android:id="@+id/delete_card_label"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="15dp"
                 android:paddingBottom="20dp"
