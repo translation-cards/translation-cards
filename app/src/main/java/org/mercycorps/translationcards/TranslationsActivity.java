@@ -120,6 +120,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
         ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
+        findViewById(R.id.card_list_header).setOnClickListener(null);
+
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
                 this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>());
@@ -202,8 +204,6 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
                 convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
             }
-            convertView.findViewById(R.id.translation_indicator_layout)
-                    .setOnClickListener(new CardIndicatorClickListener(convertView, position));
 
             if (translationCardStates[position]) {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
@@ -212,6 +212,11 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.GONE);
                 convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
             }
+
+            convertView.setOnClickListener(null);
+
+            convertView.findViewById(R.id.translation_indicator_layout)
+                    .setOnClickListener(new CardIndicatorClickListener(convertView, position));
 
             convertView.findViewById(R.id.translation_card_edit)
                     .setOnClickListener(new CardEditClickListener(getItem(position)));
