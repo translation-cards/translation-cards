@@ -50,9 +50,7 @@ public class TranslationsActivity extends AppCompatActivity {
 
     private static final String TAG = "TranslationsActivity";
 
-    private static final String FEEDBACK_URL =
-            "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=0.2.1";
+    public static final String INTENT_KEY_DECK = "deck";
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
@@ -69,7 +67,7 @@ public class TranslationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbm = new DbManager(this);
-        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -166,7 +164,7 @@ public class TranslationsActivity extends AppCompatActivity {
         intent.putExtra(
                 RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
-        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+        intent.putExtra(INTENT_KEY_DECK, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
@@ -275,7 +273,7 @@ public class TranslationsActivity extends AppCompatActivity {
                     RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
             intent.putExtra(
                     RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
-            intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+            intent.putExtra(INTENT_KEY_DECK, deck);
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
     }

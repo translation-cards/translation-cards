@@ -25,7 +25,6 @@ public class DecksActivity extends AppCompatActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.2.1";
-    public static final String INTENT_KEY_DECK_ID = "Deck";
     private DbManager dbManager;
 
 
@@ -85,8 +84,10 @@ public class DecksActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra(INTENT_KEY_DECK_ID, getItem(position));
+                        Intent decksIntent = new Intent(
+                                DecksActivity.this, TranslationsActivity.class);
+                        decksIntent.putExtra(
+                                TranslationsActivity.INTENT_KEY_DECK, getItem(position));
                         DecksActivity.this.startActivity(decksIntent);
                     }
                 });
