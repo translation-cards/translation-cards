@@ -223,14 +223,14 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     .setOnClickListener(new CardIndicatorClickListener(convertView, position));
 
             View editView = convertView.findViewById(R.id.translation_card_edit);
+            View deleteView = convertView.findViewById(R.id.translation_card_delete);
             if (deck.isLocked()) {
                 editView.setVisibility(View.GONE);
+                deleteView.setVisibility(View.GONE);
             } else {
                 editView.setOnClickListener(new CardEditClickListener(getItem(position)));
+                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
             }
-
-            convertView.findViewById(R.id.translation_card_delete)
-                    .setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
 
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
