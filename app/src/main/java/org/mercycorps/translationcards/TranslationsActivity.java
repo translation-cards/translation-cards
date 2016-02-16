@@ -127,12 +127,16 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
-        addTranslationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddTranslationDialog();
-            }
-        });
+        if (deck.isLocked()) {
+            addTranslationButton.setVisibility(View.GONE);
+        } else {
+            addTranslationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAddTranslationDialog();
+                }
+            });
+        }
     }
 
     private void setDictionary(int dictionaryIndex) {
@@ -218,8 +222,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
             convertView.findViewById(R.id.translation_indicator_layout)
                     .setOnClickListener(new CardIndicatorClickListener(convertView, position));
 
-            convertView.findViewById(R.id.translation_card_edit)
-                    .setOnClickListener(new CardEditClickListener(getItem(position)));
+            View editView = convertView.findViewById(R.id.translation_card_edit);
+            if (deck.isLocked()) {
+                editView.setVisibility(View.GONE);
+            } else {
+                editView.setOnClickListener(new CardEditClickListener(getItem(position)));
+            }
 
             convertView.findViewById(R.id.translation_card_delete)
                     .setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
