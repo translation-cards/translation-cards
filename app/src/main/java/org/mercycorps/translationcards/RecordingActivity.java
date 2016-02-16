@@ -418,8 +418,7 @@ public class RecordingActivity extends AppCompatActivity {
         recordingsDir.mkdirs();
         File targetFile = new File(
                 recordingsDir,
-                String.format("%d_%s_%d.3gp",
-                        dictionaryId, label.replace(' ', '-'), (new Random()).nextInt()));
+                String.format("%d.3gp", (new Random()).nextInt() * (new Random()).nextInt()));
         filename = targetFile.getAbsolutePath();
         isAsset = false;
         mediaRecorder = new MediaRecorder();
