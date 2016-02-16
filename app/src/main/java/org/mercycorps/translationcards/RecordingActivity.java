@@ -266,8 +266,12 @@ public class RecordingActivity extends AppCompatActivity {
                         label.equals(getString(R.string.recording_label_hint_text))) {
                     return;
                 }
-                translatedText = translatedTextField.getText().toString();
 
+                translatedText = translatedTextField.getText().toString();
+                if(translatedText.trim().isEmpty()
+                        || translatedText.equals(getString(R.string.recording_text_hint_text))) {
+                    translatedText = "";
+                }
                 moveToAudioStep();
             }
         });
@@ -279,9 +283,9 @@ public class RecordingActivity extends AppCompatActivity {
                 getString(hintText))) {
             field.setText("");
             field.setTextColor(Color.BLACK);
-        } else if (!hasFocus && field.getText().toString().equals("")) {
+        } else if (!hasFocus && field.getText().toString().trim().isEmpty()) {
             field.setText(getString(hintText));
-            field.setTextColor(getResources().getColor(R.color.borderColor));
+            field.setTextColor(ContextCompat.getColor(this, R.color.borderColor));
         }
         if (hasFocus) {
             InputMethodManager inputMethodManager =
@@ -305,10 +309,10 @@ public class RecordingActivity extends AppCompatActivity {
         TextView text = (TextView) findViewById(R.id.recording_label_next_text);
         ImageView image = (ImageView) findViewById(R.id.recording_label_next_image);
         if (enabled) {
-            text.setTextColor(getResources().getColor(R.color.primaryTextColor));
+            text.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
             image.setImageResource(R.drawable.forward_arrow);
         } else {
-            text.setTextColor(getResources().getColor(R.color.navBarTextDisabled));
+            text.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
             image.setImageResource(R.drawable.forward_arrow_40p);
         }
     }
@@ -487,7 +491,7 @@ public class RecordingActivity extends AppCompatActivity {
 
     private void setAudioSaveButtonEnabled() {
         TextView text = (TextView) findViewById(R.id.recording_audio_save_text);
-        text.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        text.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
         ImageView image = (ImageView) findViewById(R.id.recording_audio_save_image);
         image.setImageResource(R.drawable.forward_arrow);
     }

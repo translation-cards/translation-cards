@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
-                android:textColor="@color/navBarTextDisabled"
+                android:textColor="@color/textDisabled"
                 android:text="@string/navigation_button_next"
                 android:id="@+id/recording_label_next_text" />
             <ImageView

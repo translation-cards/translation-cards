@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
-                android:textColor="@color/navBarTextDisabled"
+                android:textColor="@color/textDisabled"
                 android:text="@string/navigation_button_save"
                 android:id="@+id/recording_audio_save_text" />
             <ImageView

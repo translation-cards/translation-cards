@@ -45,8 +45,8 @@
     <string name="default_origin_language">ENGLISH</string>
     <string name="edit_label">Edit this flashcard</string>
     <string name="delete_label">Delete this flashcard</string>
-    <string name="no_translation_text">No Translation Provided</string>
     <string name="import_version_override_title">Override other version?</string>
+    <string name="empty_translated_text">Set phrase translation</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

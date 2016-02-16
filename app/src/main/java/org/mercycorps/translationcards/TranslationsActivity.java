@@ -26,8 +26,10 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,13 +143,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
-                    getResources().getColor(R.color.unselectedLanguageTabText));
+                    ContextCompat.getColor(this, R.color.unselectedLanguageTabText));
             languageTabBorders[currentDictionaryIndex].setBackgroundColor(0);
         }
         languageTabTextViews[dictionaryIndex].setTextColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         languageTabBorders[dictionaryIndex].setBackgroundColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         currentDictionaryIndex = dictionaryIndex;
         Dictionary dictionary = dictionaries[dictionaryIndex];
         listAdapter.clear();
@@ -231,7 +233,15 @@ public class TranslationsActivity extends RoboActionBarActivity {
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
-            translatedText.setText(getItem(position).getTranslatedText());
+            if(getItem(position).getTranslatedText().isEmpty()){
+                translatedText.setText(getString(R.string.empty_translated_text));
+                translatedText.setTextColor(ContextCompat.getColor(getContext(), R.color.textDisabled));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+            } else {
+                translatedText.setText(getItem(position).getTranslatedText());
+                translatedText.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryTextColor));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            }
 
             convertView.findViewById(R.id.translated_text_layout)
                     .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
