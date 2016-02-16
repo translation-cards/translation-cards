@@ -125,20 +125,21 @@ public class DbManager {
     }
 
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationTimestamp, String externalId, String hash) {
+                        long creationTimestamp, String externalId, String hash, boolean locked) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
         values.put(DecksTable.CREATION_TIMESTAMP, creationTimestamp);
         values.put(DecksTable.EXTERNAL_ID, externalId);
         values.put(DecksTable.HASH, hash);
+        values.put(DecksTable.LOCKED, locked ? 1 : 0);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
     public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash) {
+                        String hash, boolean locked) {
         return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash);
+                hash, locked);
     }
 
     public void deleteDeck(long deckId) {
@@ -257,7 +258,8 @@ public class DbManager {
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)));
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
+                    cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1);
 
             decks[i] = deck;
             hasNext = cursor.moveToNext();
@@ -350,6 +352,7 @@ public class DbManager {
         public static final String CREATION_TIMESTAMP = "creationTimestamp";
         public static final String EXTERNAL_ID = "externalId";
         public static final String HASH = "hash";
+        public static final String LOCKED = "locked";
     }
 
     private class DictionariesTable {
@@ -384,7 +387,8 @@ public class DbManager {
                 DecksTable.PUBLISHER + " TEXT," +
                 DecksTable.CREATION_TIMESTAMP + " INTEGER," +
                 DecksTable.EXTERNAL_ID + " TEXT," +
-                DecksTable.HASH + " TEXT" +
+                DecksTable.HASH + " TEXT," +
+                DecksTable.LOCKED + " INTEGER" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
@@ -427,7 +431,7 @@ public class DbManager {
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationTimestamp, null, null);
+                    creationTimestamp, null, null, false);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -460,7 +464,7 @@ public class DbManager {
                 long defaultDeckId = addDeck(
                         db, context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationTimestamp, null, null);
+                        creationTimestamp, null, null, false);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

@@ -343,9 +343,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
                 portingUtility.exportData(
-                        new Deck(deck.getLabel(), deck.getPublisher(), deck.getExternalId(),
-                                deck.getDbId(), deck.getTimestamp()),
-                        dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
+                        deck, dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override

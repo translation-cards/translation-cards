@@ -17,18 +17,21 @@ public class Deck implements Serializable {
     private final String publisher;
     private final String externalId;
     private final long dbId;
-    private long timestamp;
+    private final long timestamp;
+    private final boolean locked;
 
-    public Deck(String label, String publisher, String externalId, long dbId, long timestamp) {
+    public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
+                boolean locked) {
         this.label = label;
         this.publisher = publisher;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
+        this.locked = locked;
     }
 
-    public Deck(String label, String publisher, String externalId, long timestamp) {
-        this(label, publisher, externalId, -1, timestamp);
+    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked) {
+        this(label, publisher, externalId, -1, timestamp, locked);
     }
 
     public String getLabel() {
@@ -56,5 +59,9 @@ public class Deck implements Serializable {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         String formattedDate = dateFormat.format(date);
         return formattedDate;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 }
