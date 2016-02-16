@@ -28,6 +28,8 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "PlayCardFragment";
 
+    private static final String STATE_KEY_MEDIA_POSITION = "mediaPosition";
+
     private Dictionary.Translation translationCard;
     private MediaPlayerManager lastMediaPlayerManager;
 
@@ -36,11 +38,24 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View playCardView = inflater.inflate(R.layout.play_card_view, container, false);
-        translationCard = (Dictionary.Translation) getArguments().getSerializable("TranslationCard");
-        
+        translationCard = (Dictionary.Translation) getArguments().getSerializable(
+                "TranslationCard");
         setTranslationText(playCardView);
-        playTranslationAudio(playCardView);
+        int mediaPosition = -1;
+        if (savedInstanceState != null) {
+            mediaPosition = savedInstanceState.getInt(STATE_KEY_MEDIA_POSITION, -1);
+        }
+        playTranslationAudio(playCardView, mediaPosition);
         return playCardView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        int mediaPosition = -1;
+        if (lastMediaPlayerManager != null) {
+            mediaPosition = lastMediaPlayerManager.stop();
+        }
+        outState.putInt(STATE_KEY_MEDIA_POSITION, mediaPosition);
     }
 
     @Override
@@ -73,7 +88,7 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
                 == Configuration.ORIENTATION_PORTRAIT;
     }
 
-    private void playTranslationAudio(View playCardView) {
+    private void playTranslationAudio(View playCardView, int mediaPosition) {
         ProgressBar progressBar = (ProgressBar) playCardView.findViewById(R.id.play_card_progress_bar);
 
         if (lastMediaPlayerManager != null) {
@@ -88,11 +103,15 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "Error getting audio asset: " + e);
             return;
         }
+        progressBar.setMax(mediaPlayer.getDuration());
+        if (mediaPosition > 0) {
+            mediaPlayer.seekTo(mediaPosition);
+            progressBar.setProgress(mediaPosition);
+        }
 
         lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
         mediaPlayer.setOnCompletionListener(
                 new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-        progressBar.setMax(mediaPlayer.getDuration());
         mediaPlayer.start();
         new Thread(lastMediaPlayerManager).start();
     }
@@ -111,17 +130,18 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
             this.progressBar = progressBar;
         }
 
-        public boolean stop() {
+        public int stop() {
             lock.lock();
             if (!running) {
                 // Already stopped, just return false.
                 lock.unlock();
-                return false;
+                return -1;
             }
             running = false;
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
             }
+            int position = mediaPlayer.getCurrentPosition();
             mediaPlayer.reset();
             mediaPlayer.release();
             progressBar.post(new Runnable() {
@@ -131,7 +151,7 @@ public class PlayCardFragment extends Fragment implements View.OnClickListener {
                 }
             });
             lock.unlock();
-            return true;
+            return position;
         }
 
         private boolean tryUpdate() {
