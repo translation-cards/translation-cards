@@ -39,13 +39,17 @@
     <string name="export_failure_write_error_error_message">Error writing file.</string>
     <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
+    <string name="misc_cancel">Cancel</string>
     <string name="data_default_deck_name">Default</string>
     <string name="my_decks">My Decks</string>
     <string name="data_default_deck_publisher">My Deck</string>
+    <string name="data_self_publisher">Self</string>
     <string name="default_origin_language">ENGLISH</string>
     <string name="edit_label">Edit this flashcard</string>
     <string name="delete_label">Delete this flashcard</string>
     <string name="no_translation_text">No Translation Provided</string>
+    <string name="deck_card_expansion_make_copy">Make a personal copy of this deck.</string>
+    <string name="deck_copy_dialog_title">Name for deck copy?</string>
     <string name="import_version_override_title">Override other version?</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">

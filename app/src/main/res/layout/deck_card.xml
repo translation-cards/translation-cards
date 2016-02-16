@@ -80,4 +80,49 @@
             android:lineSpacingExtra="10dp"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/deck_card_expansion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <View
+            android:background="@color/lineColor"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"/>
+        <LinearLayout
+            android:id="@+id/deck_card_expansion_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:weightSum="1">
+            <FrameLayout
+                android:layout_width="30dp"
+                android:layout_height="56dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/edit_card_icon"
+                    android:src="@drawable/edit"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/deck_card_expansion_copy_label"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="25dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="10dp"
+                android:textSize="12dp"
+                android:fontFamily="Roboto-Regular"
+                android:textColor="@color/colorSecondaryLight"
+                android:text="@string/deck_card_expansion_make_copy" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>
