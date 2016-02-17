@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,8 +25,6 @@
         android:paddingBottom="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-
-        android:fontFamily="Roboto-Medium"
         android:textSize="14dp"
         android:textColor="@color/colorSecondaryLight"
         android:gravity="top" />
@@ -50,7 +47,6 @@
             android:paddingBottom="20dp"
             android:paddingLeft="16dp"
             android:textSize="14dp"
-            android:fontFamily="Roboto-Medium"
             android:textColor="@color/colorSecondaryLight"
             android:text="@string/default_origin_language"/>
 
@@ -75,7 +71,6 @@
             android:paddingBottom="20dp"
             android:paddingRight="26dp"
             android:textSize="14dp"
-            android:fontFamily="Roboto-Medium"
             android:textColor="@color/colorPrimary"
             android:lineSpacingExtra="10dp"/>
     </RelativeLayout>
