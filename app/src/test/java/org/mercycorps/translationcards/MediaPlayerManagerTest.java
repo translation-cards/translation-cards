@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.hamcrest.core.IsAnything.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

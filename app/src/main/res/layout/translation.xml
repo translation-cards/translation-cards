@@ -44,7 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingRight="16dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:paddingBottom="20dp"
             android:paddingTop="20dp">
             <ImageView
