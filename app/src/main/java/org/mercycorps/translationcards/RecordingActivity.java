@@ -506,15 +506,19 @@ public class RecordingActivity extends AppCompatActivity {
         titleView.setText(getString(R.string.recording_done_title, dictionaryLabel));
         TextView detailView = (TextView) findViewById(R.id.recording_done_detail);
         detailView.setText(getString(R.string.recording_done_detail, dictionaryLabel));
-        TextView cardTextView = (TextView) findViewById(R.id.card_text);
+        TextView cardTextView = (TextView) findViewById(R.id.origin_translation_text);
         cardTextView.setText(label);
-        findViewById(R.id.card_edit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inEditMode = true;
-                moveToLabelStep();
-            }
-        });
+        TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
+        if (translatedText.trim().isEmpty()) {
+            translatedCardText.setText(getString(R.string.empty_translated_text));
+        } else {
+            translatedCardText.setText(translatedText);
+        }
+        ImageView cardIndicator = (ImageView) findViewById(R.id.indicator_icon);
+        cardIndicator.setBackgroundResource(R.drawable.back_arrow);
+        findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+        findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
+
         View doneButton = (View) findViewById(R.id.recording_done_done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
