@@ -185,7 +185,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void setDictionary_shouldNotHaveAnyTranslationCardsWhenNoneHaveBeenCreated() {
-        TextView translationCardText = (TextView) translationsActivity.findViewById(R.id.card_text);
+        TextView translationCardText = (TextView) translationsActivity.findViewById(R.id.origin_translation_text);
 
         assertThat(translationCardText, is(nullValue()));
     }

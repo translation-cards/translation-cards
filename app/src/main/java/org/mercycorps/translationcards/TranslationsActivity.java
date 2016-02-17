@@ -126,7 +126,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
-                this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>());
+                this, R.layout.translation_item, R.id.origin_translation_text, new ArrayList<Dictionary.Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         addTranslationButton.setOnClickListener(new View.OnClickListener() {

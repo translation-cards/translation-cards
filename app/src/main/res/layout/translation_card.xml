@@ -1,33 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background">
-    <TextView
-        android:id="@+id/card_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:paddingTop="25dp"
-        android:paddingBottom="23dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textSize="24dp"
-        android:textColor="@color/primaryTextColor"/>
-    <FrameLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="22dp"
-        android:id="@+id/card_edit">
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/edit" />
-    </FrameLayout>
+    android:background="@drawable/card_background"
+    android:id="@+id/deck_card">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp">
+        <TextView
+            android:id="@+id/origin_translation_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textSize="20dp"
+            android:textColor="@color/primaryTextColor"/>
+
+        <FrameLayout
+            android:id="@+id/text_indicator_divider"
+            android:layout_width="11dip"
+            android:layout_height="match_parent"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp">
+            <View
+                android:background="@color/lineColor"
+                android:layout_width = "match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerVertical ="true"
+                android:layout_alignParentTop="true"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/translation_indicator_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:id="@+id/indicator_icon"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/translation_child"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <View
+            android:background="@color/lineColor"
+            android:layout_width = "fill_parent"
+            android:layout_height="1dip"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/translated_text_layout">
+            <TextView
+                android:id="@+id/translated_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="20dp"
+                android:paddingEnd="20dp"
+                android:textSize="20dp"
+                android:textColor="@color/primaryTextColor"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/translation_child_actions">
+            <View
+                android:background="@color/lineColor"
+                android:layout_width = "fill_parent"
+                android:layout_height="1dip"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:id="@+id/translation_card_edit"
+                android:weightSum="1">
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="56dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:id="@+id/edit_card_icon"
+                        android:src="@drawable/edit"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/edit_card_label"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="25dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/colorSecondaryLight"
+                    android:text="@string/edit_label" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+
+                android:id="@+id/translation_card_delete">
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="56dp"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="10dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:id="@+id/delete_card_icon"
+                        android:src="@drawable/delete"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/delete_card_label"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/colorSecondaryLight"
+                    android:text="@string/delete_label"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

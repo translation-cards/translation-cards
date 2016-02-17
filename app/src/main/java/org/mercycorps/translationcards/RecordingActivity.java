@@ -326,9 +326,10 @@ public class RecordingActivity extends AppCompatActivity {
         recycleBitmap();
         TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
         titleView.setText(getString(R.string.recording_audio_title, dictionaryLabel));
-        TextView labelView = (TextView) findViewById(R.id.card_text);
+        TextView labelView = (TextView) findViewById(R.id.origin_translation_text);
         labelView.setText(label);
-        findViewById(R.id.card_edit).setVisibility(View.GONE);
+        findViewById(R.id.translation_indicator_layout).setVisibility(View.GONE);
+        findViewById(R.id.text_indicator_divider).setVisibility(View.GONE);
         recordButton = (ImageButton) findViewById(R.id.recording_audio_button_record);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override

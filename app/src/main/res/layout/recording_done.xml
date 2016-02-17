@@ -39,7 +39,7 @@
         android:lineSpacingExtra="3dp"
         android:id="@+id/recording_done_detail" />
 
-    <include layout="@layout/translation"
+    <include layout="@layout/translation_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/recording_done_detail"

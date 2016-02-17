@@ -43,7 +43,7 @@ public class RecordingActivityTest {
     }
 
     @Test
-    public void moveToInstructionsStep_shouldDisplayInstructionsToMakeTranslattionCard() {
+    public void moveToInstructionsStep_shouldDisplayInstructionsToMakeTranslationCard() {
         TextView instructionsDetail = (TextView) recordingActivity
                 .findViewById(R.id.recording_instructions_detail);
 
