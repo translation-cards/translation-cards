@@ -46,7 +46,7 @@
     <string name="edit_label">Edit this flashcard</string>
     <string name="delete_label">Delete this flashcard</string>
     <string name="import_version_override_title">Override other version?</string>
-    <string name="translated_text_hint">Set phrase translation</string>
+    <string name="translated_text_hint">Add %s translation</string>
     <string name="navigation_button_edit">EDIT</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">

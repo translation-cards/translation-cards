@@ -122,7 +122,7 @@ public class TranslationsActivityTest {
         View translationsListItem = translationsList.getAdapter().getView(2, null, translationsList);
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-        assertThat(translatedText.getText().toString(), is("Set phrase translation"));
+        assertThat(translatedText.getText().toString(), is("Add " + DICTIONARY_TEST_LABEL + " translation"));
         assertThat(translatedText.getTextSize(), is(18f));
         assertThat(translatedText.getCurrentTextColor(), is(disabledTextColor));
     }

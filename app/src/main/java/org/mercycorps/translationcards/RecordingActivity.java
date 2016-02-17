@@ -35,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -199,7 +200,7 @@ public class RecordingActivity extends AppCompatActivity {
         final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
         fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
-        fillPrepopulatedField(translatedText, translatedTextField, getString(R.string.translated_text_hint));
+        fillPrepopulatedField(translatedText, translatedTextField, String.format(getString(R.string.translated_text_hint), dictionaryLabel));
         if (inEditMode) {
             ImageView deleteButton = (ImageView) findViewById(R.id.recording_label_delete_image);
             deleteButton.setVisibility(View.VISIBLE);
@@ -512,9 +513,11 @@ public class RecordingActivity extends AppCompatActivity {
         cardTextView.setText(label);
         TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
         if (translatedText.trim().isEmpty()) {
-            translatedCardText.setText(getString(R.string.translated_text_hint));
+            translatedCardText.setHint(String.format(getString(R.string.translated_text_hint), dictionaryLabel));
+            translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         } else {
             translatedCardText.setText(translatedText);
+            translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         }
         ImageView cardIndicator = (ImageView) findViewById(R.id.indicator_icon);
         cardIndicator.setBackgroundResource(R.drawable.back_arrow);
