@@ -198,8 +198,8 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView.setImageBitmap(currentBitmap);
         final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
-        fillPrepopulatedField(label, labelField);
-        fillPrepopulatedField(translatedText, translatedTextField);
+        fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
+        fillPrepopulatedField(translatedText, translatedTextField, getString(R.string.translated_text_hint));
         if (inEditMode) {
             ImageView deleteButton = (ImageView) findViewById(R.id.recording_label_delete_image);
             deleteButton.setVisibility(View.VISIBLE);
@@ -284,8 +284,7 @@ public class RecordingActivity extends AppCompatActivity {
             field.setText("");
             field.setTextColor(Color.BLACK);
         } else if (!hasFocus && field.getText().toString().trim().isEmpty()) {
-            field.setText(getString(hintText));
-            field.setTextColor(ContextCompat.getColor(this, R.color.borderColor));
+            field.setHint(hintText);
         }
         if (hasFocus) {
             InputMethodManager inputMethodManager =
@@ -296,12 +295,14 @@ public class RecordingActivity extends AppCompatActivity {
         }
     }
 
-    private void fillPrepopulatedField(String fieldValue, EditText field) {
-        if (fieldValue != null) {
+    private void fillPrepopulatedField(String fieldValue, EditText field, String hintText) {
+        if (fieldValue != null && !fieldValue.isEmpty()) {
             field.setText(fieldValue);
             field.setTextColor(Color.BLACK);
             field.setSelection(fieldValue.length());
             setLabelNextButtonEnabled(true);
+        } else {
+            field.setHint(hintText);
         }
     }
 
@@ -511,7 +512,7 @@ public class RecordingActivity extends AppCompatActivity {
         cardTextView.setText(label);
         TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
         if (translatedText.trim().isEmpty()) {
-            translatedCardText.setText(getString(R.string.empty_translated_text));
+            translatedCardText.setText(getString(R.string.translated_text_hint));
         } else {
             translatedCardText.setText(translatedText);
         }
@@ -519,6 +520,15 @@ public class RecordingActivity extends AppCompatActivity {
         cardIndicator.setBackgroundResource(R.drawable.back_arrow);
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
+
+        View backButton = findViewById(R.id.recording_done_edit);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inEditMode = true;
+                moveToLabelStep();
+            }
+        });
 
         View doneButton = (View) findViewById(R.id.recording_done_done);
         doneButton.setOnClickListener(new View.OnClickListener() {

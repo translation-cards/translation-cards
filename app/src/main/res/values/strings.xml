@@ -17,7 +17,7 @@
     <string name="recording_text_create_title">Enter the translation text</string>
     <string name="recording_text_hint_text">Phrase translation (Optional)</string>
     <string name="recording_done_title">New %s flashcard created</string>
-    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category. To make changes to the phrase or delete it, just tap the pencil icon on the flashcard.</string>
+    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category.</string>
     <string name="navigation_button_back">BACK</string>
     <string name="navigation_button_done">DONE</string>
     <string name="navigation_button_next">NEXT</string>
@@ -46,7 +46,8 @@
     <string name="edit_label">Edit this flashcard</string>
     <string name="delete_label">Delete this flashcard</string>
     <string name="import_version_override_title">Override other version?</string>
-    <string name="empty_translated_text">Set phrase translation</string>
+    <string name="translated_text_hint">Set phrase translation</string>
+    <string name="navigation_button_edit">EDIT</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

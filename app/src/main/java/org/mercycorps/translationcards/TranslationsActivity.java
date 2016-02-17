@@ -234,7 +234,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
-                translatedText.setText(getString(R.string.empty_translated_text));
+                translatedText.setText(getString(R.string.translated_text_hint));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(), R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
             } else {
