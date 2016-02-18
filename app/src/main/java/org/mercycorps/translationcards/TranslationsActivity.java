@@ -74,7 +74,6 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private View[] languageTabBorders;
     private CardListAdapter listAdapter;
     private Deck deck;
-    private MediaPlayerManager lastMediaPlayerManager;
     private boolean[] translationCardStates;
 
     @Override
@@ -229,8 +228,10 @@ public class TranslationsActivity extends RoboActionBarActivity {
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
 
+            MainApplication application = (MainApplication) getApplication();
+            MediaPlayerManager lastMediaPlayerManager = application.getMediaPlayerManager();
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.list_item_progress_bar);
-            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar, lastMediaPlayerManager));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
@@ -244,7 +245,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
             }
 
             convertView.findViewById(R.id.translated_text_layout)
-                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar, lastMediaPlayerManager));
 
             return convertView;
         }
@@ -396,36 +397,5 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 .show();
     }
 
-    private class CardAudioClickListener implements View.OnClickListener {
-        private Dictionary.Translation translationCard;
-        private final ProgressBar progressBar;
 
-        public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar) {
-            this.translationCard = translationCard;
-            this.progressBar = progressBar;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (lastMediaPlayerManager != null) {
-                lastMediaPlayerManager.stop();
-            }
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                translationCard.setMediaPlayerDataSource(TranslationsActivity.this, mediaPlayer);
-                mediaPlayer.prepare();
-            } catch (IOException e) {
-                Log.d(TAG, "Error getting audio asset: " + e);
-                return;
-            }
-
-            lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
-            mediaPlayer.setOnCompletionListener(
-                    new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-            progressBar.setMax(mediaPlayer.getDuration());
-            mediaPlayer.start();
-            new Thread(lastMediaPlayerManager).start();
-        }
-    }
 }

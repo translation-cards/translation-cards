@@ -11,13 +11,23 @@ public class MediaPlayerManager implements Runnable {
 
     private final Lock lock;
     private boolean running;
-    private final MediaPlayer mediaPlayer;
-    private final ProgressBar progressBar;
+    private MediaPlayer mediaPlayer;
+    private ProgressBar progressBar;
 
-    public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar) {
+    public MediaPlayerManager() {
         lock = new ReentrantLock();
         running = true;
+        mediaPlayer = new MediaPlayer();
+    }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
+        running = true;
+
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        resetProgressBar();
         this.progressBar = progressBar;
     }
 
@@ -34,14 +44,15 @@ public class MediaPlayerManager implements Runnable {
         }
         mediaPlayer.reset();
         mediaPlayer.release();
-        progressBar.post(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setProgress(0);
-            }
-        });
+        resetProgressBar();
         lock.unlock();
         return true;
+    }
+
+    private void resetProgressBar() {
+        if (progressBar != null) {
+           progressBar.setProgress(0);
+        }
     }
 
     private boolean tryUpdate() {
@@ -70,18 +81,5 @@ public class MediaPlayerManager implements Runnable {
                 // Do nothing.
             }
         }
-    }
-
-    public void start(String filename) {
-        mediaPlayer.reset();
-        try {
-            mediaPlayer.setDataSource(filename);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        progressBar.setMax(mediaPlayer.getDuration());
-        mediaPlayer.start();
-        new Thread(this).start();
     }
 }
