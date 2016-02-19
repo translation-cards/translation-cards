@@ -104,6 +104,7 @@ public class DecksActivityTest {
         deckLayout.performClick();
 
         Intent nextStartedActivity = shadowOf(decksActivity).getNextStartedActivity();
+        assertThat(nextStartedActivity.getComponent().getClassName(), is(TranslationsActivity.class.getCanonicalName()));
         Deck deck = (Deck) nextStartedActivity.getSerializableExtra("Deck");
         assertThat(deck.getLabel(), is("Default"));
         assertThat(deck.getDbId(), is((long) 1));

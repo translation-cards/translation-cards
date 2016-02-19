@@ -20,6 +20,7 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowDrawable;
 
 import roboguice.RoboGuice;
 
@@ -163,13 +164,18 @@ public class TranslationsActivityTest {
 
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
 
+        ImageView cardIndicator = (ImageView) translationsListItem.findViewById(R.id.indicator_icon);
+
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(R.drawable.forward_arrow));
 
         translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(R.drawable.back_arrow));
 
         translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(R.drawable.forward_arrow));
     }
 
     @Test
