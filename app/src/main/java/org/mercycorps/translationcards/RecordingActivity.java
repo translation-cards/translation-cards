@@ -71,6 +71,7 @@ public class RecordingActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
     private Deck deck;
     private Intent intent;
+    private MediaPlayerManager mediaPlayerManager;
 
     private enum Step {
         INSTRUCTIONS,
@@ -108,6 +109,8 @@ public class RecordingActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication application = (MainApplication) getApplication();
+        mediaPlayerManager = application.getMediaPlayerManager();
         stepHistory = new Stack<>();
         dictionaryId = getIntent().getLongExtra(INTENT_KEY_DICTIONARY_ID, -1);
         dictionaryLabel = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_LABEL);
@@ -525,9 +528,8 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 
-        MainApplication application = (MainApplication) getApplication();
         findViewById(R.id.recording_done_card).setOnClickListener(new CardAudioClickListener(filename,
-                (ProgressBar) findViewById(R.id.recording_done_progress_bar), application.getMediaPlayerManager()));
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager));
 
         View backButton = findViewById(R.id.recording_done_edit);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -548,6 +550,12 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
         stepHistory.push(Step.DONE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayerManager.stop();
     }
 
     private void recycleBitmap() {
