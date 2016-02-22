@@ -1,23 +1,18 @@
 package org.mercycorps.translationcards;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.io.IOException;
-
 /**
- * Created by njimenez on 2/18/16.
+ * Created by njimenez and pdale on 2/18/16.
  */
 public class CardAudioClickListener implements View.OnClickListener {
-    private static final String TAG = "CardAudioClickListener";
     private Dictionary.Translation translationCard;
     private final ProgressBar progressBar;
     private MediaPlayerManager lastMediaPlayerManager;
 
-    public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar, MediaPlayerManager lastMediaPlayerManager) {
+    public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar,
+                                  MediaPlayerManager lastMediaPlayerManager) {
         this.translationCard = translationCard;
         this.progressBar = progressBar;
         this.lastMediaPlayerManager = lastMediaPlayerManager;

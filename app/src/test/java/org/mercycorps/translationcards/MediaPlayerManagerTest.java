@@ -60,16 +60,12 @@ public class MediaPlayerManagerTest {
     @Ignore
     @Test
     public void play_shouldSetOnCompletionListener() {
-//        ProgressBar progressBar = mock(ProgressBar.class);
-//        mediaPlayerManager.play("", progressBar, mock(ManagedMediaPlayerCompletionListener.class));
-//        assertThat(shadowOf(mediaPlayer).getOnCompletionListener(), is(ManagedMediaPlayerCompletionListener.class));
 
     }
 
     @Ignore
     @Test
     public void play_shouldStartMediaPlayerInNewThread() {
-
 
     }
 

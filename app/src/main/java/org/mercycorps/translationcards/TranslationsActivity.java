@@ -75,11 +75,14 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private CardListAdapter listAdapter;
     private Deck deck;
     private boolean[] translationCardStates;
+    private MediaPlayerManager lastMediaPlayerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RoboGuice.setUseAnnotationDatabases(false);
         super.onCreate(savedInstanceState);
+        MainApplication application = (MainApplication) getApplication();
+        lastMediaPlayerManager = application.getMediaPlayerManager();
         deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
@@ -186,6 +189,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastMediaPlayerManager.stop();
+    }
+
     public void onExportButtonPress(View v) {
         (new ExportTask()).execute();
     }
@@ -228,8 +237,6 @@ public class TranslationsActivity extends RoboActionBarActivity {
             TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
 
-            MainApplication application = (MainApplication) getApplication();
-            MediaPlayerManager lastMediaPlayerManager = application.getMediaPlayerManager();
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.list_item_progress_bar);
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar, lastMediaPlayerManager));
 

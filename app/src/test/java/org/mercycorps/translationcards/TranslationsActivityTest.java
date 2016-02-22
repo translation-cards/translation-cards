@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -21,7 +21,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
-import org.robolectric.shadows.ShadowDrawable;
 
 import roboguice.RoboGuice;
 
@@ -212,5 +211,10 @@ public class TranslationsActivityTest {
             bind(DbManager.class).toInstance(dbManagerMock);
         }
 
+    }
+
+    @Ignore
+    @Test
+    public void onPause_shouldStopPlayingMediaPlayerManagerWhenActivityPaused() {
     }
 }
