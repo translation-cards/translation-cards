@@ -28,22 +28,7 @@ public class CardAudioClickListener implements View.OnClickListener {
         if (lastMediaPlayerManager != null) {
             lastMediaPlayerManager.stop();
         }
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            translationCard.setMediaPlayerDataSource(progressBar.getContext(), mediaPlayer);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            return;
-        }
 
-        lastMediaPlayerManager.setMediaPlayer(mediaPlayer);
-        lastMediaPlayerManager.setProgressBar(progressBar);
-        mediaPlayer.setOnCompletionListener(
-                new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-        progressBar.setMax(mediaPlayer.getDuration());
-        mediaPlayer.start();
-        new Thread(lastMediaPlayerManager).start();
+        lastMediaPlayerManager.play(translationCard.getFilename(), progressBar);
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,6 +138,7 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        assertThat(nextStartedActivity.getComponent().getClassName(), is(RecordingActivity.class.getCanonicalName()));
         String dictionaryLabel = nextStartedActivity.getStringExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
         assertThat(dictionaryLabel, is(DICTIONARY_TEST_LABEL));
     }
