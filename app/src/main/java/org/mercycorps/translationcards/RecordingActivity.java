@@ -42,6 +42,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -523,6 +524,10 @@ public class RecordingActivity extends AppCompatActivity {
         cardIndicator.setBackgroundResource(R.drawable.back_arrow);
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
+
+        MainApplication application = (MainApplication) getApplication();
+        findViewById(R.id.recording_done_card).setOnClickListener(new CardAudioClickListener(filename,
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), application.getMediaPlayerManager()));
 
         View backButton = findViewById(R.id.recording_done_edit);
         backButton.setOnClickListener(new View.OnClickListener() {

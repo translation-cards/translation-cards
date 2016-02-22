@@ -45,7 +45,18 @@
         android:layout_below="@+id/recording_done_detail"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:id="@+id/recording_done_card" />
+        android:id="@+id/recording_done_card"/>
+
+    <ProgressBar
+        android:id="@+id/recording_done_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/play_progress"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:minHeight="1dp"
+        android:maxHeight="1dp" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the rest (on small screens, the soft keyboard can reduce the available height such that

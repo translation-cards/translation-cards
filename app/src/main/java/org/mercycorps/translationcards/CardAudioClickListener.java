@@ -7,13 +7,13 @@ import android.widget.ProgressBar;
  * Created by njimenez and pdale on 2/18/16.
  */
 public class CardAudioClickListener implements View.OnClickListener {
-    private Dictionary.Translation translationCard;
+    private String filename;
     private final ProgressBar progressBar;
     private MediaPlayerManager lastMediaPlayerManager;
 
-    public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar,
+    public CardAudioClickListener(String audioFilename, ProgressBar progressBar,
                                   MediaPlayerManager lastMediaPlayerManager) {
-        this.translationCard = translationCard;
+        this.filename = audioFilename;
         this.progressBar = progressBar;
         this.lastMediaPlayerManager = lastMediaPlayerManager;
     }
@@ -24,6 +24,6 @@ public class CardAudioClickListener implements View.OnClickListener {
             lastMediaPlayerManager.stop();
         }
 
-        lastMediaPlayerManager.play(translationCard.getFilename(), progressBar);
+        lastMediaPlayerManager.play(filename, progressBar);
     }
 }
