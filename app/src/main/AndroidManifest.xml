@@ -27,7 +27,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DecksActivity" />
        </activity>
-        <activity android:name=".RecordingActivity" />
+        <activity android:name=".RecordingActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ImportActivity">
             <!-- To support opening from a file manager. -->
             <intent-filter>
