@@ -11,6 +11,10 @@ The need for this tool was born out of [field research](https://docs.google.com/
 
 * See the Translation Cards introduction  [deck](https://docs.google.com/presentation/d/1tfcNIJqS5TwKk7dqSYu5L1nXv-l-UmeBWa1EgwHMDVQ/edit#slide=id.p) for design highlights and a more complete overview of the product.
 
+## App Store
+
+* See the latest release of [translation cards] (https://play.google.com/store/apps/details?id=org.mercycorps.translationcards&hl=en) in the Google Play store.
+
 ## Contributing code to Translation Cards
 
 * See [CONTRIBUTING](https://github.com/google/translation-cards/blob/master/CONTRIBUTING.md) to learn more about the development process.
