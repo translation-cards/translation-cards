@@ -7,7 +7,7 @@ import android.media.MediaPlayer;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
 
 /**
- *
+ * Used to create singletons for dependency injection.
  *
  * @author patdale216@gmail.com (Pat Dale)
  * @author natashaj7@hotmail.com (Natasha Jimenez)
