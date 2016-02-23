@@ -327,7 +327,7 @@ public class RecordingActivity extends AppCompatActivity {
         recordingStatus = (filename == null) ? RecordingStatus.FRESH : RecordingStatus.RECORDED;
         setContentView(R.layout.recording_audio);
         if (recordingStatus == RecordingStatus.RECORDED) {
-            setAudioSaveButtonEnabled();
+            findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
         }
         recycleBitmap();
         TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
@@ -342,12 +342,16 @@ public class RecordingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (recordingStatus) {
                     case FRESH:
+                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
                     case RECORDED:
+                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.GONE);
                         startRecording();
                         break;
                     case RECORDING:
                         stopRecording();
-                        setAudioSaveButtonEnabled();
+                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -362,7 +366,8 @@ public class RecordingActivity extends AppCompatActivity {
                 switch (recordingStatus) {
                     case RECORDING:
                         stopRecording();
-                        setAudioSaveButtonEnabled();
+                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
                         startListening();
                         break;
                     case RECORDED:
@@ -496,13 +501,6 @@ public class RecordingActivity extends AppCompatActivity {
         recordButton.setBackgroundResource(R.drawable.button_record_enabled);
         listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
         recordingStatus = RecordingStatus.RECORDED;
-    }
-
-    private void setAudioSaveButtonEnabled() {
-        TextView text = (TextView) findViewById(R.id.recording_audio_save_text);
-        text.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
-        ImageView image = (ImageView) findViewById(R.id.recording_audio_save_image);
-        image.setImageResource(R.drawable.forward_arrow);
     }
 
     private void moveToDoneStep() {
