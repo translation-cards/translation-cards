@@ -524,7 +524,7 @@ public class RecordingActivity extends AppCompatActivity {
             translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         }
         ImageView cardIndicator = (ImageView) findViewById(R.id.indicator_icon);
-        cardIndicator.setBackgroundResource(R.drawable.back_arrow);
+        cardIndicator.setBackgroundResource(R.drawable.collapse_arrow);
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 

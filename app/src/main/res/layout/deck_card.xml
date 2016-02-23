@@ -60,7 +60,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:src="@drawable/forward_arrow"/>
+                android:src="@drawable/small_arrow"/>
         </FrameLayout>
 
         <TextView

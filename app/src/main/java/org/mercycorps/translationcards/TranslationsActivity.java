@@ -208,17 +208,17 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
                 convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.forward_arrow);
+                        R.drawable.expand_arrow);
             }
 
             if (translationCardStates[position]) {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.back_arrow);
+                        R.drawable.collapse_arrow);
             } else {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.GONE);
                 convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.forward_arrow);
+                        R.drawable.expand_arrow);
             }
 
             convertView.setOnClickListener(null);
@@ -280,12 +280,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
             if (translationChild.getVisibility() == View.GONE) {
                 translationChild.setVisibility(View.VISIBLE);
                 translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.back_arrow);
+                        R.drawable.collapse_arrow);
                 translationCardStates[position] = true;
             } else {
                 translationChild.setVisibility(View.GONE);
                 translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.forward_arrow);
+                        R.drawable.expand_arrow);
                 translationCardStates[position] = false;
             }
         }
