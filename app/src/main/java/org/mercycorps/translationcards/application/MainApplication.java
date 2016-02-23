@@ -1,8 +1,10 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.application;
 
 import android.app.Application;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+
+import org.mercycorps.translationcards.manager.MediaPlayerManager;
 
 /**
  * Created by njimenez on 2/18/16.

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -38,6 +38,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+
+import org.mercycorps.translationcards.listener.CardAudioClickListener;
+import org.mercycorps.translationcards.manager.DbManager;
+import org.mercycorps.translationcards.exception.ExportException;
+import org.mercycorps.translationcards.application.MainApplication;
+import org.mercycorps.translationcards.manager.MediaPlayerManager;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.manager.TxcPortingUtility;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,7 +73,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
 
-    @Inject DbManager dbm;
+    @Inject
+    DbManager dbm;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;

@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.widget.Button;
 import android.widget.TextView;
@@ -6,6 +6,9 @@ import android.widget.TextView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.RecordingActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;

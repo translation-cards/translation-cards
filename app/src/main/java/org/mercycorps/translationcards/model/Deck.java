@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.model;
 
 import android.os.Parcelable;
 

@@ -11,25 +11,25 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name=".MainApplication">
+        android:name=".application.MainApplication">
 
-        <activity android:name=".DecksActivity" >
+        <activity android:name=".activity.DecksActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TranslationsActivity"
-            android:parentActivityName=".DecksActivity" >
+        <activity android:name=".activity.TranslationsActivity"
+            android:parentActivityName=".activity.DecksActivity" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DecksActivity" />
+                android:value=".activity.DecksActivity" />
        </activity>
-        <activity android:name=".RecordingActivity"
+        <activity android:name=".activity.RecordingActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ImportActivity">
+        <activity android:name=".activity.ImportActivity">
             <!-- To support opening from a file manager. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

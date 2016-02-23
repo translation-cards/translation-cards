@@ -1,6 +1,7 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.model;
 
 import org.junit.Test;
+import org.mercycorps.translationcards.model.Deck;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

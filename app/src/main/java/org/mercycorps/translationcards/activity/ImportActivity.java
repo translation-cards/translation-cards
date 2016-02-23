@@ -1,15 +1,16 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import java.util.Date;
+import org.mercycorps.translationcards.manager.DbManager;
+import org.mercycorps.translationcards.exception.ImportException;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.manager.TxcPortingUtility;
 
 public class ImportActivity extends AppCompatActivity {
 

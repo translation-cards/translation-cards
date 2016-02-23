@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -14,6 +14,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.RecordingActivity;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.manager.DbManager;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;

@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
 import android.view.View;
@@ -11,6 +11,11 @@ import android.widget.TextView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.DecksActivity;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.model.Deck;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;

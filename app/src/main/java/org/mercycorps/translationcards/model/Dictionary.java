@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.model;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

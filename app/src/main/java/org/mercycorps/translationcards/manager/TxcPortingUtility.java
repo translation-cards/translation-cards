@@ -1,9 +1,13 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.manager;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.util.Pair;
-import android.util.Log;
+
+import org.mercycorps.translationcards.exception.ExportException;
+import org.mercycorps.translationcards.exception.ImportException;
+import org.mercycorps.translationcards.manager.DbManager;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +20,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

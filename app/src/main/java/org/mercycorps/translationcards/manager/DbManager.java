@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.manager;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +24,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.google.inject.Inject;
+
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
 
 import java.io.File;
 import java.util.ArrayList;
