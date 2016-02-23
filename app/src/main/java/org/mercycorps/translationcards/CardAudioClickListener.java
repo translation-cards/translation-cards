@@ -20,10 +20,13 @@ public class CardAudioClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        stop();
+        lastMediaPlayerManager.play(filename, progressBar);
+    }
+
+    public void stop() {
         if (lastMediaPlayerManager != null) {
             lastMediaPlayerManager.stop();
         }
-
-        lastMediaPlayerManager.play(filename, progressBar);
     }
 }

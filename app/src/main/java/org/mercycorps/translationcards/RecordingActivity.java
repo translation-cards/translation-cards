@@ -378,6 +378,9 @@ public class RecordingActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
                 moveToLabelStep();
             }
         });
@@ -528,13 +531,15 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 
-        findViewById(R.id.recording_done_card).setOnClickListener(new CardAudioClickListener(filename,
-                (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager));
+        final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(filename,
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
+        findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
 
         View backButton = findViewById(R.id.recording_done_edit);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cardAudioClickListener.stop();
                 inEditMode = true;
                 moveToLabelStep();
             }
