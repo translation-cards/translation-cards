@@ -137,6 +137,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     }
 
     private void setDictionary(int dictionaryIndex) {
+        lastMediaPlayerManager.stop();
         translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
         Arrays.fill(translationCardStates, false);
 
