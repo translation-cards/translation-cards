@@ -17,6 +17,6 @@ The need for this tool was born out of [field research](https://docs.google.com/
 
 ## Contributing code to Translation Cards
 
-* See [CONTRIBUTING](https://github.com/google/translation-cards/blob/master/CONTRIBUTING.md) to learn more about the development process.
+* See [CONTRIBUTING](https://github.com/translation-cards/translation-cards/blob/master/CONTRIBUTING.md) to learn more about the development process.
 
 Note: This is not an official Google product.
