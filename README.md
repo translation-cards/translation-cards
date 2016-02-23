@@ -13,7 +13,7 @@ The need for this tool was born out of [field research](https://docs.google.com/
 
 ## App Store
 
-* See the latest release of [translation cards] (https://play.google.com/store/apps/details?id=org.mercycorps.translationcards&hl=en) in the Google Play store.
+* See the latest release of [Translation Cards] (https://play.google.com/store/apps/details?id=org.mercycorps.translationcards&hl=en) in the Google Play store.
 
 ## Contributing code to Translation Cards
 
