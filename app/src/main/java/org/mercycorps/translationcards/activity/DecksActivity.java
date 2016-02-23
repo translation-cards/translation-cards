@@ -12,9 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.manager.DbManager;
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.data.Deck;
 
 import java.util.ArrayList;
 import java.util.List;

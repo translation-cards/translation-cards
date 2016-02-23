@@ -1,13 +1,11 @@
-package org.mercycorps.translationcards.manager;
+package org.mercycorps.translationcards.porting;
 
 import android.content.Context;
 import android.net.Uri;
 
-import org.mercycorps.translationcards.exception.ExportException;
-import org.mercycorps.translationcards.exception.ImportException;
-import org.mercycorps.translationcards.manager.DbManager;
-import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 
 import java.io.File;
 import java.io.FileInputStream;

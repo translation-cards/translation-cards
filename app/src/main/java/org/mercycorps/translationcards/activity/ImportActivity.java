@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import org.mercycorps.translationcards.manager.DbManager;
-import org.mercycorps.translationcards.exception.ImportException;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.manager.TxcPortingUtility;
+import org.mercycorps.translationcards.porting.TxcPortingUtility;
 
 public class ImportActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.manager;
+package org.mercycorps.translationcards.media;
 
 import android.media.MediaPlayer;
 import android.util.Log;

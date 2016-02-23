@@ -6,7 +6,7 @@ import android.widget.ProgressBar;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mercycorps.translationcards.manager.MediaPlayerManager;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
 
 import java.io.IOException;
 

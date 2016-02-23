@@ -1,9 +1,7 @@
-package org.mercycorps.translationcards.listener;
+package org.mercycorps.translationcards.media;
 
 import android.view.View;
 import android.widget.ProgressBar;
-
-import org.mercycorps.translationcards.manager.MediaPlayerManager;
 
 /**
  * Created by njimenez and pdale on 2/18/16.

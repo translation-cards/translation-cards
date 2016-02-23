@@ -45,12 +45,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.listener.CardAudioClickListener;
-import org.mercycorps.translationcards.manager.DbManager;
-import org.mercycorps.translationcards.application.MainApplication;
-import org.mercycorps.translationcards.manager.MediaPlayerManager;
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.data.Deck;
 
 import java.io.File;
 import java.io.FileInputStream;

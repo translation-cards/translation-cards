@@ -39,15 +39,15 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 
-import org.mercycorps.translationcards.listener.CardAudioClickListener;
-import org.mercycorps.translationcards.manager.DbManager;
-import org.mercycorps.translationcards.exception.ExportException;
-import org.mercycorps.translationcards.application.MainApplication;
-import org.mercycorps.translationcards.manager.MediaPlayerManager;
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.porting.ExportException;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.manager.TxcPortingUtility;
-import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.porting.TxcPortingUtility;
+import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 
 import java.io.File;
 import java.util.ArrayList;
