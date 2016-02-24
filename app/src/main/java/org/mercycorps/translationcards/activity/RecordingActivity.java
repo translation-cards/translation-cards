@@ -381,7 +381,7 @@ public class RecordingActivity extends AppCompatActivity {
                         startListening();
                         break;
                     case LISTENING:
-                        finishListening(mediaPlayer);
+                        finishListening();
                         break;
                 }
             }
@@ -493,18 +493,19 @@ public class RecordingActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                finishListening(mp);
+                finishListening();
             }
         });
         mediaPlayer.start();
     }
 
-    private void finishListening(MediaPlayer mediaPlayer) {
+    private void finishListening() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
         mediaPlayer.reset();
         mediaPlayer.release();
+        mediaPlayer = null;
         recordButton.setBackgroundResource(R.drawable.button_record_enabled);
         listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
         recordingStatus = RecordingStatus.RECORDED;
