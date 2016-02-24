@@ -51,6 +51,7 @@
     <string name="deck_card_expansion_make_copy">Make a personal copy of this deck.</string>
     <string name="deck_copy_dialog_title">Name for deck copy?</string>
     <string name="import_version_override_title">Override other version?</string>
+    <string name="deck_export_dialog_title">Name for exported deck?</string>
     <string name="translated_text_hint">Add %s translation</string>
     <string name="navigation_button_edit">EDIT</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->

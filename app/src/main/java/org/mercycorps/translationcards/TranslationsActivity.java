@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -196,7 +197,24 @@ public class TranslationsActivity extends RoboActionBarActivity {
     }
 
     public void onExportButtonPress(View v) {
-        (new ExportTask()).execute();
+        final EditText nameField = new EditText(this);
+        nameField.setText(deck.getLabel());
+        (new AlertDialog.Builder(this))
+                .setTitle(R.string.deck_export_dialog_title)
+                .setView(nameField)
+                .setPositiveButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        (new ExportTask(nameField.getText().toString())).execute();
+                    }
+                })
+                .setNegativeButton(R.string.misc_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing.
+                    }
+                })
+                .show();
     }
 
     private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
@@ -358,8 +376,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private class ExportTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final String exportedDeckName;
         private File targetFile;
         private ProgressDialog loadingDialog;
+
+        public ExportTask(String exportedDeckName) {
+            this.exportedDeckName = exportedDeckName;
+        }
 
         protected void onPreExecute() {
             loadingDialog = ProgressDialog.show(
@@ -378,7 +401,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
             DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
                 portingUtility.exportData(
-                        deck, dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
+                        deck, exportedDeckName,
+                        dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override
