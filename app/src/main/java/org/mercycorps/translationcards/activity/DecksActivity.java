@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 
 import java.io.File;
 import java.io.FileInputStream;

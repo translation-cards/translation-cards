@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.media;
 
 import android.view.View;
 import android.widget.ProgressBar;

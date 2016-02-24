@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -44,6 +44,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Deck;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -374,7 +381,7 @@ public class RecordingActivity extends AppCompatActivity {
                         startListening();
                         break;
                     case LISTENING:
-                        finishListening(mediaPlayer);
+                        finishListening();
                         break;
                 }
             }
@@ -486,18 +493,19 @@ public class RecordingActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                finishListening(mp);
+                finishListening();
             }
         });
         mediaPlayer.start();
     }
 
-    private void finishListening(MediaPlayer mediaPlayer) {
+    private void finishListening() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
         mediaPlayer.reset();
         mediaPlayer.release();
+        mediaPlayer = null;
         recordButton.setBackgroundResource(R.drawable.button_record_enabled);
         listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
         recordingStatus = RecordingStatus.RECORDED;
