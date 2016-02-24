@@ -14,20 +14,19 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,18 +34,35 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.inject.Inject;
+
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.porting.ExportException;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.porting.TxcPortingUtility;
+import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import roboguice.RoboGuice;
+import roboguice.activity.RoboActionBarActivity;
 
 /**
  * Activity for the main screen, with lists of phrases to play.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class TranslationsActivity extends AppCompatActivity {
+public class TranslationsActivity extends RoboActionBarActivity {
 
     private static final String TAG = "TranslationsActivity";
 
@@ -57,19 +73,24 @@ public class TranslationsActivity extends AppCompatActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
 
-    private DbManager dbm;
-    private Deck deck;
+    @Inject
+    DbManager dbm;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
-    private ArrayAdapter<String> listAdapter;
+    private CardListAdapter listAdapter;
+    private Deck deck;
+    private boolean[] translationCardStates;
+    private MediaPlayerManager lastMediaPlayerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        RoboGuice.setUseAnnotationDatabases(false);
         super.onCreate(savedInstanceState);
-        dbm = new DbManager(this);
-        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
+        MainApplication application = (MainApplication) getApplication();
+        lastMediaPlayerManager = application.getMediaPlayerManager();
+        deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
         setContentView(R.layout.activity_translations);
@@ -107,12 +128,15 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        ListView list = (ListView) findViewById(R.id.list);
+        ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
+        findViewById(R.id.card_list_header).setOnClickListener(null);
+
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
-                this, R.layout.list_item, R.id.card_text, new ArrayList<String>(), list);
+                this, R.layout.translation_item, R.id.origin_translation_text,
+                new ArrayList<Dictionary.Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         addTranslationButton.setOnClickListener(new View.OnClickListener() {
@@ -124,47 +148,34 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     private void setDictionary(int dictionaryIndex) {
+        lastMediaPlayerManager.stop();
+        translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
+        Arrays.fill(translationCardStates, false);
+
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
-                    getResources().getColor(R.color.unselectedLanguageTabText));
+                    ContextCompat.getColor(this, R.color.unselectedLanguageTabText));
             languageTabBorders[currentDictionaryIndex].setBackgroundColor(0);
         }
         languageTabTextViews[dictionaryIndex].setTextColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         languageTabBorders[dictionaryIndex].setBackgroundColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         currentDictionaryIndex = dictionaryIndex;
         Dictionary dictionary = dictionaries[dictionaryIndex];
         listAdapter.clear();
         for (int translationIndex = 0;
              translationIndex < dictionary.getTranslationCount();
              translationIndex++) {
-            listAdapter.add(dictionary.getTranslation(translationIndex).getLabel());
+            listAdapter.add(dictionary.getTranslation(translationIndex));
         }
-
-    }
-
-    private void displayAndPlayTranslation(Dictionary.Translation translationCard) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("TranslationCard", translationCard);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        PlayCardFragment playCardFragment = new PlayCardFragment();
-        playCardFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.mainActivity, playCardFragment);
-        fragmentTransaction.addToBackStack("playCardFragment");
-        fragmentTransaction.commit();
     }
 
     private void showAddTranslationDialog() {
         Intent intent = new Intent(this, RecordingActivity.class);
-        intent.putExtra(
-                RecordingActivity.INTENT_KEY_DICTIONARY_ID,
+        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID,
                 dictionaries[currentDictionaryIndex].getDbId());
-        intent.putExtra(
-                RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
+        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
         intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
@@ -185,98 +196,166 @@ public class TranslationsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastMediaPlayerManager.stop();
+    }
+
     public void onExportButtonPress(View v) {
         (new ExportTask()).execute();
     }
 
-    private class CardListAdapter extends ArrayAdapter<String> {
-
-        private final View.OnClickListener clickListener;
-        private final View.OnClickListener editClickListener;
+    private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
 
         public CardListAdapter(
-                Context context, int resource, int textViewResourceId, List<String> objects,
-                ListView list) {
+                Context context, int resource, int textViewResourceId,
+                List<Dictionary.Translation> objects) {
             super(context, resource, textViewResourceId, objects);
-            clickListener = new CardClickListener(list);
-            editClickListener = new CardEditClickListener(list);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = null;
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                view = layoutInflater.inflate(R.layout.list_item, parent, false);
-                view.findViewById(R.id.card_text).setOnClickListener(clickListener);
-                view.findViewById(R.id.card_edit).setOnClickListener(editClickListener);
-            } else {
-                view = convertView;
+                convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
             }
-            TextView cardTextView = (TextView) view.findViewById(R.id.card_text);
-            cardTextView.setText(getItem(position));
-            return view;
+
+            if (translationCardStates[position]) {
+                convertView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.collapse_arrow);
+            } else {
+                convertView.findViewById(R.id.translation_child).setVisibility(View.GONE);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
+            }
+
+            convertView.setOnClickListener(null);
+
+            convertView.findViewById(R.id.translation_indicator_layout)
+                    .setOnClickListener(new CardIndicatorClickListener(convertView, position));
+
+            convertView.findViewById(R.id.translation_card_edit)
+                    .setOnClickListener(new CardEditClickListener(getItem(position)));
+
+            convertView.findViewById(R.id.translation_card_delete)
+                    .setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
+
+            TextView cardTextView = (TextView) convertView.findViewById(
+                    R.id.origin_translation_text);
+            cardTextView.setText(getItem(position).getLabel());
+
+            ProgressBar progressBar = (ProgressBar) convertView.findViewById(
+                    R.id.list_item_progress_bar);
+            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(),
+                    progressBar, lastMediaPlayerManager));
+
+            TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
+            if(getItem(position).getTranslatedText().isEmpty()){
+                translatedText.setText(String.format(getString(R.string.translated_text_hint),
+                        dictionaries[currentDictionaryIndex].getLabel()));
+                translatedText.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.textDisabled));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+            } else {
+                translatedText.setText(getItem(position).getTranslatedText());
+                translatedText.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.primaryTextColor));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            }
+
+            convertView.findViewById(R.id.translated_text_layout)
+                    .setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(), progressBar,
+                            lastMediaPlayerManager));
+
+            return convertView;
         }
     }
 
-    private class CardClickListener implements View.OnClickListener {
+    private class CardIndicatorClickListener implements View.OnClickListener {
 
-        private final ListView list;
+        private View translationItem;
+        private int position;
 
-        public CardClickListener(ListView list) {
-            this.list = list;
+        public CardIndicatorClickListener(View translationItem, int position) {
+
+            this.translationItem = translationItem;
+            this.position = position;
         }
 
         @Override
         public void onClick(View view) {
-            View listItem = (View) view.getParent().getParent().getParent();
-            int position = list.getPositionForView(listItem);
-            if (position == 0 ||
-                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
-                // It's a click on the header or footer bumper, ignore it.
-                return;
+            View translationChild = translationItem.findViewById(R.id.translation_child);
+            if (translationChild.getVisibility() == View.GONE) {
+                translationChild.setVisibility(View.VISIBLE);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.collapse_arrow);
+                translationCardStates[position] = true;
+            } else {
+                translationChild.setVisibility(View.GONE);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
+                translationCardStates[position] = false;
             }
-            int itemIndex = position - 1;
-
-            Dictionary.Translation translationCard =
-                    dictionaries[currentDictionaryIndex].getTranslation(itemIndex);
-            displayAndPlayTranslation(translationCard);
         }
     }
 
     private class CardEditClickListener implements View.OnClickListener {
+        private Dictionary.Translation translationCard;
 
-        private final ListView list;
-
-        public CardEditClickListener(ListView list) {
-            this.list = list;
+        public CardEditClickListener(Dictionary.Translation translationCard) {
+            this.translationCard = translationCard;
         }
 
         @Override
         public void onClick(View view) {
-            View listItem = (View) view.getParent().getParent().getParent();
-            int position = list.getPositionForView(listItem);
-            if (position == 0 ||
-                    position > dictionaries[currentDictionaryIndex].getTranslationCount()) {
-                // It's a click on the header or footer bumper, ignore it.
-                return;
-            }
-            int itemIndex = position - 1;
             Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            Dictionary.Translation translation = dictionary.getTranslation(itemIndex);
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translation.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL, translation.getLabel());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translation.getIsAsset());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translation.getFilename());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translation.getTranslatedText());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL,
+                    translationCard.getLabel());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET,
+                    translationCard.getIsAsset());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME,
+                    translationCard.getFilename());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
+                    translationCard.getTranslatedText());
             intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
+        }
+    }
+
+    private class CardDeleteClickListener implements View.OnClickListener {
+
+        long translationId;
+
+        public CardDeleteClickListener(long translationId) {
+            this.translationId = translationId;
+        }
+
+        @Override
+        public void onClick(View view) {
+            new AlertDialog.Builder(TranslationsActivity.this)
+                    .setTitle("Delete Flashcard")
+                    .setMessage("Are you sure you want to delete this translation card?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbm.deleteTranslation(translationId);
+                            dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+                            setDictionary(currentDictionaryIndex);
+                            listAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
         }
     }
 
@@ -344,4 +423,6 @@ public class TranslationsActivity extends AppCompatActivity {
                 .setMessage(errorMessage)
                 .show();
     }
+
+
 }

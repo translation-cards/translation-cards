@@ -14,18 +14,20 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.google.inject.Inject;
+
+import org.mercycorps.translationcards.R;
+
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +48,7 @@ public class DbManager {
 
     private final DbHelper dbh;
 
+    @Inject
     public DbManager(Context context) {
         this.dbh = new DbHelper(context);
     }
