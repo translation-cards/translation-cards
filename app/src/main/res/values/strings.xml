@@ -17,7 +17,7 @@
     <string name="recording_text_create_title">Enter the translation text</string>
     <string name="recording_text_hint_text">Phrase translation (Optional)</string>
     <string name="recording_done_title">New %s flashcard created</string>
-    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category. To make changes to the phrase or delete it, just tap the pencil icon on the flashcard.</string>
+    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category.</string>
     <string name="navigation_button_back">BACK</string>
     <string name="navigation_button_done">DONE</string>
     <string name="navigation_button_next">NEXT</string>
@@ -51,11 +51,12 @@
     <string name="deck_card_expansion_make_copy">Make a personal copy of this deck.</string>
     <string name="deck_copy_dialog_title">Name for deck copy?</string>
     <string name="import_version_override_title">Override other version?</string>
+    <string name="translated_text_hint">Add %s translation</string>
+    <string name="navigation_button_edit">EDIT</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
         <item>Import this, but keep existing deck</item>
         <item>Import this and delete existing deck</item>
     </string-array>
->>>>>>> master
 </resources>

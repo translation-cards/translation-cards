@@ -7,8 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +91,7 @@ public class DecksActivity extends AppCompatActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
-                convertView.findViewById(R.id.deck_card).setOnClickListener(new View.OnClickListener() {
+                convertView.findViewById(R.id.translation_card).setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {

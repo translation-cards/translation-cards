@@ -35,12 +35,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -69,6 +71,7 @@ public class RecordingActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
     private Deck deck;
     private Intent intent;
+    private MediaPlayerManager mediaPlayerManager;
 
     private enum Step {
         INSTRUCTIONS,
@@ -106,6 +109,8 @@ public class RecordingActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication application = (MainApplication) getApplication();
+        mediaPlayerManager = application.getMediaPlayerManager();
         stepHistory = new Stack<>();
         dictionaryId = getIntent().getLongExtra(INTENT_KEY_DICTIONARY_ID, -1);
         dictionaryLabel = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_LABEL);
@@ -198,8 +203,8 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView.setImageBitmap(currentBitmap);
         final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
-        fillPrepopulatedField(label, labelField);
-        fillPrepopulatedField(translatedText, translatedTextField);
+        fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
+        fillPrepopulatedField(translatedText, translatedTextField, String.format(getString(R.string.translated_text_hint), dictionaryLabel));
         if (inEditMode) {
             ImageView deleteButton = (ImageView) findViewById(R.id.recording_label_delete_image);
             deleteButton.setVisibility(View.VISIBLE);
@@ -266,8 +271,12 @@ public class RecordingActivity extends AppCompatActivity {
                         label.equals(getString(R.string.recording_label_hint_text))) {
                     return;
                 }
-                translatedText = translatedTextField.getText().toString();
 
+                translatedText = translatedTextField.getText().toString();
+                if(translatedText.trim().isEmpty()
+                        || translatedText.equals(getString(R.string.recording_text_hint_text))) {
+                    translatedText = "";
+                }
                 moveToAudioStep();
             }
         });
@@ -279,9 +288,8 @@ public class RecordingActivity extends AppCompatActivity {
                 getString(hintText))) {
             field.setText("");
             field.setTextColor(Color.BLACK);
-        } else if (!hasFocus && field.getText().toString().equals("")) {
-            field.setText(getString(hintText));
-            field.setTextColor(getResources().getColor(R.color.borderColor));
+        } else if (!hasFocus && field.getText().toString().trim().isEmpty()) {
+            field.setHint(hintText);
         }
         if (hasFocus) {
             InputMethodManager inputMethodManager =
@@ -292,12 +300,14 @@ public class RecordingActivity extends AppCompatActivity {
         }
     }
 
-    private void fillPrepopulatedField(String fieldValue, EditText field) {
-        if (fieldValue != null) {
+    private void fillPrepopulatedField(String fieldValue, EditText field, String hintText) {
+        if (fieldValue != null && !fieldValue.isEmpty()) {
             field.setText(fieldValue);
             field.setTextColor(Color.BLACK);
             field.setSelection(fieldValue.length());
             setLabelNextButtonEnabled(true);
+        } else {
+            field.setHint(hintText);
         }
     }
 
@@ -305,10 +315,10 @@ public class RecordingActivity extends AppCompatActivity {
         TextView text = (TextView) findViewById(R.id.recording_label_next_text);
         ImageView image = (ImageView) findViewById(R.id.recording_label_next_image);
         if (enabled) {
-            text.setTextColor(getResources().getColor(R.color.primaryTextColor));
+            text.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
             image.setImageResource(R.drawable.forward_arrow);
         } else {
-            text.setTextColor(getResources().getColor(R.color.navBarTextDisabled));
+            text.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
             image.setImageResource(R.drawable.forward_arrow_40p);
         }
     }
@@ -317,26 +327,31 @@ public class RecordingActivity extends AppCompatActivity {
         recordingStatus = (filename == null) ? RecordingStatus.FRESH : RecordingStatus.RECORDED;
         setContentView(R.layout.recording_audio);
         if (recordingStatus == RecordingStatus.RECORDED) {
-            setAudioSaveButtonEnabled();
+            findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
         }
         recycleBitmap();
         TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
         titleView.setText(getString(R.string.recording_audio_title, dictionaryLabel));
-        TextView labelView = (TextView) findViewById(R.id.card_text);
+        TextView labelView = (TextView) findViewById(R.id.origin_translation_text);
         labelView.setText(label);
-        findViewById(R.id.card_edit).setVisibility(View.GONE);
+        findViewById(R.id.translation_indicator_layout).setVisibility(View.GONE);
+        findViewById(R.id.text_indicator_divider).setVisibility(View.GONE);
         recordButton = (ImageButton) findViewById(R.id.recording_audio_button_record);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (recordingStatus) {
                     case FRESH:
+                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
                     case RECORDED:
+                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.GONE);
                         startRecording();
                         break;
                     case RECORDING:
                         stopRecording();
-                        setAudioSaveButtonEnabled();
+                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -351,7 +366,8 @@ public class RecordingActivity extends AppCompatActivity {
                 switch (recordingStatus) {
                     case RECORDING:
                         stopRecording();
-                        setAudioSaveButtonEnabled();
+                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
                         startListening();
                         break;
                     case RECORDED:
@@ -367,6 +383,9 @@ public class RecordingActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
                 moveToLabelStep();
             }
         });
@@ -414,8 +433,7 @@ public class RecordingActivity extends AppCompatActivity {
         recordingsDir.mkdirs();
         File targetFile = new File(
                 recordingsDir,
-                String.format("%d_%s_%d.3gp",
-                        dictionaryId, label.replace(' ', '-'), (new Random()).nextInt()));
+                String.format("%d.3gp", (new Random()).nextInt() * (new Random()).nextInt()));
         filename = targetFile.getAbsolutePath();
         isAsset = false;
         mediaRecorder = new MediaRecorder();
@@ -485,13 +503,6 @@ public class RecordingActivity extends AppCompatActivity {
         recordingStatus = RecordingStatus.RECORDED;
     }
 
-    private void setAudioSaveButtonEnabled() {
-        TextView text = (TextView) findViewById(R.id.recording_audio_save_text);
-        text.setTextColor(getResources().getColor(R.color.primaryTextColor));
-        ImageView image = (ImageView) findViewById(R.id.recording_audio_save_image);
-        image.setImageResource(R.drawable.forward_arrow);
-    }
-
     private void moveToDoneStep() {
         setContentView(R.layout.recording_done);
         recycleBitmap();
@@ -503,15 +514,35 @@ public class RecordingActivity extends AppCompatActivity {
         titleView.setText(getString(R.string.recording_done_title, dictionaryLabel));
         TextView detailView = (TextView) findViewById(R.id.recording_done_detail);
         detailView.setText(getString(R.string.recording_done_detail, dictionaryLabel));
-        TextView cardTextView = (TextView) findViewById(R.id.card_text);
+        TextView cardTextView = (TextView) findViewById(R.id.origin_translation_text);
         cardTextView.setText(label);
-        findViewById(R.id.card_edit).setOnClickListener(new View.OnClickListener() {
+        TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
+        if (translatedText.trim().isEmpty()) {
+            translatedCardText.setHint(String.format(getString(R.string.translated_text_hint), dictionaryLabel));
+            translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+        } else {
+            translatedCardText.setText(translatedText);
+            translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+        }
+        ImageView cardIndicator = (ImageView) findViewById(R.id.indicator_icon);
+        cardIndicator.setBackgroundResource(R.drawable.collapse_arrow);
+        findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+        findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
+
+        final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(filename,
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
+        findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
+
+        View backButton = findViewById(R.id.recording_done_edit);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cardAudioClickListener.stop();
                 inEditMode = true;
                 moveToLabelStep();
             }
         });
+
         View doneButton = (View) findViewById(R.id.recording_done_done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -522,6 +553,12 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
         stepHistory.push(Step.DONE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayerManager.stop();
     }
 
     private void recycleBitmap() {

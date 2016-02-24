@@ -39,14 +39,30 @@
         android:lineSpacingExtra="3dp"
         android:id="@+id/recording_done_detail" />
 
-    <include layout="@layout/translation_card"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/recording_done_detail"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:id="@+id/recording_done_card" />
+        android:layout_marginRight="16dp">
 
+        <ProgressBar
+            android:id="@+id/recording_done_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/play_progress"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:minHeight="1dp"
+            android:maxHeight="1dp"/>
+
+        <include layout="@layout/translation_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recording_done_progress_bar"
+            android:id="@+id/recording_done_card"/>
+    </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the rest (on small screens, the soft keyboard can reduce the available height such that
          not everything fits). This frame layout (which must be at least as tall as the navigation
@@ -55,7 +71,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/recording_done_card" />
+        android:layout_below="@id/recording_done_detail" />
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -65,6 +81,25 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="16dp"
+            android:id="@+id/recording_done_edit">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back_arrow" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="16dp"
+                android:textColor="@color/primaryTextColor"
+                android:text="@string/navigation_button_edit" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

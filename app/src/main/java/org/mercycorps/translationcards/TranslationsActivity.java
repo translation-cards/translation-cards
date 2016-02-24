@@ -21,13 +21,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,13 +70,15 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private View[] languageTabBorders;
     private CardListAdapter listAdapter;
     private Deck deck;
-    private MediaPlayerManager lastMediaPlayerManager;
     private boolean[] translationCardStates;
+    private MediaPlayerManager lastMediaPlayerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RoboGuice.setUseAnnotationDatabases(false);
         super.onCreate(savedInstanceState);
+        MainApplication application = (MainApplication) getApplication();
+        lastMediaPlayerManager = application.getMediaPlayerManager();
         deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = -1;
@@ -124,7 +124,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
-                this, R.layout.list_item, R.id.card_text, new ArrayList<Dictionary.Translation>());
+                this, R.layout.translation_item, R.id.origin_translation_text,
+                new ArrayList<Dictionary.Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         if (deck.isLocked()) {
@@ -140,18 +141,19 @@ public class TranslationsActivity extends RoboActionBarActivity {
     }
 
     private void setDictionary(int dictionaryIndex) {
+        lastMediaPlayerManager.stop();
         translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
         Arrays.fill(translationCardStates, false);
 
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
-                    getResources().getColor(R.color.unselectedLanguageTabText));
+                    ContextCompat.getColor(this, R.color.unselectedLanguageTabText));
             languageTabBorders[currentDictionaryIndex].setBackgroundColor(0);
         }
         languageTabTextViews[dictionaryIndex].setTextColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         languageTabBorders[dictionaryIndex].setBackgroundColor(
-                getResources().getColor(R.color.textColor));
+                ContextCompat.getColor(this, R.color.textColor));
         currentDictionaryIndex = dictionaryIndex;
         Dictionary dictionary = dictionaries[dictionaryIndex];
         listAdapter.clear();
@@ -164,11 +166,9 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private void showAddTranslationDialog() {
         Intent intent = new Intent(this, RecordingActivity.class);
-        intent.putExtra(
-                RecordingActivity.INTENT_KEY_DICTIONARY_ID,
+        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID,
                 dictionaries[currentDictionaryIndex].getDbId());
-        intent.putExtra(
-                RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
+        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
         intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
@@ -189,6 +189,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastMediaPlayerManager.stop();
+    }
+
     public void onExportButtonPress(View v) {
         (new ExportTask()).execute();
     }
@@ -206,15 +212,18 @@ public class TranslationsActivity extends RoboActionBarActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
             }
 
             if (translationCardStates[position]) {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.back_arrow);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.collapse_arrow);
             } else {
                 convertView.findViewById(R.id.translation_child).setVisibility(View.GONE);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
+                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
             }
 
             convertView.setOnClickListener(null);
@@ -232,17 +241,32 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
             }
 
-            TextView cardTextView = (TextView) convertView.findViewById(R.id.origin_translation_text);
+            TextView cardTextView = (TextView) convertView.findViewById(
+                    R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
 
-            ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.list_item_progress_bar);
-            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+            ProgressBar progressBar = (ProgressBar) convertView.findViewById(
+                    R.id.list_item_progress_bar);
+            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(),
+                    progressBar, lastMediaPlayerManager));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
-            translatedText.setText(getItem(position).getTranslatedText());
+            if(getItem(position).getTranslatedText().isEmpty()){
+                translatedText.setText(String.format(getString(R.string.translated_text_hint),
+                        dictionaries[currentDictionaryIndex].getLabel()));
+                translatedText.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.textDisabled));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+            } else {
+                translatedText.setText(getItem(position).getTranslatedText());
+                translatedText.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.primaryTextColor));
+                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            }
 
             convertView.findViewById(R.id.translated_text_layout)
-                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar));
+                    .setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(), progressBar,
+                            lastMediaPlayerManager));
 
             return convertView;
         }
@@ -264,11 +288,13 @@ public class TranslationsActivity extends RoboActionBarActivity {
             View translationChild = translationItem.findViewById(R.id.translation_child);
             if (translationChild.getVisibility() == View.GONE) {
                 translationChild.setVisibility(View.VISIBLE);
-                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.back_arrow);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.collapse_arrow);
                 translationCardStates[position] = true;
             } else {
                 translationChild.setVisibility(View.GONE);
-                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(R.drawable.forward_arrow);
+                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
+                        R.drawable.expand_arrow);
                 translationCardStates[position] = false;
             }
         }
@@ -288,13 +314,14 @@ public class TranslationsActivity extends RoboActionBarActivity {
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
             intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL, translationCard.getLabel());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET, translationCard.getIsAsset());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME, translationCard.getFilename());
-            intent.putExtra(
-                    RecordingActivity.INTENT_KEY_TRANSLATION_TEXT, translationCard.getTranslatedText());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL,
+                    translationCard.getLabel());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET,
+                    translationCard.getIsAsset());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME,
+                    translationCard.getFilename());
+            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
+                    translationCard.getTranslatedText());
             intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
 
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
@@ -392,36 +419,5 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 .show();
     }
 
-    private class CardAudioClickListener implements View.OnClickListener {
-        private Dictionary.Translation translationCard;
-        private final ProgressBar progressBar;
 
-        public CardAudioClickListener(Dictionary.Translation translationCard, ProgressBar progressBar) {
-            this.translationCard = translationCard;
-            this.progressBar = progressBar;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (lastMediaPlayerManager != null) {
-                lastMediaPlayerManager.stop();
-            }
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                translationCard.setMediaPlayerDataSource(TranslationsActivity.this, mediaPlayer);
-                mediaPlayer.prepare();
-            } catch (IOException e) {
-                Log.d(TAG, "Error getting audio asset: " + e);
-                return;
-            }
-
-            lastMediaPlayerManager = new MediaPlayerManager(mediaPlayer, progressBar);
-            mediaPlayer.setOnCompletionListener(
-                    new ManagedMediaPlayerCompletionListener(lastMediaPlayerManager));
-            progressBar.setMax(mediaPlayer.getDuration());
-            mediaPlayer.start();
-            new Thread(lastMediaPlayerManager).start();
-        }
-    }
 }

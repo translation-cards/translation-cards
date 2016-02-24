@@ -1,11 +1,8 @@
 package org.mercycorps.translationcards;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,6 +11,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -23,9 +21,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
-
-import java.util.Arrays;
-import java.util.List;
 
 import roboguice.RoboGuice;
 
@@ -51,13 +46,12 @@ import static org.robolectric.Shadows.shadowOf;
 public class TranslationsActivityTest {
 
     public static final int DEFAULT_DECK_ID = 1;
-    public static final String DEFAULT_DECK_NAME = "Default";
     public static final String NO_VALUE = "";
     public static final long DEFAULT_LONG = -1;
     public static final String DICTIONARY_TEST_LABEL = "TestLabel";
     public static final String TRANSLATED_TEXT = "TranslatedText";
     public static final String TRANSLATION_LABEL = "TranslationLabel";
-    private static final String DELETE_MESSAGE = "Are you sure you want to delete this translation card?";
+    public static final String DEFAULT_DECK_NAME = "Default";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Dictionary.Translation translation;
@@ -72,23 +66,28 @@ public class TranslationsActivityTest {
         RoboGuice.overrideApplicationInjector(RuntimeEnvironment.application,
                 new TranslationsActivityTestModule());
         RoboGuice.getInjector(RuntimeEnvironment.application).injectMembers(this);
-        translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+        translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(
+                intent).create().get();
     }
 
     private void initializeMockDbManager() {
         dbManagerMock = mock(DbManager.class);
         Dictionary[] dictionaries = new Dictionary[1];
-        Dictionary.Translation[] translations = new Dictionary.Translation[1];
-        translation = new Dictionary.Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG,
+        translation = new Dictionary.Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
                 TRANSLATED_TEXT);
-        translations[0] = translation;
-        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
+        Dictionary.Translation emptyTranslatedTextTranslation = new Dictionary.Translation(
+                TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
+                NO_VALUE);
+        Dictionary.Translation[] translations = {translation, emptyTranslatedTextTranslation};
+        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
+                DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
 
     @Test
     public void onCreate_shouldShowDeckNameInToolbar() {
-        assertThat(translationsActivity.getSupportActionBar().getTitle().toString(), is("Default"));
+        assertThat(translationsActivity.getSupportActionBar().getTitle().toString(), is(
+                DEFAULT_DECK_NAME));
     }
 
     @Test
@@ -102,7 +101,8 @@ public class TranslationsActivityTest {
                 .findViewById(R.id.translations_list);
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
 
-        TextView originTranslationText = (TextView) translationsListItem.findViewById(R.id.origin_translation_text);
+        TextView originTranslationText = (TextView) translationsListItem.findViewById(
+                R.id.origin_translation_text);
         assertThat(originTranslationText.getText().toString(), is(TRANSLATION_LABEL));
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
@@ -122,6 +122,20 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    public void shouldDisplayAndFormatNoTranslationTextStringWhenTranslatedTextLeftEmpty() {
+        int disabledTextColor = -7960954;
+        ListView translationsList = (ListView) translationsActivity.findViewById(
+                R.id.translations_list);
+        View translationsListItem = translationsList.getAdapter().getView(2, null, translationsList);
+
+        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
+        assertThat(translatedText.getText().toString(), is(
+                "Add " + DICTIONARY_TEST_LABEL + " translation"));
+        assertThat(translatedText.getTextSize(), is(18f));
+        assertThat(translatedText.getCurrentTextColor(), is(disabledTextColor));
+    }
+
+    @Test
     public void onClick_shouldStartRecordingActivityWhenEditLayoutIsClicked() {
         ListView translationsList = (ListView) translationsActivity
                 .findViewById(R.id.translations_list);
@@ -130,19 +144,24 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        String dictionaryLabel = nextStartedActivity.getStringExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
+        assertThat(nextStartedActivity.getComponent().getClassName(), is(
+                RecordingActivity.class.getCanonicalName()));
+        String dictionaryLabel = nextStartedActivity.getStringExtra(
+                RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
         assertThat(dictionaryLabel, is(DICTIONARY_TEST_LABEL));
     }
 
     @Test
     public void onClick_shouldShowDeleteConfirmationDialogWhenDeleteLayoutIsClicked(){
-        ListView translationsList = (ListView) translationsActivity.findViewById(R.id.translations_list);
+        ListView translationsList = (ListView) translationsActivity.findViewById(
+                R.id.translations_list);
 
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
-        assertThat(shadowAlertDialog.getMessage().toString(), is(DELETE_MESSAGE));
+        assertThat(shadowAlertDialog.getMessage().toString(),
+                is("Are you sure you want to delete this translation card?"));
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
         verify(dbManagerMock).deleteTranslation(translation.getDbId());
@@ -156,13 +175,24 @@ public class TranslationsActivityTest {
 
         View translationsListItem = translationsList.getAdapter().getView(1, null, translationsList);
 
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+        ImageView cardIndicator = (ImageView) translationsListItem.findViewById(R.id.indicator_icon);
+
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(
+                View.GONE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(
+                R.drawable.expand_arrow));
 
         translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(
+                View.VISIBLE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(
+                R.drawable.collapse_arrow));
 
         translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(
+                View.GONE));
+        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(
+                R.drawable.expand_arrow));
     }
 
     @Test
@@ -178,7 +208,8 @@ public class TranslationsActivityTest {
 
     @Test
     public void setDictionary_shouldNotHaveAnyTranslationCardsWhenNoneHaveBeenCreated() {
-        TextView translationCardText = (TextView) translationsActivity.findViewById(R.id.card_text);
+        TextView translationCardText = (TextView) translationsActivity.findViewById(
+                R.id.origin_translation_text);
 
         assertThat(translationCardText, is(nullValue()));
     }
@@ -197,5 +228,10 @@ public class TranslationsActivityTest {
             bind(DbManager.class).toInstance(dbManagerMock);
         }
 
+    }
+
+    @Ignore
+    @Test
+    public void onPause_shouldStopPlayingMediaPlayerManagerWhenActivityPaused() {
     }
 }

@@ -87,8 +87,8 @@ public class TxcPortingUtility {
                     String translationFilename = buildUniqueFilename(
                             translation, translationFilenames);
                     translationFilenames.put(translationFilename, translation);
-                    String line = String.format("%s|%s|%s\n",
-                            translation.getLabel(), translationFilename, language);
+                    String line = String.format("%s|%s|%s|%s\n", translation.getLabel(),
+                            translationFilename, language, translation.getTranslatedText());
                     zos.write(line.getBytes());
                 }
             }

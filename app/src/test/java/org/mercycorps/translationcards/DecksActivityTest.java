@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards;
 
 import android.content.Intent;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -100,10 +99,11 @@ public class DecksActivityTest {
         ListView decksListView = (ListView) decksActivity.findViewById(R.id.decks_list);
         View decksListItem = decksListView.getAdapter().getView(0, null, decksListView);
 
-        LinearLayout deckLayout = (LinearLayout) decksListItem.findViewById(R.id.deck_card);
+        LinearLayout deckLayout = (LinearLayout) decksListItem.findViewById(R.id.translation_card);
         deckLayout.performClick();
 
         Intent nextStartedActivity = shadowOf(decksActivity).getNextStartedActivity();
+        assertThat(nextStartedActivity.getComponent().getClassName(), is(TranslationsActivity.class.getCanonicalName()));
         Deck deck = (Deck) nextStartedActivity.getSerializableExtra("Deck");
         assertThat(deck.getLabel(), is("Default"));
         assertThat(deck.getDbId(), is((long) 1));

@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards;
 
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
@@ -9,44 +10,33 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MediaPlayerManager implements Runnable {
 
+    private static final String TAG = "MediaPlayerManager";
     private final Lock lock;
-    private boolean running;
-    private final MediaPlayer mediaPlayer;
-    private final ProgressBar progressBar;
+    private MediaPlayer mediaPlayer;
+    private ProgressBar progressBar;
 
-    public MediaPlayerManager(MediaPlayer mediaPlayer, ProgressBar progressBar) {
-        lock = new ReentrantLock();
-        running = true;
+    public MediaPlayerManager(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
-        this.progressBar = progressBar;
+        lock = new ReentrantLock();
     }
 
-    public boolean stop() {
+    public void stop() {
         lock.lock();
-        if (!running) {
-            // Already stopped, just return false.
-            lock.unlock();
-            return false;
-        }
-        running = false;
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
+        mediaPlayer.stop();
         mediaPlayer.reset();
-        mediaPlayer.release();
-        progressBar.post(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setProgress(0);
-            }
-        });
+        resetProgressBar();
         lock.unlock();
-        return true;
+    }
+
+    private void resetProgressBar() {
+        if (progressBar != null) {
+           progressBar.setProgress(0);
+        }
     }
 
     private boolean tryUpdate() {
         lock.lock();
-        if (!running) {
+        if (!mediaPlayer.isPlaying()) {
             lock.unlock();
             return false;
         }
@@ -72,15 +62,24 @@ public class MediaPlayerManager implements Runnable {
         }
     }
 
-    public void start(String filename) {
-        mediaPlayer.reset();
+    public void play(String filename, ProgressBar progressBar) {
+        resetProgressBar();
+        this.progressBar = progressBar;
         try {
             mediaPlayer.setDataSource(filename);
             mediaPlayer.prepare();
         } catch (IOException e) {
+            Log.d(TAG, "Error getting audio asset: " + e);
             e.printStackTrace();
         }
-        progressBar.setMax(mediaPlayer.getDuration());
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                stop();
+            }
+        });
+
+        this.progressBar.setMax(mediaPlayer.getDuration());
         mediaPlayer.start();
         new Thread(this).start();
     }
