@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.manager;
 
 import android.media.MediaPlayer;
 import android.widget.ProgressBar;
@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
 
 import java.io.IOException;
 

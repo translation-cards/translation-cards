@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.porting;
 
 /**
  * Exception for when there is an error exporting a .txc file.

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -44,6 +44,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.MediaPlayerManager;
+import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Deck;
 
 import java.io.File;
 import java.io.FileInputStream;
