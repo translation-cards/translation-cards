@@ -147,6 +147,13 @@ public class DecksActivity extends AppCompatActivity {
             } else {
                 deckCopyView.setVisibility(View.GONE);
             }
+            View deckDeleteView = convertView.findViewById(R.id.deck_card_expansion_delete);
+            deckDeleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    optionallyDelete(deck);
+                }
+            });
 
             return convertView;
         }
@@ -198,5 +205,24 @@ public class DecksActivity extends AppCompatActivity {
         }
         inStream.close();
         outStream.close();
+    }
+
+    private void optionallyDelete(final Deck deck) {
+        new AlertDialog.Builder(DecksActivity.this)
+                .setTitle(R.string.deck_delete_dialog_title)
+                .setPositiveButton(R.string.misc_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbManager.deleteDeck(deck.getDbId());
+                                initDecks();
+                            }
+                        })
+                .setNegativeButton(R.string.misc_cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {}
+                        })
+                .show();
     }
 }

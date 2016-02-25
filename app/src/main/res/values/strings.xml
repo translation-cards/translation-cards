@@ -49,7 +49,9 @@
     <string name="delete_label">Delete this flashcard</string>
     <string name="no_translation_text">No Translation Provided</string>
     <string name="deck_card_expansion_make_copy">Make a personal copy of this deck.</string>
+    <string name="deck_card_expansion_delete">Delete this deck.</string>
     <string name="deck_copy_dialog_title">Name for deck copy?</string>
+    <string name="deck_delete_dialog_title">Are you sure you want to delete this deck?</string>
     <string name="import_version_override_title">Override other version?</string>
     <string name="deck_export_dialog_title">Name for exported deck?</string>
     <string name="translated_text_hint">Add %s translation</string>
