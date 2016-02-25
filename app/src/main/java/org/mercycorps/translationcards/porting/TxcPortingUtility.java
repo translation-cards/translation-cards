@@ -38,7 +38,8 @@ public class TxcPortingUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final int BUFFER_SIZE = 2048;
 
-    public void exportData(Deck deck, Dictionary[] dictionaries, File file) throws ExportException {
+    public void exportData(Deck deck, String exportedDeckName, Dictionary[] dictionaries, File file)
+            throws ExportException {
         ZipOutputStream zos = null;
         try {
             OutputStream os;
@@ -49,7 +50,7 @@ public class TxcPortingUtility {
             }
             zos = new ZipOutputStream(os);
             Map<String, Dictionary.Translation> translationFilenames =
-                    buildIndex(deck, dictionaries, zos);
+                    buildIndex(deck, exportedDeckName, dictionaries, zos);
             for (String filename : translationFilenames.keySet()) {
                 addFileToZip(filename, translationFilenames.get(filename), zos);
             }
@@ -72,12 +73,13 @@ public class TxcPortingUtility {
     }
 
     private Map<String, Dictionary.Translation> buildIndex(
-            Deck deck, Dictionary[] dictionaries, ZipOutputStream zos) throws ExportException {
+            Deck deck, String exportedDeckname, Dictionary[] dictionaries, ZipOutputStream zos)
+            throws ExportException {
         Map<String, Dictionary.Translation> translationFilenames = new HashMap<>();
         try {
             zos.putNextEntry(new ZipEntry(INDEX_FILENAME));
             String metaLine = String.format("META:%s|%s|%s|%d\n",
-                    deck.getLabel(), deck.getPublisher(),
+                    exportedDeckname, deck.getPublisher(),
                     deck.getExternalId() == null ? "" : deck.getExternalId(),
                     deck.getTimestamp());
             zos.write(metaLine.getBytes());
@@ -303,7 +305,7 @@ public class TxcPortingUtility {
     private void loadData(Context context, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
         long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
-                importInfo.externalId, importInfo.hash);
+                importInfo.externalId, importInfo.hash, true);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
