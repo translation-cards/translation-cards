@@ -65,7 +65,7 @@ public class TranslationsActivityTest {
     public void setUp() {
         RoboGuice.setUseAnnotationDatabases(false);
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
         intent.putExtra("Deck", deck);
         initializeMockDbManager();
         RoboGuice.overrideApplicationInjector(RuntimeEnvironment.application,
