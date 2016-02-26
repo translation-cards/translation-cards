@@ -37,7 +37,7 @@
                 <data
                     android:scheme="file"
                     android:host="*"
-                    android:pathPattern=".*\\.txc" />
+                    android:pathPattern="/.*\\.txc" />
             </intent-filter>
             <!-- To support opening downloaded files.
                  It appears that downloaded files are re-assigned numeric filenames, so we can't
