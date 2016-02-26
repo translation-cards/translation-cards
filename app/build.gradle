@@ -13,7 +13,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("keystore.jks")
+            storeFile file("../keystore.jks")
             storePassword System.getenv("KEYPWD")
             keyAlias "TranslationCardsKey"
             keyPassword System.getenv("KEYPWD")
