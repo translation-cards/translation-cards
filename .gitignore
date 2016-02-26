@@ -13,3 +13,6 @@
 
 #Release Binaries
 app/app-release.apk
+
+#Keystore
+keystore.jks
