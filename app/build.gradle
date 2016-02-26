@@ -16,7 +16,7 @@ android {
             storeFile file("../keystore.jks")
             storePassword System.getenv("KEYPWD").toString().replace("DONTEVERUSETHIS=0", "")
             keyAlias "TranslationCardsKey"
-            keyPassword System.getenv("KEYPWD")
+            keyPassword System.getenv("KEYPWD").toString().replace("DONTEVERUSETHIS=0", "")
         }
     }
     buildTypes {
