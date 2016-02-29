@@ -272,8 +272,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(
                     R.id.list_item_progress_bar);
-            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(),
-                    progressBar, lastMediaPlayerManager));
+            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
+                    lastMediaPlayerManager));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
@@ -290,7 +290,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
             }
 
             convertView.findViewById(R.id.translated_text_layout)
-                    .setOnClickListener(new CardAudioClickListener(getItem(position).getFilename(), progressBar,
+                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
                             lastMediaPlayerManager));
 
             return convertView;

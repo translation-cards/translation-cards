@@ -45,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.MainApplication;
@@ -76,6 +77,8 @@ public class RecordingActivity extends AppCompatActivity {
     public static final String INTENT_KEY_TRANSLATION_TEXT = "translatedText";
 
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+    public static final int NO_DB_ID = 0;
+    public static final boolean NOT_AN_ASSET = false;
     private Deck deck;
     private Intent intent;
     private MediaPlayerManager mediaPlayerManager;
@@ -537,7 +540,8 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 
-        final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(filename,
+        final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
+                new Dictionary.Translation(label, NOT_AN_ASSET, filename, NO_DB_ID, translatedText),
                 (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
         findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
 
