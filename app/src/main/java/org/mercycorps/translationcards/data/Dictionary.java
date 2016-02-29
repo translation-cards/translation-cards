@@ -68,6 +68,7 @@ public class Dictionary {
      */
     public static class Translation implements Serializable {
 
+        public static final String DEFAULT_TRANSLATED_TEXT = "";
         private final String label;
         private final boolean isAsset;
         private final String filename;
@@ -100,7 +101,7 @@ public class Dictionary {
         }
 
         public String getTranslatedText() {
-            return translatedText;
+            return translatedText == null ? DEFAULT_TRANSLATED_TEXT : translatedText;
         }
 
 

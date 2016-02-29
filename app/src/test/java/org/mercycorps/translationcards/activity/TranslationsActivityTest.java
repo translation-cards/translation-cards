@@ -80,10 +80,9 @@ public class TranslationsActivityTest {
         Dictionary[] dictionaries = new Dictionary[1];
         translation = new Dictionary.Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
                 TRANSLATED_TEXT);
-        Dictionary.Translation emptyTranslatedTextTranslation = new Dictionary.Translation(
-                TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
-                NO_VALUE);
-        Dictionary.Translation[] translations = {translation, emptyTranslatedTextTranslation};
+        Dictionary.Translation nullTranslatedTextTranslation = new Dictionary.Translation(
+                TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, null);
+        Dictionary.Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
