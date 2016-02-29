@@ -1,5 +1,8 @@
 # Translation Cards
 
+[![Build Status](https://snap-ci.com/translation-cards/translation-cards/branch/master/build_image)](https://snap-ci.com/translation-cards/translation-cards/branch/master)
+
+
 [Translation Cards](https://docs.google.com/presentation/d/1tfcNIJqS5TwKk7dqSYu5L1nXv-l-UmeBWa1EgwHMDVQ/edit?usp=drive_web) is an Android app that makes it really easy to record and play back translated words and phrases.
 
 Translation Cards is an in-development tool designed to make it easy for those communicating with someone who speaks another language, providing ready access to pre-recorded translated content just by tapping a card on the screen. This app comes with an initial set of translated and recorded content, oriented towards the medical field. As a user of Translation Cards, you’re also able record their own translations for additional words and phrases.
