@@ -1,13 +1,13 @@
 # Build Pipeline and Artifact Repository
-[Build Pipeline][https://snap-ci.com/translation-cards/translation-cards/branch/master]
-[Hosted APK][http://translation-cards.s3-website-us-east-1.amazonaws.com/app-release.apk]
+[Build Pipeline](https://snap-ci.com/translation-cards/translation-cards/branch/master)
+[Hosted APK](http://translation-cards.s3-website-us-east-1.amazonaws.com/app-release.apk)
 
 # Snap CI
-We use [Snap CI][https://snap-ci.com/] for our build pipeline. We chose this because it is very easy to set up, maintain, and is well documented.
+We use [Snap CI](https://snap-ci.com/) for our build pipeline. We chose this because it is very easy to set up, maintain, and is well documented.
 
 The pipeline will trigger when a commit is pushed to the master branch. This will run our tests against our application, and give you the option in the end to upload the APK to an artifact repository.
 
-Eventually the pipeline can be configured to upload our APK directly to the Play store to achieve [Continuous Delivery][http://martinfowler.com/bliki/ContinuousDelivery.html].
+Eventually the pipeline can be configured to upload our APK directly to the Play store to achieve [Continuous Delivery](http://martinfowler.com/bliki/ContinuousDelivery.html).
 
 # Build Stages
 ### Android Initialize
