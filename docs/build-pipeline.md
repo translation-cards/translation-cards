@@ -1,5 +1,6 @@
 # Build Pipeline and Artifact Repository
 [Build Pipeline](https://snap-ci.com/translation-cards/translation-cards/branch/master)
+
 [Hosted APK](http://translation-cards.s3-website-us-east-1.amazonaws.com/app-release.apk)
 
 # Snap CI
