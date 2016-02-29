@@ -1,7 +1,5 @@
 # Translation Cards
-Build Status
-
-![Build Image](https://snap-ci.com/translation-cards/translation-cards/branch/master/build_image)
+Build Status: ![Build Image](https://snap-ci.com/translation-cards/translation-cards/branch/master/build_image)
 
 [Translation Cards](https://docs.google.com/presentation/d/1tfcNIJqS5TwKk7dqSYu5L1nXv-l-UmeBWa1EgwHMDVQ/edit?usp=drive_web) is an Android app that makes it really easy to record and play back translated words and phrases.
 
