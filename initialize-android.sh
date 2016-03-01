@@ -17,7 +17,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
   echo y | android update sdk --no-ui --filter build-tools-23.0.2 --all > /dev/null
 
   # The SDK version used to compile your project
-  echo y | android update sdk --no-ui --filter android-10 > /dev/null
+  echo y | android update sdk --no-ui --filter android-23 > /dev/null
 
   # uncomment to install the Extra/Android Support Library
    echo y | android update sdk --no-ui --filter extra-android-support --all > /dev/null
@@ -27,7 +27,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
    echo y | android update sdk --no-ui --filter extra-android-m2repository --all > /dev/null
 
   # Specify at least one system image if you want to run emulator tests
-  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-10 --all > /dev/null
+  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-23 --all > /dev/null
 
   touch ${INITIALIZATION_FILE}
 fi
