@@ -29,17 +29,23 @@ public class CardAudioClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(lastMediaPlayerManager.isCurrentlyPlayingSameCard(translation)) {
-            stop();
+            stopMediaPlayer();
         } else {
-            stop();
-            lastMediaPlayerManager.play(getFileDescriptor(translation.getFilename()), progressBar, translation);
+            stopMediaPlayer();
+            lastMediaPlayerManager.play(getFileDescriptor(), progressBar, translation);
         }
     }
 
-    private FileDescriptor getFileDescriptor(String filename) {
+    public void stopMediaPlayer() {
+        if (lastMediaPlayerManager != null) {
+            lastMediaPlayerManager.stop();
+        }
+    }
+
+    private FileDescriptor getFileDescriptor() {
         FileDescriptor fileDescriptor;
         try {
-            fileDescriptor = new FileInputStream(filename).getFD();
+            fileDescriptor = loadFile();
         } catch (IOException e) {
             Log.d(TAG, "Error preparing audio.");
             throw new IllegalArgumentException(e);
@@ -47,9 +53,13 @@ public class CardAudioClickListener implements View.OnClickListener {
         return fileDescriptor;
     }
 
-    public void stop() {
-        if (lastMediaPlayerManager != null) {
-            lastMediaPlayerManager.stop();
+    private FileDescriptor loadFile() throws IOException {
+        FileDescriptor fileDescriptor;
+        if (translation.getIsAsset()) {
+            fileDescriptor = progressBar.getContext().getAssets().openFd(translation.getFilename()).getFileDescriptor();
+        } else {
+            fileDescriptor = new FileInputStream(translation.getFilename()).getFD();
         }
+        return fileDescriptor;
     }
 }

@@ -71,13 +71,7 @@ public class MediaPlayerManager implements Runnable {
         resetProgressBar();
         this.translation = translation;
         this.progressBar = progressBar;
-        try {
-            mediaPlayer.setDataSource(audioFile);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            e.printStackTrace();
-        }
+        prepareMediaPlayer(audioFile);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -89,6 +83,16 @@ public class MediaPlayerManager implements Runnable {
         mediaPlayer.start();
         new Thread(this).start();
         lock.unlock();
+    }
+
+    private void prepareMediaPlayer(FileDescriptor audioFile) {
+        try {
+            mediaPlayer.setDataSource(audioFile);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            Log.d(TAG, "Error getting audio asset: " + e);
+            e.printStackTrace();
+        }
     }
 
     public boolean isCurrentlyPlayingSameCard(Dictionary.Translation translation) {
