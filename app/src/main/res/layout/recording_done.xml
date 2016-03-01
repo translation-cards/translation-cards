@@ -109,7 +109,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/recording_done_done">
+            android:id="@+id/recording_done">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,12 +117,12 @@
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_done"
-                android:id="@+id/recording_done_done_text" />
+                android:id="@+id/recording_done_text" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/forward_arrow"
-                android:id="@+id/recording_done_done_image" />
+                android:id="@+id/recording_done_arrow" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

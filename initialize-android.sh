@@ -27,7 +27,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
    echo y | android update sdk --no-ui --filter extra-android-m2repository --all > /dev/null
 
   # Specify at least one system image if you want to run emulator tests
-#  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-19 --all > /dev/null
+  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-10 --all > /dev/null
 
   touch ${INITIALIZATION_FILE}
 fi

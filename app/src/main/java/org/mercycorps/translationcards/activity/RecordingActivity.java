@@ -555,7 +555,7 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
 
-        View doneButton = (View) findViewById(R.id.recording_done_done);
+        View doneButton = (View) findViewById(R.id.recording_done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
