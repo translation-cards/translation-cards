@@ -1,25 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Originally written by Ralf Kistner <ralf@embarkmobile.com>, but placed in the public domain
+# Found here: https://github.com/rapidftr/RapidFTR-Android/blob/master/RapidFTR-Android/travis/wait_for_emulator.sh
 
-set +e
+WAIT_TIMEOUT=60
+WAIT_COUNTER=0
 
-bootanim=""
-failcounter=0
-timeout_in_sec=360
-
-until [[ "$bootanim" =~ "stopped" ]]; do
-  bootanim=`adb -e shell getprop init.svc.bootanim 2>&1 &`
-  if [[ "$bootanim" =~ "device not found" || "$bootanim" =~ "device offline"
-    || "$bootanim" =~ "running" ]]; then
-    let "failcounter += 1"
-    echo "Waiting for emulator to start"
-    if [[ $failcounter -gt timeout_in_sec ]]; then
-      echo "Timeout ($timeout_in_sec seconds) reached; failed to start emulator"
-      exit 1
-    fi
+until [[ `adb devices | grep -E 'emulator-.*device'` ]]; do
+  echo "Waiting for emulator to start..."
+  let "WAIT_COUNTER += 1"
+  if [[ $WAIT_COUNTER -gt $WAIT_TIMEOUT ]]; then
+    echo "Emulator failed to start"
+    exit 1
   fi
   sleep 1
 done
-
-echo "Emulator is ready"
+echo "Emulator up and running"
