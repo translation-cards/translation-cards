@@ -14,7 +14,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
   echo y | android update sdk --no-ui --filter tool > /dev/null
 
   # The BuildTools version used by your project
-  echo y | android update sdk --no-ui --filter build-tools-20.0.0 --all > /dev/null
+  echo y | android update sdk --no-ui --filter build-tools-23.0.2 --all > /dev/null
 
   # The SDK version used to compile your project
   echo y | android update sdk --no-ui --filter android-23 > /dev/null
@@ -26,8 +26,10 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
    echo y | android update sdk --no-ui --filter extra-google-m2repository --all > /dev/null
    echo y | android update sdk --no-ui --filter extra-android-m2repository --all > /dev/null
 
-  # Specify at least one system image if you want to run emulator tests
-  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-19 --all > /dev/null
+#  # Specify at least one system image if you want to run emulator tests
+#  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-19 --all > /dev/null
+    (wget http://dl.google.com/android/android-sdk_r23-linux.tgz -O - | tar zx -C $ANDROID_HOME --strip-components 1); echo
+    echo 'y' | $ANDROID_HOME/tools/android --silent update sdk --no-ui --force --all --obsolete --filter platform-tools
 
   touch ${INITIALIZATION_FILE}
 fi
