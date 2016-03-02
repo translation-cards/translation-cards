@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,29 +25,28 @@ public class MediaPlayerManagerTest {
     private MediaPlayer mediaPlayer;
     private MediaPlayerManager mediaPlayerManager;
     private Dictionary.Translation translation;
+    public static final FileDescriptor ANY_FILE = new FileDescriptor();
 
     @Before
     public void setUp() throws Exception {
         mediaPlayer = mock(MediaPlayer.class);
         when(mediaPlayer.getDuration()).thenReturn(SOME_DURATION);
         translation = mock(Dictionary.Translation.class);
-        when(translation.getFilename()).thenReturn(ANY_FILENAME);
 
         mediaPlayerManager = new MediaPlayerManager(mediaPlayer);
     }
 
     @Test
     public void play_shouldSetMediaPlayerDataSourceToSomeFilename() throws IOException {
-        Dictionary.Translation translation = mock(Dictionary.Translation.class);
-        when(translation.getFilename()).thenReturn("SomeFilename");
-        mediaPlayerManager.play(translation, mock(ProgressBar.class));
+        FileDescriptor fileDescriptor = new FileDescriptor();
+        mediaPlayerManager.play(fileDescriptor, mock(ProgressBar.class), translation);
 
-        verify(mediaPlayer).setDataSource("SomeFilename");
+        verify(mediaPlayer).setDataSource(fileDescriptor);
     }
 
     @Test
     public void play_shouldPrepareMediaPlayer() throws IOException {
-        mediaPlayerManager.play(translation, mock(ProgressBar.class));
+        mediaPlayerManager.play(ANY_FILE, mock(ProgressBar.class), translation);
 
         verify(mediaPlayer).prepare();
     }
@@ -55,14 +54,14 @@ public class MediaPlayerManagerTest {
     @Test
     public void play_shouldSetProgressBarToDurationOfMediaPlayer() {
         ProgressBar progressBar = mock(ProgressBar.class);
-        mediaPlayerManager.play(translation, progressBar);
+        mediaPlayerManager.play(ANY_FILE, progressBar, translation);
 
         verify(progressBar).setMax(SOME_DURATION);
     }
 
     @Test
     public void play_shouldStartMediaPlayer() {
-        mediaPlayerManager.play(translation, mock(ProgressBar.class));
+        mediaPlayerManager.play(ANY_FILE, mock(ProgressBar.class), translation);
 
         verify(mediaPlayer).start();
     }
@@ -102,7 +101,7 @@ public class MediaPlayerManagerTest {
         ProgressBar progressBar = mock(ProgressBar.class);
         when(mediaPlayer.isPlaying()).thenReturn(true);
 
-        mediaPlayerManager.play(translation, progressBar);
+        mediaPlayerManager.play(ANY_FILE, progressBar, translation);
         mediaPlayerManager.stop();
 
         verify(progressBar).setProgress(0);
@@ -112,8 +111,8 @@ public class MediaPlayerManagerTest {
     public void play_shouldResetProgressBarIfItHasBeenSet() {
         ProgressBar progressBar = mock(ProgressBar.class);
 
-        mediaPlayerManager.play(translation, progressBar);
-        mediaPlayerManager.play(translation, mock(ProgressBar.class));
+        mediaPlayerManager.play(ANY_FILE, progressBar, translation);
+        mediaPlayerManager.play(ANY_FILE, mock(ProgressBar.class), translation);
 
         verify(progressBar).setProgress(0);
     }

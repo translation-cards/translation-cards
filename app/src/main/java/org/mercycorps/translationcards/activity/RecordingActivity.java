@@ -549,7 +549,7 @@ public class RecordingActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardAudioClickListener.stop();
+                cardAudioClickListener.stopMediaPlayer();
                 inEditMode = true;
                 moveToLabelStep();
             }

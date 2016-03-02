@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 
 import org.mercycorps.translationcards.data.Dictionary;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -65,18 +66,12 @@ public class MediaPlayerManager implements Runnable {
         }
     }
 
-    public void play(Dictionary.Translation translation, ProgressBar progressBar) {
+    public void play(FileDescriptor audioFile, ProgressBar progressBar, Dictionary.Translation translation) {
         lock.lock();
         resetProgressBar();
         this.translation = translation;
         this.progressBar = progressBar;
-        try {
-            mediaPlayer.setDataSource(translation.getFilename());
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            e.printStackTrace();
-        }
+        prepareMediaPlayer(audioFile);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -90,11 +85,21 @@ public class MediaPlayerManager implements Runnable {
         lock.unlock();
     }
 
-    public boolean isCurrentlyPlayingSameCard(Dictionary.Translation translation) {
-        return isSameTranslation(translation) && mediaPlayer.isPlaying();
+    private void prepareMediaPlayer(FileDescriptor audioFile) {
+        try {
+            mediaPlayer.setDataSource(audioFile);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            Log.d(TAG, "Error getting audio asset: " + e);
+            e.printStackTrace();
+        }
     }
 
-    private boolean isSameTranslation(Dictionary.Translation translation) {
+    public boolean isCurrentlyPlayingSameCard(Dictionary.Translation translation) {
+        return isSameAudioFile(translation) && mediaPlayer.isPlaying();
+    }
+
+    private boolean isSameAudioFile(Dictionary.Translation translation) {
         return this.translation != null && translation.getFilename().equals(this.translation.getFilename());
     }
 }
