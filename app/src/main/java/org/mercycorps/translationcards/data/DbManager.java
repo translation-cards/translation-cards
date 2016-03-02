@@ -109,7 +109,7 @@ public class DbManager {
                 DictionariesTable.TABLE_NAME, null,
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
-                String.format("%s DESC", DictionariesTable.ID));
+                String.format("%s ASC", DictionariesTable.LABEL));
 
         Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
@@ -331,7 +331,8 @@ public class DbManager {
                 DictionariesTable.TABLE_NAME,
                 new String[]{DictionariesTable.LABEL},
                 DictionariesTable.DECK_ID + " = ?",
-                new String[]{String.valueOf(deckDbId)}, null, null, null);
+                new String[]{String.valueOf(deckDbId)}, null, null,
+                String.format("%s ASC", DictionariesTable.LABEL));
 
         String translationLanguages = "";
         String delimiter = "   ";
