@@ -2,7 +2,7 @@
 
 # Found here: https://github.com/rapidftr/RapidFTR-Android/blob/master/RapidFTR-Android/travis/wait_for_emulator.sh
 
-WAIT_TIMEOUT=60
+WAIT_TIMEOUT=120
 WAIT_COUNTER=0
 
 until [[ `adb devices | grep -E 'emulator-.*device'` ]]; do
