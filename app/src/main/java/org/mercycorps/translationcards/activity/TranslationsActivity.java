@@ -400,7 +400,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
         }
 
         protected Boolean doInBackground(Void... params) {
-            targetFile = new File(getExternalCacheDir(), "export.txc");
+            targetFile = new File(getExternalCacheDir(), getString(R.string.export_filename));
             if (targetFile.exists()) {
                 targetFile.delete();
             }
