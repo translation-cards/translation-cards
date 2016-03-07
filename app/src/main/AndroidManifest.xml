@@ -13,16 +13,14 @@
         android:theme="@style/AppTheme"
         android:name=".MainApplication">
 
-        <activity android:name=".activity.DecksActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".activity.DecksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.TranslationsActivity"
-            android:parentActivityName=".activity.DecksActivity"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".activity.DecksActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

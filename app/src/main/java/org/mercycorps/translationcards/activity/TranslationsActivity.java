@@ -89,16 +89,22 @@ public class TranslationsActivity extends RoboActionBarActivity {
         lastMediaPlayerManager = application.getMediaPlayerManager();
         deck = (Deck) getIntent().getSerializableExtra("Deck");
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
-        currentDictionaryIndex = -1;
+        currentDictionaryIndex = getIntent().getIntExtra("CurrentDictionaryIndex", 0);
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();
-        setDictionary(0);
+        setDictionary(currentDictionaryIndex);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setElevation(0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getIntent().putExtra("CurrentDictionaryIndex", currentDictionaryIndex);
     }
 
     private void initTabs() {
