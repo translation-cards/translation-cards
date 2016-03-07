@@ -305,7 +305,7 @@ public class TxcPortingUtility {
     private void loadData(Context context, ImportInfo importInfo) {
         DbManager dbm = new DbManager(context);
         long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
-                importInfo.externalId, importInfo.hash, true);
+                importInfo.externalId, importInfo.hash, false);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
