@@ -13,14 +13,16 @@
         android:theme="@style/AppTheme"
         android:name=".MainApplication">
 
-        <activity android:name=".activity.DecksActivity" >
+        <activity android:name=".activity.DecksActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.TranslationsActivity"
-            android:parentActivityName=".activity.DecksActivity" >
+            android:parentActivityName=".activity.DecksActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -29,7 +31,8 @@
        </activity>
         <activity android:name=".activity.RecordingActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ImportActivity">
+        <activity android:name=".activity.ImportActivity"
+            android:screenOrientation="portrait">
             <!-- To support opening from a file manager. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
