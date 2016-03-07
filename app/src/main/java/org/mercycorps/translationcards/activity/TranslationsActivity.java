@@ -69,6 +69,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
+    public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
 
     @Inject
     DbManager dbm;
@@ -87,9 +88,9 @@ public class TranslationsActivity extends RoboActionBarActivity {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
         lastMediaPlayerManager = application.getMediaPlayerManager();
-        deck = (Deck) getIntent().getSerializableExtra("Deck");
+        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
-        currentDictionaryIndex = getIntent().getIntExtra("CurrentDictionaryIndex", 0);
+        currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();
@@ -104,7 +105,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getIntent().putExtra("CurrentDictionaryIndex", currentDictionaryIndex);
+        getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, currentDictionaryIndex);
     }
 
     private void initTabs() {
