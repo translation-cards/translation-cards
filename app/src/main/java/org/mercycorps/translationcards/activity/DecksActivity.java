@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,17 +38,22 @@ import java.util.Random;
  * @author patdale216@gmail.com (Pat Dale)
  */
 public class DecksActivity extends AppCompatActivity {
+
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.3.1";
     public static final String INTENT_KEY_DECK_ID = "Deck";
-    private DbManager dbManager;
 
+    private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
+    private static final int REQUEST_CODE_IMPORT_FILE = 2;
+
+    private DbManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decks);
+        initAddButton();
         initFeedbackButton();
         dbManager = new DbManager(this);
         initDecks();
@@ -65,7 +71,17 @@ public class DecksActivity extends AppCompatActivity {
         for (Deck deck : dbManager.getAllDecks()) {
             listAdapter.add(deck);
         }
+    }
 
+    private void initAddButton() {
+        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("file/*");
+                startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE_PICKER);
+            }
+        });
     }
 
     private void initFeedbackButton() {
@@ -224,5 +240,24 @@ public class DecksActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {}
                         })
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case REQUEST_CODE_IMPORT_FILE_PICKER:
+                if (resultCode != RESULT_OK) {
+                    return;
+                }
+                Intent intent = new Intent(this, ImportActivity.class);
+                intent.setData(data.getData());
+                startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE);
+                break;
+            case REQUEST_CODE_IMPORT_FILE:
+                if (resultCode == RESULT_OK) {
+                    initDecks();
+                }
+                break;
+        }
     }
 }
