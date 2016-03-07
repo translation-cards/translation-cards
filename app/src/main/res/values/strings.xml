@@ -18,6 +18,14 @@
     <string name="recording_text_hint_text">Phrase translation (Optional)</string>
     <string name="recording_done_title">New %s flashcard created</string>
     <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category.</string>
+    <string name="deck_creation_field_label_deck_name">Deck Name:</string>
+    <string name="deck_creation_field_label_target_languages">Target Languages (comma-separated):</string>
+    <string name="deck_creation_add_button">Add Deck</string>
+    <!-- The order of these is important! Don't move them around without updating DecksActivity. -->
+    <string-array name="deck_add_options">
+        <item>Import from file</item>
+        <item>Create fresh deck</item>
+    </string-array>
     <string name="navigation_button_back">BACK</string>
     <string name="navigation_button_done">DONE</string>
     <string name="navigation_button_next">NEXT</string>
@@ -40,6 +48,7 @@
     <string name="export_failure_too_many_duplicate_filenames_error_message">Too many duplicate filenames.</string>
     <string name="misc_ok">OK</string>
     <string name="misc_cancel">Cancel</string>
+    <string name="misc_self">Self</string>
     <string name="data_default_deck_name">Default</string>
     <string name="my_decks">My Decks</string>
     <string name="data_default_deck_publisher">My Deck</string>

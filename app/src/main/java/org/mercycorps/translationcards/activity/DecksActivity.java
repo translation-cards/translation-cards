@@ -46,6 +46,7 @@ public class DecksActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
+    private static final int REQUEST_CODE_CREATE_DECK = 3;
 
     private DbManager dbManager;
 
@@ -77,9 +78,24 @@ public class DecksActivity extends AppCompatActivity {
         findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("file/*");
-                startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE_PICKER);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DecksActivity.this);
+                builder.setItems(R.array.deck_add_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                fileIntent.setType("file/*");
+                                startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
+                                break;
+                            case 1:
+                                Intent createIntent =
+                                        new Intent(DecksActivity.this, DeckCreationActivity.class);
+                                startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
+                                break;
+                        }
+                    }
+                });
+                builder.show();
             }
         });
     }
@@ -254,6 +270,11 @@ public class DecksActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE);
                 break;
             case REQUEST_CODE_IMPORT_FILE:
+                if (resultCode == RESULT_OK) {
+                    initDecks();
+                }
+                break;
+            case REQUEST_CODE_CREATE_DECK:
                 if (resultCode == RESULT_OK) {
                     initDecks();
                 }
