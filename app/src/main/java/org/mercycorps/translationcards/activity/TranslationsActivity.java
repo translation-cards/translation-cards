@@ -65,6 +65,7 @@ import roboguice.activity.RoboActionBarActivity;
  */
 public class TranslationsActivity extends RoboActionBarActivity {
 
+    public static final String INTENT_KEY_DECK_ID = "Deck";
     private static final String TAG = "TranslationsActivity";
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
@@ -88,7 +89,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
         lastMediaPlayerManager = application.getMediaPlayerManager();
-        deck = (Deck) getIntent().getSerializableExtra(DecksActivity.INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
@@ -185,7 +186,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 dictionaries[currentDictionaryIndex].getDbId());
         intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
-        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+        intent.putExtra(INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
@@ -354,7 +355,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     translationCard.getFilename());
             intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
                     translationCard.getTranslatedText());
-            intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+            intent.putExtra(INTENT_KEY_DECK_ID, deck);
 
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
