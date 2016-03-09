@@ -10,17 +10,12 @@ The specification file should be called "spec.json", with a "deck" object at the
 
 A deck object has:
 - a "source_language" field specifying the name of the source language for the deck
-- a "meta" field with an object containing meta information as described below
-- a "languages" field with an array of objects, each containing information about the cards for one target language, as described below
-
-### meta Objects
-
-The "meta" object has:
 - a "label" field, specifying the name of the deck
 - a "publisher" field, specifying the name of the organization or person who produced it
 - optionally, an "id" field, specifying a string that uniquely identifies the deck
 - optionally, a "timestamp" field, specifying the timestamp for the time the deck was created
-- optionally, a "locked" field, specifying "true" or "false", depending on whether the deck should be locked (defaults to false)
+- optionally, a "locked" field, set to either "true" or "false", depending on whether the deck should be locked (defaults to false)
+- a "languages" field with an array of objects, each containing information about the cards for one target language, as described below
 
 ### language Objects
 
@@ -34,6 +29,36 @@ Each translation object has:
 - a "label" field, specifying the label
 - a "filename" field, specifying the name of the audio file
 - optionally, a "translation_text" field, containing text in the target language to display along with the audio
+
+## Example spec.json File Contents
+
+{
+  "source_language": "English",
+  "label": "Greeting Deck",
+  "publisher": "Fred",
+  "languages": [
+    {
+      "name": "Spanish",
+      "translations": [
+        {
+          "label": "Hello",
+          "filename": "es_hello.mp3",
+          "translation_text": "Hola."
+        }
+      ]
+    },
+    {
+      "name": "Robot",
+      "translations": [
+        {
+          "label": "Hello",
+          "filename": "ro_hello.mp3",
+          "translation_text": "Beep boop beep."
+        },
+      ]
+    }
+  ]
+}
 
 ## Prior Formats
 
