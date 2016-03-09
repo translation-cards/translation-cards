@@ -19,6 +19,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -59,7 +60,7 @@ public class TranslationsActivityTest {
     public static final String DEFAULT_DECK_NAME = "Default";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
-    private Dictionary.Translation translation;
+    private Translation translation;
 
     @Before
     public void setUp() {
@@ -78,11 +79,11 @@ public class TranslationsActivityTest {
     private void initializeMockDbManager() {
         dbManagerMock = mock(DbManager.class);
         Dictionary[] dictionaries = new Dictionary[1];
-        translation = new Dictionary.Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
+        translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
                 TRANSLATED_TEXT);
-        Dictionary.Translation nullTranslatedTextTranslation = new Dictionary.Translation(
+        Translation nullTranslatedTextTranslation = new Translation(
                 TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, null);
-        Dictionary.Translation[] translations = {translation, nullTranslatedTextTranslation};
+        Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
