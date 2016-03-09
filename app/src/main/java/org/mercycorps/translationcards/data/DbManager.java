@@ -126,22 +126,31 @@ public class DbManager {
         return dictionaries;
     }
 
-    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationTimestamp, String externalId, String hash, boolean locked) {
+    private ContentValues getDeckContentValues(Deck deck) {
         ContentValues values = new ContentValues();
-        values.put(DecksTable.LABEL, label);
-        values.put(DecksTable.PUBLISHER, publisher);
-        values.put(DecksTable.CREATION_TIMESTAMP, creationTimestamp);
-        values.put(DecksTable.EXTERNAL_ID, externalId);
-        values.put(DecksTable.HASH, hash);
-        values.put(DecksTable.LOCKED, locked ? 1 : 0);
+        values.put(DecksTable.LABEL, deck.getLabel());
+        values.put(DecksTable.PUBLISHER, deck.getPublisher());
+        values.put(DecksTable.CREATION_TIMESTAMP, deck.getTimestamp());
+        values.put(DecksTable.EXTERNAL_ID, deck.getExternalId());
+        values.put(DecksTable.HASH, deck.getHash());
+        values.put(DecksTable.LOCKED, deck.isLocked() ? 1 : 0);
+        return values;
+    }
+
+    long addDeck(SQLiteDatabase writableDatabase, Deck deck) {
+        ContentValues values = getDeckContentValues(deck);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
-    public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash, boolean locked) {
-        return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash, locked);
+    long addDeck(Deck deck) {
+        return addDeck(dbh.getWritableDatabase(), deck);
+    }
+
+    void updateDeck(Deck deck) {
+        ContentValues values = getDeckContentValues(deck);
+        String whereClause = DecksTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deck.getDbId())};
+        dbh.getWritableDatabase().update(DecksTable.TABLE_NAME, values, whereClause, whereArgs);
     }
 
     public void deleteDeck(long deckId) {
@@ -240,7 +249,6 @@ public class DbManager {
     }
 
     public void deleteTranslation(long translationId) {
-
         String whereClause = String.format("%s = ?", TranslationsTable.ID);
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
@@ -256,11 +264,13 @@ public class DbManager {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while(hasNext){
-            Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
+            Deck deck = new Deck(
+                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.HASH)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1);
 
             decks[i] = deck;
@@ -431,10 +441,11 @@ public class DbManager {
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
             long creationTimestamp = (new Date()).getTime();
-            long defaultDeckId = addDeck(
-                    db, context.getString(R.string.data_default_deck_name),
+            Deck defaultDeck = new Deck(
+                    context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationTimestamp, null, null, false);
+                    null, creationTimestamp, null, false);
+            long defaultDeckId = addDeck(db, defaultDeck);
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -464,10 +475,11 @@ public class DbManager {
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
                 long creationTimestamp = (new Date()).getTime() / 1000;
-                long defaultDeckId = addDeck(
-                        db, context.getString(R.string.data_default_deck_name),
+                Deck defaultDeck = new Deck(
+                        context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationTimestamp, null, null, false);
+                        null, creationTimestamp, null, false);
+                long defaultDeckId = addDeck(db, defaultDeck);
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);

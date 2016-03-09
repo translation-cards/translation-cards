@@ -165,13 +165,15 @@ public class DecksActivity extends AppCompatActivity {
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
         DbManager dbm = new DbManager(this);
-        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
+        Deck deckCopy = new Deck(deckName, getString(R.string.data_self_publisher),
+                null, (new Date()).getTime(), null, false);
+        deckCopy.save(this);
         Dictionary[] dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
                 long dictionaryId = dbm.addDictionary(
-                        dictionary.getLabel(), dictionaryIndex, deckId);
+                        dictionary.getLabel(), dictionaryIndex, deckCopy.getDbId());
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
@@ -191,7 +193,7 @@ public class DecksActivity extends AppCompatActivity {
                 }
             }
         } catch (IOException e) {
-            dbm.deleteDeck(deckId);
+            dbm.deleteDeck(deckCopy.getDbId());
         }
     }
 

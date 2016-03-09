@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.data;
 
+import android.content.Context;
 import android.os.Parcelable;
 
 import java.io.Serializable;
@@ -13,25 +14,33 @@ import java.util.Date;
  */
 public class Deck implements Serializable {
 
+    private long dbId;
     private final String label;
     private final String publisher;
     private final String externalId;
-    private final long dbId;
     private final long timestamp;
+    private final String hash;
     private final boolean locked;
 
-    public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
-                boolean locked) {
+    Deck(long dbId,
+         String label, String publisher,
+         String externalId, long timestamp, String hash, boolean locked) {
+        this.dbId = dbId;
         this.label = label;
         this.publisher = publisher;
         this.externalId = externalId;
-        this.dbId = dbId;
         this.timestamp = timestamp;
+        this.hash = hash;
         this.locked = locked;
     }
 
-    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked) {
-        this(label, publisher, externalId, -1, timestamp, locked);
+    public Deck(String label, String publisher,
+                String externalId, long timestamp, String hash, boolean locked) {
+        this(-1, label, publisher, externalId, timestamp, hash, locked);
+    }
+
+    public long getDbId() {
+        return dbId;
     }
 
     public String getLabel() {
@@ -46,10 +55,6 @@ public class Deck implements Serializable {
         return externalId;
     }
 
-    public long getDbId() {
-        return dbId;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -61,7 +66,28 @@ public class Deck implements Serializable {
         return formattedDate;
     }
 
+    public String getHash() {
+        return hash;
+    }
+
     public boolean isLocked() {
         return locked;
+    }
+
+    public void save(Context context) {
+        DbManager dbm = new DbManager(context);
+        if (dbId == -1) {
+            dbId = dbm.addDeck(this);
+        } else {
+            dbm.updateDeck(this);
+        }
+    }
+
+    public void delete(Context context) {
+        DbManager dbm = new DbManager(context);
+        if (dbId == -1) {
+            throw new IllegalArgumentException("Tried to delete unsaved Deck.");
+        }
+        dbm.deleteDeck(dbId);
     }
 }
