@@ -4,36 +4,36 @@ TXCs have two parts: a specification file and the audio files themselves. Those 
 
 ## Specification File
 
-The specification file should be called "spec.xml", and the top-level element should be a "deck" element.
+The specification file should be called "spec.json", with a "deck" object at the top level.
 
-### deck Element
+### deck Objects
 
-A deck element has:
-- a "source-language" attribute specifying the name of the source language for the deck
-- exactly one "meta" element
-- any number of "language" elements
+A deck object has:
+- a "source_language" field specifying the name of the source language for the deck
+- a "meta" field with an object containing meta information as described below
+- a "languages" field with an array of objects, each containing information about the cards for one target language, as described below
 
-### meta Element
+### meta Objects
 
-A meta element has:
-- a "label" element, containing the name of the deck
-- a "publisher" element, containing the name of the organization or person who produced it
-- optionally, an "id" element, containing a string that uniquely identifies the deck
-- optionally, a "timestamp" element, containing the timestamp for the time the deck was created
-- optionally, a "locked" element, containing "true" or "false", depending on whether the deck should be locked (defaults to false)
+The "meta" object has:
+- a "label" field, specifying the name of the deck
+- a "publisher" field, specifying the name of the organization or person who produced it
+- optionally, an "id" field, specifying a string that uniquely identifies the deck
+- optionally, a "timestamp" field, specifying the timestamp for the time the deck was created
+- optionally, a "locked" field, specifying "true" or "false", depending on whether the deck should be locked (defaults to false)
 
-### language Elements
+### language Objects
 
-Each language element has:
-- an attribute "name" with the name of the language
-- any number of "translation" elements.
+Each language object has:
+- a "name" field with the name of the language
+- a "translations" field with an array of objects, each containing information about one card, as described below
 
-### translation Elements
+### translation Objects
 
-Each translation element has:
-- a "label" element, containing the label
-- a "filename" element, containing the name of the audio file
-- optionally, a "translation-text" element, containing text in the target language to display along with the audio
+Each translation object has:
+- a "label" field, specifying the label
+- a "filename" field, specifying the name of the audio file
+- optionally, a "translation_text" field, containing text in the target language to display along with the audio
 
 ## Prior Formats
 
