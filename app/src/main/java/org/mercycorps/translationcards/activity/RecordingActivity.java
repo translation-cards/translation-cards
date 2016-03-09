@@ -77,7 +77,7 @@ public class RecordingActivity extends AppCompatActivity {
     public static final String INTENT_KEY_TRANSLATION_TEXT = "translatedText";
 
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
-    public static final int NO_DB_ID = -1;
+    public static final int NO_ITEM_INDEX = -1;
     public static final boolean IS_ASSET = false;
     private Deck deck;
     private Intent intent;
@@ -103,6 +103,7 @@ public class RecordingActivity extends AppCompatActivity {
     private long dictionaryId;
     private String dictionaryLabel;
     private long translationId;
+    private Translation translation;
     private String label;
     private boolean isAsset;
     private String filename;
@@ -222,7 +223,8 @@ public class RecordingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DbManager dbm = new DbManager(RecordingActivity.this);
-                    dbm.deleteTranslation(translationId);
+                    Translation.getTranslationById(RecordingActivity.this, translationId)
+                            .delete(RecordingActivity.this);
                     if (!isAsset) {
                         File oldFile = new File(filename);
                         oldFile.delete();
@@ -409,9 +411,18 @@ public class RecordingActivity extends AppCompatActivity {
                 }
                 DbManager dbm = new DbManager(RecordingActivity.this);
                 if (translationId == -1) {
-                    translationId = dbm.addTranslationAtTop(dictionaryId, label, false, filename, translatedText);
+                    Translation translation = new Translation(dictionaryId, label, false, filename, -1, translatedText);
+                    translation.setToTopOfDictionary(RecordingActivity.this);
+                    translation.save(RecordingActivity.this);
+                    translationId = translation.getDbId();
                 } else {
-                    dbm.updateTranslation(translationId, label, isAsset, filename, translatedText);
+                    Translation translation = Translation.getTranslationById(
+                            RecordingActivity.this, translationId);
+                    translation.setLabel(label);
+                    translation.setIsAsset(isAsset);
+                    translation.setFilename(filename);
+                    translation.setTranslatedText(translatedText);
+                    translation.save(RecordingActivity.this);
                     // If we're replacing the audio and the prior file wasn't an included audio
                     // asset, delete it.
                     if (filename != null && savedFilename != null &&
@@ -541,7 +552,8 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 
         final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
-                new Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
+                new Translation(dictionaryId, label, IS_ASSET, filename,
+                        NO_ITEM_INDEX, translatedText),
                 (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
         findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
 

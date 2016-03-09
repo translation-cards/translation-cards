@@ -16,6 +16,8 @@
 
 package org.mercycorps.translationcards.data;
 
+import android.content.Context;
+
 /**
  * Contains information about a set of phrases for a particular language.
  *
@@ -23,20 +25,38 @@ package org.mercycorps.translationcards.data;
  */
 public class Dictionary {
 
-    private final String label;
-    private final Translation[] translations;
-    private final long dbId;
-    private final long deckId;
+    private long dbId;
+    private long deckId;
+    private String label;
+    private int itemIndex;
+    private Translation[] translations;
 
-    public Dictionary(String label, Translation[] translations, long dbId, long deckId) {
-        this.label = label;
-        this.translations = translations;
+    Dictionary(long dbId, long deckId, String label, int itemIndex, Translation[] translations) {
         this.dbId = dbId;
         this.deckId = deckId;
+        this.label = label;
+        this.itemIndex = itemIndex;
+        this.translations = translations;
+    }
+
+    public Dictionary(long deckId, String label, int itemIndex) {
+        this(-1, deckId, label, itemIndex, new Translation[] {});
+    }
+
+    public long getDbId() {
+        return dbId;
+    }
+
+    public long getDeckId() {
+        return deckId;
     }
 
     public String getLabel() {
         return label;
+    }
+
+    public int getItemIndex() {
+        return itemIndex;
     }
 
     public int getTranslationCount() {
@@ -47,11 +67,24 @@ public class Dictionary {
         return translations[index];
     }
 
-    public long getDbId() {
-        return dbId;
+    public void setDeck(Deck deck) {
+        this.deckId = deck.getDbId();
     }
 
-    public long getDeckId() {
-        return deckId;
+    public void save(Context context) {
+        DbManager dbm = new DbManager(context);
+        if (dbId == -1) {
+            dbId = dbm.addDictionary(this);
+        } else {
+            dbm.updateDictionary(this);
+        }
+    }
+
+    public void delete(Context context) {
+        DbManager dbm = new DbManager(context);
+        if (dbId == -1) {
+            throw new IllegalArgumentException("Tried to delete unsaved Deck.");
+        }
+        dbm.deleteDeck(dbId);
     }
 }

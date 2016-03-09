@@ -173,8 +173,9 @@ public class DecksActivity extends AppCompatActivity {
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
-                long dictionaryId = dbm.addDictionary(
-                        dictionary.getLabel(), dictionaryIndex, deckCopy.getDbId());
+                Dictionary copyDictionary = new Dictionary(
+                        deckCopy.getDbId(), dictionary.getLabel(), dictionaryIndex);
+                copyDictionary.save(this);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
@@ -188,8 +189,11 @@ public class DecksActivity extends AppCompatActivity {
                         copyFile(srcFile, targetFile);
                         filename = targetFile.getAbsolutePath();
                     }
-                    dbm.addTranslation(dictionaryId, translation.getLabel(), translation.getIsAsset(),
-                            filename, translationDbIndex, translation.getTranslatedText());
+                    Translation newTranslation = new Translation(
+                            copyDictionary.getDbId(), translation.getLabel(),
+                            translation.getIsAsset(), filename, translationDbIndex,
+                            translation.getTranslatedText());
+                    newTranslation.save(this);
                     translationDbIndex--;
                 }
             }

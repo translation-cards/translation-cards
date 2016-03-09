@@ -70,10 +70,12 @@ public class DbManager {
                 translations.put(dictionaryId, new ArrayList<Translation>());
             }
             translations.get(dictionaryId).add(new Translation(
+                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.DICTIONARY_ID)),
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
                     cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
-                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                    cursor.getInt(cursor.getColumnIndex(TranslationsTable.ITEM_INDEX)),
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.TRANSLATED_TEXT))));
             hasNext = cursor.moveToNext();
         }
@@ -97,7 +99,7 @@ public class DbManager {
                         .toArray(new Translation[] {});
             }
             res[dictionaryIndex] = new Dictionary(
-                    label, languageTranslations, dictionaryId, deckId);
+                    dictionaryId, deckId, label, dictionaryIndex, languageTranslations);
             cursor.moveToNext();
             dictionaryIndex++;
         }
@@ -117,7 +119,8 @@ public class DbManager {
         while (hasNext) {
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
-            Dictionary dictionary = new Dictionary(label, getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
+            Dictionary dictionary = new Dictionary(
+                    dictionaryId, deckId, label, i, getTranslationsByDictionaryId(dictionaryId));
             dictionaries[i] = dictionary;
             i++;
             hasNext = cursor.moveToNext();
@@ -126,16 +129,86 @@ public class DbManager {
         return dictionaries;
     }
 
-    private ContentValues getDeckContentValues(Deck deck) {
+    // Translation modification methods.
+
+    long addTranslation(SQLiteDatabase writableDatabase, Translation translation) {
+        ContentValues values = getTranslationContentValues(translation);
+        return writableDatabase.insert(TranslationsTable.TABLE_NAME, null, values);
+    }
+
+    long addTranslation(Translation translation) {
+        return addTranslation(dbh.getWritableDatabase(), translation);
+    }
+
+    void updateTranslation(Translation translation) {
+        ContentValues values = getTranslationContentValues(translation);
+        String whereClause = TranslationsTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(translation.getDbId())};
+        dbh.getWritableDatabase().update(
+                TranslationsTable.TABLE_NAME, values, whereClause, whereArgs);
+    }
+
+    void deleteTranslation(Translation translation) {
+        if (!translation.getIsAsset()) {
+            File file = new File(translation.getFilename());
+            if (file.exists()) {
+                // It should always exist, but check to be safe.
+                file.delete();
+            }
+        }
+        String whereClause = TranslationsTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(translation.getDbId())};
+        dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    private ContentValues getTranslationContentValues(Translation translation) {
         ContentValues values = new ContentValues();
-        values.put(DecksTable.LABEL, deck.getLabel());
-        values.put(DecksTable.PUBLISHER, deck.getPublisher());
-        values.put(DecksTable.CREATION_TIMESTAMP, deck.getTimestamp());
-        values.put(DecksTable.EXTERNAL_ID, deck.getExternalId());
-        values.put(DecksTable.HASH, deck.getHash());
-        values.put(DecksTable.LOCKED, deck.isLocked() ? 1 : 0);
+        values.put(TranslationsTable.DICTIONARY_ID, translation.getDictionaryId());
+        values.put(TranslationsTable.LABEL, translation.getLabel());
+        values.put(TranslationsTable.IS_ASSET, translation.getIsAsset() ? 1 : 0);
+        values.put(TranslationsTable.FILENAME, translation.getFilename());
+        values.put(TranslationsTable.ITEM_INDEX, translation.getItemIndex());
+        values.put(TranslationsTable.TRANSLATED_TEXT, translation.getTranslatedText());
         return values;
     }
+
+    // Dictionary modification methods.
+
+    long addDictionary(SQLiteDatabase writableDatabase, Dictionary dictionary) {
+        ContentValues values = getDictionaryContentValues(dictionary);
+        return writableDatabase.insert(DictionariesTable.TABLE_NAME, null, values);
+    }
+
+    long addDictionary(Dictionary dictionary) {
+        return addDictionary(dbh.getWritableDatabase(), dictionary);
+    }
+
+    void updateDictionary(Dictionary dictionary) {
+        ContentValues values = getDictionaryContentValues(dictionary);
+        String whereClause = DictionariesTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
+        dbh.getWritableDatabase().update(
+                DictionariesTable.TABLE_NAME, values, whereClause, whereArgs);
+    }
+
+    void deleteDictionary(Dictionary dictionary) {
+        for (int i = 0; i < dictionary.getTranslationCount(); i++) {
+            deleteTranslation(dictionary.getTranslation(i));
+        }
+        String whereClause = DictionariesTable.TABLE_NAME + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
+        dbh.getWritableDatabase().delete(DictionariesTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    private ContentValues getDictionaryContentValues(Dictionary dictionary) {
+        ContentValues values = new ContentValues();
+        values.put(DictionariesTable.DECK_ID, dictionary.getDeckId());
+        values.put(DictionariesTable.LABEL, dictionary.getLabel());
+        values.put(DictionariesTable.ITEM_INDEX, dictionary.getItemIndex());
+        return values;
+    }
+
+    // Deck modification methods.
 
     long addDeck(SQLiteDatabase writableDatabase, Deck deck) {
         ContentValues values = getDeckContentValues(deck);
@@ -153,106 +226,84 @@ public class DbManager {
         dbh.getWritableDatabase().update(DecksTable.TABLE_NAME, values, whereClause, whereArgs);
     }
 
-    public void deleteDeck(long deckId) {
+    void deleteDeck(long deckId) {
         Dictionary[] dictionaries = getAllDictionariesForDeck(deckId);
         for (Dictionary dictionary : dictionaries) {
-            // Delete all the files.
-            for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                Translation translation = dictionary.getTranslation(i);
-                if (translation.getIsAsset()) {
-                    // Don't delete the built-in assets.
-                    continue;
-                }
-                File file = new File(translation.getFilename());
-                if (file.exists()) {
-                    // It should always exist, but check to be safe.
-                    file.delete();
-                }
-            }
-            // Delete the rows in the translations table.
-            String whereClause = TranslationsTable.DICTIONARY_ID + " = ?";
-            String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
-            dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
+            deleteDictionary(dictionary);
         }
-        // Delete the rows in the dictionaries table.
-        String whereClause = DictionariesTable.DECK_ID + " = ?";
-        String[] whereArgs = new String[] {String.valueOf(deckId)};
-        dbh.getWritableDatabase().delete(DictionariesTable.TABLE_NAME, whereClause, whereArgs);
         // Delete the row from the deck table.
-        whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
+        String whereClause = DecksTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deckId)};
         dbh.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
-                              long deckId) {
+    private ContentValues getDeckContentValues(Deck deck) {
         ContentValues values = new ContentValues();
-        values.put(DictionariesTable.LABEL, label);
-        values.put(DictionariesTable.ITEM_INDEX, itemIndex);
-        values.put(DictionariesTable.DECK_ID, deckId);
-        return writableDatabase.insert(DictionariesTable.TABLE_NAME, null, values);
+        values.put(DecksTable.LABEL, deck.getLabel());
+        values.put(DecksTable.PUBLISHER, deck.getPublisher());
+        values.put(DecksTable.CREATION_TIMESTAMP, deck.getTimestamp());
+        values.put(DecksTable.EXTERNAL_ID, deck.getExternalId());
+        values.put(DecksTable.HASH, deck.getHash());
+        values.put(DecksTable.LOCKED, deck.isLocked() ? 1 : 0);
+        return values;
     }
 
-    public long addDictionary(String label, int itemIndex, long deckId) {
-        return addDictionary(dbh.getWritableDatabase(), label, itemIndex, deckId);
+    // Translation query methods.
+
+    Translation getTranslationById(long id) {
+        String whereClause = TranslationsTable.ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(id)};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                TranslationsTable.TABLE_NAME, null, whereClause, whereArgs, null, null, null);
+        Translation translation = null;
+        if (cursor.moveToFirst()) {
+            translation = getTranslationFromCursor(cursor);
+        }
+        cursor.close();
+        return translation;
     }
 
-    public long addTranslation(SQLiteDatabase writableDatabase,
-            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
-        Log.d(TAG, "Inserting translation...");
-        ContentValues values = new ContentValues();
-        values.put(TranslationsTable.DICTIONARY_ID, dictionaryId);
-        values.put(TranslationsTable.LABEL, label);
-        values.put(TranslationsTable.IS_ASSET, isAsset ? 1 : 0);
-        values.put(TranslationsTable.FILENAME, filename);
-        values.put(TranslationsTable.ITEM_INDEX, itemIndex);
-        values.put(TranslationsTable.TRANSLATED_TEXT, translatedText);
-        return writableDatabase.insert(TranslationsTable.TABLE_NAME, null, values);
+    Translation[] getAllTranslationsForDictionary(long dictionaryId) {
+        String whereClause = TranslationsTable.DICTIONARY_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(dictionaryId)};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                TranslationsTable.TABLE_NAME, null, whereClause, whereArgs, null, null, null);
+        Translation[] translations = new Translation[cursor.getCount()];
+        int i = 0;
+        boolean hasNext = cursor.moveToFirst();
+        while (hasNext) {
+            translations[i] = getTranslationFromCursor(cursor);
+            i++;
+            hasNext = cursor.moveToNext();
+        }
+        return translations;
     }
 
-    public long addTranslation(
-            long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
-        long translationId = addTranslation(
-                dbh.getWritableDatabase(), dictionaryId, label, isAsset, filename, itemIndex, translatedText);
-        dbh.close();
-        return translationId;
+    private Translation getTranslationFromCursor(Cursor cursor) {
+        return new Translation(
+                cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                cursor.getLong(cursor.getColumnIndex(TranslationsTable.DICTIONARY_ID)),
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
+                cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
+                cursor.getInt(cursor.getColumnIndex(TranslationsTable.ITEM_INDEX)),
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.TRANSLATED_TEXT)));
     }
 
-    public long addTranslationAtTop(
-            long dictionaryId, String label, boolean isAsset, String filename, String translatedText) {
+    int getTopTranslationIndex(long dictionaryId) {
+        int result = 0;
         String maxColumnName = String.format("MAX(%s)", TranslationsTable.ITEM_INDEX);
         Cursor cursor = dbh.getReadableDatabase().query(
                 TranslationsTable.TABLE_NAME, new String[]{maxColumnName},
                 String.format("%s = ?", TranslationsTable.DICTIONARY_ID),
                 new String[]{String.format("%d", dictionaryId)},
                 null, null, null);
-        if (!cursor.moveToFirst()) {
-            return addTranslation(dictionaryId, label, isAsset, filename, 0, translatedText);
+        if (cursor.moveToFirst()) {
+            result = cursor.getInt(cursor.getColumnIndex(maxColumnName)) + 1;
         }
-        int itemIndex = cursor.getInt(cursor.getColumnIndex(maxColumnName)) + 1;
         cursor.close();
         dbh.close();
-        return addTranslation(dictionaryId, label, isAsset, filename, itemIndex, translatedText);
-    }
-
-    public void updateTranslation(
-            long translationId, String label, boolean isAsset, String filename, String translatedText) {
-        ContentValues values = new ContentValues();
-        values.put(TranslationsTable.LABEL, label);
-        values.put(TranslationsTable.IS_ASSET, isAsset);
-        values.put(TranslationsTable.FILENAME, filename);
-        values.put(TranslationsTable.TRANSLATED_TEXT, translatedText);
-        String whereClause = String.format("%s = ?", TranslationsTable.ID);
-        String[] whereArgs = new String[] {String.format("%d", translationId)};
-        dbh.getWritableDatabase().update(
-                TranslationsTable.TABLE_NAME, values, whereClause, whereArgs);
-        dbh.close();
-    }
-
-    public void deleteTranslation(long translationId) {
-        String whereClause = String.format("%s = ?", TranslationsTable.ID);
-        String[] whereArgs = new String[] {String.format("%d", translationId)};
-        dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
-        dbh.close();
+        return result;
     }
 
     public Deck[] getAllDecks() {
@@ -321,10 +372,12 @@ public class DbManager {
         int i=0;
         while(hasNext){
             Translation translation = new Translation(
+                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.DICTIONARY_ID)),
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
                     cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
-                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
+                    cursor.getInt(cursor.getColumnIndex(TranslationsTable.ITEM_INDEX)),
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.TRANSLATED_TEXT))
             );
             translations[i] = translation;
@@ -445,25 +498,24 @@ public class DbManager {
                     context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
                     null, creationTimestamp, null, false);
-            long defaultDeckId = addDeck(db, defaultDeck);
-            populateIncludedData(db, defaultDeckId);
+            addDeck(db, defaultDeck);
+            populateIncludedData(db, defaultDeck);
         }
 
-        private void populateIncludedData(SQLiteDatabase db, long defaultDeckId) {
+        private void populateIncludedData(SQLiteDatabase db, Deck defaultDeck) {
             for (int dictionaryIndex = 0; dictionaryIndex < INCLUDED_DATA.length;
                  dictionaryIndex++) {
                 Dictionary dictionary = INCLUDED_DATA[dictionaryIndex];
-                long dictionaryId = addDictionary(db, dictionary.getLabel(), dictionaryIndex,
-                        defaultDeckId);
+                dictionary.setDeck(defaultDeck);
+                addDictionary(db, dictionary);
                 for (int translationIndex = 0;
                      translationIndex < dictionary.getTranslationCount();
                      translationIndex++) {
-                    Translation translation =
-                            dictionary.getTranslation(translationIndex);
-                    int itemIndex = dictionary.getTranslationCount() - translationIndex - 1;
-                    addTranslation(db, dictionaryId, translation.getLabel(),
-                            translation.getIsAsset(), translation.getFilename(), itemIndex,
-                            translation.getTranslatedText());
+                    Translation translation = dictionary.getTranslation(translationIndex);
+                    translation.setItemIndex(
+                            dictionary.getTranslationCount() - translationIndex - 1);
+                    translation.setDictionary(dictionary);
+                    addTranslation(db, translation);
                 }
             }
         }
@@ -492,8 +544,8 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Arabic", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Farsi", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Pashto", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary(NO_VALUE_ID, NO_VALUE_ID, "Arabic", 0, new Translation[] {}),
+            new Dictionary(NO_VALUE_ID, NO_VALUE_ID, "Farsi", 1, new Translation[] {}),
+            new Dictionary(NO_VALUE_ID, NO_VALUE_ID, "Pashto", 2, new Translation[] {}),
     };
 }

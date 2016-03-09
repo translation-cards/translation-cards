@@ -264,7 +264,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 deleteView.setVisibility(View.GONE);
             } else {
                 editView.setOnClickListener(new CardEditClickListener(getItem(position)));
-                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
+                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position)));
             }
 
             TextView cardTextView = (TextView) convertView.findViewById(
@@ -356,10 +356,10 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     private class CardDeleteClickListener implements View.OnClickListener {
 
-        long translationId;
+        private final Translation translation;
 
-        public CardDeleteClickListener(long translationId) {
-            this.translationId = translationId;
+        public CardDeleteClickListener(Translation translation) {
+            this.translation = translation;
         }
 
         @Override
@@ -369,7 +369,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     .setMessage("Are you sure you want to delete this translation card?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dbm.deleteTranslation(translationId);
+                            translation.delete(TranslationsActivity.this);
                             dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
                             setDictionary(currentDictionaryIndex);
                             listAdapter.notifyDataSetChanged();

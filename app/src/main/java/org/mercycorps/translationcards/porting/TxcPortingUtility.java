@@ -304,9 +304,9 @@ public class TxcPortingUtility {
     }
 
     private void loadData(Context context, ImportInfo importInfo) {
-        DbManager dbm = new DbManager(context);
-        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
-                importInfo.externalId, importInfo.hash, false);
+        Deck deck = new Deck(importInfo.label, importInfo.publisher,
+                importInfo.externalId, importInfo.timestamp, importInfo.hash, false);
+        deck.save(context);
         Map<String, Long> dictionaryLookup = new HashMap<>();
         int dictionaryIndex = 0;
         // Iterate backwards through the list, because we're adding each translation at the top of
@@ -316,13 +316,19 @@ public class TxcPortingUtility {
             File targetFile = new File(importInfo.dir, item.name);
             String dictionaryLookupKey = item.language.toLowerCase();
             if (!dictionaryLookup.containsKey(dictionaryLookupKey)) {
-                long dictionaryId = dbm.addDictionary(item.language, dictionaryIndex, deckId);
+                Dictionary dictionary = new Dictionary(
+                        deck.getDbId(), item.language, dictionaryIndex);
+                dictionary.save(context);
                 dictionaryIndex++;
-                dictionaryLookup.put(dictionaryLookupKey, dictionaryId);
+                dictionaryLookup.put(dictionaryLookupKey, dictionary.getDbId());
             }
             long dictionaryId = dictionaryLookup.get(dictionaryLookupKey);
-            dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath(),
-                    item.translatedText);
+            // Temporarily set the item index to -1 but update it immediately.
+            Translation translation = new Translation(
+                    dictionaryId, item.text, false, targetFile.getAbsolutePath(),
+                    -1, item.translatedText);
+            translation.setToTopOfDictionary(context);
+            translation.save(context);
         }
     }
 
