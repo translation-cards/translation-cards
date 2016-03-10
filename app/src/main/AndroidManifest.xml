@@ -29,6 +29,7 @@
        </activity>
         <activity android:name=".activity.RecordingActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.DeckCreationActivity" />
         <activity android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">
             <!-- To support opening from a file manager. -->
