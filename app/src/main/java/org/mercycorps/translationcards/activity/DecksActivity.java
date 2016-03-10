@@ -42,7 +42,6 @@ public class DecksActivity extends AppCompatActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.3.1";
-    public static final String INTENT_KEY_DECK_ID = "Deck";
 
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
@@ -128,16 +127,15 @@ public class DecksActivity extends AppCompatActivity {
             if (convertView == null) {
                 LayoutInflater layoutInflater = getLayoutInflater();
                 convertView = layoutInflater.inflate(R.layout.deck_item, parent, false);
-                convertView.findViewById(R.id.translation_card).setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                        decksIntent.putExtra(INTENT_KEY_DECK_ID, getItem(position));
-                        DecksActivity.this.startActivity(decksIntent);
-                    }
-                });
             }
+            convertView.findViewById(R.id.translation_card).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
+                    decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK_ID, getItem(position));
+                    DecksActivity.this.startActivity(decksIntent);
+                }
+            });
 
             TextView deckName = (TextView) convertView.findViewById(R.id.deck_name);
             deckName.setText(getItem(position).getLabel());
