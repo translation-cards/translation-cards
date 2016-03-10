@@ -4,7 +4,7 @@ TXCs have two parts: a specification file and the audio files themselves. Those 
 
 ## Specification File
 
-The specification file should be called "spec.json", with a "deck" object at the top level.
+The specification file should be called "spec.json", with a "deck" object at the top level. The spec.json file should be UTF-8.
 
 ### deck Objects
 
