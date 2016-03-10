@@ -6,9 +6,7 @@
 # Snap CI
 We use [Snap CI](https://snap-ci.com/) for our build pipeline. We chose this because it is very easy to set up, maintain, and is well documented.
 
-The pipeline will trigger when a commit is pushed to the master branch. This will run our tests against our application, and give you the option in the end to upload the APK to an artifact repository.
-
-Eventually the pipeline can be configured to upload our APK directly to the Play store to achieve [Continuous Delivery](http://martinfowler.com/bliki/ContinuousDelivery.html).
+The pipeline will trigger when a commit is pushed to the master branch. This will run our tests against our application, and give you the option in the end to manually trigger an upload of the APK to an artifact repository.
 
 # Build Stages
 ### Android Initialize
@@ -24,4 +22,4 @@ This stage runs our unit tests.
 This stage generates a signed apk using our keystore for the Google Play store.
 
 ### S3Upload
-This stage uploads our apk to an artifact repository (S3).
+This is an optional and manually triggered stage that uploads our apk to an artifact repository (S3).
