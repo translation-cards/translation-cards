@@ -65,10 +65,12 @@ import roboguice.activity.RoboActionBarActivity;
  */
 public class TranslationsActivity extends RoboActionBarActivity {
 
+    public static final String INTENT_KEY_DECK_ID = "Deck";
     private static final String TAG = "TranslationsActivity";
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
+    public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
 
     @Inject
     DbManager dbm;
@@ -87,18 +89,24 @@ public class TranslationsActivity extends RoboActionBarActivity {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
         lastMediaPlayerManager = application.getMediaPlayerManager();
-        deck = (Deck) getIntent().getSerializableExtra("Deck");
+        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
         dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
-        currentDictionaryIndex = -1;
+        currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();
-        setDictionary(0);
+        setDictionary(currentDictionaryIndex);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setElevation(0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, currentDictionaryIndex);
     }
 
     private void initTabs() {
@@ -178,7 +186,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 dictionaries[currentDictionaryIndex].getDbId());
         intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
                 dictionaries[currentDictionaryIndex].getLabel());
-        intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+        intent.putExtra(INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
@@ -347,7 +355,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     translationCard.getFilename());
             intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
                     translationCard.getTranslatedText());
-            intent.putExtra(DecksActivity.INTENT_KEY_DECK_ID, deck);
+            intent.putExtra(INTENT_KEY_DECK_ID, deck);
 
             startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
         }
