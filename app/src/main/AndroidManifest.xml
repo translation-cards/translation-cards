@@ -36,37 +36,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="http"
-                    android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
-                <data
-                    android:scheme="https"
-                    android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
-                <data
-                    android:scheme="ftp"
-                    android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
-                <data
-                    android:scheme="sftp"
-                    android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
                 <data
                     android:scheme="file"
                     android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
-                <data
-                    android:scheme="content"
-                    android:host="*"
-                    android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:pathPattern="/.*\\.txc" />
             </intent-filter>
             <!-- To support opening downloaded files.
                  It appears that downloaded files are re-assigned numeric filenames, so we can't
@@ -77,17 +50,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:scheme="content"
-                    android:host="*"
                     android:mimeType="application/octet-stream" />
                 <data
                     android:scheme="content"
-                    android:host="*"
                     android:mimeType="application/zip" />
                 <data
                     android:scheme="content"
-                    android:host="*"
                     android:mimeType="application/x-zip" />
-            </intent-filter> -->
+                <data
+                    android:scheme="file"
+                    android:mimeType="application/octet-stream" />
+                <data
+                    android:scheme="file"
+                    android:mimeType="application/zip" />
+                <data
+                    android:scheme="file"
+                    android:mimeType="application/x-zip" />
+            </intent-filter>
         </activity>
     </application>
+
 </manifest>
