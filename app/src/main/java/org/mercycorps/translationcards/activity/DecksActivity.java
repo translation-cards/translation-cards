@@ -41,7 +41,7 @@ public class DecksActivity extends AppCompatActivity {
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=0.3.1";
+                    "viewform?entry.1158658650=0.3.2";
 
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
