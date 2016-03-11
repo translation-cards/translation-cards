@@ -65,7 +65,7 @@ public class DecksActivityTest {
     public void initFeedbackButton_shouldLaunchFeedbackForm() {
         decksActivity.findViewById(R.id.feedback_button).performClick();
 
-        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=0.3.1"));
+        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=0.3.2"));
         assertThat(shadowOf(decksActivity).getNextStartedActivity(), is(expectedIntent));
     }
 
