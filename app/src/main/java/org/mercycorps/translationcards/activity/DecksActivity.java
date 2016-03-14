@@ -195,7 +195,8 @@ public class DecksActivity extends AppCompatActivity {
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
         DbManager dbm = new DbManager(this);
-        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
+        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false,
+                deck.getSrcLanguageIso());
         Dictionary[] dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {

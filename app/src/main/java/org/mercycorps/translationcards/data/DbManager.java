@@ -89,6 +89,8 @@ public class DbManager {
         cursor.moveToFirst();
         while (dictionaryIndex < res.length) {
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
+            String destLanguageIso = cursor.getString(cursor.getColumnIndex(
+                    DictionariesTable.LANGUAGE_ISO));
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
             long deckId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.DECK_ID));
             Dictionary.Translation[] languageTranslations = {};
@@ -97,7 +99,7 @@ public class DbManager {
                         .toArray(new Dictionary.Translation[] {});
             }
             res[dictionaryIndex] = new Dictionary(
-                    label, languageTranslations, dictionaryId, deckId);
+                    destLanguageIso, label, languageTranslations, dictionaryId, deckId);
             cursor.moveToNext();
             dictionaryIndex++;
         }
@@ -115,9 +117,12 @@ public class DbManager {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while (hasNext) {
+            String destLanguageIso = cursor.getString(cursor.getColumnIndex(
+                    DictionariesTable.LANGUAGE_ISO));
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
-            Dictionary dictionary = new Dictionary(label, getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
+            Dictionary dictionary = new Dictionary(destLanguageIso, label,
+                    getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
             dictionaries[i] = dictionary;
             i++;
             hasNext = cursor.moveToNext();
@@ -258,12 +263,14 @@ public class DbManager {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while(hasNext){
-            Deck deck = new Deck(cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
+            Deck deck = new Deck(
+                    cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
-                    cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1);
+                    cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
+                    cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO)));
 
             decks[i] = deck;
             hasNext = cursor.moveToNext();
@@ -514,8 +521,11 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Arabic", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Farsi", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Pashto", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("ar", "Arabic", new Dictionary.Translation[] {},
+                    NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("fa", "Farsi", new Dictionary.Translation[] {},
+                    NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("ps", "Pashto", new Dictionary.Translation[] {},
+                    NO_VALUE_ID, NO_VALUE_ID),
     };
 }
