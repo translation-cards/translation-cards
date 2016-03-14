@@ -336,26 +336,29 @@ public class DbManager {
         return translations;
     }
 
-    public String getTranslationLanguagesForDeck(long deckDbId) {
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME,
-                new String[]{DictionariesTable.LANGUAGE_ISO},
-                DictionariesTable.DECK_ID + " = ?",
-                new String[]{String.valueOf(deckDbId)}, null, null,
-                String.format("%s ASC", DictionariesTable.LABEL));
+    private Dictionary getDictionaryFromCursor(Cursor cursor) {
+        return new Dictionary(
+                cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID)),
+                cursor.getLong(cursor.getColumnIndex(DictionariesTable.DECK_ID)),
+                cursor.getString(cursor.getColumnIndex(DictionariesTable.LANGUAGE_ISO)),
+                cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL)));
+    }
 
-        String translationLanguages = "";
-        String delimiter = "   ";
-        boolean hasNext = cursor.moveToFirst();
-        while(hasNext) {
-            String translationLanguage = cursor.getString(
-                    cursor.getColumnIndex(DictionariesTable.LANGUAGE_ISO));
-            translationLanguages += translationLanguage.toUpperCase() + delimiter;
-            hasNext = cursor.moveToNext();
+    Dictionary[] getDictionariesForDeck(long deckId) {
+        String whereClause = DictionariesTable.DECK_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deckId)};
+        Cursor cursor = dbh.getReadableDatabase().query(
+                DictionariesTable.TABLE_NAME, null, whereClause, whereArgs, null, null,
+                DictionariesTable.ITEM_INDEX);
+        int count = cursor.getCount();
+        Dictionary[] dictionaries = new Dictionary[count];
+        cursor.moveToFirst();
+        for (int i = 0; i < count; i++) {
+            dictionaries[i] = getDictionaryFromCursor(cursor);
+            cursor.moveToNext();
         }
         cursor.close();
-        dbh.close();
-        return translationLanguages.trim();
+        return dictionaries;
     }
 
     private class DecksTable {

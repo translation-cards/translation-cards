@@ -33,11 +33,11 @@ import java.io.Serializable;
  */
 public class Dictionary {
 
-    private final String destLanguageIso;
-    private final String label;
-    private final Translation[] translations;
     private final long dbId;
     private final long deckId;
+    private final String destLanguageIso;
+    private final String label;
+    private Translation[] translations;
 
     public Dictionary(String destLanguageIso, String label, Translation[] translations, long dbId,
                       long deckId) {
@@ -46,6 +46,14 @@ public class Dictionary {
         this.translations = translations;
         this.dbId = dbId;
         this.deckId = deckId;
+    }
+
+    Dictionary(long dbId, long deckId, String destLanguageIso, String label) {
+        this.dbId = dbId;
+        this.deckId = deckId;
+        this.destLanguageIso = destLanguageIso;
+        this.label = label;
+        translations = null;
     }
 
     public String getDestLanguageIso() {

@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.data;
 
+import android.content.Context;
 import android.os.Parcelable;
 
 import java.io.Serializable;
@@ -20,6 +21,8 @@ public class Deck implements Serializable {
     private final long timestamp;
     private final boolean locked;
     private final String srcLanguageIso;
+    // The dictionaries list is lazily initialized.
+    private Dictionary[] dictionaries;
 
     public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
                 boolean locked, String srcLanguageIso) {
@@ -30,6 +33,7 @@ public class Deck implements Serializable {
         this.timestamp = timestamp;
         this.locked = locked;
         this.srcLanguageIso = srcLanguageIso;
+        dictionaries = null;
     }
 
     public Deck(String label, String publisher, String externalId, long timestamp, boolean locked,
@@ -70,5 +74,13 @@ public class Deck implements Serializable {
 
     public String getSrcLanguageIso() {
         return srcLanguageIso;
+    }
+
+    public Dictionary[] getDictionaries(Context context) {
+        if (dictionaries == null) {
+            DbManager dbm = new DbManager(context);
+            dictionaries = dbm.getDictionariesForDeck(dbId);
+        }
+        return dictionaries;
     }
 }

@@ -20,6 +20,7 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -147,7 +148,9 @@ public class DecksActivity extends AppCompatActivity {
 
             TextView translationLanguagesView =
                     (TextView) convertView.findViewById(R.id.translation_languages);
-            translationLanguagesView.setText(dbManager.getTranslationLanguagesForDeck(deck.getDbId()));
+            Dictionary[] dictionaries = deck.getDictionaries(DecksActivity.this);
+            translationLanguagesView.setText(LanguageDisplayUtil.getDestLanguageListDisplay(
+                    DecksActivity.this, deck, "  "));
 
             View deckCopyView = convertView.findViewById(R.id.deck_card_expansion_copy);
             if (deck.isLocked()) {

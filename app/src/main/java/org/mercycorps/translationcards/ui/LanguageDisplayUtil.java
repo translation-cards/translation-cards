@@ -24,6 +24,20 @@ public class LanguageDisplayUtil {
                 dictionary.getLabel();
     }
 
+    public static String getDestLanguageListDisplay(Context context, Deck deck, String delimiter) {
+        Dictionary[] dictionaries = deck.getDictionaries(context);
+        if (dictionaries.length == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDestLanguageDisplayName(context, dictionaries[0]));
+        for (int i = 1; i < dictionaries.length; i++) {
+            sb.append(delimiter);
+            sb.append(getDestLanguageDisplayName(context, dictionaries[i]));
+        }
+        return sb.toString();
+    }
+
     private static String getLanguageDisplayName(Context context, String isoCode) {
         switch (isoCode) {
             case "ar":
