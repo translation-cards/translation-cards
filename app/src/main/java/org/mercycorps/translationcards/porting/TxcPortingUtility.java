@@ -2,7 +2,11 @@ package org.mercycorps.translationcards.porting;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -36,7 +40,25 @@ public class TxcPortingUtility {
 
     private static final String INDEX_FILENAME = "card_deck.csv";
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
+    private static final String SPEC_FILENAME = "spec.json";
     private static final int BUFFER_SIZE = 2048;
+
+    private final class JsonKeys {
+        public static final String DECK_LABEL = "deck_label";
+        public static final String EXTERNAL_ID = "id";
+        public static final String PUBLISHER = "publisher";
+        public static final String TIMESTAMP = "timestamp";
+        public static final String SOURCE_LANGUAGE = "source_language";
+        public static final String LOCKED = "locked";
+        public static final String DICTIONARIES = "languages";
+        public static final String DICTIONARY_DEST_LANGUAGE = "dest_language";
+        public static final String CARDS = "cards";
+        public static final String CARD_LABEL = "card_label";
+        public static final String CARD_DEST_AUDIO = "dest_audio";
+        public static final String CARD_DEST_TEXT = "dest_txt";
+    }
+
+    private static final String DEFAULT_SOURCE_LANGUAGE = "en";
 
     public void exportData(Deck deck, String exportedDeckName, Dictionary[] dictionaries, File file)
             throws ExportException {
@@ -141,7 +163,7 @@ public class TxcPortingUtility {
         }
     }
 
-    public ImportInfo prepareImport(Context context, Uri source) throws ImportException {
+    public ImportSpec prepareImport(Context context, Uri source) throws ImportException {
         String hash = getFileHash(context, source);
         ZipInputStream zip = getZip(context, source);
         String filename = source.getLastPathSegment();
@@ -150,22 +172,22 @@ public class TxcPortingUtility {
         return getIndex(targetDir, indexFilename, filename, hash);
     }
 
-    public void executeImport(Context context, ImportInfo importInfo) throws ImportException {
-        loadData(context, importInfo);
+    public void executeImport(Context context, ImportSpec importSpec) throws ImportException {
+        loadData(context, importSpec);
     }
 
-    public void abortImport(Context context, ImportInfo importInfo) {
-        importInfo.dir.delete();
+    public void abortImport(Context context, ImportSpec importSpec) {
+        importSpec.dir.delete();
     }
 
-    public boolean isExistingDeck(Context context, ImportInfo importInfo) {
+    public boolean isExistingDeck(Context context, ImportSpec importSpec) {
         DbManager dbm = new DbManager(context);
-        return dbm.hasDeckWithHash(importInfo.hash);
+        return dbm.hasDeckWithHash(importSpec.hash);
     }
 
-    public long otherVersionExists(Context context, ImportInfo importInfo) {
+    public long otherVersionExists(Context context, ImportSpec importSpec) {
         DbManager dbm = new DbManager(context);
-        return dbm.hasDeckWithExternalId(importInfo.externalId);
+        return dbm.hasDeckWithExternalId(importSpec.externalId);
     }
 
     private String getFileHash(Context context, Uri source) throws ImportException {
@@ -219,7 +241,9 @@ public class TxcPortingUtility {
             ZipEntry zipEntry;
             while ((zipEntry = zip.getNextEntry()) != null) {
                 String name = zipEntry.getName();
-                if (INDEX_FILENAME.equals(name) || ALT_INDEX_FILENAME.equals(name)) {
+                if (INDEX_FILENAME.equals(name)
+                        || ALT_INDEX_FILENAME.equals(name)
+                        || SPEC_FILENAME.equals(name)) {
                     indexFilename = name;
                 }
                 outputStream = new FileOutputStream(new File(targetDir, name));
@@ -258,13 +282,76 @@ public class TxcPortingUtility {
         return indexFilename;
     }
 
-    private ImportInfo getIndex(File dir, String indexFilename, String defaultLabel, String hash)
+    private ImportSpec getIndex(File dir, String indexFilename, String defaultLabel, String hash)
             throws ImportException {
+        if (SPEC_FILENAME.equals(indexFilename)) {
+            return getIndexFromSpec(dir, defaultLabel, hash);
+        } else{
+            return getIndexFromPsv(dir, indexFilename, defaultLabel, hash);
+        }
+    }
+
+    private ImportSpec getIndexFromSpec(File dir, String defaultLabel, String hash)
+            throws ImportException {
+        JSONObject json;
+        try {
+            InputStream is = new FileInputStream(new File(dir, SPEC_FILENAME));
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+            json = new JSONObject(new String(buffer, "UTF-8"));
+        } catch (FileNotFoundException e) {
+            throw new ImportException(ImportException.ImportProblem.NO_INDEX_FILE, e);
+        } catch (IOException e) {
+            throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, e);
+        } catch (JSONException e) {
+            throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, e);
+        }
+        ImportSpec spec;
+        try {
+            String deckLabel = json.getString(JsonKeys.DECK_LABEL);
+            String publisher = json.optString(JsonKeys.PUBLISHER);
+            String externalId = json.optString(JsonKeys.EXTERNAL_ID);
+            long timestamp = json.optLong(JsonKeys.TIMESTAMP, -1);
+            String srcLanguage = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE);
+            boolean locked = json.optBoolean(JsonKeys.LOCKED, false);
+            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, hash, dir);
+            JSONArray dictionaries = json.optJSONArray(JsonKeys.DICTIONARIES);
+            if (dictionaries == null) {
+                return spec;
+            }
+            for (int i = 0; i < dictionaries.length(); i++) {
+                JSONObject dictionary = dictionaries.getJSONObject(i);
+                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_LANGUAGE);
+                ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode);
+                spec.dictionaries.add(dictionarySpec);
+                JSONArray cards = dictionary.optJSONArray(JsonKeys.CARDS);
+                if (cards == null) {
+                    continue;
+                }
+                for (int j = 0; j < cards.length(); j++) {
+                    JSONObject card = cards.getJSONObject(j);
+                    String cardLabel = card.getString(JsonKeys.CARD_LABEL);
+                    String cardFilename = card.getString(JsonKeys.CARD_DEST_AUDIO);
+                    String cardTranslatedText = card.getString(JsonKeys.CARD_DEST_TEXT);
+                    dictionarySpec.cards.add(new ImportSpecCard(
+                            cardLabel, cardFilename, cardTranslatedText));
+                }
+            }
+        } catch (JSONException e) {
+            throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, e);
+        }
+        return spec;
+    }
+
+    private ImportSpec getIndexFromPsv(File dir, String indexFilename, String defaultLabel,
+                                       String hash) throws ImportException {
         String label = defaultLabel;
         String publisher = null;
         String externalId = null;
         long timestamp = -1;
-        List<ImportItem> items = new ArrayList<>();
+        ImportSpec spec = new ImportSpec(label, publisher, externalId, timestamp, hash, dir);
+        Map<String, ImportSpecDictionary> dictionaryLookup = new HashMap<>();
         Scanner s;
         try {
             s = new Scanner(new File(dir, indexFilename));
@@ -284,81 +371,84 @@ public class TxcPortingUtility {
                         publisher = metaLine[1];
                         externalId = metaLine[2];
                         timestamp = Long.valueOf(metaLine[3]);
+                        spec = new ImportSpec(label, publisher, externalId, timestamp, hash, dir);
                         continue;
                     }
                 }
             }
             String[] split = line.trim().split("\\|");
-            if (split.length == 3) {
-                items.add(new ImportItem(split[0], split[1], split[2], ""));
-            } else if (split.length == 4) {
-                items.add(new ImportItem(split[0], split[1], split[2], split[3]));
-            } else {
+            if (split.length < 3) {
                 s.close();
                 throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
+            String language = split[2];
+            ImportSpecDictionary dictionary = dictionaryLookup.containsKey(language) ?
+                    dictionaryLookup.get(language) : new ImportSpecDictionary(language);
+            dictionary.cards.add(
+                    new ImportSpecCard(split[0], split[1], split.length > 3 ? split[3] : null));
         }
         s.close();
-        return new ImportInfo(label, publisher, externalId, timestamp, hash, items, dir);
+        return spec;
     }
 
-    private void loadData(Context context, ImportInfo importInfo) {
+    private void loadData(Context context, ImportSpec importSpec) {
         DbManager dbm = new DbManager(context);
-        long deckId = dbm.addDeck(importInfo.label, importInfo.publisher, importInfo.timestamp,
-                importInfo.externalId, importInfo.hash, false);
-        Map<String, Long> dictionaryLookup = new HashMap<>();
-        int dictionaryIndex = 0;
-        // Iterate backwards through the list, because we're adding each translation at the top of
-        // the list and want them to appear in the correct order.
-        for (int i = importInfo.items.size() - 1; i >= 0; i--) {
-            ImportItem item = importInfo.items.get(i);
-            File targetFile = new File(importInfo.dir, item.name);
-            String dictionaryLookupKey = item.language.toLowerCase();
-            if (!dictionaryLookup.containsKey(dictionaryLookupKey)) {
-                long dictionaryId = dbm.addDictionary(item.language, dictionaryIndex, deckId);
-                dictionaryIndex++;
-                dictionaryLookup.put(dictionaryLookupKey, dictionaryId);
+        long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
+                importSpec.externalId, importSpec.hash, false);
+        for (int i = 0; i < importSpec.dictionaries.size(); i++) {
+            ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
+            long dictionaryId = dbm.addDictionary(dictionary.language, i, deckId);
+            for (int j = 0; j < dictionary.cards.size(); j++) {
+                ImportSpecCard card = dictionary.cards.get(j);
+                dbm.addTranslation(
+                        dictionaryId, card.label, false, card.filename, j, card.translatedText);
             }
-            long dictionaryId = dictionaryLookup.get(dictionaryLookupKey);
-            dbm.addTranslationAtTop(dictionaryId, item.text, false, targetFile.getAbsolutePath(),
-                    item.translatedText);
         }
     }
 
-    public class ImportInfo {
+    public class ImportSpec {
 
         public final String label;
         public final String publisher;
         public final String externalId;
         public final long timestamp;
         public final String hash;
-        public final List<ImportItem> items;
         public final File dir;
+        public final List<ImportSpecDictionary> dictionaries;
 
-        public ImportInfo(String label, String publisher, String externalId, long timestamp,
-                          String hash, List<ImportItem> items, File dir) {
+        public ImportSpec(String label, String publisher, String externalId, long timestamp,
+                          String hash, File dir) {
             this.label = label;
             this.publisher = publisher;
             this.externalId = externalId;
             this.timestamp = timestamp;
             this.hash = hash;
-            this.items = items;
             this.dir = dir;
+            dictionaries = new ArrayList<ImportSpecDictionary>();
         }
     }
 
-    private class ImportItem {
+    private class ImportSpecDictionary {
 
-        public final String text;
-        public final String name;
         public final String language;
+        public final List<ImportSpecCard> cards;
+
+        public ImportSpecDictionary(String language) {
+            this.language = language;
+            cards = new ArrayList<ImportSpecCard>();
+        }
+    }
+
+    private class ImportSpecCard {
+
+        public final String label;
+        public final String filename;
         public final String translatedText;
 
 
-        public ImportItem(String text, String name, String language, String translatedText) {
-            this.text = text;
-            this.name = name;
-            this.language = language;
+        public ImportSpecCard(String label, String filename, String translatedText) {
+            this.label = label;
+            this.filename = filename;
             this.translatedText = translatedText;
         }
     }
