@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -68,6 +70,11 @@ public class Dictionary {
 
     public long getDeckId() {
         return deckId;
+    }
+
+    public String getDisplayName(Context context) {
+        return (label == null) ?
+                LanguageDisplayUtil.getLanguageDisplayName(context, destLanguageIso) : label;
     }
 
     /**
