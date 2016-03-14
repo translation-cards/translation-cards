@@ -72,11 +72,6 @@ public class Dictionary {
         return deckId;
     }
 
-    public String getDisplayName(Context context) {
-        return (label == null) ?
-                LanguageDisplayUtil.getLanguageDisplayName(context, destLanguageIso) : label;
-    }
-
     /**
      * Contains information about a single phrase.
      */
