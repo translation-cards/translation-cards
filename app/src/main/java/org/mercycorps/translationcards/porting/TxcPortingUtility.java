@@ -285,14 +285,13 @@ public class TxcPortingUtility {
     private ImportSpec getIndex(File dir, String indexFilename, String defaultLabel, String hash)
             throws ImportException {
         if (SPEC_FILENAME.equals(indexFilename)) {
-            return getIndexFromSpec(dir, defaultLabel, hash);
+            return getIndexFromSpec(dir, hash);
         } else{
             return getIndexFromPsv(dir, indexFilename, defaultLabel, hash);
         }
     }
 
-    private ImportSpec getIndexFromSpec(File dir, String defaultLabel, String hash)
-            throws ImportException {
+    private ImportSpec getIndexFromSpec(File dir, String hash) throws ImportException {
         JSONObject json;
         try {
             InputStream is = new FileInputStream(new File(dir, SPEC_FILENAME));
@@ -315,7 +314,8 @@ public class TxcPortingUtility {
             long timestamp = json.optLong(JsonKeys.TIMESTAMP, -1);
             String srcLanguage = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE);
             boolean locked = json.optBoolean(JsonKeys.LOCKED, false);
-            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, hash, dir);
+            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, srcLanguage,
+                    hash, dir);
             JSONArray dictionaries = json.optJSONArray(JsonKeys.DICTIONARIES);
             if (dictionaries == null) {
                 return spec;
@@ -350,7 +350,8 @@ public class TxcPortingUtility {
         String publisher = null;
         String externalId = null;
         long timestamp = -1;
-        ImportSpec spec = new ImportSpec(label, publisher, externalId, timestamp, hash, dir);
+        ImportSpec spec = new ImportSpec(label, publisher, externalId, timestamp, false,
+                DEFAULT_SOURCE_LANGUAGE, hash, dir);
         Map<String, ImportSpecDictionary> dictionaryLookup = new HashMap<>();
         Scanner s;
         try {
@@ -371,7 +372,8 @@ public class TxcPortingUtility {
                         publisher = metaLine[1];
                         externalId = metaLine[2];
                         timestamp = Long.valueOf(metaLine[3]);
-                        spec = new ImportSpec(label, publisher, externalId, timestamp, hash, dir);
+                        spec = new ImportSpec(label, publisher, externalId, timestamp, false,
+                                DEFAULT_SOURCE_LANGUAGE, hash, dir);
                         continue;
                     }
                 }
@@ -382,8 +384,13 @@ public class TxcPortingUtility {
                 throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
             String language = split[2];
-            ImportSpecDictionary dictionary = dictionaryLookup.containsKey(language) ?
-                    dictionaryLookup.get(language) : new ImportSpecDictionary(language);
+            ImportSpecDictionary dictionary;
+            if (dictionaryLookup.containsKey(language)) {
+                dictionary = dictionaryLookup.get(language);
+            } else {
+                dictionary = new ImportSpecDictionary(language);
+                dictionaryLookup.put(language, dictionary);
+            }
             dictionary.cards.add(
                     new ImportSpecCard(split[0], split[1], split.length > 3 ? split[3] : null));
         }
@@ -394,7 +401,7 @@ public class TxcPortingUtility {
     private void loadData(Context context, ImportSpec importSpec) {
         DbManager dbm = new DbManager(context);
         long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
-                importSpec.externalId, importSpec.hash, false);
+                importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
             long dictionaryId = dbm.addDictionary(dictionary.language, i, deckId);
@@ -412,19 +419,23 @@ public class TxcPortingUtility {
         public final String publisher;
         public final String externalId;
         public final long timestamp;
+        public final boolean locked;
+        public final String srcLanguage;
         public final String hash;
         public final File dir;
         public final List<ImportSpecDictionary> dictionaries;
 
         public ImportSpec(String label, String publisher, String externalId, long timestamp,
-                          String hash, File dir) {
+                          boolean locked, String srcLanguage, String hash, File dir) {
             this.label = label;
             this.publisher = publisher;
             this.externalId = externalId;
             this.timestamp = timestamp;
+            this.locked = locked;
+            this.srcLanguage = srcLanguage;
             this.hash = hash;
             this.dir = dir;
-            dictionaries = new ArrayList<ImportSpecDictionary>();
+            dictionaries = new ArrayList<>();
         }
     }
 
@@ -435,7 +446,7 @@ public class TxcPortingUtility {
 
         public ImportSpecDictionary(String language) {
             this.language = language;
-            cards = new ArrayList<ImportSpecCard>();
+            cards = new ArrayList<>();
         }
     }
 

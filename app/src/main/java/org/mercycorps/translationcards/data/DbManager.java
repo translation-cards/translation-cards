@@ -127,7 +127,8 @@ public class DbManager {
     }
 
     public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationTimestamp, String externalId, String hash, boolean locked) {
+                        long creationTimestamp, String externalId, String hash, boolean locked,
+                        String srcLanguageIso) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
@@ -135,13 +136,14 @@ public class DbManager {
         values.put(DecksTable.EXTERNAL_ID, externalId);
         values.put(DecksTable.HASH, hash);
         values.put(DecksTable.LOCKED, locked ? 1 : 0);
+        values.put(DecksTable.SOURCE_LANGUAGE_ISO, srcLanguageIso);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
     public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash, boolean locked) {
+                        String hash, boolean locked, String srcLanguageIso) {
         return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash, locked);
+                hash, locked, srcLanguageIso);
     }
 
     public void deleteDeck(long deckId) {
@@ -356,12 +358,14 @@ public class DbManager {
         public static final String EXTERNAL_ID = "externalId";
         public static final String HASH = "hash";
         public static final String LOCKED = "locked";
+        public static final String SOURCE_LANGUAGE_ISO = "srcLanguageIso";
     }
 
     private class DictionariesTable {
         public static final String TABLE_NAME = "dictionaries";
         public static final String ID = "id";
         public static final String DECK_ID = "deckId";
+        public static final String LANGUAGE_ISO = "languageIso";
         public static final String LABEL = "label";
         public static final String ITEM_INDEX = "itemIndex";
     }
@@ -380,7 +384,7 @@ public class DbManager {
     private class DbHelper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "TranslationCards.db";
-        private static final int DATABASE_VERSION = 2;
+        private static final int DATABASE_VERSION = 3;
 
         // Initialization SQL.
         private static final String INIT_DECKS_SQL =
@@ -391,14 +395,16 @@ public class DbManager {
                 DecksTable.CREATION_TIMESTAMP + " INTEGER," +
                 DecksTable.EXTERNAL_ID + " TEXT," +
                 DecksTable.HASH + " TEXT," +
-                DecksTable.LOCKED + " INTEGER" +
+                DecksTable.LOCKED + " INTEGER," +
+                DecksTable.SOURCE_LANGUAGE_ISO + " TEXT" +
                 ")";
         private static final String INIT_DICTIONARIES_SQL =
                 "CREATE TABLE " + DictionariesTable.TABLE_NAME + "( " +
                 DictionariesTable.ID + " INTEGER PRIMARY KEY," +
                 DictionariesTable.DECK_ID + " INTEGER," +
                 DictionariesTable.LABEL + " TEXT," +
-                DictionariesTable.ITEM_INDEX + " INTEGER" +
+                DictionariesTable.ITEM_INDEX + " INTEGER," +
+                DictionariesTable.LANGUAGE_ISO + " TEXT" +
                 ")";
         private static final String INIT_TRANSLATIONS_SQL =
                 "CREATE TABLE " + TranslationsTable.TABLE_NAME + " (" +
@@ -418,6 +424,12 @@ public class DbManager {
         private static final String ALTER_TABLE_ADD_DECK_FOREIGN_KEY =
                 "ALTER TABLE " + DictionariesTable.TABLE_NAME + " ADD " +
                 DictionariesTable.DECK_ID + " INTEGER";
+        private static final String ALTER_TABLE_ADD_SOURCE_LANGUAGE_COLUMN =
+                "ALTER TABLE " + DecksTable.TABLE_NAME + " ADD " +
+                DecksTable.SOURCE_LANGUAGE_ISO + " TEXT";
+        private static final String ALTER_TABLE_ADD_DEST_LANGUAGE_ISO_COLUMN =
+                "ALTER TABLE " + DictionariesTable.TABLE_NAME + " ADD " +
+                DictionariesTable.LANGUAGE_ISO + " TEXT";
 
         private final Context context;
 
@@ -434,7 +446,7 @@ public class DbManager {
             long defaultDeckId = addDeck(
                     db, context.getString(R.string.data_default_deck_name),
                     context.getString(R.string.data_default_deck_publisher),
-                    creationTimestamp, null, null, false);
+                    creationTimestamp, null, null, false, "en");
             populateIncludedData(db, defaultDeckId);
         }
 
@@ -467,10 +479,32 @@ public class DbManager {
                 long defaultDeckId = addDeck(
                         db, context.getString(R.string.data_default_deck_name),
                         context.getString(R.string.data_default_deck_publisher),
-                        creationTimestamp, null, null, false);
+                        creationTimestamp, null, null, false, "en");
                 ContentValues defaultDeckUpdateValues = new ContentValues();
                 defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
                 db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);
+            }
+            // Deck source languages and ISO codes for dictionary languages were added in v3 of the
+            // database.
+            if (oldVersion < 3) {
+                if (oldVersion == 2) {
+                    // No need to run this if going from v1 to v3, because we've just created the
+                    // whole decks table above in that case.
+                    db.execSQL(ALTER_TABLE_ADD_SOURCE_LANGUAGE_COLUMN);
+                }
+                db.execSQL(ALTER_TABLE_ADD_DEST_LANGUAGE_ISO_COLUMN);
+                // We assume that the source language of all pre-existing decks is English.
+                ContentValues defaultSourceLanguageValues = new ContentValues();
+                defaultSourceLanguageValues.put(DecksTable.SOURCE_LANGUAGE_ISO, "en");
+                db.update(DecksTable.TABLE_NAME, defaultSourceLanguageValues, null, null);
+                // We use "xx" as the destination language ISO code for all pre-existing
+                // dictionaries. This will never be found in a language lookup table and will force
+                // us to default to the user-specified label. By adding a dummy value, we avoid
+                // having to deal with nulls in the future, since we will consider this a required
+                // field going forward.
+                ContentValues defaultDestLanguageValues = new ContentValues();
+                defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, "xx");
+                db.update(DictionariesTable.TABLE_NAME, defaultDestLanguageValues, null, null);
             }
         }
 
