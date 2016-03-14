@@ -404,7 +404,7 @@ public class TxcPortingUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbm.addDictionary(dictionary.language, i, deckId);
+            long dictionaryId = dbm.addDictionary(dictionary.language, null, i, deckId);
             for (int j = 0; j < dictionary.cards.size(); j++) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 dbm.addTranslation(

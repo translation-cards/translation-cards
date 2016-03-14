@@ -37,7 +37,7 @@ public class DeckCreationActivity extends AppCompatActivity {
                                // screen's limitations)
                 String[] languages = targetLanguagesField.getText().toString().split(",");
                 for (int i = 0; i < languages.length; i++) {
-                    dbm.addDictionary(languages[i], i, deckId);
+                    dbm.addDictionary(languages[i], "", i, deckId);
                 }
                 setResult(RESULT_OK);
                 finish();

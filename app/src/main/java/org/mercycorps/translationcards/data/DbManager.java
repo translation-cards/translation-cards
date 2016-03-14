@@ -181,17 +181,18 @@ public class DbManager {
         dbh.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public long addDictionary(SQLiteDatabase writableDatabase, String label, int itemIndex,
-                              long deckId) {
+    public long addDictionary(SQLiteDatabase writableDatabase, String destIsoCode, String label,
+                              int itemIndex, long deckId) {
         ContentValues values = new ContentValues();
+        values.put(DictionariesTable.LANGUAGE_ISO, destIsoCode);
         values.put(DictionariesTable.LABEL, label);
         values.put(DictionariesTable.ITEM_INDEX, itemIndex);
         values.put(DictionariesTable.DECK_ID, deckId);
         return writableDatabase.insert(DictionariesTable.TABLE_NAME, null, values);
     }
 
-    public long addDictionary(String label, int itemIndex, long deckId) {
-        return addDictionary(dbh.getWritableDatabase(), label, itemIndex, deckId);
+    public long addDictionary(String destIsoCode, String label, int itemIndex, long deckId) {
+        return addDictionary(dbh.getWritableDatabase(), destIsoCode, label, itemIndex, deckId);
     }
 
     public long addTranslation(SQLiteDatabase writableDatabase,
@@ -338,7 +339,7 @@ public class DbManager {
     public String getTranslationLanguagesForDeck(long deckDbId) {
         Cursor cursor = dbh.getReadableDatabase().query(
                 DictionariesTable.TABLE_NAME,
-                new String[]{DictionariesTable.LABEL},
+                new String[]{DictionariesTable.LANGUAGE_ISO},
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckDbId)}, null, null,
                 String.format("%s ASC", DictionariesTable.LABEL));
@@ -347,7 +348,8 @@ public class DbManager {
         String delimiter = "   ";
         boolean hasNext = cursor.moveToFirst();
         while(hasNext) {
-            String translationLanguage = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
+            String translationLanguage = cursor.getString(
+                    cursor.getColumnIndex(DictionariesTable.LANGUAGE_ISO));
             translationLanguages += translationLanguage.toUpperCase() + delimiter;
             hasNext = cursor.moveToNext();
         }
@@ -461,7 +463,8 @@ public class DbManager {
             for (int dictionaryIndex = 0; dictionaryIndex < INCLUDED_DATA.length;
                  dictionaryIndex++) {
                 Dictionary dictionary = INCLUDED_DATA[dictionaryIndex];
-                long dictionaryId = addDictionary(db, dictionary.getLabel(), dictionaryIndex,
+                long dictionaryId = addDictionary(db, dictionary.getDestLanguageIso(),
+                        dictionary.getLabel(), dictionaryIndex,
                         defaultDeckId);
                 for (int translationIndex = 0;
                      translationIndex < dictionary.getTranslationCount();

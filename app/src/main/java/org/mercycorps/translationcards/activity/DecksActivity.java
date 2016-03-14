@@ -202,7 +202,8 @@ public class DecksActivity extends AppCompatActivity {
         try {
             for (Dictionary dictionary : dictionaries) {
                 long dictionaryId = dbm.addDictionary(
-                        dictionary.getLabel(), dictionaryIndex, deckId);
+                        dictionary.getDestLanguageIso(), dictionary.getLabel(), dictionaryIndex,
+                        deckId);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
