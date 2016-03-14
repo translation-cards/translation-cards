@@ -31,7 +31,7 @@ import java.io.Serializable;
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class Dictionary {
+public class Dictionary implements Serializable {
 
     private final long dbId;
     private final long deckId;
