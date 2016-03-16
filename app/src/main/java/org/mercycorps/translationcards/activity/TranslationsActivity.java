@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.google.inject.Inject;
 
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
@@ -55,15 +54,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import roboguice.RoboGuice;
-import roboguice.activity.RoboActionBarActivity;
-
 /**
  * Activity for the main screen, with lists of phrases to play.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class TranslationsActivity extends RoboActionBarActivity {
+public class TranslationsActivity extends AppCompatActivity {
 
     public static final String INTENT_KEY_DECK_ID = "Deck";
     private static final String TAG = "TranslationsActivity";
@@ -72,8 +68,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
 
-    @Inject
-    DbManager dbm;
+    DbManager dbManager;
     private Dictionary[] dictionaries;
     private int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
@@ -85,12 +80,12 @@ public class TranslationsActivity extends RoboActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        RoboGuice.setUseAnnotationDatabases(false);
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
         lastMediaPlayerManager = application.getMediaPlayerManager();
+        dbManager = application.getDbManager();
         deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
-        dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+        dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
         initTabs();
@@ -196,7 +191,7 @@ public class TranslationsActivity extends RoboActionBarActivity {
             case REQUEST_KEY_ADD_CARD:
             case REQUEST_KEY_EDIT_CARD:
                 if (resultCode == RESULT_OK) {
-                    dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+                    dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
                     setDictionary(currentDictionaryIndex);
                 }
                 break;
@@ -376,8 +371,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
                     .setMessage("Are you sure you want to delete this translation card?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dbm.deleteTranslation(translationId);
-                            dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+                            dbManager.deleteTranslation(translationId);
+                            dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
                             setDictionary(currentDictionaryIndex);
                             listAdapter.notifyDataSetChanged();
                         }
@@ -413,11 +408,10 @@ public class TranslationsActivity extends RoboActionBarActivity {
                 targetFile.delete();
             }
             TxcPortingUtility portingUtility = new TxcPortingUtility();
-            DbManager dbm = new DbManager(TranslationsActivity.this);
             try {
                 portingUtility.exportData(
                         deck, exportedDeckName,
-                        dbm.getAllDictionariesForDeck(deck.getDbId()), targetFile);
+                        dbManager.getAllDictionariesForDeck(deck.getDbId()), targetFile);
             } catch (final ExportException e) {
                 TranslationsActivity.this.runOnUiThread(new Runnable() {
                     @Override

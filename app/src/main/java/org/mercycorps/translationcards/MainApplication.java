@@ -4,6 +4,7 @@ import android.app.Application;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
 
 /**
@@ -15,6 +16,7 @@ import org.mercycorps.translationcards.media.MediaPlayerManager;
 public class MainApplication extends Application {
 
     private MediaPlayerManager mediaPlayerManager;
+    private DbManager dbManager;
 
     @Override
     public void onCreate() {
@@ -22,9 +24,14 @@ public class MainApplication extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayerManager = new MediaPlayerManager(mediaPlayer);
+        dbManager = new DbManager(getApplicationContext());
     }
 
     public MediaPlayerManager getMediaPlayerManager() {
         return mediaPlayerManager;
+    }
+
+    public DbManager getDbManager() {
+        return dbManager;
     }
 }

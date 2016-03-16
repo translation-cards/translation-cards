@@ -23,8 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.inject.Inject;
-
 import org.mercycorps.translationcards.R;
 
 import java.io.File;
@@ -48,7 +46,6 @@ public class DbManager {
 
     private final DbHelper dbh;
 
-    @Inject
     public DbManager(Context context) {
         this.dbh = new DbHelper(context);
     }

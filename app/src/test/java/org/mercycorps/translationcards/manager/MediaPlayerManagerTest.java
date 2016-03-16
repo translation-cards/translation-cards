@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 public class MediaPlayerManagerTest {
 
@@ -64,18 +65,6 @@ public class MediaPlayerManagerTest {
         mediaPlayerManager.play(ANY_FILE, mock(ProgressBar.class), translation);
 
         verify(mediaPlayer).start();
-    }
-
-    @Ignore
-    @Test
-    public void play_shouldSetOnCompletionListener() {
-
-    }
-
-    @Ignore
-    @Test
-    public void play_shouldStartMediaPlayerInNewThread() {
-
     }
 
     @Test
