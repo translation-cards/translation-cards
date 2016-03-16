@@ -1,10 +1,19 @@
 package org.mercycorps.translationcards.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.data.DbManager;
@@ -12,18 +21,74 @@ import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 
+import java.io.File;
+
 public class ImportActivity extends AppCompatActivity {
 
+    public static final int PERMISSION_REQUEST_EXTERNAL_WRITE = 1;
     private TxcPortingUtility portingUtility;
+    private Uri source;
+    private BroadcastReceiver onComplete;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         portingUtility = new TxcPortingUtility();
-        confirmAndLoadData(getIntent().getData());
+        source = getIntent().getData();
+
+        onComplete = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                confirmAndLoadData();
+                unregisterReceiver(onComplete);
+            }
+        };
+        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        if (sourceIsURL()) {
+            downloadFile();
+        } else {
+            confirmAndLoadData();
+        }
     }
 
-    private void confirmAndLoadData(final Uri source) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == PERMISSION_REQUEST_EXTERNAL_WRITE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            importDeck();
+        }
+    }
+
+    private boolean sourceIsURL() {
+        return source.toString().contains("http");
+    }
+
+    private void downloadFile() {
+        DownloadManager.Request request = new DownloadManager.Request(source);
+        String[] parsedURL = source.toString().split("/");
+        String filename = parsedURL[parsedURL.length - 1];
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(request);
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename;
+        File downloadedDeck = new File(path);
+        source = Uri.fromFile(downloadedDeck);
+    }
+
+    private void confirmAndLoadData() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                importDeck();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_WRITE);
+            }
+        } else {
+            importDeck();
+        }
+    }
+
+    private void importDeck() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.import_confirm_alert_title)
                 .setMessage(getString(R.string.import_confirm_alert_message))
@@ -31,7 +96,7 @@ public class ImportActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                attemptImport(source);
+                                attemptImport();
                             }
                         })
                 .setNegativeButton(R.string.import_confirm_alert_negative,
@@ -44,7 +109,7 @@ public class ImportActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void attemptImport(Uri source) {
+    private void attemptImport() {
         try {
             TxcPortingUtility.ImportInfo importInfo =
                     portingUtility.prepareImport(ImportActivity.this, source);

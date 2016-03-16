@@ -1,7 +1,10 @@
 package org.mercycorps.translationcards.porting;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
