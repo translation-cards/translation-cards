@@ -16,9 +16,9 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
-import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 
 import java.io.File;
@@ -29,6 +29,7 @@ public class ImportActivity extends AppCompatActivity {
     private TxcPortingUtility portingUtility;
     private Uri source;
     private BroadcastReceiver onComplete;
+    private AlertDialog downloadDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class ImportActivity extends AppCompatActivity {
 
         onComplete = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
+                downloadDialog.hide();
                 confirmAndLoadData();
                 unregisterReceiver(onComplete);
             }
@@ -45,11 +47,34 @@ public class ImportActivity extends AppCompatActivity {
         registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         if (sourceIsURL()) {
-            downloadFile();
+            downloadFile(source);
         } else {
             confirmAndLoadData();
         }
     }
+
+    private void downloadFile(Uri source) {
+        String[] parsedURL = source.toString().split("/");
+        String filename = parsedURL[parsedURL.length - 1];
+        showDownloadAlertDialog(filename);
+
+        DownloadManager.Request request = new DownloadManager.Request(source);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(request);
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename;
+        File downloadedDeck = new File(path);
+        this.source = Uri.fromFile(downloadedDeck);
+    }
+
+    private void showDownloadAlertDialog(String filename) {
+        downloadDialog = new AlertDialog.Builder(ImportActivity.this)
+                .setTitle(R.string.file_download_title)
+                .setMessage(filename)
+                .show();
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -61,19 +86,6 @@ public class ImportActivity extends AppCompatActivity {
 
     private boolean sourceIsURL() {
         return source.toString().contains("http");
-    }
-
-    private void downloadFile() {
-        DownloadManager.Request request = new DownloadManager.Request(source);
-        String[] parsedURL = source.toString().split("/");
-        String filename = parsedURL[parsedURL.length - 1];
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-
-        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename;
-        File downloadedDeck = new File(path);
-        source = Uri.fromFile(downloadedDeck);
     }
 
     private void confirmAndLoadData() {
