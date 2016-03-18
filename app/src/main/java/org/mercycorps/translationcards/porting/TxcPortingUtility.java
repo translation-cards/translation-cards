@@ -425,8 +425,10 @@ public class TxcPortingUtility {
             long dictionaryId = dbm.addDictionary(dictionary.language, null, i, deckId);
             for (int j = 0; j < dictionary.cards.size(); j++) {
                 ImportSpecCard card = dictionary.cards.get(j);
+                File cardFile = new File(importSpec.dir, card.filename);
                 dbm.addTranslation(
-                        dictionaryId, card.label, false, card.filename, j, card.translatedText);
+                        dictionaryId, card.label, false, cardFile.getAbsolutePath(), j,
+                        card.translatedText);
             }
         }
     }
