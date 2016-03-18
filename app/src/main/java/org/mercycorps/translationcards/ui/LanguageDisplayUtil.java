@@ -14,12 +14,12 @@ import org.mercycorps.translationcards.data.Dictionary;
 public class LanguageDisplayUtil {
 
     public static String getSourceLanguageDisplayName(Context context, Deck deck) {
-        return (deck.getLabel() == null) ?
+        return isNullOrEmpty(deck.getLabel()) ?
                 getLanguageDisplayName(context, deck.getSrcLanguageIso()) : deck.getLabel();
     }
 
     public static String getDestLanguageDisplayName(Context context, Dictionary dictionary) {
-        return (dictionary.getLabel() == null) ?
+        return isNullOrEmpty(dictionary.getLabel()) ?
                 getLanguageDisplayName(context, dictionary.getDestLanguageIso()) :
                 dictionary.getLabel();
     }
@@ -49,7 +49,12 @@ public class LanguageDisplayUtil {
             case "ps":
                 return context.getString(R.string.name_ps);
             default:
-                return null;
+                // Better than nothing.
+                return isoCode;
         }
+    }
+
+    private static boolean isNullOrEmpty(String val) {
+        return (val == null) || val.isEmpty();
     }
 }
