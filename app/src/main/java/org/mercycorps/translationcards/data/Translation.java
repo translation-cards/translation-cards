@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -74,5 +77,9 @@ public class Translation implements Serializable {
 
     public boolean isAudioFilePresent(){
         return filename != null;
+    }
+
+    public FileDescriptor createFileDescriptor() throws IOException {
+        return new FileInputStream(filename).getFD();
     }
 }

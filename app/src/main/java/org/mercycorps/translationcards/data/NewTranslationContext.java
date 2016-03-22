@@ -11,6 +11,11 @@ public class NewTranslationContext implements Serializable {
         this.translation = new Translation();
     }
 
+    public NewTranslationContext(Dictionary dictionary, Translation translation){
+        this.dictionary = dictionary;
+        this.translation = translation;
+    }
+
     public Dictionary getDictionary() {
         return dictionary;
     }
