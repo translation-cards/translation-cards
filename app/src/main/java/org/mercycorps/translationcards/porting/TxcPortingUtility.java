@@ -1,14 +1,12 @@
 package org.mercycorps.translationcards.porting;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +50,7 @@ public class TxcPortingUtility {
                 throw new ExportException(ExportException.ExportProblem.TARGET_FILE_NOT_FOUND, e);
             }
             zos = new ZipOutputStream(os);
-            Map<String, Dictionary.Translation> translationFilenames =
+            Map<String, Translation> translationFilenames =
                     buildIndex(deck, exportedDeckName, dictionaries, zos);
             for (String filename : translationFilenames.keySet()) {
                 addFileToZip(filename, translationFilenames.get(filename), zos);
@@ -75,10 +73,10 @@ public class TxcPortingUtility {
         }
     }
 
-    private Map<String, Dictionary.Translation> buildIndex(
+    private Map<String, Translation> buildIndex(
             Deck deck, String exportedDeckname, Dictionary[] dictionaries, ZipOutputStream zos)
             throws ExportException {
-        Map<String, Dictionary.Translation> translationFilenames = new HashMap<>();
+        Map<String, Translation> translationFilenames = new HashMap<>();
         try {
             zos.putNextEntry(new ZipEntry(INDEX_FILENAME));
             String metaLine = String.format("META:%s|%s|%s|%d\n",
@@ -89,7 +87,7 @@ public class TxcPortingUtility {
             for (Dictionary dictionary : dictionaries) {
                 String language = dictionary.getLabel();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                    Dictionary.Translation translation = dictionary.getTranslation(i);
+                    Translation translation = dictionary.getTranslation(i);
                     String translationFilename = buildUniqueFilename(
                             translation, translationFilenames);
                     translationFilenames.put(translationFilename, translation);
@@ -106,8 +104,8 @@ public class TxcPortingUtility {
     }
 
     private String buildUniqueFilename(
-            Dictionary.Translation translation,
-            Map<String, Dictionary.Translation> translationFilenames) throws ExportException {
+            Translation translation,
+            Map<String, Translation> translationFilenames) throws ExportException {
         String baseName = new File(translation.getFilename()).getName();
         if (!translationFilenames.containsKey(baseName)) {
             return baseName;
@@ -126,7 +124,7 @@ public class TxcPortingUtility {
     }
 
     private void addFileToZip(
-            String filename, Dictionary.Translation translation, ZipOutputStream zos)
+            String filename, Translation translation, ZipOutputStream zos)
             throws ExportException {
         try {
             zos.putNextEntry(new ZipEntry(filename));

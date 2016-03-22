@@ -61,7 +61,8 @@
         android:textColor="@color/borderColor"
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
-        android:text="@string/recording_label_hint_text" />
+        android:textColorHint="@color/borderColor"
+        android:hint="@string/recording_label_hint_text" />
 
     <EditText
         android:layout_width="wrap_content"

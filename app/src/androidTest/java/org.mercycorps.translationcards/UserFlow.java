@@ -36,17 +36,17 @@ public class UserFlow {
         onView(withText("Default")).perform(click());
 
         onView(withId(R.id.add_button)).perform(click());
-        onView(withId(R.id.recording_instructions_start)).perform(click());
+        onView(withId(R.id.get_started_button)).perform(click());
 
         onView(withText("Flashcard phrase")).perform(typeText(ORIGIN_TEXT));
         closeSoftKeyboard();
         onView(withText("Phrase translation (Optional)")).perform(replaceText(TRANSLATION_TEXT));
-        onView(withId(R.id.recording_label_next)).perform(click());
+        onView(withId(R.id.enter_source_phrase_next_label)).perform(click());
 
-        onView(withId(R.id.recording_audio_button_record)).perform(click());
+        onView(withId(R.id.record_audio_button)).perform(click());
         sleep(2000);
-        onView(withId(R.id.recording_audio_button_record)).perform(click());
-        onView(withId(R.id.recording_audio_save)).perform(click());
+        onView(withId(R.id.record_audio_button)).perform(click());
+        onView(withId(R.id.record_activity_next)).perform(click());
 
         onView(withId(R.id.origin_translation_text)).check(matches(withText(ORIGIN_TEXT)));
         onView(withId(R.id.translated_text)).check(matches(withText(TRANSLATION_TEXT)));

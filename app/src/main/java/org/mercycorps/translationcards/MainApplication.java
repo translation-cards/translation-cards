@@ -3,9 +3,11 @@ package org.mercycorps.translationcards;
 import android.app.Application;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
+import org.mercycorps.translationcards.media.MediaRecorderManager;
 
 /**
  * Used to create singletons for dependency injection.
@@ -17,6 +19,7 @@ public class MainApplication extends Application {
 
     private MediaPlayerManager mediaPlayerManager;
     private DbManager dbManager;
+    private MediaRecorderManager mediaRecorderManager;
 
     @Override
     public void onCreate() {
@@ -25,6 +28,7 @@ public class MainApplication extends Application {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayerManager = new MediaPlayerManager(mediaPlayer);
         dbManager = new DbManager(getApplicationContext());
+        mediaRecorderManager = new MediaRecorderManager();
     }
 
     public MediaPlayerManager getMediaPlayerManager() {
@@ -33,5 +37,9 @@ public class MainApplication extends Application {
 
     public DbManager getDbManager() {
         return dbManager;
+    }
+
+    public MediaRecorderManager getMediaRecorderManager() {
+        return mediaRecorderManager;
     }
 }

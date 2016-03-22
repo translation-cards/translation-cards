@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ExportException;
@@ -136,7 +137,7 @@ public class TranslationsActivity extends AppCompatActivity {
         list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
         listAdapter = new CardListAdapter(
                 this, R.layout.translation_item, R.id.origin_translation_text,
-                new ArrayList<Dictionary.Translation>());
+                new ArrayList<Translation>());
         list.setAdapter(listAdapter);
         ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
         if (deck.isLocked()) {
@@ -227,11 +228,11 @@ public class TranslationsActivity extends AppCompatActivity {
                 .show();
     }
 
-    private class CardListAdapter extends ArrayAdapter<Dictionary.Translation> {
+    private class CardListAdapter extends ArrayAdapter<Translation> {
 
         public CardListAdapter(
                 Context context, int resource, int textViewResourceId,
-                List<Dictionary.Translation> objects) {
+                List<Translation> objects) {
             super(context, resource, textViewResourceId, objects);
         }
 
@@ -329,9 +330,9 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     private class CardEditClickListener implements View.OnClickListener {
-        private Dictionary.Translation translationCard;
+        private Translation translationCard;
 
-        public CardEditClickListener(Dictionary.Translation translationCard) {
+        public CardEditClickListener(Translation translationCard) {
             this.translationCard = translationCard;
         }
 

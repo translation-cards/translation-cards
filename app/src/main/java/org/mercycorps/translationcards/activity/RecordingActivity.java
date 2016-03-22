@@ -45,7 +45,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.MainApplication;
@@ -173,12 +173,12 @@ public class RecordingActivity extends AppCompatActivity {
         setContentView(R.layout.recording_instructions);
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(
-                getResources(), R.drawable.recording_instructions_image);
-        currentBitmapView = (ImageView) findViewById(R.id.recording_instructions_image);
+                getResources(), R.drawable.get_started_image);
+        currentBitmapView = (ImageView) findViewById(R.id.get_started_image);
         currentBitmapView.setImageBitmap(currentBitmap);
-        TextView titleView = (TextView) findViewById(R.id.recording_instructions_title);
+        TextView titleView = (TextView) findViewById(R.id.get_started_title);
         titleView.setText(getString(R.string.recording_instructions_title, dictionaryLabel));
-        ImageButton backButton = (ImageButton) findViewById(R.id.recording_instructions_back);
+        ImageButton backButton = (ImageButton) findViewById(R.id.get_started_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +186,7 @@ public class RecordingActivity extends AppCompatActivity {
                 finish();
             }
         });
-        Button startButton = (Button) findViewById(R.id.recording_instructions_start);
+        Button startButton = (Button) findViewById(R.id.get_started_button);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,7 +211,7 @@ public class RecordingActivity extends AppCompatActivity {
                 getResources(), R.drawable.recording_label_image);
         currentBitmapView = (ImageView) findViewById(R.id.recording_label_image);
         currentBitmapView.setImageBitmap(currentBitmap);
-        final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
+        final EditText labelField = (EditText) findViewById(R.id.source_phrase_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
         fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
         fillPrepopulatedField(translatedText, translatedTextField, String.format(getString(R.string.translated_text_hint), dictionaryLabel));
@@ -272,7 +272,7 @@ public class RecordingActivity extends AppCompatActivity {
                 // Do nothing here.
             }
         });
-        View nextButton = (View) findViewById(R.id.recording_label_next);
+        View nextButton = (View) findViewById(R.id.enter_source_phrase_next_label);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -337,7 +337,7 @@ public class RecordingActivity extends AppCompatActivity {
         recordingStatus = (filename == null) ? RecordingStatus.FRESH : RecordingStatus.RECORDED;
         setContentView(R.layout.recording_audio);
         if (recordingStatus == RecordingStatus.RECORDED) {
-            findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
+            findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
         }
         recycleBitmap();
         TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
@@ -346,27 +346,27 @@ public class RecordingActivity extends AppCompatActivity {
         labelView.setText(label);
         findViewById(R.id.translation_indicator_layout).setVisibility(View.GONE);
         findViewById(R.id.text_indicator_divider).setVisibility(View.GONE);
-        recordButton = (ImageButton) findViewById(R.id.recording_audio_button_record);
+        recordButton = (ImageButton) findViewById(R.id.record_audio_button);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (recordingStatus) {
                     case FRESH:
-                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
                     case RECORDED:
-                        findViewById(R.id.recording_audio_back).setVisibility(View.GONE);
-                        findViewById(R.id.recording_audio_save).setVisibility(View.GONE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
+                        findViewById(R.id.record_activity_next).setVisibility(View.GONE);
                         startRecording();
                         break;
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
-                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         break;
                 }
             }
         });
-        listenButton = (ImageButton) findViewById(R.id.recording_audio_button_listen);
+        listenButton = (ImageButton) findViewById(R.id.play_audio_button);
         if (recordingStatus == RecordingStatus.RECORDED) {
             listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
         }
@@ -376,8 +376,8 @@ public class RecordingActivity extends AppCompatActivity {
                 switch (recordingStatus) {
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.recording_audio_back).setVisibility(View.VISIBLE);
-                        findViewById(R.id.recording_audio_save).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         startListening();
                         break;
                     case RECORDED:
@@ -389,7 +389,7 @@ public class RecordingActivity extends AppCompatActivity {
                 }
             }
         });
-        View backButton = findViewById(R.id.recording_audio_back);
+        View backButton = findViewById(R.id.record_activity_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -399,7 +399,7 @@ public class RecordingActivity extends AppCompatActivity {
                 moveToLabelStep();
             }
         });
-        View saveButton = findViewById(R.id.recording_audio_save);
+        View saveButton = findViewById(R.id.record_activity_next);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -541,7 +541,7 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
 
         final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
-                new Dictionary.Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
+                new Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
                 (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
         findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
 

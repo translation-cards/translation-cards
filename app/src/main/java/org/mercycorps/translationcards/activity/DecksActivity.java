@@ -20,6 +20,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -200,7 +201,7 @@ public class DecksActivity extends AppCompatActivity {
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                    Dictionary.Translation translation = dictionary.getTranslation(i);
+                    Translation translation = dictionary.getTranslation(i);
                     String filename = translation.getFilename();
                     if (!translation.getIsAsset()) {
                         File srcFile = new File(filename);
