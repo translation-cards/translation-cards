@@ -67,7 +67,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/recording_translated_text_field"
+        android:id="@+id/translated_phrase_field"
         android:layout_marginTop="34dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -90,7 +90,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/recording_translated_text_field" />
+        android:layout_below="@id/translated_phrase_field" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -139,7 +139,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/enter_source_phrase_next_label">
+            android:id="@+id/enter_translated_phrase_save_label">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

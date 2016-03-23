@@ -21,7 +21,7 @@ public class EnterSourcePhraseActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        findViewById(R.id.enter_source_phrase_next_label).setOnClickListener((new View.OnClickListener() {
+        findViewById(R.id.enter_translated_phrase_save_label).setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleLabelNextClick();

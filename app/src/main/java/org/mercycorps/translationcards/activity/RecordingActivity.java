@@ -212,7 +212,7 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView = (ImageView) findViewById(R.id.recording_label_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         final EditText labelField = (EditText) findViewById(R.id.source_phrase_field);
-        final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
+        final EditText translatedTextField = (EditText) findViewById(R.id.translated_phrase_field);
         fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
         fillPrepopulatedField(translatedText, translatedTextField, String.format(getString(R.string.translated_text_hint), dictionaryLabel));
         if (inEditMode) {
@@ -272,7 +272,7 @@ public class RecordingActivity extends AppCompatActivity {
                 // Do nothing here.
             }
         });
-        View nextButton = (View) findViewById(R.id.enter_source_phrase_next_label);
+        View nextButton = (View) findViewById(R.id.enter_translated_phrase_save_label);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,7 +555,7 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
 
-        View doneButton = (View) findViewById(R.id.recording_done);
+        View doneButton = (View) findViewById(R.id.summary_done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

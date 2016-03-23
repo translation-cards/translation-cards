@@ -36,6 +36,8 @@ public class Translation implements Serializable {
     public Translation() {
     }
 
+
+
     public String getLabel() {
         return label;
     }
@@ -56,6 +58,9 @@ public class Translation implements Serializable {
         return translatedText == null ? DEFAULT_TRANSLATED_TEXT : translatedText;
     }
 
+    public void setTranslatedText(String translatedText) {
+        this.translatedText = translatedText;
+    }
 
     public void setMediaPlayerDataSource(Context context, MediaPlayer mp) throws IOException {
         if (isAsset) {

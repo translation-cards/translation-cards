@@ -85,6 +85,7 @@
                 android:paddingEnd="20dp"
                 android:layout_weight="1"
                 android:textSize="20dp"
+                android:textColorHint="@color/borderColor"
                 android:textColor="@color/primaryTextColor"/>
             <FrameLayout
                 android:layout_width="wrap_content"

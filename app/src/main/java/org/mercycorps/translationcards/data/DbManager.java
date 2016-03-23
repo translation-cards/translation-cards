@@ -344,6 +344,10 @@ public class DbManager {
         return translationLanguages.trim();
     }
 
+    public void saveTranslationContext(NewTranslationContext context) {
+
+    }
+
     private class DecksTable {
         public static final String TABLE_NAME = "decks";
         public static final String ID = "id";

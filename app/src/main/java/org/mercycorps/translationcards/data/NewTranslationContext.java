@@ -33,4 +33,7 @@ public class NewTranslationContext implements Serializable {
     }
 
 
+    public void setTranslatedText(String translatedText) {
+        this.translation.setTranslatedText(translatedText);
+    }
 }

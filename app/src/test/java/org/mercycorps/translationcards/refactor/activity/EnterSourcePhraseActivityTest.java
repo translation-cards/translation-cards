@@ -71,7 +71,7 @@ public class EnterSourcePhraseActivityTest {
         Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
         Activity activity = createActivityToTest(dict);
 
-        activity.findViewById(R.id.enter_source_phrase_next_label).performClick();
+        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
 
         assertNull(shadowOf(activity).getNextStartedActivity());
     }
@@ -81,7 +81,7 @@ public class EnterSourcePhraseActivityTest {
         Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
         Activity activity = createActivityToTest(dict);
 
-        activity.findViewById(R.id.enter_source_phrase_next_label).performClick();
+        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
 
         NewTranslationContext newTranslationContext = (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
         assertEquals(null, newTranslationContext.getTranslation().getLabel());
@@ -90,7 +90,7 @@ public class EnterSourcePhraseActivityTest {
     private void setSourceTextAndClick(Activity activity) { //TODO CODE SMELL
         TextView textView = (TextView) activity.findViewById(R.id.source_phrase_field);
         textView.setText(DEFAULT_TRANSLATION_TEXT);
-        activity.findViewById(R.id.enter_source_phrase_next_label).performClick();
+        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
     }
 
 

@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:src="@drawable/recording_label_image"
         android:id="@+id/recording_label_image" />
 
     <TextView
@@ -76,10 +77,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:inputType="text"
-        android:textColor="@color/borderColor"
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
-        android:text="@string/recording_text_hint_text" />
+        android:textColorHint="@color/borderColor"
+        android:hint="@string/recording_text_hint_text" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such
@@ -145,7 +146,7 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/textDisabled"
-                android:text="@string/navigation_button_next"
+                android:text="@string/navigation_button_save"
                 android:id="@+id/recording_label_next_text" />
             <ImageView
                 android:layout_width="24dp"
