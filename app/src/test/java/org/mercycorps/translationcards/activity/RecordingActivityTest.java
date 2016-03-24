@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.RecordingActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -40,7 +39,7 @@ public class RecordingActivityTest {
     @Test
     public void moveToInstructionsStep_shouldShowHeaderWhenMakingATranslationCard() {
         TextView instructionsHeader = (TextView) recordingActivity
-                .findViewById(R.id.recording_instructions_header);
+                .findViewById(R.id.get_started_header);
 
         assertThat(instructionsHeader.getText().toString(), is("Make your own flashcards"));
     }
@@ -48,7 +47,7 @@ public class RecordingActivityTest {
     @Test
     public void moveToInstructionsStep_shouldDisplayInstructionsToMakeTranslationCard() {
         TextView instructionsDetail = (TextView) recordingActivity
-                .findViewById(R.id.recording_instructions_detail);
+                .findViewById(R.id.get_started_detail);
 
         assertThat(instructionsDetail.getText().toString()
                 , is("Write your script, record your phrase,\\nand use your flashcard in the field."));
@@ -57,7 +56,7 @@ public class RecordingActivityTest {
     @Test
     public void moveToInstructionsStep_shouldHaveCardCreationButton() {
         Button recordingButton = (Button) recordingActivity
-                .findViewById(R.id.recording_instructions_start);
+                .findViewById(R.id.get_started_button);
 
         assertThat(recordingButton.getText().toString(), is("GET STARTED"));
     }

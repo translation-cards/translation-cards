@@ -23,8 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.inject.Inject;
-
 import org.mercycorps.translationcards.R;
 
 import java.io.File;
@@ -48,14 +46,13 @@ public class DbManager {
 
     private final DbHelper dbh;
 
-    @Inject
     public DbManager(Context context) {
         this.dbh = new DbHelper(context);
     }
 
     public Dictionary[] getAllDictionaries() {
         // Getting translations.
-        Map<Long, List<Dictionary.Translation>> translations = new HashMap<>();
+        Map<Long, List<Translation>> translations = new HashMap<>();
         String[] columns = {TranslationsTable.ID, TranslationsTable.DICTIONARY_ID,
                 TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME,
                 TranslationsTable.TRANSLATED_TEXT};
@@ -67,9 +64,9 @@ public class DbManager {
         while (hasNext) {
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(TranslationsTable.DICTIONARY_ID));
             if (!translations.containsKey(dictionaryId)) {
-                translations.put(dictionaryId, new ArrayList<Dictionary.Translation>());
+                translations.put(dictionaryId, new ArrayList<Translation>());
             }
-            translations.get(dictionaryId).add(new Dictionary.Translation(
+            translations.get(dictionaryId).add(new Translation(
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
                     cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
@@ -91,10 +88,10 @@ public class DbManager {
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
             String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
             long deckId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.DECK_ID));
-            Dictionary.Translation[] languageTranslations = {};
+            Translation[] languageTranslations = {};
             if (translations.containsKey(dictionaryId)) {
                 languageTranslations = translations.get(dictionaryId)
-                        .toArray(new Dictionary.Translation[] {});
+                        .toArray(new Translation[] {});
             }
             res[dictionaryIndex] = new Dictionary(
                     label, languageTranslations, dictionaryId, deckId);
@@ -149,7 +146,7 @@ public class DbManager {
         for (Dictionary dictionary : dictionaries) {
             // Delete all the files.
             for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                Dictionary.Translation translation = dictionary.getTranslation(i);
+                Translation translation = dictionary.getTranslation(i);
                 if (translation.getIsAsset()) {
                     // Don't delete the built-in assets.
                     continue;
@@ -302,15 +299,15 @@ public class DbManager {
         return result;
     }
 
-    private Dictionary.Translation[] getTranslationsByDictionaryId(long dictionaryId) {
+    private Translation[] getTranslationsByDictionaryId(long dictionaryId) {
         Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
                 TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},
                 null, null, String.format("%s DESC", TranslationsTable.ITEM_INDEX));
-        Dictionary.Translation[] translations = new Dictionary.Translation[cursor.getCount()];
+        Translation[] translations = new Translation[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
         int i=0;
         while(hasNext){
-            Dictionary.Translation translation = new Dictionary.Translation(
+            Translation translation = new Translation(
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
                     cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
                     cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
@@ -345,6 +342,11 @@ public class DbManager {
         cursor.close();
         dbh.close();
         return translationLanguages.trim();
+    }
+
+    public void saveTranslationContext(NewTranslationContext context) {
+        Translation translation = context.getTranslation();
+        addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
     }
 
     private class DecksTable {
@@ -447,7 +449,7 @@ public class DbManager {
                 for (int translationIndex = 0;
                      translationIndex < dictionary.getTranslationCount();
                      translationIndex++) {
-                    Dictionary.Translation translation =
+                    Translation translation =
                             dictionary.getTranslation(translationIndex);
                     int itemIndex = dictionary.getTranslationCount() - translationIndex - 1;
                     addTranslation(db, dictionaryId, translation.getLabel(),
@@ -480,8 +482,8 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("Arabic", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Farsi", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("Pashto", new Dictionary.Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("Arabic", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("Farsi", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
+            new Dictionary("Pashto", new Translation[] {}, NO_VALUE_ID, NO_VALUE_ID),
     };
 }

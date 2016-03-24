@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:id="@+id/enter_source_phrase_image" />
+        android:id="@+id/enter_translated_phrase_image" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -26,7 +26,7 @@
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
         android:textSize="20dp"
-        android:layout_below="@+id/enter_source_phrase_image"
+        android:layout_below="@+id/enter_translated_phrase_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/translated_phrase_title" />
@@ -45,23 +45,7 @@
         android:layout_alignParentStart="true"
         android:id="@+id/recording_label_detail" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/source_phrase_field"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_below="@+id/recording_label_detail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="text"
-        android:textColor="@color/borderColor"
-        android:textColorHighlight="@color/colorPrimary"
-        android:imeOptions="actionDone"
-        android:text="@string/recording_label_hint_text" />
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -70,16 +54,16 @@
         android:layout_marginTop="34dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_below="@+id/source_phrase_field"
+        android:layout_below="@+id/recording_label_detail"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:inputType="text"
-        android:textColor="@color/borderColor"
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
-        android:text="@string/recording_text_hint_text" />
+        android:textColorHint="@color/borderColor"
+        android:hint="@string/recording_text_hint_text" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such
@@ -128,6 +112,28 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="16dp"
+            android:id="@+id/go_to_record_audio_label">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back_arrow_40p"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="16dp"
+                android:textColor="@color/textDisabled"
+                android:text="@string/navigation_button_back" />
         </LinearLayout>
 
         <LinearLayout

@@ -85,6 +85,7 @@
                 android:paddingEnd="20dp"
                 android:layout_weight="1"
                 android:textSize="20dp"
+                android:textColorHint="@color/borderColor"
                 android:textColor="@color/primaryTextColor"/>
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -105,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/translation_child_actions">
+            android:id="@+id/translation_grandchild">
             <View
                 android:background="@color/lineColor"
                 android:layout_width = "fill_parent"
