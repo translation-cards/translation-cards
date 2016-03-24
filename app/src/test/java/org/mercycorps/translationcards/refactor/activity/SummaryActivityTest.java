@@ -1,9 +1,12 @@
 package org.mercycorps.translationcards.refactor.activity;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,113 +14,124 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.NewTranslationContext;
-import org.mercycorps.translationcards.data.Translation;
-import org.robolectric.Robolectric;
+import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
+import java.io.IOException;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class SummaryActivityTest {
-
-    public static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
-    private static  final String DEFAULT_TRANSLATED_TEXT = "TranslatedText";
-    private String DEFAULT_SOURCE_PHRASE = "SourcePhrase";
-    ;
 
     @Test
     public void shouldNotBeNull(){
-        Activity activity = createActivityToTest();
+        Activity activity = TestAddTranslationCardActivityHelper.createActivityToTest(SummaryActivity.class);
         assertNotNull(activity);
     }
 
     @Test
     public void shouldHaveValidTranslationContextOnStart(){ // TODO: 3/23/16 Does this even make sense to test this?
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
+        Dictionary dict = createDefaultDictionary();
+        Activity activity = createActivityToTest(SummaryActivity.class, dict);
         NewTranslationContext newTranslationContext = fetchTranslationContext(activity);
         assertEquals(dict, newTranslationContext.getDictionary());
     }
 
     @Test
     public void shouldStartTranslationActivityWhenUserClicksDone() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-        activity.findViewById(R.id.summary_done).performClick();
-
+        Dictionary dict = createDefaultDictionary();
+        Activity activity = createActivityToTest(SummaryActivity.class, dict);
+        activity.findViewById(R.id.save_translation_button).performClick();
     }
 
     @Test
     public void shouldShowTranslationSourcePhraseInCardView() {
-        NewTranslationContext context = new NewTranslationContext(createDictionary(), createTranslation(DEFAULT_SOURCE_PHRASE));
-        Activity activity = createActivityToTest(context);
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
         TextView sourceTextView = (TextView) activity.findViewById(R.id.origin_translation_text);
-        assertEquals(DEFAULT_SOURCE_PHRASE, sourceTextView.getText().toString());
+        assertEquals(DEFAULT_TRANSLATION_LABEL, sourceTextView.getText().toString());
     }
 
     @Test
     public void shouldShowTranslatedPhraseInCardView() {
-        NewTranslationContext context = new NewTranslationContext(createDictionary(), createTranslationWithTranslatedText(DEFAULT_TRANSLATED_TEXT));
-        Activity activity = createActivityToTest(context);
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
         TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
         assertEquals(DEFAULT_TRANSLATED_TEXT, translatedTextView.getText().toString());
     }
 
     @Test
     public void shouldShowHintTextWhenNoTranslatedTextPhraseIsProvided() {
-        Activity activity = createActivityToTest(createDictionary());
+        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
         assertEquals(String.format("Add %s translation", DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
     }
 
     @Test
     public void shouldMakeTranslationChildLinearLayoutVisibleWhenLayoutIsLoaded() {
-        Activity activity = createActivityToTest();
+        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         assertEquals(View.VISIBLE, activity.findViewById(R.id.translation_child).getVisibility());
     }
 
-    private Dictionary createDictionary() {
-        return new Dictionary(DEFAULT_DICTIONARY_LABEL);
+    @Test
+    public void shouldMakeTranslationGrandchildLinearLayoutGone() {
+        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
+        assertEquals(View.GONE, activity.findViewById(R.id.translation_grandchild).getVisibility());
     }
 
-    private Translation createTranslation(String sourcePhrase) {
-        Translation translation = new Translation();
-        translation.setLabel(sourcePhrase);
-        return translation;
+    @Test
+    public void shouldPlayAudioFileWhenTranslationCardIsClicked() throws IOException {
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
+        activity.findViewById(R.id.summary_translation_card).performClick();
+        verify(TestAddTranslationCardActivityHelper.getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE);
     }
 
-    // TODO: 3/23/16 Please refactor
-    private Translation createTranslationWithTranslatedText(String translatedText){
-        Translation translation = new Translation();
-        translation.setTranslatedText(translatedText);
-        return translation;
+    @Test
+    public void shouldGoBackToEnterTranslatedTextActivityWhenEditIsClicked() throws Exception{
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        activity.findViewById(R.id.go_to_enter_translated_phrase_activity).performClick();
+        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
-    private NewTranslationContext fetchTranslationContext(Activity activity) {
-        return (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+    @Test
+    public void shouldContainImageWhenLoaded() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        ImageView getStartedImage = findImageView(activity, R.id.summary_image);
+        assertEquals(R.drawable.summary_image, shadowOf(getStartedImage.getDrawable()).getCreatedFromResId());
     }
 
-    private Activity createActivityToTest(Dictionary dict) {
-        NewTranslationContext context = new NewTranslationContext(dict);
-        return createActivityToTest(context);
+    @Test
+    public void shouldSaveTranslationContextWhenUserClicksSave() {
+        Activity activity = createActivityToTestWithTContextAndSourceText(SummaryActivity.class);
+        click(activity, R.id.save_translation_button);
+        verify(getDbManager()).saveTranslationContext(any(NewTranslationContext.class));
     }
 
-    private Activity createActivityToTest(NewTranslationContext context) {
-        Intent intent = new Intent();
-        intent.putExtra(CONTEXT_INTENT_KEY, context);
-        return Robolectric.buildActivity(SummaryActivity.class).withIntent(intent).create().get();
+    @Test
+    public void shouldSetSummaryTitleWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
+        TextView summaryTitle = findTextView(activity, R.id.summary_title);
+        assertEquals(String.format("New %s flashcard created", DEFAULT_DICTIONARY_LABEL), summaryTitle.getText().toString());
     }
 
-    private Activity createActivityToTest() {
-        Intent intent = new Intent();
-        NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
-        intent.putExtra(CONTEXT_INTENT_KEY, context);
-        return Robolectric.buildActivity(SummaryActivity.class).withIntent(intent).create().get();
+    @Test
+    public void shouldHideActionBarWhenActivityIsCreated() {
+        AppCompatActivity activity = createCompatActivityToTest(SummaryActivity.class);
+        Assert.assertNotNull(activity.getSupportActionBar());
+        assertFalse(activity.getSupportActionBar().isShowing());
+    }
+
+    @Test
+    public void shouldSetSummaryDetailWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
+        TextView summaryDetail = findTextView(activity, R.id.summary_detail);
+        assertEquals(String.format("Find your new flashcard at the top of the list in the %s category.", DEFAULT_DICTIONARY_LABEL), summaryDetail.getText().toString());
     }
 }

@@ -4,13 +4,15 @@ import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
-public class MediaRecorderManager {
+public class AudioRecorderManager {
 
     private MediaRecorder mediaRecorder;
 
-    public MediaRecorderManager(MediaRecorder mediaRecorder) {
+    public AudioRecorderManager(MediaRecorder mediaRecorder) {
         this.mediaRecorder = mediaRecorder;
     }
 
@@ -25,15 +27,15 @@ public class MediaRecorderManager {
         try {
             mediaRecorder.prepare();
         } catch (IOException e) {
-            throw new RecordAudioException("Unable to record audio.");
+            throw new RecordAudioException("Unable to record audio " ,e);
         }
     }
 
     private void setupMediaRecorder(MediaConfig mediaConfig) throws RecordAudioException {
         mediaRecorder.setAudioSource(mediaConfig.getAudioSource());
         mediaRecorder.setOutputFormat(mediaConfig.getOutputFormat());
-        mediaRecorder.setOutputFile(mediaConfig.getFileName());
         mediaRecorder.setAudioEncoder(mediaConfig.getAudioEncoder());
+        mediaRecorder.setOutputFile(mediaConfig.getFileNameWithPath());
     }
 
     public void stop() {

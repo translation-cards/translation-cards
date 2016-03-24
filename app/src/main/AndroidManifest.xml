@@ -28,6 +28,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.DecksActivity" />
        </activity>
+        <activity android:name=".refactor.activity.GetStartedActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".refactor.activity.EnterSourcePhraseActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".refactor.activity.RecordAudioActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".refactor.activity.EnterTranslatedPhraseActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".refactor.activity.SummaryActivity" android:screenOrientation="portrait"/>
+
         <activity android:name=".activity.RecordingActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.DeckCreationActivity" />

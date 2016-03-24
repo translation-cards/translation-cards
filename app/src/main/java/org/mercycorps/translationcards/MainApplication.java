@@ -10,15 +10,12 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.fileUtil.FileHelper;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
-import org.mercycorps.translationcards.media.MediaRecorderManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.FileHandler;
 
 /**
  * Used to create singletons for dependency injection.
@@ -30,7 +27,7 @@ public class MainApplication extends Application {
 
     private MediaPlayerManager mediaPlayerManager;
     private DbManager dbManager;
-    private MediaRecorderManager mediaRecorderManager;
+    private AudioRecorderManager audioRecorderManager;
     private AudioPlayerManager audioPlayerManager;
     private FileHelper fileHelper;
     private static Context context;
@@ -42,10 +39,11 @@ public class MainApplication extends Application {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayerManager = new MediaPlayerManager(mediaPlayer);
         dbManager = new DbManager(getApplicationContext());
-        mediaRecorderManager = new MediaRecorderManager(new MediaRecorder());
+        audioRecorderManager = new AudioRecorderManager(new MediaRecorder());
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
         fileHelper = new FileHelper();
         context = getApplicationContext();
+        createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
     }
 
     public MediaPlayerManager getMediaPlayerManager() {
@@ -56,8 +54,8 @@ public class MainApplication extends Application {
         return dbManager;
     }
 
-    public MediaRecorderManager getMediaRecorderManager() {
-        return mediaRecorderManager;
+    public AudioRecorderManager getAudioRecorderManager() {
+        return audioRecorderManager;
     }
 
     public AudioPlayerManager getAudioPlayerManager() {
@@ -74,5 +72,14 @@ public class MainApplication extends Application {
 
     public FileDescriptor getFileDescriptor(String fileName) throws IOException {
         return new FileInputStream(new File(fileName)).getFD();
+    }
+
+    private void createAudioRecordingDirs(){
+        File recordingsDir = new File(getFilesDir(), "recordings");
+        recordingsDir.mkdirs();
+    }
+
+    public String getFilePathPrefix(){
+        return getFilesDir().getAbsolutePath()+"/recordings/";
     }
 }

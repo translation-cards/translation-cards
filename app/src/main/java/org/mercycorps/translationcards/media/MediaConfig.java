@@ -2,6 +2,9 @@ package org.mercycorps.translationcards.media;
 
 import android.media.MediaRecorder;
 
+import org.mercycorps.translationcards.MainApplication;
+
+import java.io.File;
 import java.util.Random;
 
 public class MediaConfig {
@@ -50,6 +53,11 @@ public class MediaConfig {
 
     public static MediaConfig createMediaConfig(){
         String fileName = String.format("TranslationCards%d.3gp", System.currentTimeMillis());
-       return new MediaConfig(fileName);
+        return new MediaConfig(fileName);
+    }
+
+    public String getFileNameWithPath(){
+        String filePathPrefix = ((MainApplication) MainApplication.getContextFromMainApp()).getFilePathPrefix();
+        return filePathPrefix + fileName;
     }
 }

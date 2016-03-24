@@ -1,111 +1,107 @@
 package org.mercycorps.translationcards.refactor.activity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.NewTranslationContext;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.MediaConfig;
-import org.mercycorps.translationcards.media.MediaRecorderManager;
-import org.mercycorps.translationcards.uiHelper.ToastHelper;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.util.List;
 
-public class RecordAudioActivity extends AppCompatActivity {
-    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
-    private boolean isRecording;
+    private boolean isRecording = false;
+
+    @Bind(R.id.play_audio_button)ImageButton playAudioButton;
+    @Bind(R.id.record_audio_title)TextView recordAudioTitle;
+    @Bind(R.id.origin_translation_text)TextView originTranslationText;
+    @Bind({ R.id.go_to_enter_source_phrase_activity, R.id.record_activity_next})
+    List<LinearLayout> backAndNext;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setActivityTitle() {
+        recordAudioTitle.setText(String.format(getString(R.string.record_audio_title), getContextFromIntent().getDictionary().getLabel()));
+    }
+
+    @Override
+    public void inflateView() {
         setContentView(R.layout.activity_record_audio);
-        isRecording = false;
-        setOnClickListeners();
-        initState();
     }
 
-    private void initState() {
+    public void initStates(){
         updatePlayButtonState();
-        updateButtonStates(R.id.record_activity_back);
-        updateButtonStates(R.id.record_activity_next);
+        updateBackAndNextButtonStates();
+        showTranslationSourcePhrase();
     }
 
-    private void updateButtonStates(int restId) {
+    private void showTranslationSourcePhrase() {
+        originTranslationText.setText(getContextFromIntent().getTranslation().getLabel());
+    }
+
+    private void updateBackAndNextButtonStates(){
+        ButterKnife.apply(backAndNext, VISIBILTY, getVisibility());
+    }
+
+    private int getVisibility(){
         boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
-
-        int visibility = translationHasAudioFile && !isRecording ? View.VISIBLE : View.GONE;
-        findViewById(restId).setVisibility(visibility);
+        return translationHasAudioFile && !isRecording ? View.VISIBLE : View.GONE;
     }
 
-    // TODO change color of play button depending on whether or not recording is happening
     private void updatePlayButtonState() {
         boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
-        findViewById(R.id.play_audio_button).setClickable(translationHasAudioFile);
+        playAudioButton.setClickable(translationHasAudioFile);
     }
 
 
-    private void setOnClickListeners() {
-        setupPlayButtonListener();
-        setupRecordAudioButtonListener();
-        startActivityForButton(R.id.record_activity_next, EnterTranslatedPhraseActivity.class);
-        startActivityForButton(R.id.record_activity_back, EnterSourcePhraseActivity.class);
+    @OnClick(R.id.record_activity_next)
+    public void recordActivityNextClick(){
+        startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
     }
 
-
-    private void startActivityForButton(int viewId, final Class activityToStart){
-        findViewById(viewId).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecordAudioActivity.this, activityToStart);
-                intent.putExtra(CONTEXT_INTENT_KEY, getContextFromIntent());
-                startActivity(intent);
-            }
-        });
+    @OnClick(R.id.go_to_enter_source_phrase_activity)
+    public void recordActivityBackClick(){
+        startNextActivity(RecordAudioActivity.this, EnterSourcePhraseActivity.class);
     }
 
-    private void setupRecordAudioButtonListener(){
-        findViewById(R.id.record_audio_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isRecording = !isRecording;
-                tryToRecord();
-                updateButtonStates(R.id.record_activity_back);
-                updateButtonStates(R.id.record_activity_next);
-
-            }
-        });
+    @OnClick(R.id.record_audio_button)
+    public void recordAudioButtonClick(){
+        isRecording = !isRecording;
+        tryToRecord();
+        updateBackAndNextButtonStates();
     }
+
 
     private void tryToRecord() {
         try {
             handleIsRecordingState();
         } catch (RecordAudioException e) {
             Log.d(TAG, "Error creating file for recording: " + e);
-            ToastHelper.showToast(getApplicationContext(), getString(R.string.unable_to_record_message));
+            showToast(getString(R.string.unable_to_record_message));
         }
     }
 
-    private void setupPlayButtonListener(){
-        findViewById(R.id.play_audio_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if(isRecording) handleIsRecordingState();
-                    playAudioFile();
-                } catch (AudioFileException | RecordAudioException e) {
-                    Log.d(TAG, "Error getting audio asset: " + e);
-                    ToastHelper.showToast(getApplicationContext(), e.getLocalizedMessage());
-                }
-            }
-        });
+    @OnClick(R.id.play_audio_button)
+    public void playAudioButtonClick(){
+        try {
+            if(isRecording) handleIsRecordingState();
+            playAudioFile();
+        } catch (AudioFileException | RecordAudioException e) {
+            Log.d(TAG, "Error getting audio asset: " + e);
+            showToast(e.getLocalizedMessage());
+        }
     }
 
     private void playAudioFile() throws AudioFileException {
@@ -119,20 +115,15 @@ public class RecordAudioActivity extends AppCompatActivity {
     }
 
     private void handleIsRecordingState() throws RecordAudioException {
-        MediaRecorderManager mediaRecorderManager = ((MainApplication) getApplication()).getMediaRecorderManager();
-
+        AudioRecorderManager audioRecorderManager = ((MainApplication) getApplication()).getAudioRecorderManager();
         if (!isRecording) {
-            mediaRecorderManager.stop();
+            audioRecorderManager.stop();
         } else {
             //TODO looks chaotic. Refactor
             MediaConfig mediaConfig = MediaConfig.createMediaConfig();
             getContextFromIntent().setAudioFile(mediaConfig.getFileName());
-            mediaRecorderManager.record(mediaConfig);
+            audioRecorderManager.record(mediaConfig);
         }
     }
 
-    private NewTranslationContext getContextFromIntent(){
-       return (NewTranslationContext) getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
-
-    }
 }

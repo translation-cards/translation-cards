@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:id="@+id/recording_label_image" />
+        android:id="@+id/enter_source_phrase_image" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -26,10 +26,10 @@
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
         android:textSize="20dp"
-        android:layout_below="@+id/recording_label_image"
+        android:layout_below="@+id/enter_source_phrase_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/recording_label_title" />
+        android:id="@+id/translated_phrase_title" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
         android:text="@string/recording_label_detail"
-        android:layout_below="@+id/recording_label_title"
+        android:layout_below="@+id/translated_phrase_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/recording_label_detail" />

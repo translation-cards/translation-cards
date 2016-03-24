@@ -177,7 +177,7 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView = (ImageView) findViewById(R.id.get_started_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         TextView titleView = (TextView) findViewById(R.id.get_started_title);
-        titleView.setText(getString(R.string.recording_instructions_title, dictionaryLabel));
+        titleView.setText(getString(R.string.get_started_title, dictionaryLabel));
         ImageButton backButton = (ImageButton) findViewById(R.id.get_started_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,12 +204,12 @@ public class RecordingActivity extends AppCompatActivity {
 
     private void moveToLabelStep() {
         setContentView(R.layout.recording_label);
-        TextView labelTitle = (TextView) findViewById(R.id.recording_label_title);
+        TextView labelTitle = (TextView) findViewById(R.id.translated_phrase_title);
         labelTitle.setText(getString(R.string.recording_label_create_title, dictionaryLabel));
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(
-                getResources(), R.drawable.recording_label_image);
-        currentBitmapView = (ImageView) findViewById(R.id.recording_label_image);
+                getResources(), R.drawable.enter_phrase_image);
+        currentBitmapView = (ImageView) findViewById(R.id.enter_source_phrase_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         final EditText labelField = (EditText) findViewById(R.id.source_phrase_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.translated_phrase_field);
@@ -340,8 +340,8 @@ public class RecordingActivity extends AppCompatActivity {
             findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
         }
         recycleBitmap();
-        TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
-        titleView.setText(getString(R.string.recording_audio_title, dictionaryLabel));
+        TextView titleView = (TextView) findViewById(R.id.record_audio_title);
+        titleView.setText(getString(R.string.record_audio_title, dictionaryLabel));
         TextView labelView = (TextView) findViewById(R.id.origin_translation_text);
         labelView.setText(label);
         findViewById(R.id.translation_indicator_layout).setVisibility(View.GONE);
@@ -352,15 +352,15 @@ public class RecordingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (recordingStatus) {
                     case FRESH:
-                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
+                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.GONE);
                     case RECORDED:
-                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
+                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.GONE);
                         findViewById(R.id.record_activity_next).setVisibility(View.GONE);
                         startRecording();
                         break;
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.VISIBLE);
                         findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         break;
                 }
@@ -376,7 +376,7 @@ public class RecordingActivity extends AppCompatActivity {
                 switch (recordingStatus) {
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
+                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.VISIBLE);
                         findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         startListening();
                         break;
@@ -389,7 +389,7 @@ public class RecordingActivity extends AppCompatActivity {
                 }
             }
         });
-        View backButton = findViewById(R.id.record_activity_back);
+        View backButton = findViewById(R.id.go_to_enter_source_phrase_activity);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -518,13 +518,13 @@ public class RecordingActivity extends AppCompatActivity {
         setContentView(R.layout.recording_done);
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(
-                getResources(), R.drawable.recording_done_image);
-        currentBitmapView = (ImageView) findViewById(R.id.recording_done_image);
+                getResources(), R.drawable.summary_image);
+        currentBitmapView = (ImageView) findViewById(R.id.summary_image);
         currentBitmapView.setImageBitmap(currentBitmap);
-        TextView titleView = (TextView) findViewById(R.id.recording_done_title);
-        titleView.setText(getString(R.string.recording_done_title, dictionaryLabel));
-        TextView detailView = (TextView) findViewById(R.id.recording_done_detail);
-        detailView.setText(getString(R.string.recording_done_detail, dictionaryLabel));
+        TextView titleView = (TextView) findViewById(R.id.summary_title);
+        titleView.setText(getString(R.string.summary_title, dictionaryLabel));
+        TextView detailView = (TextView) findViewById(R.id.summary_detail);
+        detailView.setText(getString(R.string.summary_detail, dictionaryLabel));
         TextView cardTextView = (TextView) findViewById(R.id.origin_translation_text);
         cardTextView.setText(label);
         TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
@@ -538,14 +538,14 @@ public class RecordingActivity extends AppCompatActivity {
         ImageView cardIndicator = (ImageView) findViewById(R.id.indicator_icon);
         cardIndicator.setBackgroundResource(R.drawable.collapse_arrow);
         findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-        findViewById(R.id.translation_child_actions).setVisibility(View.GONE);
+        findViewById(R.id.translation_grandchild).setVisibility(View.GONE);
 
         final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
                 new Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
                 (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
-        findViewById(R.id.recording_done_card).setOnClickListener(cardAudioClickListener);
+        findViewById(R.id.summary_translation_card).setOnClickListener(cardAudioClickListener);
 
-        View backButton = findViewById(R.id.recording_done_edit);
+        View backButton = findViewById(R.id.go_to_enter_translated_phrase_activity);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,7 +555,7 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
 
-        View doneButton = (View) findViewById(R.id.summary_done);
+        View doneButton = (View) findViewById(R.id.save_translation_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

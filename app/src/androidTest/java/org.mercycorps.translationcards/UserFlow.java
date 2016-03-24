@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.activity.DecksActivity;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -38,19 +39,22 @@ public class UserFlow {
         onView(withId(R.id.add_button)).perform(click());
         onView(withId(R.id.get_started_button)).perform(click());
 
-        onView(withText("Flashcard phrase")).perform(typeText(ORIGIN_TEXT));
+        onView(withId(R.id.source_phrase_field)).perform(typeText(ORIGIN_TEXT));
         closeSoftKeyboard();
-        onView(withText("Phrase translation (Optional)")).perform(replaceText(TRANSLATION_TEXT));
         onView(withId(R.id.enter_translated_phrase_save_label)).perform(click());
 
         onView(withId(R.id.record_audio_button)).perform(click());
         sleep(2000);
         onView(withId(R.id.record_audio_button)).perform(click());
+
         onView(withId(R.id.record_activity_next)).perform(click());
+
+        onView(withId(R.id.translated_phrase_field)).perform(replaceText(TRANSLATION_TEXT));
+        onView(withId(R.id.enter_translated_phrase_save_label)).perform(click());
 
         onView(withId(R.id.origin_translation_text)).check(matches(withText(ORIGIN_TEXT)));
         onView(withId(R.id.translated_text)).check(matches(withText(TRANSLATION_TEXT)));
-        onView(withId(R.id.summary_done)).perform(click());
+        onView(withId(R.id.save_translation_button)).perform(click());
 
         onView(withId(R.id.indicator_icon)).check(isRightOf(withText(ORIGIN_TEXT))).perform(click());
         onView(withText("Delete this flashcard")).perform(click());

@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/translation_child_actions">
+            android:id="@+id/translation_grandchild">
             <View
                 android:background="@color/lineColor"
                 android:layout_width = "fill_parent"

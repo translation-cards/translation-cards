@@ -18,6 +18,8 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
+import org.mercycorps.translationcards.refactor.activity.GetStartedActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -26,6 +28,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -161,6 +164,13 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    public void shouldStartGetStartedActivityWhenAddButtonIsClicked(){
+        translationsActivity.findViewById(R.id.add_button).performClick();
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        assertEquals(GetStartedActivity.class.getCanonicalName(), nextStartedActivity.getComponent().getClassName());
+    }
+
+    @Test
     public void onClick_shouldStartRecordingActivityWhenEditLayoutIsClicked() {
         View translationsListItem = firstTranslationCardInListView();
 
@@ -292,6 +302,7 @@ public class TranslationsActivityTest {
 
         assertTrue(shadowActivity.isFinishing());
     }
+
 
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity

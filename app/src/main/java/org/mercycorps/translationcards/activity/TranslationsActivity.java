@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.data.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
@@ -49,6 +50,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
+import org.mercycorps.translationcards.refactor.activity.GetStartedActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,6 +71,7 @@ public class TranslationsActivity extends AppCompatActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
+
 
     DbManager dbManager;
     private Dictionary[] dictionaries;
@@ -146,10 +150,21 @@ public class TranslationsActivity extends AppCompatActivity {
             addTranslationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showAddTranslationDialog();
+                    launchGetStartedActivity();
                 }
             });
         }
+    }
+
+    private void launchGetStartedActivity(){
+        Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
+        nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
+        nextIntent.putExtra(INTENT_KEY_DECK_ID, deck);
+        startActivity(nextIntent);
+    }
+
+    private NewTranslationContext createTranslationContext() {
+        return new NewTranslationContext(dictionaries[currentDictionaryIndex]);
     }
 
     private void setDictionary(int dictionaryIndex) {
@@ -174,16 +189,6 @@ public class TranslationsActivity extends AppCompatActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
-    }
-
-    private void showAddTranslationDialog() {
-        Intent intent = new Intent(this, RecordingActivity.class);
-        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID,
-                dictionaries[currentDictionaryIndex].getDbId());
-        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
-                dictionaries[currentDictionaryIndex].getLabel());
-        intent.putExtra(INTENT_KEY_DECK_ID, deck);
-        startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
 
     @Override

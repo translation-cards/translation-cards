@@ -19,7 +19,7 @@
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
         android:textSize="20dp"
-        android:id="@+id/recording_audio_title" />
+        android:id="@+id/record_audio_title" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
         android:text="@string/recording_audio_detail"
-        android:layout_below="@+id/recording_audio_title"
+        android:layout_below="@+id/record_audio_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/recording_audio_instructions" />
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/record_activity_back">
+            android:id="@+id/go_to_enter_source_phrase_activity">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -146,7 +146,7 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_save"
+                android:text="@string/navigation_button_next"
                 android:id="@+id/recording_audio_save_text" />
             <ImageView
                 android:layout_width="24dp"

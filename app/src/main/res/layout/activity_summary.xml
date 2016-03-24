@@ -12,12 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:id="@+id/recording_done_image" />
+        android:id="@+id/summary_image" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recording_done_image"
+        android:layout_below="@+id/summary_image"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
         android:paddingLeft="16dp"
@@ -25,24 +25,24 @@
         android:textColor="@color/textColor"
         android:textSize="20dp"
         android:background="@color/colorPrimary"
-        android:id="@+id/recording_done_title" />
+        android:id="@+id/summary_title" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recording_done_title"
+        android:layout_below="@+id/summary_title"
         android:paddingTop="24dp"
         android:paddingBottom="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
-        android:id="@+id/recording_done_detail" />
+        android:id="@+id/summary_detail" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recording_done_detail"
+        android:layout_below="@+id/summary_detail"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recording_done_progress_bar"
-            android:id="@+id/recording_done_card"/>
+            android:id="@+id/summary_translation_card"/>
     </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the rest (on small screens, the soft keyboard can reduce the available height such that
@@ -71,7 +71,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/recording_done_detail" />
+        android:layout_below="@id/summary_detail" />
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/recording_done_edit">
+            android:id="@+id/go_to_enter_translated_phrase_activity">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -98,7 +98,7 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_edit" />
+                android:text="@string/navigation_button_back" />
         </LinearLayout>
 
         <LinearLayout
@@ -109,14 +109,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/summary_done">
+            android:id="@+id/save_translation_button">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_done"
+                android:text="@string/navigation_button_save"
                 android:id="@+id/recording_done_text" />
             <ImageView
                 android:layout_width="24dp"

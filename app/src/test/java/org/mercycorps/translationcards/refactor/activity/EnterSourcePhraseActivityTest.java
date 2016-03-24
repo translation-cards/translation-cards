@@ -1,21 +1,23 @@
 package org.mercycorps.translationcards.refactor.activity;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.NewTranslationContext;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_DICTIONARY_LABEL;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -28,82 +30,78 @@ public class EnterSourcePhraseActivityTest {
 
     @Test
     public void shouldNotChangeNewTranslationContextWhenStartingActivity() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
+        Dictionary dict = createDefaultDictionary();
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, dict);
         NewTranslationContext newTranslationContext = (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
         assertEquals(dict, newTranslationContext.getDictionary());
     }
 
     @Test
     public void shouldStartRecordAudioActivityWhenUserClicksNext() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-
         assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
     public void shouldUpdateNewTranslationContextWhenUserClicksNextWithValidSourceText() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-
-        NewTranslationContext newTranslationContext = (NewTranslationContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(DEFAULT_TRANSLATION_TEXT, newTranslationContext.getTranslation().getLabel());
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
     }
 
     @Test
     public void shouldUpdateTranslationSourceTextToUserInputtedText() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-
-        NewTranslationContext newTranslationContext = (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(DEFAULT_TRANSLATION_TEXT, newTranslationContext.getTranslation().getLabel());
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
     }
 
     @Test
     public void shouldNotStartNextActivityWhenThereIsNoSourceText() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-
-        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
-
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        click(activity, R.id.enter_translated_phrase_save_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
     }
 
     @Test
     public void shouldNotUpdateNewTranslationContextWhenThereIsNoSourceText() {
-        Dictionary dict = new Dictionary(DEFAULT_DICTIONARY_LABEL);
-        Activity activity = createActivityToTest(dict);
-
-        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
-
-        NewTranslationContext newTranslationContext = (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(null, newTranslationContext.getTranslation().getLabel());
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        click(activity, R.id.enter_translated_phrase_save_label);
+        assertEquals(null, getContextFromIntent(activity).getTranslation().getLabel());
     }
 
-    private void setSourceTextAndClick(Activity activity) { //TODO CODE SMELL
-        TextView textView = (TextView) activity.findViewById(R.id.source_phrase_field);
-        textView.setText(DEFAULT_TRANSLATION_TEXT);
-        activity.findViewById(R.id.enter_translated_phrase_save_label).performClick();
+    @Test
+    public void shouldContainImageWhenLoaded() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        ImageView getStartedImage = findImageView(activity, R.id.enter_source_phrase_image);
+        assertEquals(R.drawable.enter_phrase_image, shadowOf(getStartedImage.getDrawable()).getCreatedFromResId());
     }
 
-
-    private Activity createActivityToTest(Dictionary dict) {
-        NewTranslationContext context = new NewTranslationContext(dict);
-        return createActivityToTest(context);
+    @Test
+    public void shouldGoToTranslationsActivityWhenCancelButtonIsClicked() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        click(activity, R.id.cancel_add_translation_activity);
+        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
-    private Activity createActivityToTest(NewTranslationContext context) {
-        Intent intent = new Intent();
-        intent.putExtra(CONTEXT_INTENT_KEY, context);
-        return Robolectric.buildActivity(EnterSourcePhraseActivity.class).withIntent(intent).create().get();
+    @Test
+    public void shouldSetEnterSourcePhraseActivityTitleWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, createDefaultDictionary());
+        TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title); //TODO push text to string to helper
+        assertEquals(String.format("Write your %s phrase", DEFAULT_DICTIONARY_LABEL), sourcePhraseActivityTitle.getText().toString());
     }
 
+    @Test
+    public void shouldPopulateSourcePhraseFieldWithValueWhenTranslationContextHasSourceText(){
+        Activity activity = createActivityToTestWithTContextAndSourceText(EnterSourcePhraseActivity.class);
+        TextView sourcePhraseField = findTextView(activity, R.id.source_phrase_field);
+        assertEquals(DEFAULT_SOURCE_PHRASE, sourcePhraseField.getText().toString());
+    }
+
+    private void setSourceTextAndClick(Activity activity) {
+        setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
+        click(activity, R.id.enter_translated_phrase_save_label);
+    }
 
 }
