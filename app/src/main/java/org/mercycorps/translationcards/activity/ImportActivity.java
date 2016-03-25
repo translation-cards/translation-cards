@@ -28,7 +28,7 @@ public class ImportActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_EXTERNAL_WRITE = 1;
     private TxcPortingUtility portingUtility;
     private Uri source;
-    private BroadcastReceiver onComplete;
+    private BroadcastReceiver onDownloadComplete;
     private AlertDialog downloadDialog;
 
     @Override
@@ -37,19 +37,35 @@ public class ImportActivity extends AppCompatActivity {
         portingUtility = new TxcPortingUtility();
         source = getIntent().getData();
 
-        onComplete = new BroadcastReceiver() {
+        onDownloadComplete = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 downloadDialog.hide();
-                confirmAndLoadData();
-                unregisterReceiver(onComplete);
+                importDeck();
+                unregisterReceiver(onDownloadComplete);
             }
         };
-        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+        requestPermissionsAndLoadData();
+    }
+
+    protected void requestPermissionsAndLoadData() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                loadDataAndImport();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_WRITE);
+            }
+        } else {
+            loadDataAndImport();
+        }
+    }
+
+    private void loadDataAndImport() {
         if (sourceIsURL()) {
             downloadFile(source);
         } else {
-            confirmAndLoadData();
+            importDeck();
         }
     }
 
@@ -85,19 +101,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private boolean sourceIsURL() {
-        return source.toString().contains("http");
-    }
-
-    private void confirmAndLoadData() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                importDeck();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_WRITE);
-            }
-        } else {
-            importDeck();
-        }
+        return source.getScheme().equals("http") || source.getScheme().equals("https");
     }
 
     private void importDeck() {
