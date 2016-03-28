@@ -1,6 +1,9 @@
 package org.mercycorps.translationcards.media;
 
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
 
@@ -13,13 +16,18 @@ public class AudioRecorderManager {
     private MediaRecorder mediaRecorder;
 
     public AudioRecorderManager(MediaRecorder mediaRecorder) {
-        this.mediaRecorder = mediaRecorder;
+//        findAudioRecord();
     }
 
     public boolean record(MediaConfig mediaConfig) throws RecordAudioException {
+        mediaRecorder = new MediaRecorder();
         setupMediaRecorder(mediaConfig);
         prepareMediaRecorder();
-        mediaRecorder.start();
+        try {
+            mediaRecorder.start();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -34,14 +42,15 @@ public class AudioRecorderManager {
     private void setupMediaRecorder(MediaConfig mediaConfig) throws RecordAudioException {
         mediaRecorder.setAudioSource(mediaConfig.getAudioSource());
         mediaRecorder.setOutputFormat(mediaConfig.getOutputFormat());
-        mediaRecorder.setAudioEncoder(mediaConfig.getAudioEncoder());
         mediaRecorder.setOutputFile(mediaConfig.getFileNameWithPath());
+
+        mediaRecorder.setAudioEncoder(mediaConfig.getAudioEncoder());
+
     }
 
     public void stop() {
         mediaRecorder.stop();
         mediaRecorder.reset();
+        mediaRecorder.release();
     }
-
-
 }

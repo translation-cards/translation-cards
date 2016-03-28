@@ -26,8 +26,10 @@ public class MediaPlayerManager implements Runnable {
 
     public void stop() {
         lock.lock();
-        mediaPlayer.stop();
-        mediaPlayer.reset();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
         resetProgressBar();
         lock.unlock();
     }
