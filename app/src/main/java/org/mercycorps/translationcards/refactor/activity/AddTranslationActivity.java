@@ -32,6 +32,12 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         setActivityTitle();
     }
 
+    @Override
+    protected void onDestroy() {
+        recycleBitmap();
+        super.onDestroy();
+    }
+
     protected abstract void setActivityTitle();
 
     private void hideActionBar() {
@@ -50,7 +56,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     }
 
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {
-        recycleBitmap(); //// TODO: 3/24/16 Does it belong here?
+        finish(); //Calling finish is going to call onDestroy() on Activity
         Intent nextIntent = new Intent(currentContext, nextActivityClass);
         nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getSerializableExtra(CONTEXT_INTENT_KEY));
         nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getSerializableExtra(INTENT_KEY_DECK_ID));
@@ -71,7 +77,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         currentBitmapView.setImageBitmap(currentBitmap);
     }
 
-    private void recycleBitmap() {
+    protected void recycleBitmap() {
         if (currentBitmap != null) {
             currentBitmap.recycle();
             if (currentBitmapView != null) currentBitmapView.setImageBitmap(null);
