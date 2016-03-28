@@ -4,19 +4,16 @@ import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.MainApplication;
 
-import java.io.File;
-import java.util.Random;
-
 public class MediaConfig {
 
     private int audioSource = MediaRecorder.AudioSource.MIC;
     private int outputFormat = MediaRecorder.OutputFormat.THREE_GPP;
     private int audioEncoder = MediaRecorder.AudioEncoder.AMR_NB;
 
-    private String fileName;
+    private String absoluteFilePath;
 
-    public MediaConfig(String fileName) {
-        this.fileName = fileName;
+    public MediaConfig(String absoluteFilePath) {
+        this.absoluteFilePath = absoluteFilePath;
     }
 
     public int getAudioSource() {
@@ -31,8 +28,8 @@ public class MediaConfig {
         return audioEncoder;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getAbsoluteFilePath() {
+        return absoluteFilePath;
     }
 
     public void setAudioSource(int audioSource) {
@@ -47,16 +44,16 @@ public class MediaConfig {
         this.audioEncoder = audioEncoder;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setAbsoluteFilePath(String absoluteFilePath) {
+        this.absoluteFilePath = absoluteFilePath;
     }
 
     public static MediaConfig createMediaConfig(){
-        String fileName = String.format("TranslationCards%d.3gp", System.currentTimeMillis());
-        return new MediaConfig(fileName);
+        return new MediaConfig(getFileNameWithPath());
     }
 
-    public String getFileNameWithPath(){
+    public static String getFileNameWithPath(){
+        String fileName = String.format("TranslationCards%d.3gp", System.currentTimeMillis());
         String filePathPrefix = ((MainApplication) MainApplication.getContextFromMainApp()).getFilePathPrefix();
         return filePathPrefix + fileName;
     }

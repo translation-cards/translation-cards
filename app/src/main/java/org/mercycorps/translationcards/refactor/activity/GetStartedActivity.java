@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.refactor.activity;
 
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.TextView;
 

@@ -121,7 +121,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         } else {
             //TODO looks chaotic. Refactor
             MediaConfig mediaConfig = MediaConfig.createMediaConfig();
-            getContextFromIntent().setAudioFile(mediaConfig.getFileName());
+            getContextFromIntent().setAudioFile(mediaConfig.getAbsoluteFilePath());
             audioRecorderManager.record(mediaConfig);
         }
     }

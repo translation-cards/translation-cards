@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -48,7 +49,7 @@ public class AudioRecorderManagerTest {
     @Test
     public void shouldSetOutputFileWhenRecording() throws RecordAudioException {
         audioRecorderManager.record(mediaConfig);
-        verify(mediaRecorder).setOutputFile(mediaConfig.getFileNameWithPath());
+        verify(mediaRecorder).setOutputFile(anyString());
     }
 
     @Test
