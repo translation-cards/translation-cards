@@ -15,12 +15,23 @@ import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.refactor.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
+import org.mercycorps.translationcards.refactor.activity.AudioFileNotSetException;
 import org.mercycorps.translationcards.refactor.activity.SummaryActivity;
 import org.robolectric.Robolectric;
 
 import org.robolectric.RuntimeEnvironment;
+
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class TestAddTranslationCardActivityHelper {
@@ -30,6 +41,10 @@ public class TestAddTranslationCardActivityHelper {
     public static final String DEFAULT_AUDIO_FILE = "DefaultAudioFile";
     public static final String DEFAULT_SOURCE_PHRASE = "SourcePhrase";
     public static final String DEFAULT_TRANSLATION_LABEL = "TranslationLabel";
+    public static final Long INITIAL_DELAY = (long) 0;
+    public static final Long PERIOD = (long) 100;
+    public static final int DEFAULT_POSITION = 5;
+    public static final int DEFAULT_MAX = 10;
 
 
     public static Activity createActivityToTest(Class<? extends AddTranslationActivity>instanceOfClass) {
@@ -78,6 +93,14 @@ public class TestAddTranslationCardActivityHelper {
 
     public static AudioPlayerManager getAudioPlayerManager() {
         return getApplication().getAudioPlayerManager();
+    }
+
+    public static DecoratedMediaManager getDecoratedMediaManager() {
+        return getApplication().getDecoratedMediaManager();
+    }
+
+    public static ScheduledExecutorService getScheduledExecutorService(){
+        return getApplication().getScheduledExecutorService();
     }
 
     public static NewTranslationContext fetchTranslationContext(Activity activity) {
@@ -132,5 +155,12 @@ public class TestAddTranslationCardActivityHelper {
 
     public static DbManager getDbManager(){
        return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getDbManager();
+    }
+
+    public static void setupAudioPlayerManager() throws AudioFileNotSetException {
+        when(getAudioPlayerManager().getCurrentPosition()).thenReturn(DEFAULT_POSITION);
+        when(getAudioPlayerManager().getMaxDuration()).thenReturn(DEFAULT_MAX);
+        when(getScheduledExecutorService().scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS)))
+                .thenReturn(mock(ScheduledFuture.class));
     }
 }

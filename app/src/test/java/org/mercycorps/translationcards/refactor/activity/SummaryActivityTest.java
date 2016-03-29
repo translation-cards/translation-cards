@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -18,12 +19,18 @@ import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import java.io.IOException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -34,7 +41,7 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldNotBeNull(){
-        Activity activity = TestAddTranslationCardActivityHelper.createActivityToTest(SummaryActivity.class);
+        Activity activity = createActivityToTest(SummaryActivity.class);
         assertNotNull(activity);
     }
 
@@ -87,10 +94,11 @@ public class SummaryActivityTest {
     }
 
     @Test
-    public void shouldPlayAudioFileWhenTranslationCardIsClicked() throws IOException {
+    public void shouldPlayAudioFileWhenTranslationCardIsClicked() throws AudioFileException {
         Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
         activity.findViewById(R.id.summary_translation_card).performClick();
-        verify(TestAddTranslationCardActivityHelper.getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE);
+        ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
+        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar);
     }
 
     @Test
@@ -133,5 +141,19 @@ public class SummaryActivityTest {
         Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         TextView summaryDetail = findTextView(activity, R.id.summary_detail);
         assertEquals(String.format("Find your new flashcard at the top of the list in the %s category.", DEFAULT_DICTIONARY_LABEL), summaryDetail.getText().toString());
+    }
+
+    @Test
+    public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
+        setupAudioPlayerManager();
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
+        click(activity, R.id.summary_translation_card);
+        click(activity, R.id.summary_translation_card);
+        verify(getDecoratedMediaManager()).stop();
+    }
+
+
+    public static void setupAudioPlayerManager() throws AudioFileNotSetException {
+        when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
     }
 }

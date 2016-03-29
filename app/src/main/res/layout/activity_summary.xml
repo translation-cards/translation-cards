@@ -47,7 +47,7 @@
         android:layout_marginRight="16dp">
 
         <ProgressBar
-            android:id="@+id/recording_done_progress_bar"
+            android:id="@+id/summary_progress_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@android:style/Widget.ProgressBar.Horizontal"
@@ -60,7 +60,7 @@
         <include layout="@layout/translation_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recording_done_progress_bar"
+            android:layout_below="@+id/summary_progress_bar"
             android:id="@+id/summary_translation_card"/>
     </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up

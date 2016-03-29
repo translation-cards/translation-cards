@@ -5,6 +5,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
 
 import java.io.File;
@@ -15,12 +16,12 @@ public class AudioRecorderManager {
 
     private MediaRecorder mediaRecorder;
 
-    public AudioRecorderManager(MediaRecorder mediaRecorder) {
-//        findAudioRecord();
+    public AudioRecorderManager() {
     }
 
+    //// TODO: 3/28/16  Currently because of 3click bug, we are having to do this. Refactor
     public boolean record(MediaConfig mediaConfig) throws RecordAudioException {
-        mediaRecorder = new MediaRecorder();
+        mediaRecorder = ((MainApplication) MainApplication.getContextFromMainApp()).getMediaRecorder();
         setupMediaRecorder(mediaConfig);
         prepareMediaRecorder();
         try {
@@ -42,13 +43,13 @@ public class AudioRecorderManager {
     private void setupMediaRecorder(MediaConfig mediaConfig) throws RecordAudioException {
         mediaRecorder.setAudioSource(mediaConfig.getAudioSource());
         mediaRecorder.setOutputFormat(mediaConfig.getOutputFormat());
-        mediaRecorder.setOutputFile(mediaConfig.getFileNameWithPath());
-
+        mediaRecorder.setOutputFile(mediaConfig.getAbsoluteFilePath());
         mediaRecorder.setAudioEncoder(mediaConfig.getAudioEncoder());
 
     }
 
     public void stop() {
+        if(mediaRecorder == null) return;
         mediaRecorder.stop();
         mediaRecorder.reset();
         mediaRecorder.release();

@@ -7,9 +7,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
@@ -17,21 +19,20 @@ import java.io.IOException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-@Ignore
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class AudioRecorderManagerTest {
-
-    private MediaRecorder mediaRecorder;
     private MediaConfig mediaConfig;
     private AudioRecorderManager audioRecorderManager;
+    private MediaRecorder mediaRecorder;
 
     @Before
     public void setUp() throws Exception {
-        mediaRecorder = mock(MediaRecorder.class);
-        audioRecorderManager = new AudioRecorderManager(mediaRecorder);
+        mediaRecorder = getMediaRecorder();
+        audioRecorderManager = new AudioRecorderManager();
         mediaConfig = new MediaConfig("A FILE");
     }
 
@@ -78,22 +79,33 @@ public class AudioRecorderManagerTest {
     }
 
     @Test
-    public void shouldCallStopMediaRecorderWhenStopRecording() {
+    public void shouldCallStopMediaRecorderWhenStopRecording() throws RecordAudioException {
+        audioRecorderManager.record(mediaConfig);
         audioRecorderManager.stop();
         verify(mediaRecorder).stop();
     }
 
     @Test
-    public void shouldCallResetMediaRecorderWhenStopRecording() {
+    public void shouldCallResetMediaRecorderWhenStopRecording() throws RecordAudioException {
+        audioRecorderManager.record(mediaConfig);
         audioRecorderManager.stop();
         verify(mediaRecorder).reset();
     }
 
     @Ignore
-    @Test
+    @Test //// TODO: 3/28/16 figure a way out to test this bug. Currently fixed
     public void threeClickBug() throws RecordAudioException {
         audioRecorderManager.record(mediaConfig);
         audioRecorderManager.stop();
         audioRecorderManager.record(mediaConfig);
     }
+
+    public static MediaRecorder getMediaRecorder() {
+        return getApplication().getMediaRecorder();
+    }
+
+    private static TestMainApplication getApplication() {
+        return (TestMainApplication) RuntimeEnvironment.application;
+    }
+
 }

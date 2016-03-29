@@ -3,10 +3,12 @@ package org.mercycorps.translationcards.refactor.activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.io.IOException;
 
@@ -22,6 +24,7 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.translation_grandchild)LinearLayout translationGrandchildLayout;
     @Bind(R.id.summary_title)TextView summaryTitle;
     @Bind(R.id.summary_detail)TextView summaryDetail;
+    @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
 
     @Override
     protected void setActivityTitle() {
@@ -79,8 +82,10 @@ public class SummaryActivity extends AddTranslationActivity {
     @OnClick(R.id.summary_translation_card)
     protected void translationCardClicked() {
         try {
-            getMainApplication().getAudioPlayerManager().play(getContextFromIntent().getTranslation().getFilename());
-        } catch (IOException e) {
+            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
+            if(mediaManager.isPlaying()) mediaManager.stop();
+            else mediaManager.play(getContextFromIntent().getTranslation().getFilename(), progressBar);
+        } catch (AudioFileException e) {
             showToast(getString(R.string.could_not_play_audio_message));
             Log.d(TAG, getString(R.string.could_not_play_audio_message));
         }
@@ -91,6 +96,9 @@ public class SummaryActivity extends AddTranslationActivity {
         startNextActivity(SummaryActivity.this, EnterTranslatedPhraseActivity.class);
     }
 
+    private DecoratedMediaManager getDecoratedMediaManager(){
+        return getMainApplication().getDecoratedMediaManager();
+    }
     private void saveTranslation() {
         getMainApplication().getDbManager().saveTranslationContext(getContextFromIntent());
     }

@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.refactor.activity;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -62,6 +63,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updatePlayButtonState() {
         boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
+        if (translationHasAudioFile) {
+            playAudioButton.setBackgroundResource(R.drawable.play_button_enabled);
+        }
         playAudioButton.setClickable(translationHasAudioFile);
     }
 
@@ -81,6 +85,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         isRecording = !isRecording;
         tryToRecord();
         updateBackAndNextButtonStates();
+        updatePlayButtonState();
     }
 
 
@@ -96,7 +101,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @OnClick(R.id.play_audio_button)
     public void playAudioButtonClick(){
         try {
-            if(isRecording) handleIsRecordingState();
+            if(isRecording) {
+                isRecording = !isRecording;
+                handleIsRecordingState();
+            }
             playAudioFile();
         } catch (AudioFileException | RecordAudioException e) {
             Log.d(TAG, "Error getting audio asset: " + e);
@@ -106,11 +114,12 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void playAudioFile() throws AudioFileException {
         try {
+
             NewTranslationContext context = getContextFromIntent();
             AudioPlayerManager audioPlayerManager = ((MainApplication) getApplication()).getAudioPlayerManager();
             audioPlayerManager.play(context.getTranslation().getFilename());
         } catch (IOException e) {
-            throw new AudioFileException("Unable to play audio file.");
+            throw new AudioFileException("Unable to play audio file", e);
         }
     }
 

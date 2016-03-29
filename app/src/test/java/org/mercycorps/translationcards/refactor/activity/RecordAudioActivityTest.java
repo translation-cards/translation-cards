@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.refactor.activity;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,11 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.io.IOException;
 
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
@@ -102,11 +100,11 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldPlayAudioFileWhenPlayButtonIsClicked() throws IOException {
-        AudioPlayerManager audioPlayerManager = getAudioPlayerManager();
+    public void shouldPlayAudioFileWhenPlayButtonIsClicked() throws Exception {
+        setupAudioPlayerManager();
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         click(activity, R.id.play_audio_button);
-        verify(audioPlayerManager).play(DEFAULT_AUDIO_FILE);
+        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE);
     }
 
     @Test
@@ -135,5 +133,28 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTestWithTContextAndSourceText(RecordAudioActivity.class);
         TextView recordAudioTitle = findTextView(activity, R.id.origin_translation_text);
         assertEquals(DEFAULT_SOURCE_PHRASE, recordAudioTitle.getText().toString());
+    }
+
+    @Test
+    public void shouldNotHaveClickablePlayButtonWhenAFileIsNotRecorded() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
+        assertFalse(playButton.isClickable());
+    }
+
+    @Test
+    public void shouldHavePlayButtonBeClickableWhenAFileIsRecorded() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.record_audio_button);
+        click(activity, R.id.record_audio_button);
+        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
+        assertTrue(playButton.isClickable());
+    }
+
+    @Test
+    public void shouldChangePlayButtonsImageWhenItBecomesClickable() {
+        Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
+        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
+        assertEquals(R.drawable.play_button_enabled, shadowOf(playButton.getBackground()).getCreatedFromResId());
     }
 }

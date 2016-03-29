@@ -368,7 +368,7 @@ public class RecordingActivity extends AppCompatActivity {
         });
         listenButton = (ImageButton) findViewById(R.id.play_audio_button);
         if (recordingStatus == RecordingStatus.RECORDED) {
-            listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
+            listenButton.setBackgroundResource(R.drawable.play_button_enabled);
         }
         listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,7 +433,7 @@ public class RecordingActivity extends AppCompatActivity {
         if (!checkRecordingPermission()) {
             return;
         }
-        listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
+        listenButton.setBackgroundResource(R.drawable.play_button_enabled);
         if (!isAsset && (filename != null)) {
             File oldFile = new File(filename);
             oldFile.delete();
@@ -468,7 +468,7 @@ public class RecordingActivity extends AppCompatActivity {
         mediaRecorder.reset();
         mediaRecorder.release();
         mediaRecorder = null;
-        listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
+        listenButton.setBackgroundResource(R.drawable.play_button_enabled);
         recordingStatus = RecordingStatus.RECORDED;
     }
 
@@ -510,7 +510,7 @@ public class RecordingActivity extends AppCompatActivity {
         mediaPlayer.release();
         mediaPlayer = null;
         recordButton.setBackgroundResource(R.drawable.button_record_enabled);
-        listenButton.setBackgroundResource(R.drawable.button_listen_enabled);
+        listenButton.setBackgroundResource(R.drawable.play_button_enabled);
         recordingStatus = RecordingStatus.RECORDED;
     }
 
