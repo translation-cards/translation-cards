@@ -53,21 +53,21 @@ public class EnterTranslatedPhraseActivityTest {
     public void shouldUpdateTranslationContextWithTranslatedTextWhenSaveButtonIsClicked(){
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         setText(activity, R.id.translated_phrase_field, DEFAULT_TRANSLATED_TEXT);
-        click(activity, R.id.enter_translated_phrase_save_label);
+        click(activity, R.id.enter_translated_phrase_next_label);
         assertEquals(DEFAULT_TRANSLATED_TEXT, getContextFromIntent(activity).getTranslation().getTranslatedText());
     }
 
     @Test
     public void shouldUpdateTranslationContextWithEmptyStringWhenNoTranslationAddedAndSaveButtonIsClicked() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
-        click(activity, R.id.enter_translated_phrase_save_label);
+        click(activity, R.id.enter_translated_phrase_next_label);
         assertEquals(EMPTY_STRING, getContextFromIntent(activity).getTranslation().getTranslatedText());
     }
 
     @Test
     public void shouldStartSummaryActivityWhenUserClicksSave() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
-        click(activity, R.id.enter_translated_phrase_save_label);
+        click(activity, R.id.enter_translated_phrase_next_label);
         assertEquals(SummaryActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 

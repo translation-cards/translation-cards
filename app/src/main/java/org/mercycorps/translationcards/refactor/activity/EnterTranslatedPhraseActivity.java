@@ -35,7 +35,7 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
         setBitmap(R.id.enter_translated_phrase_image, R.drawable.enter_phrase_image);
     }
 
-    @OnClick(R.id.enter_translated_phrase_save_label)
+    @OnClick(R.id.enter_translated_phrase_next_label)
     protected void enterTranslatedTextNextLabelClicked(){
         String translatedText  = translatedPhraseTextView.getText().toString();
         getContextFromIntent().setTranslatedText(translatedText);

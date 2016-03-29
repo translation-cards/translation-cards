@@ -15,6 +15,7 @@ import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.refactor.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
@@ -93,6 +94,10 @@ public class TestAddTranslationCardActivityHelper {
 
     public static AudioPlayerManager getAudioPlayerManager() {
         return getApplication().getAudioPlayerManager();
+    }
+
+    public static AudioRecorderManager getAudioRecorderManager() {
+        return getApplication().getAudioRecorderManager();
     }
 
     public static DecoratedMediaManager getDecoratedMediaManager() {

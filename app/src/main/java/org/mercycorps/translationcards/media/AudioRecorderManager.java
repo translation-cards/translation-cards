@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.Random;
 
 public class AudioRecorderManager {
-
     private MediaRecorder mediaRecorder;
+    private boolean isRecording;
 
     public AudioRecorderManager() {
     }
@@ -29,6 +29,7 @@ public class AudioRecorderManager {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+        isRecording = true;
         return true;
     }
 
@@ -53,5 +54,10 @@ public class AudioRecorderManager {
         mediaRecorder.stop();
         mediaRecorder.reset();
         mediaRecorder.release();
+        isRecording = false;
+    }
+
+    public boolean isRecording() {
+        return isRecording;
     }
 }

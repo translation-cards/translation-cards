@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.io.File;
@@ -69,6 +71,14 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
 
     protected MainApplication getMainApplication() {
         return ((MainApplication) getApplication());
+    }
+
+    protected AudioPlayerManager getAudioPlayerManager(){
+        return getMainApplication().getAudioPlayerManager();
+    }
+
+    protected AudioRecorderManager getAudioRecorderManager(){
+        return getMainApplication().getAudioRecorderManager();
     }
 
     protected void setBitmap(int resId, int drawableId) {

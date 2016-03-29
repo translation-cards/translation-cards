@@ -83,15 +83,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/delete"
-            android:visibility="gone"
-            android:id="@+id/recording_label_delete_image" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
@@ -100,6 +91,18 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/recording_label_step_marker">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -126,13 +129,13 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/back_arrow_40p"/>
+                android:src="@drawable/back_arrow"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
-                android:textColor="@color/textDisabled"
+                android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_back" />
         </LinearLayout>
 
@@ -144,19 +147,19 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/enter_translated_phrase_save_label">
+            android:id="@+id/enter_translated_phrase_next_label">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
-                android:textColor="@color/textDisabled"
+                android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_next"
                 android:id="@+id/recording_label_next_text" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/forward_arrow_40p"
+                android:src="@drawable/forward_arrow"
                 android:id="@+id/recording_label_next_image" />
         </LinearLayout>
     </RelativeLayout>

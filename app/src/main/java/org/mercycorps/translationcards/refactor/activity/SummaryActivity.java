@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.refactor.activity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.summary_title)TextView summaryTitle;
     @Bind(R.id.summary_detail)TextView summaryDetail;
     @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
+    @Bind(R.id.indicator_icon)ImageView indicatorIcon;
 
     @Override
     protected void setActivityTitle() {
@@ -42,6 +44,7 @@ public class SummaryActivity extends AddTranslationActivity {
         setTranslationCardChildrenVisibility();
         updateTextInTextView(sourceTextView, getContextFromIntent().getTranslation().getLabel());
         updateTranslatedTextView();
+        indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
     }
 
     @Override
@@ -76,7 +79,15 @@ public class SummaryActivity extends AddTranslationActivity {
     @OnClick(R.id.save_translation_button)
     protected void summaryDoneClicked() {
         saveTranslation();
+        stopMediaManager();
         startNextActivity(SummaryActivity.this, TranslationsActivity.class);
+    }
+
+    private void stopMediaManager() {
+        DecoratedMediaManager mediaManager = getDecoratedMediaManager();
+        if (mediaManager.isPlaying()) {
+            mediaManager.stop();
+        }
     }
 
     @OnClick(R.id.summary_translation_card)
@@ -93,7 +104,20 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @OnClick(R.id.go_to_enter_translated_phrase_activity)
     protected void summaryBackClicked(){
+        stopMediaManager();
         startNextActivity(SummaryActivity.this, EnterTranslatedPhraseActivity.class);
+    }
+
+    @OnClick(R.id.translation_indicator_layout)
+    protected void indicatorLayoutClicked() {
+        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
+        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        translationChildLayout.setVisibility(visibility);
+        indicatorIcon.setBackgroundResource(backgroundResource);
+    }
+
+    private boolean isTranslationChildVisible() {
+        return translationChildLayout.getVisibility() == View.VISIBLE;
     }
 
     private DecoratedMediaManager getDecoratedMediaManager(){

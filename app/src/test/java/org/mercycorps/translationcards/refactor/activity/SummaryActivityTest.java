@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.intThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -152,6 +153,60 @@ public class SummaryActivityTest {
         verify(getDecoratedMediaManager()).stop();
     }
 
+    @Test
+    public void shouldShowCollapseIndicatorWhenTranslationCardIsCreated() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldCollapseTranslationCardWhenCardIndicatorIsClicked() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        assertEquals(View.GONE, findView(activity, R.id.translation_child).getVisibility());
+    }
+
+    @Test
+    public void shouldShowExpandCardIndicatorWhenTranslationCardIsCollapsed() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.expand_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldExpandTranslationCardWhenCardIndicatorIsClickedTwice() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        assertEquals(View.VISIBLE, findView(activity, R.id.translation_child).getVisibility());
+    }
+
+    @Test
+    public void shouldShowCollapseCardIndicatorWhenTranslationCardIsClickedTwice() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldStopPlayingAudioWhenSaveTranslationButtonIsClicked() {
+        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
+        click(activity, R.id.save_translation_button);
+        verify(getDecoratedMediaManager()).stop();
+    }
+
+    @Test
+    public void shouldStopPlayingAudioWhenBackButtonIsClicked() {
+        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+        Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
+        click(activity, R.id.go_to_enter_translated_phrase_activity);
+        verify(getDecoratedMediaManager()).stop();
+    }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);

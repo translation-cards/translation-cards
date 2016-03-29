@@ -1,5 +1,8 @@
 package org.mercycorps.translationcards.refactor.activity;
 
+import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -7,11 +10,15 @@ import org.mercycorps.translationcards.activity.TranslationsActivity;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @Bind(R.id.source_phrase_field)TextView sourcePhraseTextView;
     @Bind(R.id.source_phrase_title)TextView sourcePhraseTitle;
+    @Bind(R.id.activity_enter_source_phrase_next_label)LinearLayout nextButton;
+    @Bind(R.id.activity_enter_source_phrase_next_text)TextView nextButtonText;
+    @Bind(R.id.activity_enter_source_phrase_next_image)ImageView nextButtonImage;
 
     @Override
     protected void setActivityTitle() {
@@ -42,10 +49,24 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
         startNextActivity(EnterSourcePhraseActivity.this, TranslationsActivity.class);
     }
 
-    @OnClick(R.id.enter_translated_phrase_save_label)
-    public void enterTranslatedPhraseSaveLabelClick(){
+    @OnTextChanged(R.id.source_phrase_field)
+    public void sourcePhraseTextChanged() {
         String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
-        if (userEnteredSourcePhrase.isEmpty()) return;
+        nextButton.setClickable(!userEnteredSourcePhrase.isEmpty());
+        updateNextButtonState(userEnteredSourcePhrase);
+    }
+
+    protected void updateNextButtonState(String userEnteredSourcePhrase) {
+        int backgroundResource = userEnteredSourcePhrase.isEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        int buttonColor = userEnteredSourcePhrase.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
+        nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
+        nextButtonImage.setBackgroundResource(backgroundResource);
+    }
+
+    @OnClick(R.id.activity_enter_source_phrase_next_label)
+    public void enterTranslatedPhraseSaveLabelClick(){
+        if (!nextButton.isClickable()) return;
+        String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
         getContextFromIntent().setSourceText(userEnteredSourcePhrase);
         startNextActivity(EnterSourcePhraseActivity.this, RecordAudioActivity.class);
     }
