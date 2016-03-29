@@ -1,6 +1,5 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,13 +8,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
-
-import java.io.File;
 
 /**
  * Created by karthikbalasubramanian on 3/23/16.

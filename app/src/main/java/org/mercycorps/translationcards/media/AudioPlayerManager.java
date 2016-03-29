@@ -4,8 +4,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.refactor.activity.AudioFileNotSetException;
-import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.io.FileDescriptor;
 import java.io.IOException;

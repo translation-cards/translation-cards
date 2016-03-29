@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.exception;
 
 /**
  * Created by karthikbalasubramanian on 3/28/16.

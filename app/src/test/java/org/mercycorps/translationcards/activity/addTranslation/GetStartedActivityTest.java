@@ -1,18 +1,19 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.tools.ant.taskdefs.Get;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -20,7 +21,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_DICTIONARY_LABEL;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTestWithTContextAndSourceText;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createDefaultDictionary;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;

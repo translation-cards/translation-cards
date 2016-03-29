@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.exception;
 
 public class AudioFileException extends Exception {
 

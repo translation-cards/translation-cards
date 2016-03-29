@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.app.Activity;
 import android.widget.ImageView;
@@ -8,19 +8,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.w3c.dom.Text;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_DICTIONARY_LABEL;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)

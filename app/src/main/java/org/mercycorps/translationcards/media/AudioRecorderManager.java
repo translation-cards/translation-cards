@@ -1,16 +1,11 @@
 package org.mercycorps.translationcards.media;
 
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
+import org.mercycorps.translationcards.exception.RecordAudioException;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 public class AudioRecorderManager {
     private MediaRecorder mediaRecorder;

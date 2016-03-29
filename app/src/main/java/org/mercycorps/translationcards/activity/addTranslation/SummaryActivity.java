@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.util.Log;
 import android.view.View;
@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
-
-import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static org.mercycorps.translationcards.uiHelper.ToastHelper.showToast;
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";

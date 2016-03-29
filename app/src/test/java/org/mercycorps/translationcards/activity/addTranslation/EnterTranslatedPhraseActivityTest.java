@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 
 import android.app.Activity;
@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
+import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;

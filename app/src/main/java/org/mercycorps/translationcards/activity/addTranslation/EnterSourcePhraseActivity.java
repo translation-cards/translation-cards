@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;

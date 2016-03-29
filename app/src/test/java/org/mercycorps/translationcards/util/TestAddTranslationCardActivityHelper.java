@@ -8,19 +8,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
-import org.mercycorps.translationcards.refactor.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
-import org.mercycorps.translationcards.refactor.activity.AudioFileNotSetException;
-import org.mercycorps.translationcards.refactor.activity.SummaryActivity;
+import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.robolectric.Robolectric;
 
 import org.robolectric.RuntimeEnvironment;

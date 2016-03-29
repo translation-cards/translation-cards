@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.util.Log;
 import android.view.View;
@@ -7,10 +7,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.NewTranslationContext;
-import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 
@@ -65,7 +64,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void updateBackAndNextButtonStates(){
-        ButterKnife.apply(backAndNext, VISIBILTY, getVisibility());
+        ButterKnife.apply(backAndNext, VISIBILITY, getVisibility());
     }
 
     private int getVisibility(){

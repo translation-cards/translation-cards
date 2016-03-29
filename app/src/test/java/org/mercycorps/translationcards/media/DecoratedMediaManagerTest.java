@@ -7,8 +7,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.refactor.activity.AudioFileException;
-import org.mercycorps.translationcards.refactor.activity.AudioFileNotSetException;
+import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 

@@ -3,10 +3,9 @@ package org.mercycorps.translationcards.media;
 import android.widget.ProgressBar;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.refactor.activity.AudioFileException;
+import org.mercycorps.translationcards.exception.AudioFileException;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;

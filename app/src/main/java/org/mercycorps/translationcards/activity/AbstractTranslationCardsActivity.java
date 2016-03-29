@@ -1,12 +1,10 @@
-package org.mercycorps.translationcards.refactor.activity;
+package org.mercycorps.translationcards.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import org.mercycorps.translationcards.data.NewTranslationContext;
 
 import butterknife.ButterKnife;
 
@@ -38,7 +36,7 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    static final ButterKnife.Setter<View, Integer> VISIBILTY = new ButterKnife.Setter<View, Integer>() {
+    protected static final ButterKnife.Setter<View, Integer> VISIBILITY = new ButterKnife.Setter<View, Integer>() {
         @Override public void set(View view, Integer visibility, int index) {
             view.setVisibility(visibility);
         }

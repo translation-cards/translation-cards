@@ -24,6 +24,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 
 import java.io.File;
 import java.util.ArrayList;

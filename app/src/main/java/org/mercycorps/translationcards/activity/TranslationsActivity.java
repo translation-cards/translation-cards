@@ -39,7 +39,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.data.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
@@ -50,8 +51,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.refactor.activity.AddTranslationActivity;
-import org.mercycorps.translationcards.refactor.activity.GetStartedActivity;
+import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,4 +1,7 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.activity.addTranslation;
+
+import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.Serializable;
 

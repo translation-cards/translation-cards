@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.refactor.activity.RecordAudioException;
+import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
