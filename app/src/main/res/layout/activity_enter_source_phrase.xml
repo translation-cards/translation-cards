@@ -89,7 +89,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/cancel_add_translation_activity">
+            android:id="@+id/enter_source_phrase_activity_back_label">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"

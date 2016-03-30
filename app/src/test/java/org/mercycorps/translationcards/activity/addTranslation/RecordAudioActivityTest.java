@@ -11,9 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -75,7 +72,7 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTestWithTContextAndSourceText(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
-        LinearLayout nextButton = findLinearLayout(activity, R.id.go_to_enter_source_phrase_activity);
+        LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_back);
         assertEquals(View.VISIBLE, nextButton.getVisibility());
     }
 
@@ -92,7 +89,7 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
         click(activity, R.id.record_audio_button);
-        LinearLayout nextButton = findLinearLayout(activity, R.id.go_to_enter_source_phrase_activity);
+        LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_back);
         assertEquals(View.GONE, nextButton.getVisibility());
     }
 
@@ -113,17 +110,17 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldStartEnterSourcePhraseActivityWhenBackButtonIsClicked() {
+    public void shouldStartEnterTranslatedPhraseActivityWhenBackButtonIsClicked() {
         Activity activity = createActivityToTestWithTContextAndSourceText(RecordAudioActivity.class);
-        click(activity, R.id.go_to_enter_source_phrase_activity);
-        assertEquals(EnterSourcePhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        click(activity, R.id.record_activity_back);
+        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldStartEnterTranslatedPhraseActivityWhenNextButtonIsClicked() {
+    public void shouldStartSummaryActivityWhenNextButtonIsClicked() {
         Activity activity = createActivityToTestWithTContextAndSourceText(RecordAudioActivity.class);
         click(activity, R.id.record_activity_next);
-        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(SummaryActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -221,7 +218,7 @@ public class RecordAudioActivityTest {
     public void shouldStopPlayingWhenBackButtonIsClicked(){
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         when(getAudioPlayerManager().isPlaying()).thenReturn(true);
-        click(activity, R.id.go_to_enter_source_phrase_activity);
+        click(activity, R.id.record_activity_back);
         verify(getAudioPlayerManager()).stop();
     }
 
@@ -237,14 +234,14 @@ public class RecordAudioActivityTest {
     public void shouldStopRecordingWhenBackButtonIsClicked() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
-        click(activity, R.id.go_to_enter_source_phrase_activity);
+        click(activity, R.id.record_activity_back);
         verify(getAudioRecorderManager()).stop();
     }
 
     @Test
     public void shouldHaveVisibleBackButtonWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
-        assertEquals(View.VISIBLE, activity.findViewById(R.id.go_to_enter_source_phrase_activity).getVisibility());
+        assertEquals(View.VISIBLE, activity.findViewById(R.id.record_activity_back).getVisibility());
     }
 
     @Test
@@ -253,7 +250,7 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
-        assertEquals(View.VISIBLE, activity.findViewById(R.id.go_to_enter_source_phrase_activity).getVisibility());
+        assertEquals(View.VISIBLE, activity.findViewById(R.id.record_activity_back).getVisibility());
     }
 
     @Test

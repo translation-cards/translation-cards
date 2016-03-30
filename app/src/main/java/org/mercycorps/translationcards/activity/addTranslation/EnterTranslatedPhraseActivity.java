@@ -39,11 +39,11 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     protected void enterTranslatedTextNextLabelClicked(){
         String translatedText  = translatedPhraseTextView.getText().toString();
         getContextFromIntent().setTranslatedText(translatedText);
-        startNextActivity(EnterTranslatedPhraseActivity.this, SummaryActivity.class);
+        startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
     }
 
-    @OnClick(R.id.go_to_record_audio_label)
-    protected void goToRecordAudioLabelClicked() {
-        startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
+    @OnClick(R.id.enter_translated_phrase_back_label)
+    protected void enterTranslatedPhraseBackLabelClicked() {
+        startNextActivity(EnterTranslatedPhraseActivity.this, EnterSourcePhraseActivity.class);
     }
 }

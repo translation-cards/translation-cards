@@ -352,15 +352,15 @@ public class RecordingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (recordingStatus) {
                     case FRESH:
-                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.GONE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
                     case RECORDED:
-                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.GONE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.GONE);
                         findViewById(R.id.record_activity_next).setVisibility(View.GONE);
                         startRecording();
                         break;
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
                         findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         break;
                 }
@@ -376,7 +376,7 @@ public class RecordingActivity extends AppCompatActivity {
                 switch (recordingStatus) {
                     case RECORDING:
                         stopRecording();
-                        findViewById(R.id.go_to_enter_source_phrase_activity).setVisibility(View.VISIBLE);
+                        findViewById(R.id.record_activity_back).setVisibility(View.VISIBLE);
                         findViewById(R.id.record_activity_next).setVisibility(View.VISIBLE);
                         startListening();
                         break;
@@ -389,7 +389,7 @@ public class RecordingActivity extends AppCompatActivity {
                 }
             }
         });
-        View backButton = findViewById(R.id.go_to_enter_source_phrase_activity);
+        View backButton = findViewById(R.id.record_activity_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -545,7 +545,7 @@ public class RecordingActivity extends AppCompatActivity {
                 (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
         findViewById(R.id.summary_translation_card).setOnClickListener(cardAudioClickListener);
 
-        View backButton = findViewById(R.id.go_to_enter_translated_phrase_activity);
+        View backButton = findViewById(R.id.summary_activity_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

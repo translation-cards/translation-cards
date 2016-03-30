@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/go_to_enter_translated_phrase_activity">
+            android:id="@+id/summary_activity_back">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"

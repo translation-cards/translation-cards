@@ -15,10 +15,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
-import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -104,8 +101,8 @@ public class SummaryActivityTest {
     @Test
     public void shouldGoBackToEnterTranslatedTextActivityWhenEditIsClicked() throws Exception{
         Activity activity = createActivityToTest(SummaryActivity.class);
-        activity.findViewById(R.id.go_to_enter_translated_phrase_activity).performClick();
-        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        activity.findViewById(R.id.summary_activity_back).performClick();
+        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -203,7 +200,7 @@ public class SummaryActivityTest {
     public void shouldStopPlayingAudioWhenBackButtonIsClicked() {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
         Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
-        click(activity, R.id.go_to_enter_translated_phrase_activity);
+        click(activity, R.id.summary_activity_back);
         verify(getDecoratedMediaManager()).stop();
     }
 

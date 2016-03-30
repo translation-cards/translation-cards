@@ -8,11 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -41,10 +37,10 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
-    public void shouldStartRecordAudioActivityWhenUserClicksNext() {
+    public void shouldStartEnterTranslatedPhraseActivityWhenUserClicksNext() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -89,10 +85,10 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
-    public void shouldGoToTranslationsActivityWhenCancelButtonIsClicked() {
+    public void shouldGoToGetStartedActivityWhenCancelButtonIsClicked() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
-        click(activity, R.id.cancel_add_translation_activity);
-        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(GetStartedActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test

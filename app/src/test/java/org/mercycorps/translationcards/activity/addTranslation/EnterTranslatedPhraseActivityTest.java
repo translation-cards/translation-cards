@@ -9,9 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
-import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -68,17 +65,17 @@ public class EnterTranslatedPhraseActivityTest {
     }
 
     @Test
-    public void shouldStartSummaryActivityWhenUserClicksSave() {
+    public void shouldStartRecordAudioActivityWhenUserClicksSave() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         click(activity, R.id.enter_translated_phrase_next_label);
-        assertEquals(SummaryActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldStartRecordAudioActivityWhenBackButtonIsClicked(){
+    public void shouldStartEnterSourcePhraseActivityWhenBackButtonIsClicked(){
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
-        click(activity, R.id.go_to_record_audio_label);
-        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        click(activity, R.id.enter_translated_phrase_back_label);
+        assertEquals(EnterSourcePhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test

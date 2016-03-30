@@ -27,9 +27,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Bind(R.id.record_audio_button)ImageButton recordAudioButton;
     @Bind(R.id.record_audio_title)TextView recordAudioTitle;
     @Bind(R.id.origin_translation_text)TextView originTranslationText;
-    @Bind(R.id.go_to_enter_source_phrase_activity)LinearLayout backButton;
+    @Bind(R.id.record_activity_back)LinearLayout backButton;
     @Bind(R.id.text_indicator_divider)FrameLayout translationTextIndicatorDivider;
-    @Bind({ R.id.go_to_enter_source_phrase_activity, R.id.record_activity_next})
+    @Bind({ R.id.record_activity_back, R.id.record_activity_next})
     List<LinearLayout> backAndNext;
 
 
@@ -85,7 +85,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     public void recordActivityNextClick(){
         stopAudioIfPlaying();
         stopIfRecording();
-        startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
+        startNextActivity(RecordAudioActivity.this, SummaryActivity.class);
     }
 
     private void stopIfRecording() {
@@ -96,11 +96,11 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
-    @OnClick(R.id.go_to_enter_source_phrase_activity)
+    @OnClick(R.id.record_activity_back)
     public void recordActivityBackClick(){
         stopAudioIfPlaying();
         stopIfRecording();
-        startNextActivity(RecordAudioActivity.this, EnterSourcePhraseActivity.class);
+        startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
     }
 
     @OnClick(R.id.record_audio_button)

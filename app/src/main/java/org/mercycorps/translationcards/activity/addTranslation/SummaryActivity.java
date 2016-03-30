@@ -103,10 +103,10 @@ public class SummaryActivity extends AddTranslationActivity {
         }
     }
 
-    @OnClick(R.id.go_to_enter_translated_phrase_activity)
+    @OnClick(R.id.summary_activity_back)
     protected void summaryBackClicked(){
         stopMediaManager();
-        startNextActivity(SummaryActivity.this, EnterTranslatedPhraseActivity.class);
+        startNextActivity(SummaryActivity.this, RecordAudioActivity.class);
     }
 
     @OnClick(R.id.translation_indicator_layout)
