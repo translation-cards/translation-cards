@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.data;
 
-import android.content.Context;
 import android.os.Parcelable;
 
 import java.io.Serializable;
@@ -20,25 +19,19 @@ public class Deck implements Serializable {
     private final long dbId;
     private final long timestamp;
     private final boolean locked;
-    private final String srcLanguageIso;
-    // The dictionaries list is lazily initialized.
-    private Dictionary[] dictionaries;
 
     public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
-                boolean locked, String srcLanguageIso) {
+                boolean locked) {
         this.label = label;
         this.publisher = publisher;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.srcLanguageIso = srcLanguageIso;
-        dictionaries = null;
     }
 
-    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked,
-                String srcLanguageIso) {
-        this(label, publisher, externalId, -1, timestamp, locked, srcLanguageIso);
+    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked) {
+        this(label, publisher, externalId, -1, timestamp, locked);
     }
 
     public String getLabel() {
@@ -70,17 +63,5 @@ public class Deck implements Serializable {
 
     public boolean isLocked() {
         return locked;
-    }
-
-    public String getSrcLanguageIso() {
-        return srcLanguageIso;
-    }
-
-    public Dictionary[] getDictionaries(Context context) {
-        if (dictionaries == null) {
-            DbManager dbm = new DbManager(context);
-            dictionaries = dbm.getDictionariesForDeck(dbId);
-        }
-        return dictionaries;
     }
 }

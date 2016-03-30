@@ -69,7 +69,7 @@ public class RecordingActivity extends AppCompatActivity {
     private static final String TAG = "RecordingActivity";
 
     public static final String INTENT_KEY_DICTIONARY_ID = "dictionaryId";
-    public static final String INTENT_KEY_DICTIONARY_DISPLAY_NAME = "dictionaryDisplayName";
+    public static final String INTENT_KEY_DICTIONARY_LABEL = "dictionaryLabel";
     public static final String INTENT_KEY_TRANSLATION_ID = "translationId";
     public static final String INTENT_KEY_TRANSLATION_LABEL = "translationLabel";
     public static final String INTENT_KEY_TRANSLATION_IS_ASSET = "translationIsAsset";
@@ -101,7 +101,7 @@ public class RecordingActivity extends AppCompatActivity {
     private RecordingStatus recordingStatus;
     private boolean inEditMode;
     private long dictionaryId;
-    private String dictionaryDisplayName;
+    private String dictionaryLabel;
     private long translationId;
     private String label;
     private boolean isAsset;
@@ -123,7 +123,7 @@ public class RecordingActivity extends AppCompatActivity {
         mediaPlayerManager = application.getMediaPlayerManager();
         stepHistory = new Stack<>();
         dictionaryId = getIntent().getLongExtra(INTENT_KEY_DICTIONARY_ID, -1);
-        dictionaryDisplayName = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_DISPLAY_NAME);
+        dictionaryLabel = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_LABEL);
         translationId = getIntent().getLongExtra(INTENT_KEY_TRANSLATION_ID, -1);
         label = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_LABEL);
         translatedText = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_TEXT);
@@ -177,7 +177,7 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView = (ImageView) findViewById(R.id.recording_instructions_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         TextView titleView = (TextView) findViewById(R.id.recording_instructions_title);
-        titleView.setText(getString(R.string.recording_instructions_title, dictionaryDisplayName));
+        titleView.setText(getString(R.string.recording_instructions_title, dictionaryLabel));
         ImageButton backButton = (ImageButton) findViewById(R.id.recording_instructions_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,7 +205,7 @@ public class RecordingActivity extends AppCompatActivity {
     private void moveToLabelStep() {
         setContentView(R.layout.recording_label);
         TextView labelTitle = (TextView) findViewById(R.id.recording_label_title);
-        labelTitle.setText(getString(R.string.recording_label_create_title, dictionaryDisplayName));
+        labelTitle.setText(getString(R.string.recording_label_create_title, dictionaryLabel));
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(
                 getResources(), R.drawable.recording_label_image);
@@ -214,8 +214,7 @@ public class RecordingActivity extends AppCompatActivity {
         final EditText labelField = (EditText) findViewById(R.id.recording_label_field);
         final EditText translatedTextField = (EditText) findViewById(R.id.recording_translated_text_field);
         fillPrepopulatedField(label, labelField, getString(R.string.recording_label_hint_text));
-        fillPrepopulatedField(translatedText, translatedTextField,
-                String.format(getString(R.string.translated_text_hint), dictionaryDisplayName));
+        fillPrepopulatedField(translatedText, translatedTextField, String.format(getString(R.string.translated_text_hint), dictionaryLabel));
         if (inEditMode) {
             ImageView deleteButton = (ImageView) findViewById(R.id.recording_label_delete_image);
             deleteButton.setVisibility(View.VISIBLE);
@@ -342,7 +341,7 @@ public class RecordingActivity extends AppCompatActivity {
         }
         recycleBitmap();
         TextView titleView = (TextView) findViewById(R.id.recording_audio_title);
-        titleView.setText(getString(R.string.recording_audio_title, dictionaryDisplayName));
+        titleView.setText(getString(R.string.recording_audio_title, dictionaryLabel));
         TextView labelView = (TextView) findViewById(R.id.origin_translation_text);
         labelView.setText(label);
         findViewById(R.id.translation_indicator_layout).setVisibility(View.GONE);
@@ -523,14 +522,14 @@ public class RecordingActivity extends AppCompatActivity {
         currentBitmapView = (ImageView) findViewById(R.id.recording_done_image);
         currentBitmapView.setImageBitmap(currentBitmap);
         TextView titleView = (TextView) findViewById(R.id.recording_done_title);
-        titleView.setText(getString(R.string.recording_done_title, dictionaryDisplayName));
+        titleView.setText(getString(R.string.recording_done_title, dictionaryLabel));
         TextView detailView = (TextView) findViewById(R.id.recording_done_detail);
-        detailView.setText(getString(R.string.recording_done_detail, dictionaryDisplayName));
+        detailView.setText(getString(R.string.recording_done_detail, dictionaryLabel));
         TextView cardTextView = (TextView) findViewById(R.id.origin_translation_text);
         cardTextView.setText(label);
         TextView translatedCardText = (TextView) findViewById(R.id.translated_text);
         if (translatedText.trim().isEmpty()) {
-            translatedCardText.setHint(String.format(getString(R.string.translated_text_hint), dictionaryDisplayName));
+            translatedCardText.setHint(String.format(getString(R.string.translated_text_hint), dictionaryLabel));
             translatedCardText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         } else {
             translatedCardText.setText(translatedText);

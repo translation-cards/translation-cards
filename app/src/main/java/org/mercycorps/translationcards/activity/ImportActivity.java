@@ -46,23 +46,23 @@ public class ImportActivity extends AppCompatActivity {
 
     private void attemptImport(Uri source) {
         try {
-            TxcPortingUtility.ImportSpec importSpec =
+            TxcPortingUtility.ImportInfo importInfo =
                     portingUtility.prepareImport(ImportActivity.this, source);
             // Check if it's a deck we've already imported.
-            if (false && portingUtility.isExistingDeck(this, importSpec)) {
-                portingUtility.abortImport(this, importSpec);
+            if (false && portingUtility.isExistingDeck(this, importInfo)) {
+                portingUtility.abortImport(this, importInfo);
                 alertUserOfFailure(getString(R.string.import_failure_existing_deck));
                 return;
             }
             // Check if it's a different version of a deck we've already imported.
-            if (importSpec.externalId != null && !importSpec.externalId.isEmpty()) {
-                long otherVersion = portingUtility.otherVersionExists(this, importSpec);
+            if (importInfo.externalId != null && !importInfo.externalId.isEmpty()) {
+                long otherVersion = portingUtility.otherVersionExists(this, importInfo);
                 if (otherVersion != -1) {
-                    handleVersionOverride(importSpec, otherVersion);
+                    handleVersionOverride(importInfo, otherVersion);
                     return;
                 }
             }
-            portingUtility.executeImport(this, importSpec);
+            portingUtility.executeImport(this, importInfo);
         } catch (ImportException e) {
             handleError(e);
             return;
@@ -71,7 +71,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private void handleVersionOverride(
-            final TxcPortingUtility.ImportSpec importSpec, final long otherVersion) {
+            final TxcPortingUtility.ImportInfo importInfo, final long otherVersion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.import_version_override_title)
                 .setItems(R.array.version_override_options, new DialogInterface.OnClickListener() {
@@ -82,7 +82,7 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importSpec);
+                                    portingUtility.executeImport(ImportActivity.this, importInfo);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
@@ -91,7 +91,7 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 2:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importSpec);
+                                    portingUtility.executeImport(ImportActivity.this, importInfo);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
