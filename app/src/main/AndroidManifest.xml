@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.DecksActivity" />
        </activity>
+        <activity android:name=".activity.addTranslation.GetStartedActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addTranslation.EnterSourcePhraseActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addTranslation.RecordAudioActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addTranslation.EnterTranslatedPhraseActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addTranslation.SummaryActivity" android:screenOrientation="portrait"/>
+
         <activity android:name=".activity.RecordingActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.DeckCreationActivity" />

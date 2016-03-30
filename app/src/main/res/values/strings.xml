@@ -4,20 +4,20 @@
     <string name="main_feedback_request">Is this app useful for you?\nLet us know how it can be improved.</string>
     <string name="main_feedback_button_text">GIVE FEEDBACK</string>
     <string name="main_export_button_text">SHARE</string>
-    <string name="recording_instructions_title">%s Flashcard Maker</string>
-    <string name="recording_instructions_header">Make your own flashcards</string>
-    <string name="recording_instructions_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
-    <string name="recording_instructions_button_getstarted">GET STARTED</string>
+    <string name="get_started_title">%s Flashcard Maker</string>
+    <string name="get_started_header">Make your own flashcards</string>
+    <string name="get_started_detail">Write your script, record your phrase,\nand use your flashcard in the field.</string>
+    <string name="get_started_button_getstarted">GET STARTED</string>
     <string name="recording_label_create_title">Write your %s phrase and translation</string>
     <string name="recording_label_edit_title">Update or delete your flashcard</string>
     <string name="recording_label_detail">An effective flashcard phrase is short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
     <string name="recording_label_hint_text">Flashcard phrase</string>
-    <string name="recording_audio_title">Record your %s phrase</string>
+    <string name="record_audio_title">Record your %s phrase</string>
     <string name="recording_audio_detail">When you\'re ready, press record. Speak clearly at a normal speed. When you\'re all done, press stop. You can listen back and record again until you\'re happy to save.</string>
     <string name="recording_text_create_title">Enter the translation text</string>
     <string name="recording_text_hint_text">Phrase translation (Optional)</string>
-    <string name="recording_done_title">New %s flashcard created</string>
-    <string name="recording_done_detail">Find your new flashcard at the top of the list in the %s category.</string>
+    <string name="summary_title">New %s flashcard created</string>
+    <string name="summary_detail">Find your new flashcard at the top of the list in the %s category.</string>
     <string name="deck_creation_field_label_deck_name">Deck Name:</string>
     <string name="deck_creation_field_label_target_languages">Target Languages (comma-separated):</string>
     <string name="deck_creation_add_button">Add Deck</string>
@@ -66,6 +66,13 @@
     <string name="translated_text_hint">Add %s translation</string>
     <string name="navigation_button_edit">EDIT</string>
     <string name="export_filename">shared-deck.txc</string>
+    <string name="file_download_title">Downloading File</string>
+    <string name="no_audio_file_message">Unable to play audio file</string>
+    <string name="unable_to_record_message">Unable to Record Audio.</string>
+    <string name="could_not_play_audio_message">Could not play audio file.</string>
+    <string name="navigation_button_cancel">CANCEL</string>
+    <string name="enter_translated_phrase_title">Write your %s translation</string>
+    <string name="enter_source_phrase_activity_titile">Write your %s phrase</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

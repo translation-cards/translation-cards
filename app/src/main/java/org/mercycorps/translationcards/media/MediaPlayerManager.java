@@ -4,7 +4,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class MediaPlayerManager implements Runnable {
     private final Lock lock;
     private MediaPlayer mediaPlayer;
     private ProgressBar progressBar;
-    private Dictionary.Translation translation;
+    private Translation translation;
 
     public MediaPlayerManager(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
@@ -26,8 +26,10 @@ public class MediaPlayerManager implements Runnable {
 
     public void stop() {
         lock.lock();
-        mediaPlayer.stop();
-        mediaPlayer.reset();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
         resetProgressBar();
         lock.unlock();
     }
@@ -66,7 +68,7 @@ public class MediaPlayerManager implements Runnable {
         }
     }
 
-    public void play(FileDescriptor audioFile, ProgressBar progressBar, Dictionary.Translation translation) {
+    public void play(FileDescriptor audioFile, ProgressBar progressBar, Translation translation) {
         lock.lock();
         resetProgressBar();
         this.translation = translation;
@@ -95,11 +97,11 @@ public class MediaPlayerManager implements Runnable {
         }
     }
 
-    public boolean isCurrentlyPlayingSameCard(Dictionary.Translation translation) {
+    public boolean isCurrentlyPlayingSameCard(Translation translation) {
         return isSameAudioFile(translation) && mediaPlayer.isPlaying();
     }
 
-    private boolean isSameAudioFile(Dictionary.Translation translation) {
+    private boolean isSameAudioFile(Translation translation) {
         return this.translation != null && translation.getFilename().equals(this.translation.getFilename());
     }
 }
