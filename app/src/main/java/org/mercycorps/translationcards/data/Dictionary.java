@@ -20,8 +20,6 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -31,33 +29,18 @@ import java.io.Serializable;
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class Dictionary implements Serializable {
+public class Dictionary {
 
+    private final String label;
+    private final Translation[] translations;
     private final long dbId;
     private final long deckId;
-    private final String destLanguageIso;
-    private final String label;
-    private Translation[] translations;
 
-    public Dictionary(String destLanguageIso, String label, Translation[] translations, long dbId,
-                      long deckId) {
-        this.destLanguageIso = destLanguageIso;
+    public Dictionary(String label, Translation[] translations, long dbId, long deckId) {
         this.label = label;
         this.translations = translations;
         this.dbId = dbId;
         this.deckId = deckId;
-    }
-
-    Dictionary(long dbId, long deckId, String destLanguageIso, String label) {
-        this.dbId = dbId;
-        this.deckId = deckId;
-        this.destLanguageIso = destLanguageIso;
-        this.label = label;
-        translations = null;
-    }
-
-    public String getDestLanguageIso() {
-        return destLanguageIso;
     }
 
     public String getLabel() {

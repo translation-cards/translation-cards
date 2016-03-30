@@ -20,7 +20,6 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -148,9 +147,7 @@ public class DecksActivity extends AppCompatActivity {
 
             TextView translationLanguagesView =
                     (TextView) convertView.findViewById(R.id.translation_languages);
-            Dictionary[] dictionaries = deck.getDictionaries(DecksActivity.this);
-            translationLanguagesView.setText(LanguageDisplayUtil.getDestLanguageListDisplay(
-                    DecksActivity.this, deck, "  "));
+            translationLanguagesView.setText(dbManager.getTranslationLanguagesForDeck(deck.getDbId()));
 
             View deckCopyView = convertView.findViewById(R.id.deck_card_expansion_copy);
             if (deck.isLocked()) {
@@ -198,15 +195,13 @@ public class DecksActivity extends AppCompatActivity {
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
         DbManager dbm = new DbManager(this);
-        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false,
-                deck.getSrcLanguageIso());
+        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
         Dictionary[] dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
                 long dictionaryId = dbm.addDictionary(
-                        dictionary.getDestLanguageIso(), dictionary.getLabel(), dictionaryIndex,
-                        deckId);
+                        dictionary.getLabel(), dictionaryIndex, deckId);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
