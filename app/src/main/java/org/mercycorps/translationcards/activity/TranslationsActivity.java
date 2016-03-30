@@ -49,6 +49,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -118,7 +119,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
             Dictionary dictionary = dictionaries[i];
             View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
             TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-            textView.setText(dictionary.getLabel().toUpperCase());
+            textView.setText(
+                    LanguageDisplayUtil.getDestLanguageDisplayName(this, dictionary).toUpperCase());
             final int index = i;
             textFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -184,8 +186,9 @@ public class TranslationsActivity extends RoboActionBarActivity {
         Intent intent = new Intent(this, RecordingActivity.class);
         intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID,
                 dictionaries[currentDictionaryIndex].getDbId());
-        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL,
-                dictionaries[currentDictionaryIndex].getLabel());
+        intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_DISPLAY_NAME,
+                LanguageDisplayUtil.getDestLanguageDisplayName(
+                        this, dictionaries[currentDictionaryIndex]));
         intent.putExtra(INTENT_KEY_DECK_ID, deck);
         startActivityForResult(intent, REQUEST_KEY_ADD_CARD);
     }
@@ -286,7 +289,8 @@ public class TranslationsActivity extends RoboActionBarActivity {
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
                 translatedText.setText(String.format(getString(R.string.translated_text_hint),
-                        dictionaries[currentDictionaryIndex].getLabel()));
+                        LanguageDisplayUtil.getDestLanguageDisplayName(
+                                TranslationsActivity.this, dictionaries[currentDictionaryIndex])));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
@@ -345,7 +349,9 @@ public class TranslationsActivity extends RoboActionBarActivity {
             Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
             intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
+            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_DISPLAY_NAME,
+                    LanguageDisplayUtil.getDestLanguageDisplayName(
+                            TranslationsActivity.this, dictionary));
             intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
             intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL,
                     translationCard.getLabel());
