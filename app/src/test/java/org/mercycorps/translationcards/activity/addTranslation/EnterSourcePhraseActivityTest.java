@@ -102,8 +102,8 @@ public class EnterSourcePhraseActivityTest {
     @Test
     public void shouldSetEnterSourcePhraseActivityTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, createDefaultDictionary());
-        TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title); //TODO push text to string to helper
-        assertEquals(String.format("Write your %s phrase", DEFAULT_DICTIONARY_LABEL), sourcePhraseActivityTitle.getText().toString());
+        TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title);
+        assertEquals("Write your phrase", sourcePhraseActivityTitle.getText().toString());
     }
 
     @Test

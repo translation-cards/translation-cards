@@ -35,7 +35,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @Override
     protected void setActivityTitle() {
-        recordAudioTitle.setText(String.format(getString(R.string.record_audio_title), getContextFromIntent().getDictionary().getLabel()));
+        recordAudioTitle.setText(getString(R.string.record_audio_title));
     }
 
     @Override

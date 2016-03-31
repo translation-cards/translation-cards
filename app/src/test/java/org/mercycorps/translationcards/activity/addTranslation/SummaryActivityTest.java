@@ -123,7 +123,7 @@ public class SummaryActivityTest {
     public void shouldSetSummaryTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         TextView summaryTitle = findTextView(activity, R.id.summary_title);
-        assertEquals(String.format("New %s flashcard created", DEFAULT_DICTIONARY_LABEL), summaryTitle.getText().toString());
+        assertEquals("Review and save your card", summaryTitle.getText().toString());
     }
 
     @Test

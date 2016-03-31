@@ -13,8 +13,7 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
 
     @Override
     protected void setActivityTitle() {
-        translatedPhraseTitleView.setText(String.format(getString(R.string.enter_translated_phrase_title),
-                getContextFromIntent().getDictionary().getLabel()));
+        translatedPhraseTitleView.setText(getString(R.string.enter_translated_phrase_title));
     }
 
     @Override

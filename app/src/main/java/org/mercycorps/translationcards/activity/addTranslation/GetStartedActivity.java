@@ -13,7 +13,7 @@ public class GetStartedActivity extends AddTranslationActivity {
 
     @Override
     protected void setActivityTitle() {
-        getStartedTitle.setText(String.format(getString(R.string.get_started_title), getContextFromIntent().getDictionary().getLabel()));
+        getStartedTitle.setText(getString(R.string.get_started_title));
     }
 
     @Override

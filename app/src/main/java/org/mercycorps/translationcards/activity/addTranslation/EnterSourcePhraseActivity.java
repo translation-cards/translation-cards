@@ -21,7 +21,7 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @Override
     protected void setActivityTitle() {
-        sourcePhraseTitle.setText(String.format(getString(R.string.enter_source_phrase_activity_titile), getContextFromIntent().getDictionary().getLabel()));
+        sourcePhraseTitle.setText(getString(R.string.enter_source_phrase_activity_title));
     }
 
     @Override

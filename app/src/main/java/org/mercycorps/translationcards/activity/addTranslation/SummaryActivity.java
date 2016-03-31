@@ -31,7 +31,7 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @Override
     protected void setActivityTitle() {
-        updateTextInTextView(summaryTitle, String.format(getString(R.string.summary_title), getContextFromIntent().getDictionary().getLabel()));
+        updateTextInTextView(summaryTitle, getString(R.string.summary_title));
         updateTextInTextView(summaryDetail, String.format(getString(R.string.summary_detail), getContextFromIntent().getDictionary().getLabel()));
     }
 

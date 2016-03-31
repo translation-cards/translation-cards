@@ -72,7 +72,7 @@ public class GetStartedActivityTest {
     public void shouldSetGetStartedActivityTitleWhenActivityStarts() throws Exception {
         Activity activity = createActivityToTest(GetStartedActivity.class);
         TextView getStartedTitle = findTextView(activity, R.id.get_started_title);
-        assertEquals(String.format("%s Flashcard Maker", DEFAULT_DICTIONARY_LABEL), getStartedTitle.getText().toString());
+        assertEquals("Card Maker", getStartedTitle.getText().toString());
     }
 
     @Test

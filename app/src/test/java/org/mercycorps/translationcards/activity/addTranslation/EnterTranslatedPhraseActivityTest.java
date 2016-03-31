@@ -23,12 +23,9 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterTranslatedPhraseActivityTest {
-    public static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
-    public static final String DEFAULT_TRANSLATION_TEXT = "Sleep here";
     public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
     private static final String DEFAULT_TRANSLATED_TEXT = "Translation";
     private static final String EMPTY_STRING = "";
-    private static final String DEFAULT_TRANSLATION_LABEL = "TranslationLabel";
 
     @Test
     public void shouldNotBeNull(){
@@ -104,6 +101,6 @@ public class EnterTranslatedPhraseActivityTest {
     public void shouldSetEnterTranslatedTextActivityTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class, createDefaultDictionary());
         TextView summaryTitle = findTextView(activity, R.id.translated_phrase_title);
-        assertEquals(String.format("Write your %s translation", DEFAULT_DICTIONARY_LABEL), summaryTitle.getText().toString());
+        assertEquals("Optional: add the translation", summaryTitle.getText().toString());
     }
 }

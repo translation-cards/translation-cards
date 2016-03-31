@@ -127,7 +127,7 @@ public class RecordAudioActivityTest {
     public void shouldRecordAudioActivityTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class, createDefaultDictionary());
         TextView recordAudioTitle = findTextView(activity, R.id.record_audio_title);
-        assertEquals(String.format("Record your %s phrase", DEFAULT_DICTIONARY_LABEL), recordAudioTitle.getText().toString());
+        assertEquals(("Record your phrase"), recordAudioTitle.getText().toString());
     }
 
     @Test
