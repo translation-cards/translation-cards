@@ -79,6 +79,14 @@ public class EnterTranslatedPhraseActivityTest {
     }
 
     @Test
+    public void shouldUpdateNewTranslationContextWhenBackButtonIsClickedAndATranslatedPhraseIsPresent() {
+        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
+        setText(activity, R.id.translated_phrase_field, DEFAULT_TRANSLATED_TEXT);
+        click(activity, R.id.enter_translated_phrase_back_label);
+        assertEquals(DEFAULT_TRANSLATED_TEXT, getContextFromIntent(activity).getTranslation().getTranslatedText());
+    }
+
+    @Test
     public void shouldContainImageWhenLoaded() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         ImageView getStartedImage = findImageView(activity, R.id.enter_translated_phrase_image);

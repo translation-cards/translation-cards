@@ -37,13 +37,18 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
 
     @OnClick(R.id.enter_translated_phrase_next_label)
     protected void enterTranslatedTextNextLabelClicked(){
+        updateContextWithTranslatedText();
+        startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
+    }
+
+    private void updateContextWithTranslatedText() {
         String translatedText  = translatedPhraseTextView.getText().toString();
         getContextFromIntent().setTranslatedText(translatedText);
-        startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
     }
 
     @OnClick(R.id.enter_translated_phrase_back_label)
     protected void enterTranslatedPhraseBackLabelClicked() {
+        updateContextWithTranslatedText();
         startNextActivity(EnterTranslatedPhraseActivity.this, EnterSourcePhraseActivity.class);
     }
 }

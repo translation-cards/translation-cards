@@ -46,9 +46,7 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     @OnClick(R.id.enter_source_phrase_activity_back_label)
     public void cancelButtonClick() {
         String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
-        if (!userEnteredSourcePhrase.isEmpty()) {
-            getContextFromIntent().setSourceText(userEnteredSourcePhrase);
-        }
+        updateContextWithSourceText();
         startNextActivity(EnterSourcePhraseActivity.this, GetStartedActivity.class);
     }
 
@@ -69,9 +67,13 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     @OnClick(R.id.activity_enter_source_phrase_next_label)
     public void enterSourcePhraseNextLabelClicked(){
         if (!nextButton.isClickable()) return;
+        updateContextWithSourceText();
+        startNextActivity(EnterSourcePhraseActivity.this, EnterTranslatedPhraseActivity.class);
+    }
+
+    protected void updateContextWithSourceText() {
         String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
         getContextFromIntent().setSourceText(userEnteredSourcePhrase);
-        startNextActivity(EnterSourcePhraseActivity.this, EnterTranslatedPhraseActivity.class);
     }
 
 }
