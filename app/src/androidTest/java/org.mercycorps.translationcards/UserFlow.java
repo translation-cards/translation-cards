@@ -48,15 +48,17 @@ public class UserFlow {
         closeSoftKeyboard();
         onView(withId(R.id.activity_enter_source_phrase_next_label)).perform(click());
 
+        onView(withId(R.id.translated_phrase_field)).perform(replaceText(TRANSLATION_TEXT));
+        closeSoftKeyboard();
+        onView(withId(R.id.enter_translated_phrase_next_label)).perform(click());
+
         onView(withId(R.id.record_audio_button)).perform(click());
         sleep(2000);
         onView(withId(R.id.record_audio_button)).perform(click());
 
         onView(withId(R.id.record_activity_next)).perform(click());
 
-        onView(withId(R.id.translated_phrase_field)).perform(replaceText(TRANSLATION_TEXT));
-        closeSoftKeyboard();
-        onView(withId(R.id.enter_translated_phrase_next_label)).perform(click());
+
 
         onView(withId(R.id.origin_translation_text)).check(matches(withText(ORIGIN_TEXT)));
         onView(withId(R.id.translated_text)).check(matches(withText(TRANSLATION_TEXT)));
