@@ -45,6 +45,10 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @OnClick(R.id.enter_source_phrase_activity_back_label)
     public void cancelButtonClick() {
+        String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
+        if (!userEnteredSourcePhrase.isEmpty()) {
+            getContextFromIntent().setSourceText(userEnteredSourcePhrase);
+        }
         startNextActivity(EnterSourcePhraseActivity.this, GetStartedActivity.class);
     }
 

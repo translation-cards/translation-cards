@@ -79,6 +79,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     }
 
     protected void setBitmap(int resId, int drawableId) {
+        recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(getResources(), drawableId);
         currentBitmapView = (ImageView) findViewById(resId);
         currentBitmapView.setImageBitmap(currentBitmap);

@@ -92,6 +92,14 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
+    public void shouldUpdateNewTranslationContextWhenUserClicksBackWithValidSourceText() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
+    }
+
+    @Test
     public void shouldSetEnterSourcePhraseActivityTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, createDefaultDictionary());
         TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title); //TODO push text to string to helper
