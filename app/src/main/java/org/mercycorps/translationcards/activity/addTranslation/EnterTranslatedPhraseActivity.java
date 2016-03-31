@@ -9,14 +9,22 @@ import butterknife.OnClick;
 
 public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     @Bind(R.id.translated_phrase_field)TextView translatedPhraseTextView;
+    @Bind(R.id.translated_phrase_input_language_label)TextView translatedPhraseInputLanguageLabel;
 
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_enter_translated_phrase);
     }
 
+    @Override
     public void initStates(){
+        updateInputLanguageLabel();
         updateTranslatedPhraseTextField();
+    }
+
+    private void updateInputLanguageLabel() {
+        String inputLanguageLabel = getContextFromIntent().getDictionary().getLabel().toUpperCase();
+        translatedPhraseInputLanguageLabel.setText(String.format(getString(R.string.translated_phrase_input_language_label), inputLanguageLabel));
     }
 
     private void updateTranslatedPhraseTextField() {

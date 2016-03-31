@@ -75,6 +75,7 @@
     <string name="activity_enter_translated_phrase_description">Add optional translation so you\'re able to show the card to people who may prefer to read.</string>
     <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal speed. When you\'re done, tap record again. Play back and re-record until you\'re satisfied.</string>
     <string name="activity_summary_instructions">Here\'s your new card. Before you save, be sure to review the phrase, translation, and recording.</string>
+    <string name="translated_phrase_input_language_label">"%s TEXT"</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

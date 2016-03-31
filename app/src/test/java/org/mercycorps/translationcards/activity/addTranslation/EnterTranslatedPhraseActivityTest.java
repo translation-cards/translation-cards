@@ -110,4 +110,11 @@ public class EnterTranslatedPhraseActivityTest {
         TextView activityDescription = findTextView(activity, R.id.translated_phrase_activity_description);
         assertEquals("Add optional translation so you're able to show the card to people who may prefer to read.", activityDescription.getText().toString());
     }
+
+    @Test
+    public void shouldDisplayLanguageLabelWithCorrectLanguageWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class, createDefaultDictionary());
+        TextView languageLabel = findTextView(activity, R.id.translated_phrase_input_language_label);
+        assertEquals(String.format("%s TEXT", DEFAULT_DICTIONARY_LABEL.toUpperCase()), languageLabel.getText().toString());
+    }
 }
