@@ -19,6 +19,7 @@
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
         android:textSize="20dp"
+        android:text="@string/record_audio_title"
         android:id="@+id/record_audio_title" />
 
     <TextView

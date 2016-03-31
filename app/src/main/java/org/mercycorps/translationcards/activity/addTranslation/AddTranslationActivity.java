@@ -28,7 +28,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         hideActionBar();
-        setActivityTitle();
     }
 
     @Override
@@ -36,8 +35,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         recycleBitmap();
         super.onDestroy();
     }
-
-    protected abstract void setActivityTitle();
 
     private void hideActionBar() {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();

@@ -14,15 +14,9 @@ import butterknife.OnTextChanged;
 public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @Bind(R.id.source_phrase_field)TextView sourcePhraseTextView;
-    @Bind(R.id.source_phrase_title)TextView sourcePhraseTitle;
     @Bind(R.id.activity_enter_source_phrase_next_label)LinearLayout nextButton;
     @Bind(R.id.activity_enter_source_phrase_next_text)TextView nextButtonText;
     @Bind(R.id.activity_enter_source_phrase_next_image)ImageView nextButtonImage;
-
-    @Override
-    protected void setActivityTitle() {
-        sourcePhraseTitle.setText(getString(R.string.enter_source_phrase_activity_title));
-    }
 
     @Override
     public void inflateView() {

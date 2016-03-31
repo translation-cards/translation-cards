@@ -9,12 +9,6 @@ import butterknife.OnClick;
 
 public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     @Bind(R.id.translated_phrase_field)TextView translatedPhraseTextView;
-    @Bind(R.id.translated_phrase_title)TextView translatedPhraseTitleView;
-
-    @Override
-    protected void setActivityTitle() {
-        translatedPhraseTitleView.setText(getString(R.string.enter_translated_phrase_title));
-    }
 
     @Override
     public void inflateView() {

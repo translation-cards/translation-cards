@@ -25,18 +25,11 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @Bind(R.id.play_audio_button)ImageButton playAudioButton;
     @Bind(R.id.record_audio_button)ImageButton recordAudioButton;
-    @Bind(R.id.record_audio_title)TextView recordAudioTitle;
     @Bind(R.id.origin_translation_text)TextView originTranslationText;
     @Bind(R.id.record_activity_back)LinearLayout backButton;
     @Bind(R.id.text_indicator_divider)FrameLayout translationTextIndicatorDivider;
     @Bind({ R.id.record_activity_back, R.id.record_activity_next})
     List<LinearLayout> backAndNext;
-
-
-    @Override
-    protected void setActivityTitle() {
-        recordAudioTitle.setText(getString(R.string.record_audio_title));
-    }
 
     @Override
     public void inflateView() {
