@@ -52,7 +52,7 @@
         android:layout_below="@+id/get_started_image"
         android:layout_marginTop="20dp"
         android:text="@string/get_started_header"
-        android:id="@+id/get_started_header"
+        android:id="@+id/get_started_decription_title"
         android:textSize="24dp"
         android:textColor="@color/primaryTextColor"
         android:layout_centerHorizontal="true" />
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="@string/get_started_detail"
         android:id="@+id/get_started_detail"
-        android:layout_below="@+id/get_started_header"
+        android:layout_below="@+id/get_started_decription_title"
         android:textSize="14dp"
         android:lineSpacingExtra="3dp"
         android:layout_centerHorizontal="true" />

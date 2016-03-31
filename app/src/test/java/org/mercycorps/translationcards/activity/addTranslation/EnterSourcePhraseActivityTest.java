@@ -147,6 +147,14 @@ public class EnterSourcePhraseActivityTest {
         assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
+    @Test
+    public void shouldDisplayDescriptionWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        TextView activityDescription = findTextView(activity, R.id.source_phrase_description);
+        assertEquals("Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.", activityDescription.getText().toString());
+
+    }
+
     private void setSourceTextAndClick(Activity activity) {
         setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
         click(activity, R.id.activity_enter_source_phrase_next_label);

@@ -40,7 +40,7 @@
         android:paddingRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
-        android:text="@string/recording_label_detail"
+        android:text="@string/source_phrase_activity_description"
         android:layout_below="@+id/translated_phrase_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

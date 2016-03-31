@@ -45,28 +45,28 @@ public class TestAddTranslationCardActivityHelper {
     public static final int DEFAULT_MAX = 10;
 
 
-    public static Activity createActivityToTest(Class<? extends AddTranslationActivity>instanceOfClass) {
+    public static Activity createActivityToTest(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static AppCompatActivity createCompatActivityToTest(Class<? extends AddTranslationActivity>instanceOfClass) {
+    public static AppCompatActivity createCompatActivityToTest(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static Activity createActivityToTestWithTranslationContext(Class<? extends AddTranslationActivity>instanceOfClass){
+    public static Activity createActivityToTestWithTranslationContext(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = createTranslationContextWithSourcePhraseAndTranslatedText();
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static Activity createActivityToTestWithTContextAndSourceText(Class<? extends AddTranslationActivity>instanceOfClass){
+    public static Activity createActivityToTestWithTContextAndSourceText(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = createTranslationContextWithSourcePhraseAndTranslatedText();
         context.setSourceText(DEFAULT_SOURCE_PHRASE);
@@ -74,7 +74,7 @@ public class TestAddTranslationCardActivityHelper {
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static Dictionary createDefaultDictionary(){
+    public static Dictionary createDefaultDictionary() {
         return new Dictionary(DEFAULT_DICTIONARY_LABEL);
     }
 
@@ -101,7 +101,7 @@ public class TestAddTranslationCardActivityHelper {
         return getApplication().getDecoratedMediaManager();
     }
 
-    public static ScheduledExecutorService getScheduledExecutorService(){
+    public static ScheduledExecutorService getScheduledExecutorService() {
         return getApplication().getScheduledExecutorService();
     }
 
@@ -109,7 +109,7 @@ public class TestAddTranslationCardActivityHelper {
         return (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
     }
 
-    public static NewTranslationContext createTranslationContextWithSourcePhraseAndTranslatedText(){
+    public static NewTranslationContext createTranslationContextWithSourcePhraseAndTranslatedText() {
         return new NewTranslationContext(createDefaultDictionary(), createTranslation());
     }
 
@@ -125,38 +125,38 @@ public class TestAddTranslationCardActivityHelper {
         return (TestMainApplication) RuntimeEnvironment.application;
     }
 
-    public static void setText(Activity activity, int resId, String textToSet){
+    public static void setText(Activity activity, int resId, String textToSet) {
         TextView textView = (TextView) activity.findViewById(resId);
         textView.setText(textToSet);
     }
 
-    public static void click(Activity activity, int resId){
+    public static void click(Activity activity, int resId) {
         activity.findViewById(resId).performClick();
     }
 
-    public static ImageView findImageView(Activity activity, int resId){
+    public static ImageView findImageView(Activity activity, int resId) {
         return (ImageView) activity.findViewById(resId);
     }
 
-    public static View findView(Activity activity, int resId){
+    public static View findView(Activity activity, int resId) {
         return activity.findViewById(resId);
     }
 
-    public static TextView findTextView(Activity activity, int resId){
+    public static TextView findTextView(Activity activity, int resId) {
         return (TextView) activity.findViewById(resId);
     }
 
-    public static LinearLayout findLinearLayout(Activity activity, int resId){
+    public static LinearLayout findLinearLayout(Activity activity, int resId) {
         return (LinearLayout) activity.findViewById(resId);
     }
 
 
-    public static NewTranslationContext getContextFromIntent(Activity activity){
+    public static NewTranslationContext getContextFromIntent(Activity activity) {
         return (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
     }
 
-    public static DbManager getDbManager(){
-       return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getDbManager();
+    public static DbManager getDbManager() {
+        return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getDbManager();
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
