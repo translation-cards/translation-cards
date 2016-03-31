@@ -13,7 +13,6 @@
     <string name="source_phrase_activity_description">Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
     <string name="recording_label_hint_text">Flashcard phrase</string>
     <string name="record_audio_title">Record your phrase</string>
-    <string name="recording_audio_detail">When you\'re ready, press record. Speak clearly at a normal speed. When you\'re all done, press stop. You can listen back and record again until you\'re happy to save.</string>
     <string name="recording_text_create_title">Enter the translation text</string>
     <string name="recording_text_hint_text">Phrase translation (Optional)</string>
     <string name="summary_title">Review and save your card</string>
@@ -73,6 +72,9 @@
     <string name="navigation_button_cancel">CANCEL</string>
     <string name="enter_translated_phrase_title">Optional: add the translation</string>
     <string name="enter_source_phrase_activity_title">Write your phrase</string>
+    <string name="activity_enter_translated_phrase_description">Add optional translation so you\'re able to show the card to people who may prefer to read.</string>
+    <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal speed. When you\'re done, tap record again. Play back and re-record until you\'re satisfied.</string>
+    <string name="activity_summary_instructions">Here\'s your new card. Before you save, be sure to review the phrase, translation, and recording.</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

@@ -38,6 +38,7 @@
         android:paddingRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
+        android:text="@string/activity_summary_instructions"
         android:id="@+id/summary_detail" />
 
     <RelativeLayout

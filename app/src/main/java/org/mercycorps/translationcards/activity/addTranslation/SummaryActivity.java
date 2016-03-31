@@ -35,7 +35,6 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @Override
     public void initStates(){
-        updateTextInTextView(summaryDetail, String.format(getString(R.string.summary_detail), getContextFromIntent().getDictionary().getLabel()));
         setTranslationCardChildrenVisibility();
         updateTextInTextView(sourceTextView, getContextFromIntent().getTranslation().getLabel());
         updateTranslatedTextView();

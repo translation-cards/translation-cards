@@ -135,9 +135,9 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldSetSummaryDetailWhenActivityIsCreated() {
-        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
+        Activity activity = createActivityToTest(SummaryActivity.class);
         TextView summaryDetail = findTextView(activity, R.id.summary_detail);
-        assertEquals(String.format("Find your new flashcard at the top of the list in the %s category.", DEFAULT_DICTIONARY_LABEL), summaryDetail.getText().toString());
+        assertEquals("Here's your new card. Before you save, be sure to review the phrase, translation, and recording.", summaryDetail.getText().toString());
     }
 
     @Test

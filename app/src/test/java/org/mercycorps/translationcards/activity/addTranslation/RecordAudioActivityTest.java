@@ -268,4 +268,11 @@ public class RecordAudioActivityTest {
         View indicatorDivider = findView(activity, R.id.text_indicator_divider);
         assertEquals(View.GONE, indicatorDivider.getVisibility());
     }
+
+    @Test
+    public void shouldDisplayDescriptionWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        TextView activityDescription = findTextView(activity, R.id.recording_audio_instructions);
+        assertEquals("Tap record then speak clearly at a normal speed. When you're done, tap record again. Play back and re-record until you're satisfied.", activityDescription.getText().toString());
+    }
 }

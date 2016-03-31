@@ -31,7 +31,7 @@
         android:layout_marginRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
-        android:text="@string/recording_audio_detail"
+        android:text="@string/activity_record_audio_instructions"
         android:layout_below="@+id/record_audio_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
