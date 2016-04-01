@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.data.DbManager;
+
 import butterknife.ButterKnife;
 
 public abstract class AbstractTranslationCardsActivity extends AppCompatActivity {
@@ -41,4 +44,8 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
             view.setVisibility(visibility);
         }
     };
+
+    protected DbManager getDbManager(){
+        return ((MainApplication) getApplication()).getDbManager();
+    }
 }
