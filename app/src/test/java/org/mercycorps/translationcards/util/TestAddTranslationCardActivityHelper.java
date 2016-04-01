@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -45,7 +46,7 @@ public class TestAddTranslationCardActivityHelper {
     public static final int DEFAULT_MAX = 10;
 
 
-    public static Activity createActivityToTest(Class<? extends AddTranslationActivity> instanceOfClass) {
+    public static Activity createActivityToTest(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
