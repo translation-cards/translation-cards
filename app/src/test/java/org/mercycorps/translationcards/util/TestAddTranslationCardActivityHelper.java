@@ -169,6 +169,7 @@ public class TestAddTranslationCardActivityHelper {
     }
 
     public static DbManager getDbManager() {
+
         return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getDbManager();
     }
 
@@ -177,5 +178,9 @@ public class TestAddTranslationCardActivityHelper {
         when(getAudioPlayerManager().getMaxDuration()).thenReturn(DEFAULT_MAX);
         when(getScheduledExecutorService().scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS)))
                 .thenReturn(mock(ScheduledFuture.class));
+    }
+
+    public static int getAlertDialogTitleId(){
+        return 2131558473; //// TODO: 4/1/16 How did I get this?
     }
 }

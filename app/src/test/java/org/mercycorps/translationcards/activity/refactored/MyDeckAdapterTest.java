@@ -1,34 +1,36 @@
 package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowDialog;
 
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -74,32 +76,44 @@ public class MyDeckAdapterTest extends TestCase {
         assertEquals(DEFAULT_TRANSLATION_LANGUAGES, translationLanguagesTextView.getText().toString());
     }
 
-    @Ignore // TODO: 4/1/16 Unable to figure a way out to test this
     @Test
     public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapter();
         View view = adapter.getView(0, null, null);
         click(view, R.id.deck_card_expansion_delete);
-        ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
-        assertThat(shadowAlertDialog.getTitle().toString(), is(DEFAULT_ALERT_DIALOG_TITLE));
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
+        assertThat(alertDialogTitle, is(DEFAULT_ALERT_DIALOG_TITLE));
     }
 
-    @Ignore
     @Test
     public void shouldCallDbManagerDeleteWhenDeleteButtonIsClicked(){
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapter();
+        MyDecksActivity myDecksActivity = (MyDecksActivity) adapter.getContext();
         View view = adapter.getView(0, null, null);
         click(view, R.id.deck_card_expansion_delete);
-        ShadowAlertDialog.getShownDialogs().get(0).findViewById(AlertDialog.BUTTON_POSITIVE).performClick();
-        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         verify(getDbManager()).deleteDeck(anyLong());
+        ListView listView = findAnyView(myDecksActivity, R.id.decks_list);
+        assertTrue(listView.getAdapter().getCount() == 0);
+    }
+
+    @Test
+    public void shouldOpenDeckWhenTitleClicked(){
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapter();
+        MyDecksActivity myDecksActivity = (MyDecksActivity) adapter.getContext();
+        View view = adapter.getView(0, null, null);
+        click(view, R.id.translation_card);
+        assertEquals(TranslationsActivity.class.getName(), shadowOf(myDecksActivity).getNextStartedActivity().getComponent().getClassName());
     }
 
     private ArrayAdapter<Deck> createAdapter(){
         Intent intent = new Intent();
-        Activity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
         return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, Arrays.asList(createMockDeck()));
     }
 
@@ -109,6 +123,7 @@ public class MyDeckAdapterTest extends TestCase {
 
     private void setupMocks(){
         when(getDbManager().getTranslationLanguagesForDeck(anyLong())).thenReturn(DEFAULT_TRANSLATION_LANGUAGES);
+        when(getDbManager().getAllDecks()).thenReturn(null);
     }
 
 }

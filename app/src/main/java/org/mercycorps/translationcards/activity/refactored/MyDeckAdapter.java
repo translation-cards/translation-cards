@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 
@@ -19,20 +21,22 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by njimenez on 3/31/16.
  */
 public class MyDeckAdapter extends ArrayAdapter<Deck> {
-    private final Activity activity;
+    private final MyDecksActivity activity;
     private LayoutInflater layoutInflater;
     @Bind(R.id.origin_language)TextView originLanguageTextView;
     @Bind(R.id.deck_name)TextView deckNameTextView;
     @Bind(R.id.deck_information)TextView deckInformationTextView;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
     @Bind(R.id.deck_card_expansion_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
+    @Bind(R.id.translation_card)LinearLayout deckItemLayout;
 
-    public MyDeckAdapter(Activity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
+    public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
         this.layoutInflater = context.getLayoutInflater();
         this.activity = context;
@@ -70,15 +74,14 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getDbManager().deleteDeck(deck.getDbId());
-//                                clear();
-//                                addAll(getDbManager().getAllDecks());
-//                                notifyDataSetChanged();
+                                activity.updateDecksView();
                             }
                         })
                 .setNegativeButton(R.string.misc_cancel,
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {}
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
                         })
                 .create();
         alertDialog.show();
@@ -91,5 +94,15 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                 optionallyDelete(deck);
             }
         });
+
+        deckItemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent decksIntent = new Intent(activity, TranslationsActivity.class);
+                decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK_ID, deck);
+                activity.startActivity(decksIntent);
+            }
+        });
+
     }
 }
