@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -22,10 +24,14 @@ import org.robolectric.shadows.ShadowAlertDialog;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -41,8 +47,7 @@ public class MyDeckAdapterTest extends TestCase {
     private static final String DEFAULT_FORMATTED_DATE = "12/31/69";
     private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER+ ", "+DEFAULT_FORMATTED_DATE;
     private static final String DEFAULT_TRANSLATION_LANGUAGES = "DefaultTranslationLanguages";
-    public static final String DECK_DELETE_DIALOG_TITLE= "Are you sure you want to delete this deck?";
-
+    public static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() throws Exception{
@@ -69,7 +74,28 @@ public class MyDeckAdapterTest extends TestCase {
         assertEquals(DEFAULT_TRANSLATION_LANGUAGES, translationLanguagesTextView.getText().toString());
     }
 
+    @Ignore // TODO: 4/1/16 Unable to figure a way out to test this
+    @Test
+    public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapter();
+        View view = adapter.getView(0, null, null);
+        click(view, R.id.deck_card_expansion_delete);
+        ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
+        assertThat(shadowAlertDialog.getTitle().toString(), is(DEFAULT_ALERT_DIALOG_TITLE));
+    }
 
+    @Ignore
+    @Test
+    public void shouldCallDbManagerDeleteWhenDeleteButtonIsClicked(){
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapter();
+        View view = adapter.getView(0, null, null);
+        click(view, R.id.deck_card_expansion_delete);
+        ShadowAlertDialog.getShownDialogs().get(0).findViewById(AlertDialog.BUTTON_POSITIVE).performClick();
+        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        verify(getDbManager()).deleteDeck(anyLong());
+    }
 
     private ArrayAdapter<Deck> createAdapter(){
         Intent intent = new Intent();

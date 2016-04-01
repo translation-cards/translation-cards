@@ -19,38 +19,23 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by njimenez on 3/31/16.
  */
 public class MyDeckAdapter extends ArrayAdapter<Deck> {
-    private final Activity context;
+    private final Activity activity;
     private LayoutInflater layoutInflater;
-    private ViewHolder viewHolder;
-
-
-    static class ViewHolder {
-        @Bind(R.id.origin_language)TextView originLanguageTextView;
-        @Bind(R.id.deck_name)TextView deckNameTextView;
-        @Bind(R.id.deck_information)TextView deckInformationTextView;
-        @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
-        @Bind(R.id.deck_card_expansion_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
-
-        public ViewHolder(View view){
-            ButterKnife.bind(this, view);
-        }
-
-        @OnClick(R.id.deck_card_expansion_delete)
-        public void deleteDeck(){
-        }
-
-    }
+    @Bind(R.id.origin_language)TextView originLanguageTextView;
+    @Bind(R.id.deck_name)TextView deckNameTextView;
+    @Bind(R.id.deck_information)TextView deckInformationTextView;
+    @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
+    @Bind(R.id.deck_card_expansion_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
 
     public MyDeckAdapter(Activity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
         this.layoutInflater = context.getLayoutInflater();
-        this.context = context;
+        this.activity = context;
     }
 
     @Override
@@ -58,24 +43,53 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         Deck deck = getItem(position);
         if (view == null) {
             view = layoutInflater.inflate(R.layout.deck_item, parent, false);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
+            ButterKnife.bind(this, view);
+            initFields(deck);
+            setClickListeners(deck);
         }
-        initFields(deck);
         return view;
     }
 
     private void initFields(Deck deck){
         if(deck == null) return;
-        viewHolder.deckNameTextView.setText(deck.getLabel());
-        viewHolder.deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
-        viewHolder.translationLanguagesTextView.setText(getDbManager().getTranslationLanguagesForDeck(deck.getDbId()));
+        deckNameTextView.setText(deck.getLabel());
+        deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
+        translationLanguagesTextView.setText(getDbManager().getTranslationLanguagesForDeck(deck.getDbId()));
     }
 
 
     private DbManager getDbManager(){
-        return ((MainApplication) context.getApplication()).getDbManager();
+        return ((MainApplication) activity.getApplication()).getDbManager();
+    }
+
+    private void optionallyDelete(final Deck deck) {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.deck_delete_dialog_title)
+                .setPositiveButton(R.string.misc_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getDbManager().deleteDeck(deck.getDbId());
+//                                clear();
+//                                addAll(getDbManager().getAllDecks());
+//                                notifyDataSetChanged();
+                            }
+                        })
+                .setNegativeButton(R.string.misc_cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {}
+                        })
+                .create();
+        alertDialog.show();
+    }
+
+    public void setClickListeners(final Deck deck) {
+        deckCardExpansionDeleteLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                optionallyDelete(deck);
+            }
+        });
     }
 }

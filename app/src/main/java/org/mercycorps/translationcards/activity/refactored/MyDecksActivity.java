@@ -50,9 +50,9 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         updateDecksView();
     }
 
-    private void updateDecksView() {
+    public void updateDecksView() {
         List<Deck> decks = getDecks();
-        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(this, R.layout.deck_item, R.id.deck_name, decks);
+        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(MyDecksActivity.this, R.layout.deck_item, R.id.deck_name, decks);
         ListView decksListView = (ListView) findViewById(R.id.decks_list);
         decksListView.setAdapter(listAdapter);
     }
