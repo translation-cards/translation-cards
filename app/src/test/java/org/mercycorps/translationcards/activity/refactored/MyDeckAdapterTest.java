@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,20 +13,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlertDialog;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Created by karthikbalasubramanian on 4/1/16.
@@ -39,12 +41,8 @@ public class MyDeckAdapterTest extends TestCase {
     private static final String DEFAULT_FORMATTED_DATE = "12/31/69";
     private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER+ ", "+DEFAULT_FORMATTED_DATE;
     private static final String DEFAULT_TRANSLATION_LANGUAGES = "DefaultTranslationLanguages";
+    public static final String DECK_DELETE_DIALOG_TITLE= "Are you sure you want to delete this deck?";
 
-    @Test
-    public void shouldNotBeNull() throws Exception {
-        ArrayAdapter adapter = createAdapter();
-        assertNotNull(adapter);
-    }
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() throws Exception{
@@ -70,6 +68,7 @@ public class MyDeckAdapterTest extends TestCase {
         TextView translationLanguagesTextView  = findAnyView(view, R.id.translation_languages);
         assertEquals(DEFAULT_TRANSLATION_LANGUAGES, translationLanguagesTextView.getText().toString());
     }
+
 
 
     private ArrayAdapter<Deck> createAdapter(){

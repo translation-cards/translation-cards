@@ -134,6 +134,10 @@ public class TestAddTranslationCardActivityHelper {
         activity.findViewById(resId).performClick();
     }
 
+    public static void click(View view, int resId){
+        view.findViewById(resId).performClick();
+    }
+
     public static ImageView findImageView(Activity activity, int resId) {
         return (ImageView) activity.findViewById(resId);
     }

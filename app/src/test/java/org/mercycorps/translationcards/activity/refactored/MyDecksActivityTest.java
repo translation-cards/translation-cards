@@ -38,8 +38,6 @@ import static org.robolectric.Shadows.shadowOf;
  *
  * @author patdale216@gmail.com (Pat Dale)
  */
-@Config(constants = BuildConfig.class, sdk = 21)
-@RunWith(RobolectricGradleTestRunner.class)
 public class MyDecksActivityTest {
 
 
