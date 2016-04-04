@@ -144,13 +144,6 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/back_arrow"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_back" />
         </LinearLayout>
 
         <LinearLayout
