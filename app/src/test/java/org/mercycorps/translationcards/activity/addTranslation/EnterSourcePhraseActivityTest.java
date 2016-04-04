@@ -155,6 +155,13 @@ public class EnterSourcePhraseActivityTest {
 
     }
 
+    @Test
+    public void shouldDisplayInputFieldHintWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        TextView inputFieldHint = findTextView(activity, R.id.source_phrase_field);
+        assertEquals("e.g. Wait here for 30 minutes", inputFieldHint.getHint().toString());
+    }
+
     private void setSourceTextAndClick(Activity activity) {
         setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
         click(activity, R.id.activity_enter_source_phrase_next_label);

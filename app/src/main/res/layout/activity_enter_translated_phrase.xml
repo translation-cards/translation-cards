@@ -161,7 +161,7 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_next"
+                android:text="@string/navigation_button_skip"
                 android:id="@+id/recording_label_next_text" />
             <ImageView
                 android:layout_width="24dp"
