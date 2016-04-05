@@ -1,9 +1,11 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Bind(R.id.record_audio_button)ImageButton recordAudioButton;
     @Bind(R.id.origin_translation_text)TextView originTranslationText;
     @Bind(R.id.record_activity_back)LinearLayout backButton;
+    @Bind(R.id.record_activity_next)LinearLayout nextButton;
+    @Bind(R.id.recording_audio_next_text)TextView nextButtonText;
+    @Bind(R.id.recording_audio_save_image)ImageView nextButtonArrow;
     @Bind(R.id.text_indicator_divider)FrameLayout translationTextIndicatorDivider;
     @Bind({ R.id.record_activity_back, R.id.record_activity_next})
     List<LinearLayout> backAndNext;
@@ -36,12 +41,19 @@ public class RecordAudioActivity extends AddTranslationActivity {
         setContentView(R.layout.activity_record_audio);
     }
 
+    @Override
     public void initStates(){
         updatePlayButtonState();
-        updateBackAndNextButtonStates();
         showTranslationSourcePhrase();
-        showBackButton();
         hideIndicatorDivider();
+        updateNextButtonState();
+    }
+
+    private void updateNextButtonState() {
+        Boolean isAudioFilePresent = getContextFromIntent().getTranslation().isAudioFilePresent();
+        nextButton.setClickable(isAudioFilePresent);
+        nextButtonText.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
+        nextButtonArrow.setBackgroundResource(R.drawable.forward_arrow_40p);
     }
 
     private void hideIndicatorDivider() {
@@ -58,6 +70,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updateBackAndNextButtonStates(){
         ButterKnife.apply(backAndNext, VISIBILITY, getVisibility());
+        updateNextButtonState();
     }
 
     private int getVisibility(){

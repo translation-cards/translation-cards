@@ -114,7 +114,7 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldSaveTranslationContextWhenUserClicksSave() {
-        Activity activity = createActivityToTestWithTContextAndSourceText(SummaryActivity.class);
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(SummaryActivity.class);
         click(activity, R.id.save_translation_button);
         verify(getDbManager()).saveTranslationContext(any(NewTranslationContext.class));
     }

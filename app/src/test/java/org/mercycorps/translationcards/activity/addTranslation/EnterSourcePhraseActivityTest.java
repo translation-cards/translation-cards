@@ -108,7 +108,7 @@ public class EnterSourcePhraseActivityTest {
 
     @Test
     public void shouldPopulateSourcePhraseFieldWithValueWhenTranslationContextHasSourceText(){
-        Activity activity = createActivityToTestWithTContextAndSourceText(EnterSourcePhraseActivity.class);
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterSourcePhraseActivity.class);
         TextView sourcePhraseField = findTextView(activity, R.id.source_phrase_field);
         assertEquals(DEFAULT_SOURCE_PHRASE, sourcePhraseField.getText().toString());
     }

@@ -67,7 +67,7 @@ public class TestAddTranslationCardActivityHelper {
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static Activity createActivityToTestWithTContextAndSourceText(Class<? extends AddTranslationActivity> instanceOfClass) {
+    public static Activity createActivityToTestWithSourceAndTranslatedText(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = createTranslationContextWithSourcePhraseAndTranslatedText();
         context.setSourceText(DEFAULT_SOURCE_PHRASE);

@@ -147,7 +147,7 @@
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_save"
-                android:id="@+id/recording_audio_save_text" />
+                android:id="@+id/recording_audio_next_text" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
