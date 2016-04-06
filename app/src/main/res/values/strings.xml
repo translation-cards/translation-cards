@@ -11,10 +11,10 @@
     <string name="recording_label_create_title">Write your %s phrase and translation</string>
     <string name="recording_label_edit_title">Update or delete your flashcard</string>
     <string name="source_phrase_activity_description">Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
-    <string name="recording_label_hint_text">Flashcard phrase</string>
+    <string name="recording_label_hint_text">e.g. Wait here for 30 minutes</string>
     <string name="record_audio_title">Record your phrase</string>
     <string name="recording_text_create_title">Enter the translation text</string>
-    <string name="recording_text_hint_text">Phrase translation (Optional)</string>
+    <string name="recording_text_hint_text">Phrase translation (optional)</string>
     <string name="summary_title">Review and save your card</string>
     <string name="summary_detail">Find your new flashcard at the top of the list in the %s category.</string>
     <string name="deck_creation_field_label_deck_name">Deck Name:</string>
@@ -80,7 +80,7 @@
     <string name="empty_myDecks_title">Let\'s Get Started</string>
     <string name="import_deck_button_text">IMPORT DECK</string>
     <string name="create_deck_button_text">CREATE DECK</string>
-
+    <string name="navigation_button_skip">SKIP</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

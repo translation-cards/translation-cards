@@ -117,4 +117,29 @@ public class EnterTranslatedPhraseActivityTest {
         TextView languageLabel = findTextView(activity, R.id.translated_phrase_input_language_label);
         assertEquals(String.format("%s TEXT", DEFAULT_DICTIONARY_LABEL.toUpperCase()), languageLabel.getText().toString());
     }
+
+    @Test
+    public void shouldDisplayNextLabelWhenInputIsEntered() {
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterTranslatedPhraseActivity.class);
+        TextView nextLabel = findTextView(activity, R.id.recording_label_next_text);
+        assertEquals("NEXT", nextLabel.getText().toString());
+    }
+
+    @Test
+    public void shouldDisplaySkipLabelWhenInputIsRemoved() {
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterTranslatedPhraseActivity.class);
+        TextView label = findTextView(activity, R.id.recording_label_next_text);
+        TextView translatedText = findTextView(activity, R.id.translated_phrase_field);
+        translatedText.setText("");
+        assertEquals("SKIP", label.getText().toString());
+    }
+
+    @Test
+    public void shouldDisplaySkipLabelWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
+        TextView skipLabel = findTextView(activity,R.id.recording_label_next_text);
+        assertEquals("SKIP", skipLabel.getText().toString());
+
+
+    }
 }

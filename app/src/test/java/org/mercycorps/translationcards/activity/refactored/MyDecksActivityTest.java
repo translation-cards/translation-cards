@@ -1,13 +1,8 @@
 package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -15,18 +10,16 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.DeckCreationActivity;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAlertDialog;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Mockito.when;

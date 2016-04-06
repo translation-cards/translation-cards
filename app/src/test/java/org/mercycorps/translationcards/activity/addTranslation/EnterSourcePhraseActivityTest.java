@@ -108,7 +108,7 @@ public class EnterSourcePhraseActivityTest {
 
     @Test
     public void shouldPopulateSourcePhraseFieldWithValueWhenTranslationContextHasSourceText(){
-        Activity activity = createActivityToTestWithTContextAndSourceText(EnterSourcePhraseActivity.class);
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterSourcePhraseActivity.class);
         TextView sourcePhraseField = findTextView(activity, R.id.source_phrase_field);
         assertEquals(DEFAULT_SOURCE_PHRASE, sourcePhraseField.getText().toString());
     }
@@ -153,6 +153,13 @@ public class EnterSourcePhraseActivityTest {
         TextView activityDescription = findTextView(activity, R.id.source_phrase_description);
         assertEquals("Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.", activityDescription.getText().toString());
 
+    }
+
+    @Test
+    public void shouldDisplayInputFieldHintWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        TextView inputFieldHint = findTextView(activity, R.id.source_phrase_field);
+        assertEquals("e.g. Wait here for 30 minutes", inputFieldHint.getHint().toString());
     }
 
     private void setSourceTextAndClick(Activity activity) {
