@@ -18,10 +18,10 @@ import static org.mercycorps.translationcards.MainApplication.getContextFromMain
 public class DecoratedMediaManager {
     private final int INITIAL_DELAY = 0;
     private final int PERIOD = 100;
-    private ScheduledExecutorService scheduledExecutorService;
     private ProgressBar progressBar;
     private ScheduledFuture scheduledFuture;
     private static final int RESET_PROGRESS_BAR = 0;
+    private String filename;
 
     public DecoratedMediaManager() {
     }
@@ -30,8 +30,9 @@ public class DecoratedMediaManager {
     // Bad API design by google
     public void play(String filename, ProgressBar progressBar) throws AudioFileException {
         this.progressBar = progressBar;
+        this.filename = filename;
         try {
-            getAudioPlayerManager().play(filename);
+            getAudioPlayerManager().play(this.filename);
             progressBar.setMax(getAudioPlayerManager().getMaxDuration());
             schedule();
         } catch (IOException e) {
@@ -57,6 +58,7 @@ public class DecoratedMediaManager {
 
 
     public void stop() {
+        if (progressBar == null) return;
         getAudioPlayerManager().stop();
         progressBar.setProgress(RESET_PROGRESS_BAR);
         scheduledFuture.cancel(true);
@@ -75,5 +77,13 @@ public class DecoratedMediaManager {
 
     public boolean isPlaying() {
         return getAudioPlayerManager().isPlaying();
+    }
+
+    public boolean isCurrentlyPlayingSameCard(String fileName) {
+        return isSameAudioFile(fileName) && isPlaying();
+    }
+
+    private boolean isSameAudioFile(String fileName) {
+        return fileName != null && fileName.equals(this.filename);
     }
 }

@@ -542,7 +542,7 @@ public class RecordingActivity extends AppCompatActivity {
 
         final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
                 new Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
-                (ProgressBar) findViewById(R.id.recording_done_progress_bar), mediaPlayerManager);
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), null);
         findViewById(R.id.summary_translation_card).setOnClickListener(cardAudioClickListener);
 
         View backButton = findViewById(R.id.summary_activity_back);

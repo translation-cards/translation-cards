@@ -4,12 +4,13 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 
 public class AudioPlayerManager {
-    private static final String TAG = "MediaPlayerManager";
+    private static final String TAG = "AudioPlayerManager";
     private MediaPlayer mediaPlayer;
     private FileDescriptor fileDescriptor;
 
@@ -19,7 +20,9 @@ public class AudioPlayerManager {
     }
 
     public void stop() {
-        mediaPlayer.stop();
+        if(isPlaying()){
+            mediaPlayer.stop();
+        }
         mediaPlayer.reset();
     }
 

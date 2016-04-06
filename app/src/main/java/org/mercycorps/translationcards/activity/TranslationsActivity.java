@@ -44,9 +44,9 @@ import org.mercycorps.translationcards.activity.addTranslation.NewTranslationCon
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.porting.ExportException;
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
@@ -81,13 +81,13 @@ public class TranslationsActivity extends AppCompatActivity {
     private CardListAdapter listAdapter;
     private Deck deck;
     private boolean[] translationCardStates;
-    private MediaPlayerManager lastMediaPlayerManager;
+    private DecoratedMediaManager decoratedMediaManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
-        lastMediaPlayerManager = application.getMediaPlayerManager();
+        decoratedMediaManager = application.getDecoratedMediaManager();
         dbManager = application.getDbManager();
         deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
@@ -168,7 +168,7 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     private void setDictionary(int dictionaryIndex) {
-        lastMediaPlayerManager.stop();
+        decoratedMediaManager.stop();
         translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
         Arrays.fill(translationCardStates, false);
 
@@ -209,7 +209,7 @@ public class TranslationsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        lastMediaPlayerManager.stop();
+        decoratedMediaManager.stop();
     }
 
     public void onExportButtonPress(View v) {
@@ -282,7 +282,7 @@ public class TranslationsActivity extends AppCompatActivity {
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(
                     R.id.list_item_progress_bar);
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                    lastMediaPlayerManager));
+                    decoratedMediaManager));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
@@ -300,7 +300,7 @@ public class TranslationsActivity extends AppCompatActivity {
 
             convertView.findViewById(R.id.translated_text_layout)
                     .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                            lastMediaPlayerManager));
+                            decoratedMediaManager));
 
             return convertView;
         }
