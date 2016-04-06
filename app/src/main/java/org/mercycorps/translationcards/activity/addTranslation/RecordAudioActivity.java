@@ -52,8 +52,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private void updateNextButtonState() {
         Boolean isAudioFilePresent = getContextFromIntent().getTranslation().isAudioFilePresent();
         nextButton.setClickable(isAudioFilePresent);
-        nextButtonText.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
-        nextButtonArrow.setBackgroundResource(R.drawable.forward_arrow_40p);
+        int nextButtonTextColor = isAudioFilePresent ? R.color.primaryTextColor : R.color.textDisabled;
+        nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonTextColor));
+        int nextButtonArrowColor = isAudioFilePresent ? R.drawable.forward_arrow : R.drawable.forward_arrow_40p;
+        nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
     }
 
     private void hideIndicatorDivider() {

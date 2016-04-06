@@ -73,7 +73,7 @@ public class RecordAudioActivityTest {
     public void shouldShowNextButtonWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
-        assertEquals(View.VISIBLE,nextButton.getVisibility());
+        assertEquals(View.VISIBLE, nextButton.getVisibility());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldEnableBackButtonWhenAudioFileIsPresentAndIsRecordingIsFinished(){
+    public void shouldEnableBackButtonWhenAudioFileIsPresentAndIsRecordingIsFinished() {
         Activity activity = createActivityToTestWithSourceAndTranslatedText(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
@@ -104,14 +104,50 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldDisplayGreyNextButtonWWhenActivityIsCreatedWithoutRecording() {
+    public void shouldDisplayGreyNextButtonTextAndArrowWhenActivityIsCreatedWithoutRecording() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         TextView nextButtonText = findTextView(activity, R.id.recording_audio_next_text);
         assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayGreyNextButtonArrowWhenActivityIsCreatedWithoutRecording() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
         ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
         assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
     }
 
+    @Test
+    public void shouldDisplayBlackNextButtonTextWhenActivityIsCreatedWithARecording() {
+        Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
+        TextView nextButtonText = findTextView(activity, R.id.recording_audio_next_text);
+        assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayBlackNextButtonArrowWhenActivityIsCreatedWithARecording() {
+        Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
+        assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldDisplayBlackNextButtonTextWhenActivityIsCreatedWithoutRecordingThenWeRecord() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        TextView nextButtonText = findTextView(activity, R.id.recording_audio_next_text);
+        click(activity, R.id.record_audio_button);
+        click(activity, R.id.record_audio_button);
+        assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayBlackNextButtonArrowWhenActivityIsCreatedWithoutRecordingThenWeRecord() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
+        click(activity, R.id.record_audio_button);
+        click(activity, R.id.record_audio_button);
+        assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
+    }
 
     @Ignore
     @Test
@@ -133,7 +169,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldHaveAValidFileNameAfterRecordingIsComplete(){
+    public void shouldHaveAValidFileNameAfterRecordingIsComplete() {
         Activity activity = createActivityToTestWithSourceAndTranslatedText(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
@@ -246,7 +282,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldStopPlayingWhenNextButtonIsClicked(){
+    public void shouldStopPlayingWhenNextButtonIsClicked() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         when(getAudioPlayerManager().isPlaying()).thenReturn(true);
         click(activity, R.id.record_activity_next);
@@ -254,7 +290,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldStopPlayingWhenBackButtonIsClicked(){
+    public void shouldStopPlayingWhenBackButtonIsClicked() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         when(getAudioPlayerManager().isPlaying()).thenReturn(true);
         click(activity, R.id.record_activity_back);
@@ -262,7 +298,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldStopRecordingWhenNextButtonIsClicked(){
+    public void shouldStopRecordingWhenNextButtonIsClicked() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
         click(activity, R.id.record_activity_next);
@@ -284,7 +320,7 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldEnableBackButtonsWhenRecordingIsStoppedByPlayClick(){
+    public void shouldEnableBackButtonsWhenRecordingIsStoppedByPlayClick() {
         when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
