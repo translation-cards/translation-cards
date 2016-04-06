@@ -1,9 +1,12 @@
 package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlertDialog;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,15 +48,6 @@ public class MyDecksActivityTest {
         Activity activity = createActivityToTest(MyDecksActivity.class);
         assertNotNull(activity);
     }
-
-    @Test
-    public void shouldShowDecksFooterWhenActivityStarts(){
-        setUpMocksWithEmptyDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
-        RelativeLayout decksFooterLayout = findAnyView(activity, R.id.mydecks_footer_layout);
-        assertNotNull(decksFooterLayout);
-    }
-
 
     @Test
     public void shouldShowDecksFooterTitleWhenNoDecksArePresent(){

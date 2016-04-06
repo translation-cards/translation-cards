@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/listBackgroundColor">
@@ -8,19 +8,9 @@
         android:paddingTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
-        android:id="@+id/decks_list"/>
+        android:id="@+id/my_decks_list"/>
 
-    <LinearLayout
-        android:id="@+id/mydecks_footer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/decks_list"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-        <include layout="@layout/mydecks_footer" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

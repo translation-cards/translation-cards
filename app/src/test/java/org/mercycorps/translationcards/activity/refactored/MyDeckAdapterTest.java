@@ -1,13 +1,12 @@
 package org.mercycorps.translationcards.activity.refactored;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import junit.framework.TestCase;
@@ -17,17 +16,16 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowDialog;
 
-import java.util.Arrays;
-
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
@@ -53,7 +51,7 @@ public class MyDeckAdapterTest extends TestCase {
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() throws Exception{
-        ArrayAdapter<Deck> adapter = createAdapter();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView deckNameTextView = (TextView) view.findViewById(R.id.deck_name);
         assertEquals(DEFAULT_DECK_NAME, deckNameTextView.getText().toString());
@@ -61,7 +59,7 @@ public class MyDeckAdapterTest extends TestCase {
 
     @Test
     public void shouldHaveDeckInformationWhenDeckIsPresent() throws Exception {
-        ArrayAdapter<Deck> adapter = createAdapter();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView deckInformationTextView = findAnyView(view, R.id.deck_information);
         assertEquals(DEFAULT_DECK_INFORMATION, deckInformationTextView.getText().toString());
@@ -70,7 +68,7 @@ public class MyDeckAdapterTest extends TestCase {
     @Test
     public void shouldHaveTranslationLanguagesTextWhenDeckIsPresent(){
         setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapter();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView translationLanguagesTextView  = findAnyView(view, R.id.translation_languages);
         assertEquals(DEFAULT_TRANSLATION_LANGUAGES, translationLanguagesTextView.getText().toString());
@@ -79,7 +77,7 @@ public class MyDeckAdapterTest extends TestCase {
     @Test
     public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
         setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapter();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         click(view, R.id.deck_card_expansion_delete);
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
@@ -90,35 +88,60 @@ public class MyDeckAdapterTest extends TestCase {
     @Test
     public void shouldCallDbManagerDeleteWhenDeleteButtonIsClicked(){
         setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapter();
-        MyDecksActivity myDecksActivity = (MyDecksActivity) adapter.getContext();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         click(view, R.id.deck_card_expansion_delete);
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(getDbManager()).deleteDeck(anyLong());
-        ListView listView = findAnyView(myDecksActivity, R.id.decks_list);
-        assertTrue(listView.getAdapter().getCount() == 0);
+        verify(getDbManager()).deleteDeck(0);
     }
 
     @Test
     public void shouldOpenDeckWhenTitleClicked(){
         setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapter();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         MyDecksActivity myDecksActivity = (MyDecksActivity) adapter.getContext();
         View view = adapter.getView(0, null, null);
         click(view, R.id.translation_card);
         assertEquals(TranslationsActivity.class.getName(), shadowOf(myDecksActivity).getNextStartedActivity().getComponent().getClassName());
     }
 
-    private ArrayAdapter<Deck> createAdapter(){
-        Intent intent = new Intent();
-        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
-        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, Arrays.asList(createMockDeck()));
+    @Test
+    public void shouldNotShowMakeACopyOptionWhenDeckIsNotLocked() {
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
+        View view = adapter.getView(0, null, null);
+        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_expansion_copy);
+        assertTrue(linearLayout.getVisibility() == View.GONE);
     }
 
-    private Deck createMockDeck(){
+    @Test
+    public void shouldMakeCopyOptionVisibleWhenDeckIsLocked(){
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapterLockedDeck();
+        View view = adapter.getView(0, null, null);
+        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_expansion_copy);
+        assertTrue(linearLayout.getVisibility() == View.VISIBLE);
+    }
+
+    private ArrayAdapter<Deck> createAdapterUnlockedDeck(){
+        Intent intent = new Intent();
+        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(createUnlockedTestDeck()));
+    }
+
+    private ArrayAdapter<Deck> createAdapterLockedDeck(){
+        Intent intent = new Intent();
+        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(createLockedTestDeck()));
+    }
+
+    private Deck createUnlockedTestDeck(){
         return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, false);
+    }
+
+    private Deck createLockedTestDeck(){
+        return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, true);
     }
 
     private void setupMocks(){

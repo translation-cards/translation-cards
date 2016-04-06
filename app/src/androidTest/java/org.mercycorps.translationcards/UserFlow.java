@@ -1,18 +1,13 @@
 package org.mercycorps.translationcards;
 
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.view.View;
-import android.widget.ListView;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mercycorps.translationcards.activity.DecksActivity;
+import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onData;
@@ -35,11 +30,11 @@ public class UserFlow {
     public static final String TRANSLATION_TEXT = "حيث أنها لا تؤذي؟";
 
     @Rule
-    public ActivityTestRule<DecksActivity> activityTestRule = new ActivityTestRule<>(DecksActivity.class);
+    public ActivityTestRule<MyDecksActivity> activityTestRule = new ActivityTestRule<>(MyDecksActivity.class);
 
     @Test
     public void createAndDeleteCardFlow() throws InterruptedException {
-        onData(anything()).inAdapterView(withId(R.id.decks_list)).atPosition(0).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.my_decks_list)).atPosition(0).perform(click());
 
         onView(withId(R.id.add_button)).perform(click());
         onView(withId(R.id.get_started_button)).perform(click());
@@ -57,8 +52,6 @@ public class UserFlow {
         onView(withId(R.id.record_audio_button)).perform(click());
 
         onView(withId(R.id.record_activity_next)).perform(click());
-
-
 
         onView(withId(R.id.origin_translation_text)).check(matches(withText(ORIGIN_TEXT)));
         onView(withId(R.id.translated_text)).check(matches(withText(TRANSLATION_TEXT)));

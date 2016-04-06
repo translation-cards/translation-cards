@@ -4,40 +4,25 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.DeckCreationActivity;
 import org.mercycorps.translationcards.activity.ImportActivity;
-import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
-import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by njimenez on 3/31/16.
  */
 public class MyDecksActivity extends AbstractTranslationCardsActivity {
-    @Bind(R.id.empty_myDecks_title)
-    TextView emptyMyDecksTitle;
-    @Bind(R.id.empty_myDecks_message)
-    TextView emptyMyDecksMessage;
-
-    @Bind({R.id.empty_myDecks_title, R.id.empty_myDecks_message})
-    List<TextView> emptyTitleAndMessage;
 
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
+    private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
 
     private static final String FEEDBACK_URL =
@@ -50,19 +35,61 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     public void initStates() {
-        updateDecksView();
-    }
-
-    public void updateDecksView() {
+        setActionBarTitle();
         List<Deck> decks = getDecks();
-        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(MyDecksActivity.this, R.layout.deck_item, R.id.deck_name, decks);
-        ListView decksListView = (ListView) findViewById(R.id.decks_list);
-        decksListView.setAdapter(listAdapter);
-        updateEmptyTitleAndMessage();
+        initializeFooter();
+        updateDecksView(decks);
+        updateEmptyTitleAndMessage(decks);
     }
 
-    private void updateEmptyTitleAndMessage() {
-        ButterKnife.apply(emptyTitleAndMessage, VISIBILITY, getVisibility());
+    private void setActionBarTitle() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.my_decks);
+        }
+    }
+
+    private void updateDecksView(List<Deck> decks) {
+        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(MyDecksActivity.this, R.layout.deck_item, R.id.deck_name, decks);
+        ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
+        decksListView.setAdapter(listAdapter);
+    }
+
+    private void initializeFooter() {
+        ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
+        decksListView.addFooterView(getLayoutInflater()
+                .inflate(R.layout.mydecks_footer, decksListView, false));
+
+        findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
+
+            }
+        });
+
+        findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                fileIntent.setType("file/*");
+                startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
+            }
+        });
+
+        findViewById(R.id.create_deck_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createIntent = new Intent(MyDecksActivity.this, DeckCreationActivity.class);
+                startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
+            }
+        });
+
+    }
+
+    private void updateEmptyTitleAndMessage(List<Deck> decks) {
+        Integer viewVisibility = decks.isEmpty() ? View.VISIBLE : View.GONE;
+        findViewById(R.id.empty_myDecks_message).setVisibility(viewVisibility);
+        findViewById(R.id.empty_myDecks_title).setVisibility(viewVisibility);
     }
 
     private List<Deck> getDecks() {
@@ -76,37 +103,34 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         //// TODO: 3/31/16 We dont set bitmaps for decks. Refactor this to be in AddTranslationActivity
     }
 
-    @OnClick(R.id.feedback_button)
-    public void feedbackButtonClicked() {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
-    }
-
-    @OnClick(R.id.import_deck_button)
-    public void importButtonClicked() {
-        Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        fileIntent.setType("file/*");
-        startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
-    }
-
-    @OnClick(R.id.create_deck_button)
-    public void createDeckButtonClicked() {
-        Intent createIntent = new Intent(MyDecksActivity.this, DeckCreationActivity.class);
-        startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
-    }
-
-    private int getVisibility() {
-        return getDecks().isEmpty() ? View.VISIBLE : View.GONE;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case REQUEST_CODE_IMPORT_FILE_PICKER:
+                if (resultCode != RESULT_OK) {
+                    return;
+                }
+                Intent intent = new Intent(this, ImportActivity.class);
+                intent.setData(data.getData());
+                startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE);
+                break;
+            case REQUEST_CODE_IMPORT_FILE:
+                if (resultCode == RESULT_OK) {
+                    refreshMyDecksList();
+                }
+                break;
             case REQUEST_CODE_CREATE_DECK:
                 if (resultCode == RESULT_OK) {
-                    updateDecksView();
+                    refreshMyDecksList();
                 }
                 break;
         }
+    }
+
+    public void refreshMyDecksList() {
+        List<Deck> decks = getDecks();
+        updateDecksView(decks);
+        updateEmptyTitleAndMessage(decks);
     }
 
 }
