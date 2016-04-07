@@ -36,7 +36,7 @@ public class UserFlow {
     public void createAndDeleteCardFlow() throws InterruptedException {
         onData(anything()).inAdapterView(withId(R.id.my_decks_list)).atPosition(0).perform(click());
 
-        onView(withId(R.id.add_button)).perform(click());
+        onView(withId(R.id.add_translation_button)).perform(click());
         onView(withId(R.id.get_started_button)).perform(click());
 
         onView(withId(R.id.source_phrase_field)).perform(typeText(ORIGIN_TEXT));
