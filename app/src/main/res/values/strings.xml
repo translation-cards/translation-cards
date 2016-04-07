@@ -81,6 +81,8 @@
     <string name="import_deck_button_text">IMPORT DECK</string>
     <string name="create_deck_button_text">CREATE DECK</string>
     <string name="navigation_button_skip">SKIP</string>
+    <string name="empty_deck_title">Let\'s make this useful</string>
+    <string name="empty_deck_message">This deck doesn\'t have any cards. Get started by creating your first card.</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

@@ -138,7 +138,8 @@ public class TranslationsActivity extends AppCompatActivity {
         list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
         findViewById(R.id.card_list_header).setOnClickListener(null);
 
-        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
+        inflateListFooter();
+
         listAdapter = new CardListAdapter(
                 this, R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>());
@@ -154,6 +155,19 @@ public class TranslationsActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void inflateListFooter() {
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
+        updateWelcomeInstructionsState();
+    }
+
+    private void updateWelcomeInstructionsState() {
+        int welcomeInstructionsVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.VISIBLE : View.GONE;
+        findViewById(R.id.empty_deck_title).setVisibility(welcomeInstructionsVisibility);
+        findViewById(R.id.empty_deck_message).setVisibility(welcomeInstructionsVisibility);
     }
 
     private void launchGetStartedActivity(){

@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
@@ -33,6 +34,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,6 +56,7 @@ public class TranslationsActivityTest {
     public static final String TRANSLATED_TEXT = "TranslatedText";
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
+    private static final String EMPTY_DECK_TITLE = "Let's make this useful";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
@@ -79,6 +82,41 @@ public class TranslationsActivityTest {
         dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
+    }
+
+    @Test
+    public void shouldShowWelcomeTitleWhenNoCardsArePresent() {
+        Activity activity = createEmptyTranslationsActivity();
+        TextView welcomeTitle = (TextView) activity.findViewById(R.id.empty_deck_title);
+        assertThat(welcomeTitle.getText().toString(), is(EMPTY_DECK_TITLE));
+    }
+
+    @Test
+    public void shouldNotShowWelcomeTitleWhenCardsArePresent() {
+        TextView welcomeMessageTitle = findTextView(translationsActivity, R.id.empty_deck_title);
+        assertEquals(View.GONE, welcomeMessageTitle.getVisibility());
+    }
+
+    @Test
+    public void shouldShowWelcomeMessageWhenNoCardsArePresent() {
+        Activity activity = createEmptyTranslationsActivity();
+        TextView welcomeMessage = findTextView(activity, R.id.empty_deck_message);
+        assertEquals("This deck doesn't have any cards. Get started by creating your first card.",
+                welcomeMessage.getText().toString());
+    }
+
+    @Test
+    public void shouldNotShowWelcomeMessageWhenCardsArePresent() {
+        TextView welcomeMessage = findTextView(translationsActivity, R.id.empty_deck_message);
+        assertEquals(View.GONE, welcomeMessage.getVisibility());
+    }
+
+    private Activity createEmptyTranslationsActivity() {
+        Intent intent = new Intent();
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
+        intent.putExtra("Deck", deck);
+        initializeMockDbManager();
+        return Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
     }
 
     @Test
