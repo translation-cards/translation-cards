@@ -14,7 +14,7 @@
     <string name="recording_label_hint_text">e.g. Wait here for 30 minutes</string>
     <string name="record_audio_title">Record your phrase</string>
     <string name="recording_text_create_title">Enter the translation text</string>
-    <string name="recording_text_hint_text">Phrase translation (optional)</string>
+    <string name="recording_text_hint_text">Enter translation here</string>
     <string name="summary_title">Review and save your card</string>
     <string name="summary_detail">Find your new flashcard at the top of the list in the %s category.</string>
     <string name="deck_creation_field_label_deck_name">Deck Name:</string>
