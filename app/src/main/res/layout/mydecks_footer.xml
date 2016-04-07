@@ -37,9 +37,8 @@
             android:textSize="14sp"
             android:textColor="@color/textColor"
             android:background="@color/colorPrimary"
-            android:text="@string/import_deck_button_text"
-            android:id="@+id/import_deck_button" />
-
+            android:text="@string/create_deck_button_text"
+            android:id="@+id/create_deck_button" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="36dp"
@@ -50,8 +49,8 @@
             android:textSize="14sp"
             android:textColor="@color/textColor"
             android:background="@color/colorPrimary"
-            android:text="@string/create_deck_button_text"
-            android:id="@+id/create_deck_button" />
+            android:text="@string/import_deck_button_text"
+            android:id="@+id/import_deck_button" />
 
     </LinearLayout>
     <Button

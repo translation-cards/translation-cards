@@ -146,7 +146,7 @@ public class DecksActivity extends AppCompatActivity {
                     (TextView) convertView.findViewById(R.id.translation_languages);
             translationLanguagesView.setText(dbManager.getTranslationLanguagesForDeck(deck.getDbId()));
 
-            View deckCopyView = convertView.findViewById(R.id.deck_card_expansion_copy);
+            View deckCopyView = convertView.findViewById(R.id.deck_card_copy);
             if (deck.isLocked()) {
                 deckCopyView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -174,7 +174,7 @@ public class DecksActivity extends AppCompatActivity {
             } else {
                 deckCopyView.setVisibility(View.GONE);
             }
-            View deckDeleteView = convertView.findViewById(R.id.deck_card_expansion_delete);
+            View deckDeleteView = convertView.findViewById(R.id.deck_card_delete);
             deckDeleteView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

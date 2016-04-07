@@ -21,7 +21,6 @@ import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -42,9 +41,9 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.deck_name)TextView deckNameTextView;
     @Bind(R.id.deck_information)TextView deckInformationTextView;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
-    @Bind(R.id.deck_card_expansion_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
+    @Bind(R.id.deck_card_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
-    @Bind(R.id.deck_card_expansion_copy)LinearLayout copyDeck;
+    @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +

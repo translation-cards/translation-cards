@@ -26,14 +26,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -58,12 +56,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.OnClick;
+
 /**
  * Activity for the main screen, with lists of phrases to play.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class TranslationsActivity extends AppCompatActivity {
+public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     public static final String INTENT_KEY_DECK_ID = "Deck";
     private static final String TAG = "TranslationsActivity";
@@ -72,6 +73,8 @@ public class TranslationsActivity extends AppCompatActivity {
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
 
+    @Bind(R.id.add_translation_button) LinearLayout addTranslationButton;
+    @Bind(R.id.translation_list_header) TextView listHeader;
 
     DbManager dbManager;
     private Dictionary[] dictionaries;
@@ -84,8 +87,7 @@ public class TranslationsActivity extends AppCompatActivity {
     private DecoratedMediaManager decoratedMediaManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
         decoratedMediaManager = application.getDecoratedMediaManager();
         dbManager = application.getDbManager();
@@ -104,9 +106,35 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void initStates() {
+        updateAddTranslationButtonVisibility();
+    }
+
+    private void updateHeader() {
+        int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
+        findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
+    }
+
+    private void updateAddTranslationButtonVisibility() {
+        if(deck.isLocked()){
+            addTranslationButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setBitmapsForActivity() {
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, currentDictionaryIndex);
+    }
+
+    @OnClick(R.id.add_translation_button)
+    protected void addTranslationButtonClicked() {
+        launchGetStartedActivity();
     }
 
     private void initTabs() {
@@ -135,8 +163,8 @@ public class TranslationsActivity extends AppCompatActivity {
     private void initList() {
         ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
-        list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
-        findViewById(R.id.card_list_header).setOnClickListener(null);
+        list.addHeaderView(layoutInflater.inflate(R.layout.translation_list_header, list, false));
+        findViewById(R.id.translation_list_header).setOnClickListener(null);
 
         inflateListFooter();
 
@@ -144,23 +172,12 @@ public class TranslationsActivity extends AppCompatActivity {
                 this, R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>());
         list.setAdapter(listAdapter);
-        ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
-        if (deck.isLocked()) {
-            addTranslationButton.setVisibility(View.GONE);
-        } else {
-            addTranslationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    launchGetStartedActivity();
-                }
-            });
-        }
     }
 
     private void inflateListFooter() {
         ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
-        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
+        list.addFooterView(layoutInflater.inflate(R.layout.translation_list_footer, list, false));
         updateWelcomeInstructionsState();
     }
 
@@ -203,6 +220,8 @@ public class TranslationsActivity extends AppCompatActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
+        updateHeader();
+        updateWelcomeInstructionsState();
     }
 
     @Override

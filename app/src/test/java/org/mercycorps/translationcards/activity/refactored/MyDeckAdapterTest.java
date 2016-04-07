@@ -79,7 +79,7 @@ public class MyDeckAdapterTest extends TestCase {
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
-        click(view, R.id.deck_card_expansion_delete);
+        click(view, R.id.deck_card_delete);
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
         assertThat(alertDialogTitle, is(DEFAULT_ALERT_DIALOG_TITLE));
@@ -90,7 +90,7 @@ public class MyDeckAdapterTest extends TestCase {
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
-        click(view, R.id.deck_card_expansion_delete);
+        click(view, R.id.deck_card_delete);
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         verify(getDbManager()).deleteDeck(0);
@@ -111,7 +111,7 @@ public class MyDeckAdapterTest extends TestCase {
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
-        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_expansion_copy);
+        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_copy);
         assertTrue(linearLayout.getVisibility() == View.GONE);
     }
 
@@ -120,7 +120,7 @@ public class MyDeckAdapterTest extends TestCase {
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapterLockedDeck();
         View view = adapter.getView(0, null, null);
-        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_expansion_copy);
+        LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_copy);
         assertTrue(linearLayout.getVisibility() == View.VISIBLE);
     }
 

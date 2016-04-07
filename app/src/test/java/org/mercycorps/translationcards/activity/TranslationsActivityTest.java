@@ -34,6 +34,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,6 +59,7 @@ public class TranslationsActivityTest {
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
+    private static final int EMPTY_DECK_ID = 2;
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
@@ -101,8 +104,35 @@ public class TranslationsActivityTest {
     public void shouldShowWelcomeMessageWhenNoCardsArePresent() {
         Activity activity = createEmptyTranslationsActivity();
         TextView welcomeMessage = findTextView(activity, R.id.empty_deck_message);
-        assertEquals("This deck doesn't have any cards. Get started by creating your first card.",
+        assertEquals("This deck doesn't have any cards.\\nGet started by creating your first card.",
                 welcomeMessage.getText().toString());
+    }
+
+    @Test
+    public void shouldNotDisplayCreateTranslationButtonWhenDeckIsLocked() {
+        Activity activity = createLockedDeckTranslationsActivity();
+        LinearLayout addTranslationButton = findLinearLayout(activity, R.id.add_translation_button);
+        assertEquals(View.GONE, addTranslationButton.getVisibility());
+    }
+
+    @Test
+    public void shouldDisplayCreateTranslationButtonWhenDeckIsUnlocked() {
+        Activity activity = createEmptyTranslationsActivity();
+        LinearLayout addTranslationButton = findLinearLayout(activity, R.id.add_translation_button);
+        assertEquals(View.VISIBLE, addTranslationButton.getVisibility());
+    }
+
+    @Test
+    public void shouldNotDisplayHeaderInEmptyDeck() {
+        Activity activity= createEmptyTranslationsActivity();
+        TextView header = findTextView(activity, R.id.translation_list_header);
+        assertEquals(View.GONE, header.getVisibility());
+    }
+
+    @Test
+    public void shouldDisplayHeaderWhenDeckIsPopulated() {
+        TextView header = findTextView(translationsActivity, R.id.translation_list_header);
+        assertEquals(View.VISIBLE, header.getVisibility());
     }
 
     @Test
@@ -112,11 +142,27 @@ public class TranslationsActivityTest {
     }
 
     private Activity createEmptyTranslationsActivity() {
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, EMPTY_DECK_ID, DEFAULT_LONG, false);
+        return createActivityWithDeck(deck);
+    }
+
+    private Activity createActivityWithDeck(Deck deck) {
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
         intent.putExtra("Deck", deck);
-        initializeMockDbManager();
+        initializeEmptyDeckMockDbManager();
         return Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+    }
+
+    private Activity createLockedDeckTranslationsActivity() {
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true);
+        return createActivityWithDeck(deck);
+    }
+
+    private void initializeEmptyDeckMockDbManager() {
+        Dictionary[] dictionaries = new Dictionary[1];
+        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG,
+                EMPTY_DECK_ID);
+        when(dbManagerMock.getAllDictionariesForDeck(EMPTY_DECK_ID)).thenReturn(dictionaries);
     }
 
     @Test
@@ -201,8 +247,8 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldStartGetStartedActivityWhenAddButtonIsClicked(){
-        translationsActivity.findViewById(R.id.add_button).performClick();
+    public void shouldStartGetStartedActivityWhenAddTranslationButtonIsClicked() {
+        click(translationsActivity, R.id.add_translation_button);
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         assertEquals(GetStartedActivity.class.getCanonicalName(), nextStartedActivity.getComponent().getClassName());
     }

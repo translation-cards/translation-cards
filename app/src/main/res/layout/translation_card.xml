@@ -151,7 +151,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
-
                 android:id="@+id/translation_card_delete">
 
                 <FrameLayout
