@@ -117,7 +117,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
             @Override
             public void onClick(View v) {
                 Intent decksIntent = new Intent(activity, TranslationsActivity.class);
-                decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK_ID, deck);
+                decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK, deck);
                 activity.startActivity(decksIntent);
             }
         });

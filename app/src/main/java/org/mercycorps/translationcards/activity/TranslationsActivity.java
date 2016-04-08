@@ -67,7 +67,7 @@ import butterknife.OnClick;
  */
 public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
-    public static final String INTENT_KEY_DECK_ID = "Deck";
+    public static final String INTENT_KEY_DECK = "Deck";
     private static final String TAG = "TranslationsActivity";
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
@@ -94,7 +94,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         decoratedMediaManager = application.getDecoratedMediaManager();
         dbManager = application.getDbManager();
-        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
@@ -193,7 +193,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private void launchGetStartedActivity(){
         Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
-        nextIntent.putExtra(INTENT_KEY_DECK_ID, deck);
+        nextIntent.putExtra(INTENT_KEY_DECK, deck);
         startActivity(nextIntent);
     }
 
@@ -379,11 +379,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = getIntent();
+            Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            intent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard));
-            intent.putExtra(INTENT_KEY_DECK_ID, deck.getDbId());
-            startNextActivity(TranslationsActivity.this, EnterSourcePhraseActivity.class);
+            nextIntent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard));
+            nextIntent.putExtra(INTENT_KEY_DECK, deck);
+            startActivity(nextIntent);
         }
     }
 

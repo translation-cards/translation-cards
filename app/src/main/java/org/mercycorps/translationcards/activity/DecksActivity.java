@@ -129,7 +129,7 @@ public class DecksActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent decksIntent = new Intent(DecksActivity.this, TranslationsActivity.class);
-                    decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK_ID, getItem(position));
+                    decksIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK, getItem(position));
                     DecksActivity.this.startActivity(decksIntent);
                 }
             });

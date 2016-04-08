@@ -36,10 +36,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getContextFromIntent;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,19 +62,20 @@ public class TranslationsActivityTest {
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
-    public static final String INTENT_KEY_DECK_ID = "Deck";
+    public static final String INTENT_KEY_DECK = "Deck";
     private static final int EMPTY_DECK_ID = 2;
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
     private Dictionary dictionary;
+    private Deck deck;
 
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
         dbManagerMock = application.getDbManager();
         Intent intent = new Intent();
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
         intent.putExtra("Deck", deck);
         initializeMockDbManager();
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
@@ -271,22 +272,40 @@ public class TranslationsActivityTest {
     @Test
     public void shouldPassCorrectTranslationWhenEditCardIsClicked() {
         View translationsListItem = firstTranslationCardInListView();
+
         translationsListItem.findViewById(R.id.translation_card_edit).performClick();
-        assertEquals(translation, getContextFromIntent(translationsActivity).getTranslation());
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(translation, context.getTranslation());
     }
 
     @Test
     public void shouldPassCorrectDictionaryWhenEditCardIsClicked() {
         View translationListItem = firstTranslationCardInListView();
+
         translationListItem.findViewById(R.id.translation_card_edit).performClick();
-        assertEquals(dictionary, getContextFromIntent(translationsActivity).getDictionary());
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(dictionary, context.getDictionary());
     }
 
     @Test
     public void shouldPassCorrectDeckIdWhenEditCardIsClicked() {
         View translationListItem = firstTranslationCardInListView();
+
         translationListItem.findViewById(R.id.translation_card_edit).performClick();
-        assertEquals(DEFAULT_DECK_ID, translationsActivity.getIntent().getLongExtra(INTENT_KEY_DECK_ID, -1));
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        Deck deck = (Deck) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
+        assertEquals(this.deck, deck);
+    }
+
+    @Test
+    public void shouldPassDeckEditFlagWhenEditIsClicked(){
+        
+
     }
 
     @Test

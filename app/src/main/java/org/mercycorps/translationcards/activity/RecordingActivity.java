@@ -130,9 +130,9 @@ public class RecordingActivity extends AppCompatActivity {
         translationId = getIntent().getLongExtra(INTENT_KEY_TRANSLATION_ID, -1);
         label = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_LABEL);
         translatedText = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_TEXT);
-        deck = (Deck) getIntent().getSerializableExtra(TranslationsActivity.INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(TranslationsActivity.INTENT_KEY_DECK);
         intent = new Intent();
-        intent.putExtra(TranslationsActivity.INTENT_KEY_DECK_ID, deck);
+        intent.putExtra(TranslationsActivity.INTENT_KEY_DECK, deck);
         isAsset = savedIsAsset = getIntent().getBooleanExtra(
                 INTENT_KEY_TRANSLATION_IS_ASSET, false);
         filename = savedFilename = getIntent().getStringExtra(INTENT_KEY_TRANSLATION_FILENAME);
