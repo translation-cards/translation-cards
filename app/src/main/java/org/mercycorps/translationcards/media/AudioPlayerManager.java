@@ -40,6 +40,7 @@ public class AudioPlayerManager {
 
     private void prepareMediaPlayer(String fileName) {
         try {
+            mediaPlayer.reset();
             fileDescriptor = ((MainApplication) MainApplication.getContextFromMainApp()).getFileDescriptor(fileName);
             mediaPlayer.setDataSource(fileDescriptor);
             mediaPlayer.prepare();
