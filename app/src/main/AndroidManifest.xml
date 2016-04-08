@@ -34,8 +34,6 @@
         <activity android:name=".activity.addTranslation.EnterTranslatedPhraseActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.addTranslation.SummaryActivity" android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.RecordingActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activity.DeckCreationActivity" />
         <activity android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">
