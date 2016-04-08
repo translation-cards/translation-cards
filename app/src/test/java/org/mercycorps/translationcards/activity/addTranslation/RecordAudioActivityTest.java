@@ -149,11 +149,11 @@ public class RecordAudioActivityTest {
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
     }
 
-    @Ignore
     @Test
     public void shouldDisableNextButtonWhenRecordingIsHappening() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        click(activity, R.id.record_audio_button);
         LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
         assertEquals(View.GONE, nextButton.getVisibility());
     }
