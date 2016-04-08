@@ -38,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
@@ -72,6 +73,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
+    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+
 
     @Bind(R.id.add_translation_button) LinearLayout addTranslationButton;
     @Bind(R.id.translation_list_header) TextView listHeader;
@@ -376,22 +379,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
+            Intent intent = getIntent();
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL,
-                    translationCard.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET,
-                    translationCard.getIsAsset());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME,
-                    translationCard.getFilename());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
-                    translationCard.getTranslatedText());
-            intent.putExtra(INTENT_KEY_DECK_ID, deck);
-
-            startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
+            intent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard));
+            intent.putExtra(INTENT_KEY_DECK_ID, deck.getDbId());
+            startNextActivity(TranslationsActivity.this, EnterSourcePhraseActivity.class);
         }
     }
 

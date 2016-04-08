@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -37,6 +39,7 @@ import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getContextFromIntent;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,10 +62,12 @@ public class TranslationsActivityTest {
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
+    public static final String INTENT_KEY_DECK_ID = "Deck";
     private static final int EMPTY_DECK_ID = 2;
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
+    private Dictionary dictionary;
 
     @Before
     public void setUp() {
@@ -82,8 +87,9 @@ public class TranslationsActivityTest {
         Translation nullTranslatedTextTranslation = new Translation(
                 TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
-        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
+        dictionary = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
+        dictionaries[0] = dictionary;
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
 
@@ -254,24 +260,33 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void onClick_shouldStartRecordingActivityWhenEditLayoutIsClicked() {
+    public void onClick_shouldStartEnterSourcePhraseActivityWhenEditLayoutIsClicked() {
         View translationsListItem = firstTranslationCardInListView();
-
         translationsListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        assertThat(nextStartedActivity.getComponent().getClassName(), is(RecordingActivity.class.getCanonicalName()));
+        assertEquals(EnterSourcePhraseActivity.class.getCanonicalName(), nextStartedActivity.getComponent().getClassName());
     }
 
     @Test
-    public void shouldPassCorrectDictionaryWhenEditLayoutIsClicked() {
+    public void shouldPassCorrectTranslationWhenEditCardIsClicked() {
         View translationsListItem = firstTranslationCardInListView();
-
         translationsListItem.findViewById(R.id.translation_card_edit).performClick();
+        assertEquals(translation, getContextFromIntent(translationsActivity).getTranslation());
+    }
 
-        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        String dictionaryLabel = nextStartedActivity.getStringExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL);
-        assertThat(dictionaryLabel, is(DICTIONARY_TEST_LABEL));
+    @Test
+    public void shouldPassCorrectDictionaryWhenEditCardIsClicked() {
+        View translationListItem = firstTranslationCardInListView();
+        translationListItem.findViewById(R.id.translation_card_edit).performClick();
+        assertEquals(dictionary, getContextFromIntent(translationsActivity).getDictionary());
+    }
+
+    @Test
+    public void shouldPassCorrectDeckIdWhenEditCardIsClicked() {
+        View translationListItem = firstTranslationCardInListView();
+        translationListItem.findViewById(R.id.translation_card_edit).performClick();
+        assertEquals(DEFAULT_DECK_ID, translationsActivity.getIntent().getLongExtra(INTENT_KEY_DECK_ID, -1));
     }
 
     @Test

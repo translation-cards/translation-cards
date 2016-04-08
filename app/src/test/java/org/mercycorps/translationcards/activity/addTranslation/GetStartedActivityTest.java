@@ -31,7 +31,8 @@ public class GetStartedActivityTest {
     private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
 
     @Before
-    public void setUp() throws Exception {}
+    public void setUp() throws Exception {
+    }
 
     @Test
     public void shouldNotChangeDictionaryWhenStartingActivity() {
@@ -52,9 +53,7 @@ public class GetStartedActivityTest {
     @Test
     public void shouldPassNewTranslationContextWhenStartingEnterSourcePhraseActivity() {
         Activity activity = createActivityToTest(GetStartedActivity.class);
-
-       click(activity, R.id.get_started_button);
-
+        click(activity, R.id.get_started_button);
         assertEquals(getContextFromIntent(activity), shadowOf(activity).getNextStartedActivity().getSerializableExtra(CONTEXT_INTENT_KEY));
     }
 
@@ -73,7 +72,7 @@ public class GetStartedActivityTest {
     }
 
     @Test
-    public void shouldLaunchTranslationsActivityWhenGetStartedBackButtonIsClicked(){
+    public void shouldLaunchTranslationsActivityWhenGetStartedBackButtonIsClicked() {
         Activity activity = createActivityToTest(GetStartedActivity.class);
         click(activity, R.id.get_started_back);
         assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());

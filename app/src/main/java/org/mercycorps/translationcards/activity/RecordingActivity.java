@@ -49,6 +49,7 @@ import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Deck;
@@ -82,6 +83,7 @@ public class RecordingActivity extends AppCompatActivity {
     private Deck deck;
     private Intent intent;
     private MediaPlayerManager mediaPlayerManager;
+    private DecoratedMediaManager decoratedMediaManager;
 
     private enum Step {
         INSTRUCTIONS,
@@ -121,6 +123,7 @@ public class RecordingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication) getApplication();
         mediaPlayerManager = application.getMediaPlayerManager();
+        decoratedMediaManager = application.getDecoratedMediaManager();
         stepHistory = new Stack<>();
         dictionaryId = getIntent().getLongExtra(INTENT_KEY_DICTIONARY_ID, -1);
         dictionaryLabel = getIntent().getStringExtra(INTENT_KEY_DICTIONARY_LABEL);
@@ -542,7 +545,7 @@ public class RecordingActivity extends AppCompatActivity {
 
         final CardAudioClickListener cardAudioClickListener = new CardAudioClickListener(
                 new Translation(label, IS_ASSET, filename, NO_DB_ID, translatedText),
-                (ProgressBar) findViewById(R.id.recording_done_progress_bar), null);
+                (ProgressBar) findViewById(R.id.recording_done_progress_bar), decoratedMediaManager);
         findViewById(R.id.summary_translation_card).setOnClickListener(cardAudioClickListener);
 
         View backButton = findViewById(R.id.summary_activity_back);
