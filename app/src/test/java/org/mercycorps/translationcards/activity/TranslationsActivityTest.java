@@ -35,6 +35,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
@@ -271,9 +272,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldPassCorrectTranslationWhenEditCardIsClicked() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_card_edit).performClick();
+        firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
@@ -420,6 +419,23 @@ public class TranslationsActivityTest {
         assertTrue(shadowActivity.isFinishing());
     }
 
+    @Test
+    public void shouldSetEditFlagInContextWhenEditButtonIsClicked() {
+        firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertTrue(context.isEdit());
+    }
+
+    @Test
+    public void shouldNotSetEditFlagInContextWhenCreateNewTranslationButtonIsClicked() {
+        click(translationsActivity, R.id.add_translation_button);
+
+        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
+        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertFalse(context.isEdit());
+    }
 
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity

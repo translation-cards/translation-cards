@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -25,7 +26,6 @@ public class EnterSourcePhraseActivityTest {
 
     private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     public static final String DEFAULT_TRANSLATION_TEXT = "Sleep here";
-    public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
     private static final String NO_TEXT = "";
 
     @Test
@@ -152,7 +152,6 @@ public class EnterSourcePhraseActivityTest {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         TextView activityDescription = findTextView(activity, R.id.source_phrase_description);
         assertEquals("Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.", activityDescription.getText().toString());
-
     }
 
     @Test
@@ -160,6 +159,13 @@ public class EnterSourcePhraseActivityTest {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         TextView inputFieldHint = findTextView(activity, R.id.source_phrase_field);
         assertEquals("e.g. Wait here for 30 minutes", inputFieldHint.getHint().toString());
+    }
+
+    @Test
+    public void shouldStartTranslationsActivityWhenBackButtonIsPressedInEditMode() {
+        Activity activity = createActivityToTestInEditMode(EnterSourcePhraseActivity.class);
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     private void setSourceTextAndClick(Activity activity) {

@@ -44,11 +44,19 @@ public class TestAddTranslationCardActivityHelper {
     public static final Long PERIOD = (long) 100;
     public static final int DEFAULT_POSITION = 5;
     public static final int DEFAULT_MAX = 10;
+    private static final boolean IS_EDIT = true;
 
 
     public static Activity createActivityToTest(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
+        intent.putExtra(CONTEXT_INTENT_KEY, context);
+        return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
+    }
+
+    public static Activity createActivityToTestInEditMode(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
+        Intent intent = new Intent();
+        NewTranslationContext context = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL), new Translation(), IS_EDIT);
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
@@ -111,7 +119,7 @@ public class TestAddTranslationCardActivityHelper {
     }
 
     public static NewTranslationContext createTranslationContextWithSourcePhraseAndTranslatedText() {
-        return new NewTranslationContext(createDefaultDictionary(), createTranslation());
+        return new NewTranslationContext(createDefaultDictionary(), createTranslation(), false);
     }
 
     public static Translation createTranslation() {

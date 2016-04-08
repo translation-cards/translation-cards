@@ -347,7 +347,11 @@ public class DbManager {
 
     public void saveTranslationContext(NewTranslationContext context) {
         Translation translation = context.getTranslation();
-        addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+        if (context.isEdit()) {
+            updateTranslation(translation.getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+        } else {
+            addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+        }
     }
 
     private class DecksTable {

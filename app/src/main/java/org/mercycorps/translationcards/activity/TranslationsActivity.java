@@ -74,6 +74,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
     private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+    private static final boolean IS_EDIT = true;
 
 
     @Bind(R.id.add_translation_button) LinearLayout addTranslationButton;
@@ -381,7 +382,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         public void onClick(View view) {
             Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            nextIntent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard));
+            nextIntent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard, IS_EDIT));
             nextIntent.putExtra(INTENT_KEY_DECK, deck);
             startActivity(nextIntent);
         }

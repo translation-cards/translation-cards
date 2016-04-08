@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.TranslationsActivity;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -41,7 +42,8 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     public void cancelButtonClick() {
         String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
         updateContextWithSourceText();
-        startNextActivity(EnterSourcePhraseActivity.this, GetStartedActivity.class);
+        Class nextActivity = getContextFromIntent().isEdit() ? TranslationsActivity.class : GetStartedActivity.class;
+        startNextActivity(EnterSourcePhraseActivity.this, nextActivity);
     }
 
     @OnTextChanged(R.id.source_phrase_field)
