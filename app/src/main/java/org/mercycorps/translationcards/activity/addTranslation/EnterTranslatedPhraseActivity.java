@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -12,6 +14,8 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     @Bind(R.id.translated_phrase_field)TextView translatedPhraseTextView;
     @Bind(R.id.translated_phrase_input_language_label)TextView translatedPhraseInputLanguageLabel;
     @Bind(R.id.recording_label_next_text)TextView skipLabel;
+    @Bind(R.id.origin_translation_text)TextView sourcePhrase;
+    @Bind(R.id.text_indicator_divider)FrameLayout textIndicatorDivider;
 
     @Override
     public void inflateView() {
@@ -20,13 +24,9 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
 
     @Override
     public void initStates(){
+        includeSourcePhraseInHeader();
         updateInputLanguageLabel();
         updateTranslatedPhraseTextField();
-    }
-
-    @Override
-    public void setBitmapsForActivity() {
-        setBitmap(R.id.enter_translated_phrase_image, R.drawable.enter_phrase_image);
     }
 
     @OnClick(R.id.enter_translated_phrase_next_label)
@@ -46,6 +46,11 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
         String inputText = translatedPhraseTextView.getText().toString();
         Integer labelTextResourceId = inputText.isEmpty() ? R.string.navigation_button_skip : R.string.navigation_button_next;
         skipLabel.setText(labelTextResourceId);
+    }
+
+    private void includeSourcePhraseInHeader() {
+        sourcePhrase.setText(getContextFromIntent().getTranslation().getLabel());
+        textIndicatorDivider.setVisibility(View.GONE);
     }
 
     private void updateInputLanguageLabel() {

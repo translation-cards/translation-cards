@@ -68,6 +68,48 @@ public class RecordAudioActivity extends AddTranslationActivity {
         hideGrandchildAndAudioIcon();
     }
 
+    @OnClick(R.id.record_activity_next)
+    public void recordActivityNextClick() {
+        stopAudioIfPlaying();
+        stopIfRecording();
+        startNextActivity(RecordAudioActivity.this, SummaryActivity.class);
+    }
+
+    @OnClick(R.id.record_activity_back)
+    public void recordActivityBackClick() {
+        stopAudioIfPlaying();
+        stopIfRecording();
+        startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
+    }
+
+    @OnClick(R.id.record_audio_button)
+    public void recordAudioButtonClick() {
+        stopAudioIfPlaying();
+        tryToRecord();
+        updateRecordButtonState();
+        updateBackAndNextButtonStates();
+        updatePlayButtonState();
+    }
+
+    @OnClick(R.id.play_audio_button)
+    public void playAudioButtonClick() {
+        try {
+            stopIfRecording();
+            playAudioFile();
+        } catch (AudioFileException e) {
+            Log.d(TAG, "Error getting audio asset: " + e);
+            showToast(e.getLocalizedMessage());
+        }
+    }
+
+    @OnClick(R.id.translation_indicator_layout)
+    protected void translationIndicatorLayoutClick(){
+        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
+        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        translationChild.setVisibility(visibility);
+        translationCardIndicatorIcon.setBackgroundResource(backgroundResource);
+    }
+
     protected void expandTranslationCard() {
         translationCardIndicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
         translationChild.setVisibility(View.VISIBLE);
@@ -122,14 +164,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
         playAudioButton.setClickable(translationHasAudioFile);
     }
 
-
-    @OnClick(R.id.record_activity_next)
-    public void recordActivityNextClick() {
-        stopAudioIfPlaying();
-        stopIfRecording();
-        startNextActivity(RecordAudioActivity.this, SummaryActivity.class);
-    }
-
     private void stopIfRecording() {
         if (getAudioRecorderManager().isRecording()) {
             getAudioRecorderManager().stop();
@@ -138,48 +172,12 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
-    @OnClick(R.id.record_activity_back)
-    public void recordActivityBackClick() {
-        stopAudioIfPlaying();
-        stopIfRecording();
-        startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
-    }
-
-    @OnClick(R.id.record_audio_button)
-    public void recordAudioButtonClick() {
-        stopAudioIfPlaying();
-        tryToRecord();
-        updateRecordButtonState();
-        updateBackAndNextButtonStates();
-        updatePlayButtonState();
-    }
-
     private void updateRecordButtonState() {
         if (getAudioRecorderManager().isRecording()) {
             recordAudioButton.setBackgroundResource(R.color.deep_red);
         } else {
             recordAudioButton.setBackgroundResource(R.color.red);
         }
-    }
-
-
-    @OnClick(R.id.play_audio_button)
-    public void playAudioButtonClick() {
-        try {
-            stopIfRecording();
-            playAudioFile();
-        } catch (AudioFileException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            showToast(e.getLocalizedMessage());
-        }
-    }
-
-    @OnClick(R.id.translation_indicator_layout)
-    protected void translationIndicatorLayoutClick(){
-        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
-        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
-        translationChild.setVisibility(visibility);
-        translationCardIndicatorIcon.setBackgroundResource(backgroundResource);
     }
 
     private boolean isTranslationChildVisible() {
