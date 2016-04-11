@@ -51,7 +51,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     }
 
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {
-        finish(); //Calling finish is going to call onDestroy() on Activity
+        finish();
         Intent nextIntent = new Intent(currentContext, nextActivityClass);
         nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getSerializableExtra(CONTEXT_INTENT_KEY));
         nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getSerializableExtra(INTENT_KEY_DECK_ID));

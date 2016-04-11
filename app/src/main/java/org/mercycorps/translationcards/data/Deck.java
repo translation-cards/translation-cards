@@ -13,12 +13,12 @@ import java.util.Date;
  */
 public class Deck implements Serializable {
 
-    private final String label;
-    private final String publisher;
-    private final String externalId;
-    private final long dbId;
-    private final long timestamp;
-    private final boolean locked;
+    private String label;
+    private String publisher;
+    private String externalId;
+    private long dbId;
+    private long timestamp;
+    private boolean locked;
 
     public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
                 boolean locked) {
@@ -32,6 +32,10 @@ public class Deck implements Serializable {
 
     public Deck(String label, String publisher, String externalId, long timestamp, boolean locked) {
         this(label, publisher, externalId, -1, timestamp, locked);
+    }
+
+    public Deck() {
+
     }
 
     public String getLabel() {
