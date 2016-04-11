@@ -63,8 +63,13 @@ public class RecordAudioActivity extends AddTranslationActivity {
         showTranslationSourcePhrase();
         updateTranslatedTextView();
         updateNextButtonState();
-        updateIndicatorIcon();
+        expandTranslationCard();
         hideGrandchildAndAudioIcon();
+    }
+
+    protected void expandTranslationCard() {
+        translationCardIndicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
+        translationChild.setVisibility(View.VISIBLE);
     }
 
     protected void hideGrandchildAndAudioIcon() {
@@ -79,10 +84,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
         } else {
             translatedTextView.setText(translatedText);
         }
-    }
-
-    private void updateIndicatorIcon() {
-        translationCardIndicatorIcon.setBackgroundResource(R.drawable.expand_arrow);
     }
 
     private void updateNextButtonState() {
