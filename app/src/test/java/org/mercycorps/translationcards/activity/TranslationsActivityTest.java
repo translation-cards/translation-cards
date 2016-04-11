@@ -302,12 +302,6 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldPassDeckEditFlagWhenEditIsClicked(){
-        
-
-    }
-
-    @Test
     public void onClick_shouldShowDeleteConfirmationDialogWhenDeleteLayoutIsClicked(){
         View translationsListItem = firstTranslationCardInListView();
 
