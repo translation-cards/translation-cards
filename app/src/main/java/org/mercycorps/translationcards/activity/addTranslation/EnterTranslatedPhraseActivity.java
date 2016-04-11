@@ -15,7 +15,6 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     @Bind(R.id.translated_phrase_input_language_label)TextView translatedPhraseInputLanguageLabel;
     @Bind(R.id.recording_label_next_text)TextView skipLabel;
     @Bind(R.id.origin_translation_text)TextView sourcePhrase;
-    @Bind(R.id.text_indicator_divider)FrameLayout textIndicatorDivider;
 
     @Override
     public void inflateView() {
@@ -50,7 +49,6 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
 
     private void includeSourcePhraseInHeader() {
         sourcePhrase.setText(getContextFromIntent().getTranslation().getLabel());
-        textIndicatorDivider.setVisibility(View.GONE);
     }
 
     private void updateInputLanguageLabel() {

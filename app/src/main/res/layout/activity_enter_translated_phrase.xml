@@ -14,11 +14,11 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="136dp"
-        android:background="@color/grey">
+        android:background="@color/backgroundBlue">
 
-        <include layout="@layout/translation_card"
+        <include layout="@layout/header_translation_card"
             android:layout_width="328dp"
-            android:layout_height="54dp"
+            android:layout_height="60dp"
             android:layout_centerInParent="true"
             android:id="@+id/summary_translation_card"/>
     </RelativeLayout>

@@ -142,11 +142,4 @@ public class EnterTranslatedPhraseActivityTest {
         TextView sourceText = findTextView(activity, R.id.origin_translation_text);
         assertEquals(DEFAULT_SOURCE_PHRASE, sourceText.getText().toString());
     }
-
-    @Test
-    public void shouldNotShowTranslationTextIndicatorDivider() {
-        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
-        View divider = findView(activity, R.id.text_indicator_divider);
-        assertEquals(View.GONE, divider.getVisibility());
-    }
 }
