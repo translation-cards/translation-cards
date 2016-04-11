@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -26,9 +27,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
 
     @Bind(R.id.play_audio_button)
-    ImageButton playAudioButton;
+    RelativeLayout playAudioButton;
     @Bind(R.id.record_audio_button)
-    ImageButton recordAudioButton;
+    RelativeLayout recordAudioButton;
     @Bind(R.id.origin_translation_text)
     TextView originTranslationText;
     @Bind(R.id.record_activity_back)
@@ -116,7 +117,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private void updatePlayButtonState() {
         boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
         if (translationHasAudioFile) {
-            playAudioButton.setBackgroundResource(R.drawable.play_button_enabled);
+            playAudioButton.setBackgroundResource(R.color.green);
         }
         playAudioButton.setClickable(translationHasAudioFile);
     }
@@ -155,9 +156,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updateRecordButtonState() {
         if (getAudioRecorderManager().isRecording()) {
-            recordAudioButton.setBackgroundResource(R.drawable.button_record_active);
+            recordAudioButton.setBackgroundResource(R.color.deep_red);
         } else {
-            recordAudioButton.setBackgroundResource(R.drawable.button_record_enabled);
+            recordAudioButton.setBackgroundResource(R.color.red);
         }
     }
 
