@@ -25,15 +25,31 @@ import butterknife.OnClick;
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
 
-    @Bind(R.id.play_audio_button)ImageButton playAudioButton;
-    @Bind(R.id.record_audio_button)ImageButton recordAudioButton;
-    @Bind(R.id.origin_translation_text)TextView originTranslationText;
-    @Bind(R.id.record_activity_back)LinearLayout backButton;
-    @Bind(R.id.record_activity_next)LinearLayout nextButton;
-    @Bind(R.id.recording_audio_next_text)TextView nextButtonText;
-    @Bind(R.id.recording_audio_save_image)ImageView nextButtonArrow;
-    @Bind(R.id.text_indicator_divider)FrameLayout translationTextIndicatorDivider;
-    @Bind({ R.id.record_activity_back, R.id.record_activity_next})
+    @Bind(R.id.play_audio_button)
+    ImageButton playAudioButton;
+    @Bind(R.id.record_audio_button)
+    ImageButton recordAudioButton;
+    @Bind(R.id.origin_translation_text)
+    TextView originTranslationText;
+    @Bind(R.id.record_activity_back)
+    LinearLayout backButton;
+    @Bind(R.id.record_activity_next)
+    LinearLayout nextButton;
+    @Bind(R.id.recording_audio_next_text)
+    TextView nextButtonText;
+    @Bind(R.id.recording_audio_save_image)
+    ImageView nextButtonArrow;
+    @Bind(R.id.indicator_icon)
+    ImageView translationCardIndicatorIcon;
+    @Bind(R.id.translation_child)
+    LinearLayout translationChild;
+    @Bind(R.id.translation_grandchild)
+    LinearLayout translationGrandChild;
+    @Bind(R.id.translated_text)
+    TextView translatedTextView;
+    @Bind(R.id.audio_icon_layout)
+    FrameLayout audioIconLayout;
+    @Bind({R.id.record_activity_back, R.id.record_activity_next})
     List<LinearLayout> backAndNext;
 
     @Override
@@ -42,11 +58,31 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     @Override
-    public void initStates(){
+    public void initStates() {
         updatePlayButtonState();
         showTranslationSourcePhrase();
-        hideIndicatorDivider();
+        updateTranslatedTextView();
         updateNextButtonState();
+        updateIndicatorIcon();
+        hideGrandchildAndAudioIcon();
+    }
+
+    protected void hideGrandchildAndAudioIcon() {
+        translationGrandChild.setVisibility(View.GONE);
+        audioIconLayout.setVisibility(View.GONE);
+    }
+
+    private void updateTranslatedTextView() {
+        String translatedText = getContextFromIntent().getTranslation().getTranslatedText();
+        if (translatedText.isEmpty()) {
+            translatedTextView.setHint(String.format("Add %s translation", getContextFromIntent().getDictionary().getLabel()));
+        } else {
+            translatedTextView.setText(translatedText);
+        }
+    }
+
+    private void updateIndicatorIcon() {
+        translationCardIndicatorIcon.setBackgroundResource(R.drawable.expand_arrow);
     }
 
     private void updateNextButtonState() {
@@ -58,10 +94,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
         nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
     }
 
-    private void hideIndicatorDivider() {
-        translationTextIndicatorDivider.setVisibility(View.GONE);
-    }
-
     protected void showBackButton() {
         backButton.setVisibility(View.VISIBLE);
     }
@@ -70,12 +102,12 @@ public class RecordAudioActivity extends AddTranslationActivity {
         originTranslationText.setText(getContextFromIntent().getTranslation().getLabel());
     }
 
-    private void updateBackAndNextButtonStates(){
+    private void updateBackAndNextButtonStates() {
         ButterKnife.apply(backAndNext, VISIBILITY, getVisibility());
         updateNextButtonState();
     }
 
-    private int getVisibility(){
+    private int getVisibility() {
         boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
         return translationHasAudioFile && !getAudioRecorderManager().isRecording() ? View.VISIBLE : View.GONE;
     }
@@ -90,14 +122,14 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
 
     @OnClick(R.id.record_activity_next)
-    public void recordActivityNextClick(){
+    public void recordActivityNextClick() {
         stopAudioIfPlaying();
         stopIfRecording();
         startNextActivity(RecordAudioActivity.this, SummaryActivity.class);
     }
 
     private void stopIfRecording() {
-        if(getAudioRecorderManager().isRecording()){
+        if (getAudioRecorderManager().isRecording()) {
             getAudioRecorderManager().stop();
             updateBackAndNextButtonStates();
             updateRecordButtonState();
@@ -105,14 +137,14 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     @OnClick(R.id.record_activity_back)
-    public void recordActivityBackClick(){
+    public void recordActivityBackClick() {
         stopAudioIfPlaying();
         stopIfRecording();
         startNextActivity(RecordAudioActivity.this, EnterTranslatedPhraseActivity.class);
     }
 
     @OnClick(R.id.record_audio_button)
-    public void recordAudioButtonClick(){
+    public void recordAudioButtonClick() {
         stopAudioIfPlaying();
         tryToRecord();
         updateRecordButtonState();
@@ -130,7 +162,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
 
     @OnClick(R.id.play_audio_button)
-    public void playAudioButtonClick(){
+    public void playAudioButtonClick() {
         try {
             stopIfRecording();
             playAudioFile();
@@ -140,6 +172,17 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
+    @OnClick(R.id.translation_indicator_layout)
+    protected void translationIndicatorLayoutClick(){
+        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
+        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        translationChild.setVisibility(visibility);
+        translationCardIndicatorIcon.setBackgroundResource(backgroundResource);
+    }
+
+    private boolean isTranslationChildVisible() {
+        return translationChild.getVisibility() == View.VISIBLE;
+    }
 
     protected void stopAudioIfPlaying() {
         if (getAudioPlayerManager().isPlaying()) {

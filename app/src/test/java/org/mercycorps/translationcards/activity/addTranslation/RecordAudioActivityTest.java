@@ -338,10 +338,10 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldNotShowTranslationTextIndicatorDividerOnStart() {
+    public void shouldShowExpandArrowIconWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
-        View indicatorDivider = findView(activity, R.id.text_indicator_divider);
-        assertEquals(View.GONE, indicatorDivider.getVisibility());
+        ImageView expandArrowIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.expand_arrow, shadowOf(expandArrowIcon.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -349,5 +349,72 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         TextView activityDescription = findTextView(activity, R.id.recording_audio_instructions);
         assertEquals("Tap record then speak clearly at a normal speed. When you're done, tap record again. Play back and re-record until you're satisfied.", activityDescription.getText().toString());
+    }
+
+    @Test
+    public void shouldBeAbleToClickIndicatorIcon() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        View indicatorLayout = findView(activity, R.id.translation_indicator_layout);
+        assertTrue(indicatorLayout.isClickable());
+    }
+
+    @Test
+    public void shouldExpandCardWhenIndicatorIconIsClicked() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        View translationChild = findView(activity, R.id.translation_child);
+        assertEquals(View.VISIBLE, translationChild.getVisibility());
+    }
+
+    @Test
+    public void shouldMakeTranslationGrandchildLinearLayoutGone() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        assertEquals(View.GONE, activity.findViewById(R.id.translation_grandchild).getVisibility());
+    }
+
+    @Test
+    public void shouldShowCollapseCardIndicatorWhenTranslationCardIsCollapsed() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldCollapseTranslationCardWhenCardIndicatorIsClickedTwice() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        assertEquals(View.GONE, findView(activity, R.id.translation_child).getVisibility());
+    }
+
+    @Test
+    public void shouldShowExpandCardIndicatorWhenTranslationCardIsClickedTwice() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.expand_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldShowTranslatedPhraseInCardView() {
+        Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
+        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
+        assertEquals(DEFAULT_TRANSLATED_TEXT, translatedTextView.getText().toString());
+    }
+
+    @Test
+    public void shouldShowHintTextWhenNoTranslatedTextPhraseIsProvided() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class, createDefaultDictionary());
+        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
+        assertEquals(String.format("Add %s translation", DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
+    }
+
+    @Test
+    public void shouldNotShowAudioIconInTranslationCardWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        View audioIconLayout = findView(activity, R.id.audio_icon_layout);
+        assertEquals(View.GONE, audioIconLayout.getVisibility());
     }
 }
