@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="80dp">
+
+    <TextView
+        android:id="@+id/empty_myDecks_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_myDecks_title"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/empty_myDecks_message"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="6dp"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_myDecks_message" />
+
+
+    <Button
+        android:id="@+id/create_deck_button"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/create_deck_button_text"
+        android:textColor="@color/textColor"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/import_deck_button"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/import_deck_button_text"
+        android:textColor="@color/textColor"
+        android:textSize="14sp" />
+
+</LinearLayout>

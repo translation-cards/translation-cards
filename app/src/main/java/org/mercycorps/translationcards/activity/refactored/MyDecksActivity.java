@@ -2,9 +2,11 @@ package org.mercycorps.translationcards.activity.refactored;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.Bind;
+
 /**
  * Created by njimenez on 3/31/16.
  */
@@ -25,9 +29,12 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
 
+    @Bind(R.id.my_decks_list)ListView myDeckListView;
+
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.3.2";
+    private View footerView;
 
     @Override
     public void inflateView() {
@@ -37,9 +44,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     public void initStates() {
         setActionBarTitle();
         List<Deck> decks = getDecks();
-        initializeFooter();
+        updateFooterView(decks);
         updateDecksView(decks);
-        updateEmptyTitleAndMessage(decks);
     }
 
     private void setActionBarTitle() {
@@ -54,19 +60,33 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         decksListView.setAdapter(listAdapter);
     }
 
-    private void initializeFooter() {
-        ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
-        decksListView.addFooterView(getLayoutInflater()
-                .inflate(R.layout.mydecks_footer, decksListView, false));
+    private void updateFooterView(List<Deck> decks) {
+        int footerLayout = decks.isEmpty() ? R.layout.empty_mydecks_footer : R.layout.mydecks_footer;
+        updateListViewPosition(footerLayout);
+        removePreviousFooter();
+        inflateListFooter(footerLayout);
+        setFooterClickListeners(footerLayout);
+    }
 
-        findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
+    private void updateListViewPosition(int footerLayout) {
+        int isCentered = footerLayout == R.layout.empty_mydecks_footer ? RelativeLayout.TRUE : 0;
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myDeckListView.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
+        myDeckListView.setLayoutParams(params);
+    }
 
-            }
-        });
+    private void removePreviousFooter() {
+        if (footerView != null) {
+            myDeckListView.removeFooterView(footerView);
+        }
+    }
 
+    private void inflateListFooter(int footerLayout) {
+        footerView = getLayoutInflater().inflate(footerLayout, myDeckListView, false);
+        myDeckListView.addFooterView(footerView);
+    }
+
+    private void setFooterClickListeners(int footerLayout) {
         findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,12 +104,15 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
             }
         });
 
-    }
+        if (footerLayout == R.layout.mydecks_footer) {
+            findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
 
-    private void updateEmptyTitleAndMessage(List<Deck> decks) {
-        Integer viewVisibility = decks.isEmpty() ? View.VISIBLE : View.GONE;
-        findViewById(R.id.empty_myDecks_message).setVisibility(viewVisibility);
-        findViewById(R.id.empty_myDecks_title).setVisibility(viewVisibility);
+                }
+            });
+        }
     }
 
     private List<Deck> getDecks() {
@@ -130,7 +153,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     public void refreshMyDecksList() {
         List<Deck> decks = getDecks();
         updateDecksView(decks);
-        updateEmptyTitleAndMessage(decks);
+        updateFooterView(decks);
     }
 
 }

@@ -1,8 +1,12 @@
 package org.mercycorps.translationcards.activity.refactored;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -16,6 +20,7 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
@@ -55,7 +60,7 @@ public class MyDecksActivityTest {
         setUpMockWithDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
         TextView textView = findTextView(activity, R.id.empty_myDecks_title);
-        assertTrue(textView.getVisibility() == View.GONE);
+        assertNull(textView);
     }
 
     @Test
@@ -63,12 +68,12 @@ public class MyDecksActivityTest {
         setUpMockWithDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
         TextView textView = findAnyView(activity, R.id.empty_myDecks_message);
-        assertTrue(textView.getVisibility() == View.GONE);
+        assertNull(textView);
     }
 
     @Test
     public void shouldLaunchFeedbackFormWhenFeedbackButtonIsClicked() throws Exception {
-        setUpMocksWithEmptyDecks();
+        setUpMockWithDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
         click(activity, R.id.feedback_button);
         assertEquals(URI, shadowOf(activity).getNextStartedActivity().getData().toString());
