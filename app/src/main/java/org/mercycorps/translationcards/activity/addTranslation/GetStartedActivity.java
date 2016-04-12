@@ -17,7 +17,7 @@ public class GetStartedActivity extends AddTranslationActivity {
 
     @Override
     public void inflateView() {
-        setContentView(R.layout.activity_get_started);
+        setContentView(R.layout.activity_card_get_started);
     }
 
     @Override

@@ -8,7 +8,9 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -27,7 +29,7 @@ public class GetStartedDeckActivityTest {
     public void shouldStartEnterDeckTitleActivityWhenGetStartedButtonIsClicked() {
         Activity activity = createActivityToTest(GetStartedDeckActivity.class);
         click(activity, R.id.deck_get_started_button);
-        assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterDeckTitleActivity.class.getName(),shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -40,5 +42,10 @@ public class GetStartedDeckActivityTest {
         assertEquals(expectedDeck, deck);
     }
 
-
+    @Test
+    public void shouldReturnToMyDecksWhenBackArrowIsClicked() {
+        Activity activity = createActivityToTest(GetStartedDeckActivity.class);
+        click(activity, R.id.deck_get_started_back);
+        assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
 }
