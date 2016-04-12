@@ -41,6 +41,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -119,14 +120,14 @@ public class TranslationsActivityTest {
     @Test
     public void shouldNotDisplayCreateTranslationButtonWhenDeckIsLocked() {
         Activity activity = createLockedDeckTranslationsActivity();
-        LinearLayout addTranslationButton = findLinearLayout(activity, R.id.add_translation_button);
+        View addTranslationButton = findView(activity, R.id.add_translation_button);
         assertEquals(View.GONE, addTranslationButton.getVisibility());
     }
 
     @Test
     public void shouldDisplayCreateTranslationButtonWhenDeckIsUnlocked() {
         Activity activity = createEmptyTranslationsActivity();
-        LinearLayout addTranslationButton = findLinearLayout(activity, R.id.add_translation_button);
+        View addTranslationButton = findView(activity, R.id.add_translation_button);
         assertEquals(View.VISIBLE, addTranslationButton.getVisibility());
     }
 
