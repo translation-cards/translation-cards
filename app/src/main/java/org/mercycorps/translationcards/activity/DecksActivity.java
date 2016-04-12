@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,17 +56,16 @@ public class DecksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_decks);
         initAddButton();
         initFeedbackButton();
-        dbManager = new DbManager(this);
+        dbManager = ((MainApplication) getApplication()).getDbManager();
         initDecks();
         getSupportActionBar().setTitle(R.string.my_decks);
         getSupportActionBar().setElevation(0);
     }
 
     private void initDecks() {
-        ListView decksListView = (ListView) findViewById(R.id.decks_list);
         ArrayList<Deck> listItems = new ArrayList<>();
-        ArrayAdapter<Deck> listAdapter = new DecksAdapter(this,
-                R.layout.deck_item, R.id.deck_name, listItems, decksListView);
+        ArrayAdapter<Deck> listAdapter = new DecksAdapter(this, R.layout.deck_item, R.id.deck_name, listItems);
+        ListView decksListView = (ListView) findViewById(R.id.decks_list);
         decksListView.setAdapter(listAdapter);
 
         for (Deck deck : dbManager.getAllDecks()) {
@@ -114,12 +114,9 @@ public class DecksActivity extends AppCompatActivity {
 
     private class DecksAdapter extends ArrayAdapter<Deck> {
 
-        private ListView decks;
-
         public DecksAdapter(Context context, int resource, int textViewResourceId,
-                            List<Deck> objects, ListView decks) {
+                            List<Deck> objects) {
             super(context, resource, textViewResourceId, objects);
-            this.decks = decks;
         }
 
         @Override
@@ -194,18 +191,17 @@ public class DecksActivity extends AppCompatActivity {
         File targetDir = new File(new File(getFilesDir(), "recordings"),
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
-        DbManager dbm = new DbManager(this);
-        long deckId = dbm.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
-        Dictionary[] dictionaries = dbm.getAllDictionariesForDeck(deck.getDbId());
+        long deckId = dbManager.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
+        Dictionary[] dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
-                long dictionaryId = dbm.addDictionary(
+                long dictionaryId = dbManager.addDictionary(
                         dictionary.getLabel(), dictionaryIndex, deckId);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                    Dictionary.Translation translation = dictionary.getTranslation(i);
+                    Translation translation = dictionary.getTranslation(i);
                     String filename = translation.getFilename();
                     if (!translation.getIsAsset()) {
                         File srcFile = new File(filename);
@@ -215,13 +211,13 @@ public class DecksActivity extends AppCompatActivity {
                         copyFile(srcFile, targetFile);
                         filename = targetFile.getAbsolutePath();
                     }
-                    dbm.addTranslation(dictionaryId, translation.getLabel(), translation.getIsAsset(),
+                    dbManager.addTranslation(dictionaryId, translation.getLabel(), translation.getIsAsset(),
                             filename, translationDbIndex, translation.getTranslatedText());
                     translationDbIndex--;
                 }
             }
         } catch (IOException e) {
-            dbm.deleteDeck(deckId);
+            dbManager.deleteDeck(deckId);
         }
     }
 

@@ -10,76 +10,70 @@
     android:orientation="vertical"
     android:background="#ffffff">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:id="@+id/enter_source_phrase_image" />
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
         android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
         android:textSize="20dp"
-        android:id="@+id/record_audio_title" />
+        android:layout_below="@+id/enter_source_phrase_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/source_phrase_title" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="28dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:paddingTop="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
-        android:text="@string/recording_audio_detail"
-        android:layout_below="@+id/record_audio_title"
+        android:text="@string/recording_label_detail"
+        android:layout_below="@+id/source_phrase_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/recording_audio_instructions" />
+        android:id="@+id/recording_label_detail" />
 
-    <include layout="@layout/translation_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/recording_audio_instructions"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:id="@+id/recording_audio_card" />
-
-    <LinearLayout
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/recording_audio_card"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/recording_audio_button_wrapper">
-
-        <ImageButton
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/button_record_enabled"
-            android:id="@+id/record_audio_button" />
-
-        <ImageButton
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginLeft="12dp"
-            android:background="@drawable/play_button_disabled"
-            android:id="@+id/play_audio_button" />
-    </LinearLayout>
+        android:id="@+id/source_phrase_field"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/recording_label_detail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="text"
+        android:textColorHighlight="@color/colorPrimary"
+        android:imeOptions="actionDone"
+        android:textColorHint="@color/borderColor"
+        android:hint="@string/recording_label_hint_text" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
-         the buttons (on small screens, the soft keyboard can reduce the available height such that
-         not everything fits). This frame layout (which must be at least as tall as the navigation
-         bar) forces the scroll view to take care of things and move the navigation bar out of view.
-         -->
+         the text field (on small screens, the soft keyboard can reduce the available height such
+         that not everything fits). This frame layout (which must be at least as tall as the
+         navigation bar) forces the scroll view to take care of things and move the navigation bar
+         out of view. -->
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/recording_audio_button_wrapper" />
+        android:layout_below="@id/source_phrase_field" />
 
     <RelativeLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/navBarColor"
@@ -90,24 +84,25 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/go_to_enter_source_phrase_activity">
+            android:id="@+id/cancel_add_translation_activity">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/back_arrow"
-                android:id="@+id/recording_audio_back_image"/>
-
+                android:src="@drawable/back_arrow"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
                 android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_back"
-                android:id="@+id/recording_audio_back_text"/>
+                android:text="@string/navigation_button_cancel" />
         </LinearLayout>
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -115,7 +110,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:id="@+id/recording_label_step_marker">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_selected" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +129,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/step_selected" />
+                android:src="@drawable/step_unselected" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
         </LinearLayout>
 
         <LinearLayout
@@ -138,21 +146,20 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp"
             android:paddingTop="16dp"
-            android:visibility="gone"
-            android:id="@+id/record_activity_next">
+            android:id="@+id/activity_enter_source_phrase_next_label">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="16dp"
-                android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_save"
-                android:id="@+id/recording_audio_save_text" />
+                android:textColor="@color/textDisabled"
+                android:text="@string/navigation_button_next"
+                android:id="@+id/activity_enter_source_phrase_next_text" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/forward_arrow"
-                android:id="@+id/recording_audio_save_image" />
+                android:background="@drawable/forward_arrow_40p"
+                android:id="@+id/activity_enter_source_phrase_next_image" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

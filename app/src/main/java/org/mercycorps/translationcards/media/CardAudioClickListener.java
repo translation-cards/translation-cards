@@ -4,7 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -15,11 +15,11 @@ import java.io.IOException;
  */
 public class CardAudioClickListener implements View.OnClickListener {
     private static final String TAG = "CardAudioClickListener";
-    private Dictionary.Translation translation;
+    private Translation translation;
     private final ProgressBar progressBar;
     private MediaPlayerManager lastMediaPlayerManager;
 
-    public CardAudioClickListener(Dictionary.Translation translation, ProgressBar progressBar,
+    public CardAudioClickListener(Translation translation, ProgressBar progressBar,
                                   MediaPlayerManager lastMediaPlayerManager) {
         this.translation = translation;
         this.progressBar = progressBar;
