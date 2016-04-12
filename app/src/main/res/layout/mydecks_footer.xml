@@ -26,19 +26,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textSize="14sp"
-            android:textColor="@color/textColor"
-            android:background="@color/colorPrimary"
-            android:text="@string/create_deck_button_text"
-            android:id="@+id/create_deck_button" />
+        <RelativeLayout
+            android:id="@+id/create_deck_button"
+            android:layout_width="156dp"
+            android:layout_height="110dp"
+            android:background="@color/colorPrimary">
+            <ImageView
+                android:id="@+id/add_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/play"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/textColor"
+                android:layout_below="@id/add_image"
+                android:layout_centerHorizontal="true"
+                android:text="@string/create_deck_button_text"
+                android:layout_marginBottom="20dp"/>
+        </RelativeLayout>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="36dp"
