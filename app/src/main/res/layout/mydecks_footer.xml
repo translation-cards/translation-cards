@@ -25,11 +25,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp">
         <RelativeLayout
             android:id="@+id/create_deck_button"
             android:layout_width="156dp"
             android:layout_height="110dp"
+            android:layout_marginRight="8dp"
             android:background="@color/colorPrimary">
             <ImageView
                 android:id="@+id/add_image"
@@ -50,20 +52,32 @@
                 android:layout_marginBottom="20dp"/>
         </RelativeLayout>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textSize="14sp"
-            android:textColor="@color/textColor"
-            android:background="@color/colorPrimary"
-            android:text="@string/import_deck_button_text"
-            android:id="@+id/import_deck_button" />
-
+        <RelativeLayout
+            android:id="@+id/import_deck_button"
+            android:layout_width="156dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="8dp"
+            android:background="@color/colorPrimary">
+            <ImageView
+                android:id="@+id/import_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/play"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/textColor"
+                android:layout_below="@id/import_image"
+                android:layout_centerHorizontal="true"
+                android:text="@string/import_deck_button_text"
+                android:layout_marginBottom="20dp"/>
+        </RelativeLayout>
     </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="36dp"
