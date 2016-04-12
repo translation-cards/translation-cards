@@ -25,7 +25,7 @@
         android:text="@string/empty_deck_message"/>
 
     <RelativeLayout
-        android:id="@+id/create_deck_button"
+        android:id="@+id/add_translation_button"
         android:layout_width="156dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
@@ -77,7 +78,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final boolean IS_EDIT = true;
 
 
-    @Bind(R.id.add_translation_button) LinearLayout addTranslationButton;
+    @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
     @Bind(R.id.translation_list_header) TextView listHeader;
 
     DbManager dbManager;
