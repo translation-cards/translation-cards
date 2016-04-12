@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="80dp"
     android:orientation="vertical"
     android:layout_gravity="center">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textColor="@color/primaryTextColor"
         android:text="@string/empty_deck_title"
         android:id="@+id/empty_deck_title"/>
@@ -18,45 +18,36 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginEnd="40dp"
-        android:lineSpacingMultiplier="1.25"
+        android:layout_marginBottom="24dp"
+        android:lineSpacingExtra="6dp"
         android:gravity="center"
         android:id="@+id/empty_deck_message"
         android:text="@string/empty_deck_message"/>
 
-
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="75dp"
-        android:orientation="vertical"
+    <RelativeLayout
+        android:id="@+id/create_deck_button"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/colorPrimary"
-        android:id="@+id/add_translation_button">
-
-        <FrameLayout
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/small_arrow"/>
-        </FrameLayout>
-
+        android:background="@drawable/chunky_button">
+        <ImageView
+            android:id="@+id/add_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/add"/>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:textColor="@color/textColor"
+            android:layout_below="@id/add_image"
+            android:layout_centerHorizontal="true"
             android:text="@string/add_translation_button_text"
-            android:textColor="@color/textColor"/>
-    </LinearLayout>
+            android:paddingBottom="20dp"/>
+    </RelativeLayout>
 
 </LinearLayout>
