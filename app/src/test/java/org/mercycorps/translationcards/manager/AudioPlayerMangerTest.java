@@ -1,24 +1,17 @@
 package org.mercycorps.translationcards.manager;
 
 import android.media.MediaPlayer;
-import android.widget.ProgressBar;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
-import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
