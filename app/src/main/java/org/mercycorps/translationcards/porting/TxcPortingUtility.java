@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +73,6 @@ public class TxcPortingUtility {
                 throw new ExportException(ExportException.ExportProblem.TARGET_FILE_NOT_FOUND, e);
             }
             zos = new ZipOutputStream(os);
-//<<<<<<< HEAD
-//            Map<String, Translation> translationFilenames =
-//                    buildIndex(deck, exportedDeckName, dictionaries, zos);
-//=======
             Map<String, Translation> translationFilenames =
                     buildSpec(deck, exportedDeckName, dictionaries, zos);
             for (String filename : translationFilenames.keySet()) {
@@ -419,6 +416,7 @@ public class TxcPortingUtility {
                     new ImportSpecCard(split[0], split[1], split.length > 3 ? split[3] : null));
         }
         s.close();
+        spec.updateDictionaries(dictionaryLookup.values());
         return spec;
     }
 
@@ -462,6 +460,12 @@ public class TxcPortingUtility {
             this.hash = hash;
             this.dir = dir;
             dictionaries = new ArrayList<>();
+        }
+
+        public void updateDictionaries(Collection<ImportSpecDictionary> values) {
+            for (ImportSpecDictionary value : values) {
+                dictionaries.add(value);
+            }
         }
     }
 
