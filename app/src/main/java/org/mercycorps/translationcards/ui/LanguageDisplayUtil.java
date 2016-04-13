@@ -30,7 +30,7 @@ public class LanguageDisplayUtil {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(getDestLanguageDisplayName(context, dictionaries[0]));
+        sb.append(getDestLanguageDisplayName(context, dictionaries[0]).toUpperCase());
         for (int i = 1; i < dictionaries.length; i++) {
             sb.append(delimiter);
             sb.append(getDestLanguageDisplayName(context, dictionaries[i]).toUpperCase());
