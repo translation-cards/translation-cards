@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.DeckCreationActivity;
+import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
+import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -87,7 +89,7 @@ public class MyDecksActivityTest {
         setUpMocksWithEmptyDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
         click(activity, R.id.create_deck_button);
-        assertEquals(DeckCreationActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(GetStartedDeckActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     private void setUpMockWithDecks(){
