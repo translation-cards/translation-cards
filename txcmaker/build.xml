@@ -62,4 +62,11 @@
       description="Starts the development server.">
     <dev_appserver war="war" port="8888" />
   </target>
+
+  <target
+      name="update"
+      depends="compile"
+      description="Uploads the application to App Engine.">
+    <appcfg action="update" war="war" />
+  </target>
 </project>
