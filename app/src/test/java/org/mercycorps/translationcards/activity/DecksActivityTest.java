@@ -16,6 +16,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -25,10 +26,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -48,15 +51,17 @@ public class DecksActivityTest {
     private static final long TIMESTAMP = new Date().getTime();
     private static final boolean LOCKED = false;
     private static final String PUBLISHER = "My Deck";
+    private static final String DEFAULT_ISO_LANGUAGE = "en";
     private DecksActivity decksActivity;
 
     @Before
     public void setUp() throws Exception {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
         DbManager dbManagerMock = application.getDbManager();
-        Deck defaultDeck = new Deck(DEFAULT, PUBLISHER, EXTERNAL_ID, DB_ID, TIMESTAMP, LOCKED);
+        Deck defaultDeck = new Deck(DEFAULT, PUBLISHER, EXTERNAL_ID, DB_ID, TIMESTAMP, LOCKED, DEFAULT_ISO_LANGUAGE);
         when(dbManagerMock.getAllDecks()).thenReturn(new Deck[] {defaultDeck});
-        when(dbManagerMock.getTranslationLanguagesForDeck(DB_ID)).thenReturn("ARABIC   FARSI   PASHTO");
+//        when(dbManagerMock.getTranslationLanguagesForDeck(DB_ID)).thenReturn("ARABIC   FARSI   PASHTO");
+        when(dbManagerMock.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary("Arabic"), new Dictionary("Farsi"), new Dictionary("Pashto")});
         decksActivity = Robolectric.setupActivity(DecksActivity.class);
     }
 
@@ -127,7 +132,7 @@ public class DecksActivityTest {
 
         TextView translationLanguages = (TextView) decksListItem.findViewById(R.id.translation_languages);
 
-        assertThat(translationLanguages.getText().toString(), is("ARABIC   FARSI   PASHTO"));
+        assertEquals("ARABIC   FARSI   PASHTO", translationLanguages.getText().toString());
     }
 
     @Test

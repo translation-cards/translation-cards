@@ -21,6 +21,7 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -144,7 +145,9 @@ public class DecksActivity extends AppCompatActivity {
 
             TextView translationLanguagesView =
                     (TextView) convertView.findViewById(R.id.translation_languages);
-            translationLanguagesView.setText(dbManager.getTranslationLanguagesForDeck(deck.getDbId()));
+            Dictionary[] dictionaries = deck.getDictionaries(DecksActivity.this);
+            translationLanguagesView.setText(LanguageDisplayUtil.getDestLanguageListDisplay(
+                    DecksActivity.this, deck, "  "));
 
             View deckCopyView = convertView.findViewById(R.id.deck_card_copy);
             if (deck.isLocked()) {
@@ -191,13 +194,15 @@ public class DecksActivity extends AppCompatActivity {
         File targetDir = new File(new File(getFilesDir(), "recordings"),
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
-        long deckId = dbManager.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
+        long deckId = dbManager.addDeck(deckName, getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false,
+                deck.getSrcLanguageIso());
         Dictionary[] dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
                 long dictionaryId = dbManager.addDictionary(
-                        dictionary.getLabel(), dictionaryIndex, deckId);
+                        dictionary.getDestLanguageIso(), dictionary.getLabel(), dictionaryIndex,
+                        deckId);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {

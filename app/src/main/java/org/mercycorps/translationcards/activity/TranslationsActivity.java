@@ -52,6 +52,7 @@ import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -151,7 +152,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             Dictionary dictionary = dictionaries[i];
             View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
             TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-            textView.setText(dictionary.getLabel().toUpperCase());
+            textView.setText(
+                    LanguageDisplayUtil.getDestLanguageDisplayName(this, dictionary).toUpperCase());
             final int index = i;
             textFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -325,7 +327,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
                 translatedText.setText(String.format(getString(R.string.translated_text_hint),
-                        dictionaries[currentDictionaryIndex].getLabel()));
+                        LanguageDisplayUtil.getDestLanguageDisplayName(
+                                TranslationsActivity.this, dictionaries[currentDictionaryIndex])));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);

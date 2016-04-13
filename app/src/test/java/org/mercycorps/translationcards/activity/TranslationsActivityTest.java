@@ -66,6 +66,8 @@ public class TranslationsActivityTest {
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
     public static final String INTENT_KEY_DECK = "Deck";
     private static final int EMPTY_DECK_ID = 2;
+    private static final String DEFUALT_ISO_CODE = "en";
+    private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
@@ -77,7 +79,7 @@ public class TranslationsActivityTest {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
         dbManagerMock = application.getDbManager();
         Intent intent = new Intent();
-        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false);
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
         intent.putExtra("Deck", deck);
         initializeMockDbManager();
         translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
@@ -90,7 +92,7 @@ public class TranslationsActivityTest {
         Translation nullTranslatedTextTranslation = new Translation(
                 TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
-        dictionary = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
+        dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
         dictionaries[0] = dictionary;
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
@@ -151,7 +153,7 @@ public class TranslationsActivityTest {
     }
 
     private Activity createEmptyTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, EMPTY_DECK_ID, DEFAULT_LONG, false);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, EMPTY_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
         return createActivityWithDeck(deck);
     }
 
@@ -163,13 +165,13 @@ public class TranslationsActivityTest {
     }
 
     private Activity createLockedDeckTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, DEFUALT_ISO_CODE);
         return createActivityWithDeck(deck);
     }
 
     private void initializeEmptyDeckMockDbManager() {
         Dictionary[] dictionaries = new Dictionary[1];
-        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG,
+        dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG,
                 EMPTY_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(EMPTY_DECK_ID)).thenReturn(dictionaries);
     }

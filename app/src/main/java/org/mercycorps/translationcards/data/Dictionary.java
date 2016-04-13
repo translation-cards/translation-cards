@@ -25,24 +25,41 @@ import java.io.Serializable;
  */
 public class Dictionary implements Serializable {
 
-    private static final long NO_VALUE_ID = -1;
-    private final String label;
-    private final Translation[] translations;
+
     private final long dbId;
     private final long deckId;
+    private final String destLanguageIso;
+    private final String label;
+    private Translation[] translations;
 
-    public Dictionary(String label, Translation[] translations, long dbId, long deckId) {
+    public Dictionary(String destLanguageIso, String label, Translation[] translations, long dbId,
+                      long deckId) {
+        this.destLanguageIso = destLanguageIso;
         this.label = label;
         this.translations = translations;
         this.dbId = dbId;
         this.deckId = deckId;
     }
 
-    public Dictionary(String label){
+
+    public Dictionary(String label) {
         this.label = label;
         this.translations = new Translation[0];
-        this.dbId = NO_VALUE_ID;
-        this.deckId = NO_VALUE_ID;
+        this.dbId = -1;
+        this.deckId = -1;
+        this.destLanguageIso = "";
+    }
+
+    Dictionary(long dbId, long deckId, String destLanguageIso, String label) {
+        this.dbId = dbId;
+        this.deckId = deckId;
+        this.destLanguageIso = destLanguageIso;
+        this.label = label;
+        translations = null;
+    }
+
+    public String getDestLanguageIso() {
+        return destLanguageIso;
     }
 
     public String getLabel() {
