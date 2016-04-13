@@ -33,7 +33,9 @@
         <activity android:name=".activity.addTranslation.RecordAudioActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.addTranslation.EnterTranslatedPhraseActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.addTranslation.SummaryActivity" android:screenOrientation="portrait"/>
-
+        <activity android:name=".activity.addDeck.GetStartedDeckActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addDeck.EnterDeckTitleActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.DeckCreationActivity" />
         <activity android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">

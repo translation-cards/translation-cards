@@ -35,11 +35,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         super.onDestroy();
     }
 
-    private void hideActionBar() {
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.hide();
-    }
-
     public abstract void inflateView();
 
     public void setBitmapsForActivity() {
@@ -88,5 +83,9 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
             currentBitmap = null;
             System.gc();
         }
+    }
+    private void hideActionBar() {
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.hide();
     }
 }

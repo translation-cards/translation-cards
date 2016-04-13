@@ -7,17 +7,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.activity.addDeck.AddDeckActivity.INTENT_KEY_DECK;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDeck;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDeckContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -34,12 +31,12 @@ public class GetStartedDeckActivityTest {
 
     @Test
     public void shouldPassDeckToNextActivity() {
-        Deck expectedDeck = new Deck();
-        Activity activity = createActivityToTestWithDeck(GetStartedDeckActivity.class, expectedDeck);
+        NewDeckContext expectedDeckContext = new NewDeckContext();
+        Activity activity = createActivityToTestWithDeckContext(GetStartedDeckActivity.class, expectedDeckContext);
         click(activity, R.id.deck_get_started_button);
         Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
-        Deck deck = (Deck) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
-        assertEquals(expectedDeck, deck);
+        NewDeckContext actualDeckContext = (NewDeckContext) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
+        assertEquals(expectedDeckContext, actualDeckContext);
     }
 
     @Test

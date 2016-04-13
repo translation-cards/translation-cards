@@ -10,6 +10,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.DeckCreationActivity;
 import org.mercycorps.translationcards.activity.ImportActivity;
+import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.data.Deck;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         findViewById(R.id.create_deck_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createIntent = new Intent(MyDecksActivity.this, DeckCreationActivity.class);
+                Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
                 startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
             }
         });
