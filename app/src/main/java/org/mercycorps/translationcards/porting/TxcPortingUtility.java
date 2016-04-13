@@ -411,12 +411,12 @@ public class TxcPortingUtility {
             } else {
                 dictionary = new ImportSpecDictionary(language);
                 dictionaryLookup.put(language, dictionary);
+                spec.dictionaries.add(dictionary);
             }
             dictionary.cards.add(
                     new ImportSpecCard(split[0], split[1], split.length > 3 ? split[3] : null));
         }
         s.close();
-        spec.updateDictionaries(dictionaryLookup.values());
         return spec;
     }
 
@@ -460,12 +460,6 @@ public class TxcPortingUtility {
             this.hash = hash;
             this.dir = dir;
             dictionaries = new ArrayList<>();
-        }
-
-        public void updateDictionaries(Collection<ImportSpecDictionary> values) {
-            for (ImportSpecDictionary value : values) {
-                dictionaries.add(value);
-            }
         }
     }
 
