@@ -80,7 +80,7 @@ public class Deck implements Serializable {
 
     public Dictionary[] getDictionaries(Context context) {
         if (dictionaries == null) {
-            dictionaries = ((MainApplication) context.getApplicationContext()).getDbManager().getDictionariesForDeck(dbId);
+            dictionaries = ((MainApplication) context.getApplicationContext()).getDbManager().getAllDictionariesForDeck(dbId);
         }
         return dictionaries;
     }

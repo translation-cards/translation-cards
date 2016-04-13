@@ -51,65 +51,12 @@ public class DbManager {
         this.dbh = new DbHelper(context);
     }
 
-    public Dictionary[] getAllDictionaries() {
-        // Getting translations.
-        Map<Long, List<Translation>> translations = new HashMap<>();
-        String[] columns = {TranslationsTable.ID, TranslationsTable.DICTIONARY_ID,
-                TranslationsTable.LABEL, TranslationsTable.IS_ASSET, TranslationsTable.FILENAME,
-                TranslationsTable.TRANSLATED_TEXT};
-        Cursor cursor = dbh.getReadableDatabase().query(
-                TranslationsTable.TABLE_NAME, columns,
-                null, null, null, null,
-                String.format("%s DESC", TranslationsTable.ITEM_INDEX));
-        boolean hasNext = cursor.moveToFirst();
-        while (hasNext) {
-            long dictionaryId = cursor.getLong(cursor.getColumnIndex(TranslationsTable.DICTIONARY_ID));
-            if (!translations.containsKey(dictionaryId)) {
-                translations.put(dictionaryId, new ArrayList<Translation>());
-            }
-            translations.get(dictionaryId).add(new Translation(
-                    cursor.getString(cursor.getColumnIndex(TranslationsTable.LABEL)),
-                    cursor.getInt(cursor.getColumnIndex(TranslationsTable.IS_ASSET)) == 1,
-                    cursor.getString(cursor.getColumnIndex(TranslationsTable.FILENAME)),
-                    cursor.getLong(cursor.getColumnIndex(TranslationsTable.ID)),
-                    cursor.getString(cursor.getColumnIndex(TranslationsTable.TRANSLATED_TEXT))));
-            hasNext = cursor.moveToNext();
-        }
-        cursor.close();
-        // Getting languages.
-        columns = new String[] {DictionariesTable.ID, DictionariesTable.LABEL,
-                DictionariesTable.DECK_ID};
-        cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME, columns,
-                null, null, null, null, DictionariesTable.ITEM_INDEX);
-        Dictionary[] res = new Dictionary[cursor.getCount()];
-        int dictionaryIndex = 0;
-        cursor.moveToFirst();
-        while (dictionaryIndex < res.length) {
-            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
-            String destLanguageIso = cursor.getString(cursor.getColumnIndex(
-                    DictionariesTable.LANGUAGE_ISO));
-            String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
-            long deckId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.DECK_ID));
-            Translation[] languageTranslations = {};
-            if (translations.containsKey(dictionaryId)) {
-                languageTranslations = translations.get(dictionaryId)
-                        .toArray(new Translation[] {});
-            }
-            res[dictionaryIndex] = new Dictionary(
-                    destLanguageIso, label, languageTranslations, dictionaryId, deckId);
-            cursor.moveToNext();
-            dictionaryIndex++;
-        }
-        return res;
-    }
-
     public Dictionary[] getAllDictionariesForDeck(long deckId) {
         Cursor cursor = dbh.getReadableDatabase().query(
                 DictionariesTable.TABLE_NAME, null,
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
-                String.format("%s ASC", DictionariesTable.LABEL));
+                String.format("%s ASC", DictionariesTable.LANGUAGE_ISO));
 
         Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
@@ -332,31 +279,6 @@ public class DbManager {
         cursor.close();
         dbh.close();
         return translations;
-    }
-
-    private Dictionary getDictionaryFromCursor(Cursor cursor) {
-        return new Dictionary(
-                cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID)),
-                cursor.getLong(cursor.getColumnIndex(DictionariesTable.DECK_ID)),
-                cursor.getString(cursor.getColumnIndex(DictionariesTable.LANGUAGE_ISO)),
-                cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL)));
-    }
-
-    public Dictionary[] getDictionariesForDeck(long deckId) {
-        String whereClause = DictionariesTable.DECK_ID + " = ?";
-        String[] whereArgs = new String[] {String.valueOf(deckId)};
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME, null, whereClause, whereArgs, null, null,
-                DictionariesTable.LABEL);
-        int count = cursor.getCount();
-        Dictionary[] dictionaries = new Dictionary[count];
-        cursor.moveToFirst();
-        for (int i = 0; i < count; i++) {
-            dictionaries[i] = getDictionaryFromCursor(cursor);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return dictionaries;
     }
 
     public void saveTranslationContext(NewTranslationContext context) {

@@ -156,7 +156,7 @@ public class MyDeckAdapterTest extends TestCase {
     }
 
     private void setupMockDictionaries() {
-        when(getDbManager().getDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
+        when(getDbManager().getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
     }
 
 }
