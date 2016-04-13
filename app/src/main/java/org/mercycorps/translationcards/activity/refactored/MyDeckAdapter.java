@@ -13,13 +13,11 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.DecksActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.io.IOException;
