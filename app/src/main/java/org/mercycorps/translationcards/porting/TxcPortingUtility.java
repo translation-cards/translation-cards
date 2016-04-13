@@ -2,7 +2,6 @@ package org.mercycorps.translationcards.porting;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +22,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +40,7 @@ public class TxcPortingUtility {
 
     private static final String INDEX_FILENAME = "card_deck.csv";
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
-    private static final String SPEC_FILENAME = "spec.json";
+    private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
 
     private final class JsonKeys {
@@ -53,7 +51,7 @@ public class TxcPortingUtility {
         public static final String SOURCE_LANGUAGE = "source_language";
         public static final String LOCKED = "locked";
         public static final String DICTIONARIES = "languages";
-        public static final String DICTIONARY_DEST_LANGUAGE = "dest_language";
+        public static final String DICTIONARY_DEST_ISO_CODE = "iso_code";
         public static final String CARDS = "cards";
         public static final String CARD_LABEL = "card_label";
         public static final String CARD_DEST_AUDIO = "dest_audio";
@@ -115,7 +113,7 @@ public class TxcPortingUtility {
             for (Dictionary dictionary : dictionaries) {
                 JSONObject dictionaryJson = new JSONObject();
                 dictionaryJson.put(
-                        JsonKeys.DICTIONARY_DEST_LANGUAGE, dictionary.getDestLanguageIso());
+                        JsonKeys.DICTIONARY_DEST_ISO_CODE, dictionary.getDestLanguageIso());
                 JSONArray cardsJson = new JSONArray();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
                     Translation translation = dictionary.getTranslation(i);
@@ -343,7 +341,7 @@ public class TxcPortingUtility {
             }
             for (int i = 0; i < dictionaries.length(); i++) {
                 JSONObject dictionary = dictionaries.getJSONObject(i);
-                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_LANGUAGE);
+                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
                 ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode);
                 spec.dictionaries.add(dictionarySpec);
                 JSONArray cards = dictionary.optJSONArray(JsonKeys.CARDS);
