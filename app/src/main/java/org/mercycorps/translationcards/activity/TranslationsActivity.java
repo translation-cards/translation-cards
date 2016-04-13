@@ -115,9 +115,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         updateAddTranslationButtonVisibility();
     }
 
-    private void updateHeader() {
+    private void updateHeaderAndShare() {
         int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
+        findViewById(R.id.share_deck_button).setVisibility(headerVisibility);
     }
 
     private void updateAddTranslationButtonVisibility() {
@@ -225,7 +226,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
-        updateHeader();
+        updateHeaderAndShare();
         updateWelcomeInstructionsState();
     }
 
@@ -250,6 +251,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         decoratedMediaManager.stop();
     }
 
+    @OnClick (R.id.share_deck_button)
     public void onExportButtonPress(View v) {
         final EditText nameField = new EditText(this);
         nameField.setText(deck.getLabel());

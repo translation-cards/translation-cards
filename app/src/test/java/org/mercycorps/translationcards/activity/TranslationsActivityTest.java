@@ -438,6 +438,14 @@ public class TranslationsActivityTest {
         assertFalse(context.isEdit());
     }
 
+    @Test
+    public void shouldShowAlertDialogWhenShareButtonIsClicked(){
+        click(translationsActivity, R.id.share_deck_button);
+
+        ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
+        assertThat(shadowAlertDialog.getTitle().toString(), is("Name for shared deck?"));
+    }
+
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity
                 .findViewById(R.id.translations_list);
