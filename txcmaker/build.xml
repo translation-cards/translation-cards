@@ -1,6 +1,8 @@
 <project>
   <property environment="env" />
   <property name="sdk.dir" location="${env.APPENGINE_SDK_DIR}" />
+  <property name="google-api-library.dir" location="${env.GOOGLE_API_LIBRARY_DIR}" />
+  <property name="google-drive-sdk.dir" location="${env.GOOGLE_DRIVE_SDK_DIR}" />
 
   <import file="${sdk.dir}/config/user/ant-macros.xml" />
 
@@ -15,11 +17,25 @@
   </path>
 
   <target name="copyjars"
-      description="Copies the App Engine JARs to the WAR.">
+      description="Copies the App Engine and other Google API JARs to the WAR.">
     <copy
         todir="war/WEB-INF/lib"
         flatten="true">
       <fileset dir="${sdk.dir}/lib/user">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+    <copy
+        todir="war/WEB-INF/lib"
+        flatten="true">
+      <fileset dir="${google-api-library.dir}/libs">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+    <copy
+        todir="war/WEB-INF/lib"
+        flatten="true">
+      <fileset dir="${google-drive-sdk.dir}">
         <include name="**/*.jar" />
       </fileset>
     </copy>
