@@ -4,11 +4,11 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   version="2.5">
   <servlet>
-    <servlet-name>main</servlet-name>
-    <servlet-class>org.mercycorps.translationcards.txcmaker.MainServlet</servlet-class>
+    <servlet-name>get-txc</servlet-name>
+    <servlet-class>org.mercycorps.translationcards.txcmaker.GetTxcServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>main</servlet-name>
-    <url-pattern>/</url-pattern>
+    <servlet-name>get-txc</servlet-name>
+    <url-pattern>/get-txc</url-pattern>
   </servlet-mapping>
 </web-app>
