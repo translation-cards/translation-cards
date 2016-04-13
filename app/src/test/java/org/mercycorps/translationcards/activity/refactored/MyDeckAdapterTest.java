@@ -76,7 +76,7 @@ public class MyDeckAdapterTest extends TestCase {
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView translationLanguagesTextView  = findAnyView(view, R.id.translation_languages);
-        String expectedLanguages = ALPHABETICALLY_HIGH_LANGUAGE + DELIMITER + DEFAULT_TRANSLATION_LANGUAGE;
+        String expectedLanguages = ALPHABETICALLY_HIGH_LANGUAGE.toUpperCase() + DELIMITER + DEFAULT_TRANSLATION_LANGUAGE.toUpperCase();
         assertEquals(expectedLanguages, translationLanguagesTextView.getText().toString());
     }
 

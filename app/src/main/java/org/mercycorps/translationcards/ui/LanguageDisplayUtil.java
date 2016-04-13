@@ -33,7 +33,7 @@ public class LanguageDisplayUtil {
         sb.append(getDestLanguageDisplayName(context, dictionaries[0]));
         for (int i = 1; i < dictionaries.length; i++) {
             sb.append(delimiter);
-            sb.append(getDestLanguageDisplayName(context, dictionaries[i]));
+            sb.append(getDestLanguageDisplayName(context, dictionaries[i]).toUpperCase());
         }
         return sb.toString();
     }
