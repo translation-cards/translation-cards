@@ -296,7 +296,7 @@ public class TxcPortingUtility {
                 items.add(new ImportItem(split[0], split[1], split[2], split[3]));
             } else {
                 s.close();
-                throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
+                throw new  ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
         }
         s.close();
