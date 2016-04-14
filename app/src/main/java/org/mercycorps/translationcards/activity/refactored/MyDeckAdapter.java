@@ -32,6 +32,8 @@ import java.io.OutputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLanguageListDisplay;
+
 /**
  * Created by njimenez on 3/31/16.
  */
@@ -78,7 +80,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
         deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
-        translationLanguagesTextView.setText(getDbManager().getTranslationLanguagesForDeck(deck.getDbId()));
+        translationLanguagesTextView.setText(getDestLanguageListDisplay(getContext(), deck, "  "));
     }
 
     private DbManager getDbManager(){
@@ -151,13 +153,12 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         File targetDir = new File(new File(getContext().getFilesDir(), "recordings"),
                 String.format("copy-%d", (new Random()).nextInt()));
         targetDir.mkdirs();
-        long deckId = getDbManager().addDeck(deckName, getContext().getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false);
+        long deckId = getDbManager().addDeck(deckName, getContext().getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false, deck.getSrcLanguageIso());
         Dictionary[] dictionaries = getDbManager().getAllDictionariesForDeck(deck.getDbId());
         int dictionaryIndex = dictionaries.length - 1;
         try {
             for (Dictionary dictionary : dictionaries) {
-                long dictionaryId = getDbManager().addDictionary(
-                        dictionary.getLabel(), dictionaryIndex, deckId);
+                long dictionaryId = getDbManager().addDictionary(dictionary.getDestLanguageIso(), dictionary.getLabel(), dictionaryIndex, deckId);
                 dictionaryIndex--;
                 int translationDbIndex = dictionary.getTranslationCount() - 1;
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {

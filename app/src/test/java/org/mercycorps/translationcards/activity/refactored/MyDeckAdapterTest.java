@@ -17,6 +17,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -45,11 +46,14 @@ public class MyDeckAdapterTest extends TestCase {
     private static final String DEFAULT_PUBLISHER = "DefaultPublisher";
     private static final String DEFAULT_FORMATTED_DATE = "12/31/69";
     private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER+ ", "+DEFAULT_FORMATTED_DATE;
-    private static final String DEFAULT_TRANSLATION_LANGUAGES = "DefaultTranslationLanguages";
+    private static final String DEFAULT_TRANSLATION_LANGUAGE = "DefaultTranslationLanguages";
     public static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
+    private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
+    private static final String DELIMITER = "  ";
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() throws Exception{
+        setupMockDictionaries();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView deckNameTextView = (TextView) view.findViewById(R.id.deck_name);
@@ -59,6 +63,7 @@ public class MyDeckAdapterTest extends TestCase {
     @Ignore
     @Test
     public void shouldHaveDeckInformationWhenDeckIsPresent() throws Exception {
+        setupMockDictionaries();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView deckInformationTextView = findAnyView(view, R.id.deck_information);
@@ -71,7 +76,8 @@ public class MyDeckAdapterTest extends TestCase {
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
         View view = adapter.getView(0, null, null);
         TextView translationLanguagesTextView  = findAnyView(view, R.id.translation_languages);
-        assertEquals(DEFAULT_TRANSLATION_LANGUAGES, translationLanguagesTextView.getText().toString());
+        String expectedLanguages = ALPHABETICALLY_HIGH_LANGUAGE.toUpperCase() + DELIMITER + DEFAULT_TRANSLATION_LANGUAGE.toUpperCase();
+        assertEquals(expectedLanguages, translationLanguagesTextView.getText().toString());
     }
 
     @Test
@@ -137,16 +143,20 @@ public class MyDeckAdapterTest extends TestCase {
     }
 
     private Deck createUnlockedTestDeck(){
-        return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, false);
+        return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, false, "");
     }
 
     private Deck createLockedTestDeck(){
-        return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, true);
+        return new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0l, 0l, true, "");
     }
 
     private void setupMocks(){
-        when(getDbManager().getTranslationLanguagesForDeck(anyLong())).thenReturn(DEFAULT_TRANSLATION_LANGUAGES);
+        setupMockDictionaries();
         when(getDbManager().getAllDecks()).thenReturn(null);
+    }
+
+    private void setupMockDictionaries() {
+        when(getDbManager().getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
     }
 
 }

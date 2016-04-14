@@ -39,6 +39,7 @@ import static org.robolectric.Shadows.shadowOf;
 public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
             "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=0.3.2";
+    private static final String DEFAULT_ISO_CODE = "en";
 
     @Test
     public void testDecksActivityCreation(){
@@ -110,7 +111,7 @@ public class MyDecksActivityTest {
     private Deck[] mockDecks(boolean shouldCreateDeck){
         if(!shouldCreateDeck) return null;
         Deck[] arrayOfDecks = new Deck[1];
-        Deck deck = new Deck("", "", "", 0l, false);
+        Deck deck = new Deck("", "", "", 0l, false, DEFAULT_ISO_CODE);
         arrayOfDecks[0] = deck;
         return arrayOfDecks;
     }
