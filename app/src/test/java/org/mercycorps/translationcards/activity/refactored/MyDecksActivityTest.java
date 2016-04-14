@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -21,6 +22,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;

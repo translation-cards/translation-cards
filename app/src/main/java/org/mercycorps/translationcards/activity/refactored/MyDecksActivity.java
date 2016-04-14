@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
@@ -61,7 +60,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
 
     private void updateFooterView(List<Deck> decks) {
         updateFooterDisplay(decks);
-        updateFooterPosition(decks);
+        updateListViewCentered(myDeckListView, decks.isEmpty());
     }
 
     private void updateFooterDisplay(List<Deck> decks) {
@@ -76,14 +75,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         inflateListFooter();
         setFooterClickListeners();
         updateFooterDisplay(decks);
-        updateFooterPosition(decks);
-    }
-
-    private void updateFooterPosition(List<Deck> decks) {
-        int isCentered = decks.isEmpty() ? RelativeLayout.TRUE : 0;
-        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myDeckListView.getLayoutParams();
-        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
-        myDeckListView.setLayoutParams(params);
+        updateListViewCentered(myDeckListView, decks.isEmpty());
     }
 
     private void inflateListFooter() {

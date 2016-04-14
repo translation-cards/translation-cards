@@ -80,7 +80,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
-    @Bind(R.id.translation_list_header) TextView listHeader;
 
     DbManager dbManager;
     private Dictionary[] dictionaries;
@@ -190,9 +189,12 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateWelcomeInstructionsState() {
-        int welcomeInstructionsVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.VISIBLE : View.GONE;
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        boolean isTranslationsListEmpty = dictionaries[currentDictionaryIndex].getTranslationCount() == 0;
+        int welcomeInstructionsVisibility = isTranslationsListEmpty ? View.VISIBLE : View.GONE;
         findViewById(R.id.empty_deck_title).setVisibility(welcomeInstructionsVisibility);
         findViewById(R.id.empty_deck_message).setVisibility(welcomeInstructionsVisibility);
+        updateListViewCentered(list, isTranslationsListEmpty);
     }
 
     private void launchGetStartedActivity(){
