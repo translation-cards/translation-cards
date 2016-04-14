@@ -37,7 +37,7 @@ public class CardAudioClickListener implements View.OnClickListener {
         } else {
             stopMediaPlayer();
             try {
-                decoratedMediaManager.play(translation.getFilename(), progressBar);
+                decoratedMediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
             } catch (AudioFileException e) {
                 Context context = progressBar.getContext();
                 ToastHelper.showToast(context, context.getString(R.string.could_not_play_audio_message));

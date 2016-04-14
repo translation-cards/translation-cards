@@ -2,20 +2,16 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import javolution.util.stripped.FastCollection;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static java.lang.Thread.sleep;
@@ -33,6 +29,8 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class RecordAudioActivityTest {
+
+    private static final boolean IS_NOT_ASSET = false;
 
     @Test
     public void playButtonShouldBeGreyWhenActivityStarts() {
@@ -181,7 +179,7 @@ public class RecordAudioActivityTest {
         setupAudioPlayerManager();
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         click(activity, R.id.play_audio_button);
-        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE);
+        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE, IS_NOT_ASSET);
     }
 
     @Test

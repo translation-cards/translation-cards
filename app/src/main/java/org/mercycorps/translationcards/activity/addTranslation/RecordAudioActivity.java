@@ -4,13 +4,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.MediaConfig;
@@ -202,8 +202,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void playAudioFile() throws AudioFileException {
         try {
-            NewTranslationContext context = getContextFromIntent();
-            getAudioPlayerManager().play(context.getTranslation().getFilename());
+            Translation translation = getContextFromIntent().getTranslation();
+            getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
         } catch (IOException e) {
             throw new AudioFileException("Unable to play audio file", e);
         }

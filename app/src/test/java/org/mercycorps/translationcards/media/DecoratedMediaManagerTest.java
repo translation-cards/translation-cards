@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(RobolectricGradleTestRunner.class)
 public class DecoratedMediaManagerTest {
     public static final String FILENAME = "Filename";
+    private static final boolean IS_NOT_ASSET = false;
     private DecoratedMediaManager decoratedMediaManager;
     private static final int RESET_PROGRESS_BAR = 0;
 
@@ -44,14 +45,14 @@ public class DecoratedMediaManagerTest {
     @Test
     public void shouldPlayAudioWhenPlayIsCalled() throws Exception {
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
-        verify(getAudioPlayerManager()).play(FILENAME);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
+        verify(getAudioPlayerManager()).play(FILENAME, IS_NOT_ASSET);
     }
 
     @Test
     public void shouldStopAudioWhenStopIsCalled() throws AudioFileException, AudioFileNotSetException {
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         decoratedMediaManager.stop();
         verify(getAudioPlayerManager()).stop();
     }
@@ -60,7 +61,7 @@ public class DecoratedMediaManagerTest {
     @Test
     public void shouldUpdateProgressBarWhenPlayIsCalled() throws Exception {
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         Thread.sleep(10000);
         verify(progressBar).setProgress(DEFAULT_POSITION);
     }
@@ -68,21 +69,21 @@ public class DecoratedMediaManagerTest {
     @Test
     public void shouldSetMaxDurationOfProgressBarWhenPlayIsCalled() throws Exception {
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         verify(progressBar).setMax(DEFAULT_MAX);
     }
 
     @Test
     public void shouldCreatedScheduledFutureWhenPlayIsCalled() throws Exception {
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         verify(getScheduledExecutorService()).scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS));
     }
 
     @Test
     public void shouldResetProgressBarWhenStopIsCalled() throws Exception{
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         decoratedMediaManager.stop();
         verify(progressBar).setProgress(eq(RESET_PROGRESS_BAR));
     }
@@ -90,7 +91,7 @@ public class DecoratedMediaManagerTest {
     @Test
     public void shouldStopAndDestroyScheduledFutureWhenStopIsCalled() throws Exception{
         setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar);
+        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
         decoratedMediaManager.stop();
         verify(decoratedMediaManager.getScheduledFuture()).cancel(true);
     }
