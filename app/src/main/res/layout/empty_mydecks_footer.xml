@@ -7,17 +7,17 @@
     android:paddingBottom="80dp">
 
     <TextView
-        android:id="@+id/empty_myDecks_title"
+        android:id="@+id/empty_my_decks_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:gravity="center_horizontal"
-        android:text="@string/empty_myDecks_title"
+        android:text="@string/empty_my_decks_title"
         android:textSize="24sp"
         android:textColor="@color/primaryTextColor"/>
 
     <TextView
-        android:id="@+id/empty_myDecks_message"
+        android:id="@+id/empty_my_decks_message"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -25,7 +25,7 @@
         android:lineSpacingExtra="6dp"
         android:layout_marginBottom="16dp"
         android:textSize="14sp"
-        android:text="@string/empty_myDecks_message"/>
+        android:text="@string/empty_my_decks_message"/>
 
 
     <Button

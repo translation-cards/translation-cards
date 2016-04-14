@@ -2,7 +2,6 @@ package org.mercycorps.translationcards.activity.refactored;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -29,12 +28,12 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
 
-    @Bind(R.id.my_decks_list) ListView myDeckListView;
+    @Bind(R.id.my_decks_list)
+    ListView myDeckListView;
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=0.3.2";
-    private View footerView;
 
     @Override
     public void inflateView() {
@@ -44,7 +43,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     public void initStates() {
         setActionBarTitle();
         List<Deck> decks = getDecks();
-        updateFooterView(decks);
+        initListFooter(decks);
         updateDecksView(decks);
     }
 
@@ -61,32 +60,37 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateFooterView(List<Deck> decks) {
-        int footerLayout = decks.isEmpty() ? R.layout.empty_mydecks_footer : R.layout.mydecks_footer;
-        updateListViewPosition(footerLayout);
-        removePreviousFooter();
-        inflateListFooter(footerLayout);
-        setFooterClickListeners(footerLayout);
+        updateFooterDisplay(decks);
+        updateFooterPosition(decks);
     }
 
-    private void updateListViewPosition(int footerLayout) {
-        int isCentered = footerLayout == R.layout.empty_mydecks_footer ? RelativeLayout.TRUE : 0;
+    private void updateFooterDisplay(List<Deck> decks) {
+        int visibilityForEmptyMyDecks = decks.isEmpty() ? View.VISIBLE : View.GONE;
+        int visibilityForFeedbackButton = decks.isEmpty() ? View.GONE : View.VISIBLE;
+        findViewById(R.id.empty_my_decks_title).setVisibility(visibilityForEmptyMyDecks);
+        findViewById(R.id.empty_my_decks_message).setVisibility(visibilityForEmptyMyDecks);
+        findViewById(R.id.feedback_button).setVisibility(visibilityForFeedbackButton);
+    }
+
+    private void initListFooter(List<Deck> decks) {
+        inflateListFooter();
+        setFooterClickListeners();
+        updateFooterDisplay(decks);
+    }
+
+    private void updateFooterPosition(List<Deck> decks) {
+        int isCentered = decks.isEmpty() ? RelativeLayout.TRUE : 0;
         final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myDeckListView.getLayoutParams();
         params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
         myDeckListView.setLayoutParams(params);
     }
 
-    private void removePreviousFooter() {
-        if (footerView != null) {
-            myDeckListView.removeFooterView(footerView);
-        }
-    }
-
-    private void inflateListFooter(int footerLayout) {
-        footerView = getLayoutInflater().inflate(footerLayout, myDeckListView, false);
+    private void inflateListFooter() {
+        View footerView = getLayoutInflater().inflate(R.layout.my_decks_footer, myDeckListView, false);
         myDeckListView.addFooterView(footerView);
     }
 
-    private void setFooterClickListeners(int footerLayout) {
+    private void setFooterClickListeners() {
         findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,15 +106,13 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
             }
         });
 
-        if (footerLayout == R.layout.mydecks_footer) {
-            findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
+        findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
 
-                }
-            });
-        }
+            }
+        });
     }
 
     private void importFromFile() {

@@ -1,12 +1,7 @@
 package org.mercycorps.translationcards.activity.refactored;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.os.Build;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -52,7 +47,7 @@ public class MyDecksActivityTest {
     public void shouldShowDecksFooterTitleWhenNoDecksArePresent(){
         setUpMocksWithEmptyDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
-        TextView textView = findTextView(activity, R.id.empty_myDecks_title);
+        TextView textView = findTextView(activity, R.id.empty_my_decks_title);
         assertTrue(textView.getVisibility() == View.VISIBLE);
     }
 
@@ -60,16 +55,16 @@ public class MyDecksActivityTest {
     public void shouldNotShowDecksFooterTitleWhenDecksArePresent(){
         setUpMockWithDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
-        TextView textView = findTextView(activity, R.id.empty_myDecks_title);
-        assertNull(textView);
+        TextView textView = findTextView(activity, R.id.empty_my_decks_title);
+        assertEquals(View.GONE, textView.getVisibility());
     }
 
     @Test
     public void shouldNotShowDecksFooterMessageWhenDecksArePresent(){
         setUpMockWithDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
-        TextView textView = findAnyView(activity, R.id.empty_myDecks_message);
-        assertNull(textView);
+        TextView textView = findAnyView(activity, R.id.empty_my_decks_message);
+        assertEquals(View.GONE, textView.getVisibility());
     }
 
     @Test
