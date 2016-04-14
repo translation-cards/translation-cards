@@ -76,6 +76,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         inflateListFooter();
         setFooterClickListeners();
         updateFooterDisplay(decks);
+        updateFooterPosition(decks);
     }
 
     private void updateFooterPosition(List<Deck> decks) {
