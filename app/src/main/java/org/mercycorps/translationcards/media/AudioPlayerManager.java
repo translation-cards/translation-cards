@@ -54,7 +54,7 @@ public class AudioPlayerManager {
         Context context = MainApplication.getContextFromMainApp();
         if (isAsset) {
             AssetFileDescriptor assetFileDescriptor = context.getAssets().openFd(fileName);
-            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor());
+            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
             assetFileDescriptor.close();
         } else {
             fileDescriptor = ((MainApplication) context).getFileDescriptor(fileName);
