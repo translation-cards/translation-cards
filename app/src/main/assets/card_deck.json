@@ -2,7 +2,7 @@
   "license-url": "http://creativecommons.org/licenses/by/4.0/",
   "readme": "Default content to be built into distributable apk. Translations by: http://translatorswithoutborders.org and http://mercycorps.org",
   "locked": false,
-  "timestamp": 1460487366,
+  "timestamp": 146048736600,
   "deck_label" : "Camp Aidworker",
   "publisher":"org.innovation.unhcr",
   "id": "org.innovation.unhcr.txc-default-deck",
