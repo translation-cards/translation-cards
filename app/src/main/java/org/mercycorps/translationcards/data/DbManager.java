@@ -23,15 +23,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.porting.ImportException;
+import org.mercycorps.translationcards.porting.TxcPortingUtility;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Manages database operations.
@@ -409,6 +412,7 @@ public class DbManager {
                             translation.getTranslatedText());
                 }
             }
+            importBundledDeck(db);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -447,6 +451,25 @@ public class DbManager {
                 ContentValues defaultDestLanguageValues = new ContentValues();
                 defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, "xx");
                 db.update(DictionariesTable.TABLE_NAME, defaultDestLanguageValues, null, null);
+                importBundledDeck(db);
+            }
+        }
+
+        private void importBundledDeck(SQLiteDatabase db) {
+            JSONObject jsonObject;
+            try {
+                Context context = MainApplication.getContextFromMainApp();
+                InputStream is = context.getAssets().open("card_deck.json");
+                byte[] buffer = new byte[is.available()];
+                is.read(buffer);
+                is.close();
+                jsonObject = new JSONObject(new String(buffer, "UTF-8"));
+
+                TxcPortingUtility txcPortingUtility = new TxcPortingUtility();
+                TxcPortingUtility.ImportSpec importSpec = txcPortingUtility.buildImportSpec(new File(""), "", jsonObject);
+                txcPortingUtility.loadAssetData(db, context, importSpec);
+            } catch (IOException | JSONException | ImportException e) {
+                Log.d(TAG, e.getMessage());
             }
         }
 

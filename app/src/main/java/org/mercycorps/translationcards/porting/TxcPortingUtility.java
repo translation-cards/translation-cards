@@ -1,7 +1,9 @@
 package org.mercycorps.translationcards.porting;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,7 +194,7 @@ public class TxcPortingUtility {
     }
 
     public void executeImport(Context context, ImportSpec importSpec) throws ImportException {
-        loadData(context, importSpec);
+        loadData(context, importSpec, false);
     }
 
     public void abortImport(Context context, ImportSpec importSpec) {
@@ -325,6 +327,11 @@ public class TxcPortingUtility {
         } catch (JSONException e) {
             throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, e);
         }
+        return buildImportSpec(dir, hash, json);
+    }
+
+    @NonNull
+    public ImportSpec buildImportSpec(File dir, String hash, JSONObject json) throws ImportException {
         ImportSpec spec;
         try {
             String deckLabel = json.getString(JsonKeys.DECK_LABEL);
@@ -418,7 +425,7 @@ public class TxcPortingUtility {
         return spec;
     }
 
-    private void loadData(Context context, ImportSpec importSpec) {
+    public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
         DbManager dbm = new DbManager(context);
         long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
@@ -431,6 +438,20 @@ public class TxcPortingUtility {
                 dbm.addTranslation(
                         dictionaryId, card.label, false, cardFile.getAbsolutePath(), j,
                         card.translatedText);
+            }
+        }
+    }
+
+    public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
+        DbManager dbManager = new DbManager(context);
+        long deckId = dbManager.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+                importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
+        for (int i = 0; i < importSpec.dictionaries.size(); i++) {
+            ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
+            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.language, null, i, deckId);
+            for (int j = 0; j < dictionary.cards.size(); j++) {
+                ImportSpecCard card = dictionary.cards.get(j);
+                dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, j, card.translatedText);
             }
         }
     }
