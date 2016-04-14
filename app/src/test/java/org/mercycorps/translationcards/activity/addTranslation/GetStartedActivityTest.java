@@ -82,7 +82,7 @@ public class GetStartedActivityTest {
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(GetStartedActivity.class);
         TextView getStartedDescription = findTextView(activity, R.id.get_started_detail);
-        assertEquals("Write your script, record your phrase,\\nand use your card in the field.", getStartedDescription.getText().toString());
+        assertEquals("Write your script, record your phrase\\nand use your card in the field.", getStartedDescription.getText().toString());
     }
 
     @Test
