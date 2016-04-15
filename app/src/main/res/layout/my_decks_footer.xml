@@ -71,7 +71,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/share"/>
+                android:background="@drawable/import_icon"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

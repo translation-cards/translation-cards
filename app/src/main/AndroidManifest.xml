@@ -14,14 +14,14 @@
         android:theme="@style/AppTheme"
         android:name=".MainApplication">
 
-        <activity android:name=".activity.refactored.MyDecksActivity">
+        <activity android:name=".activity.refactored.MyDecksActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.TranslationsActivity"
-            android:parentActivityName=".activity.refactored.MyDecksActivity">
+            android:parentActivityName=".activity.refactored.MyDecksActivity" android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -34,7 +34,7 @@
         <activity android:name=".activity.addTranslation.EnterTranslatedPhraseActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.addTranslation.SummaryActivity" android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.DeckCreationActivity" />
+        <activity android:name=".activity.DeckCreationActivity" android:screenOrientation="portrait" />
         <activity android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">
             <!-- To support opening from a file manager. -->
