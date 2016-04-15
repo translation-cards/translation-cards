@@ -15,15 +15,9 @@ import butterknife.OnTextChanged;
 public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @Bind(R.id.source_phrase_field)TextView sourcePhraseTextView;
-    @Bind(R.id.source_phrase_title)TextView sourcePhraseTitle;
     @Bind(R.id.activity_enter_source_phrase_next_label)LinearLayout nextButton;
     @Bind(R.id.activity_enter_source_phrase_next_text)TextView nextButtonText;
     @Bind(R.id.activity_enter_source_phrase_next_image)ImageView nextButtonImage;
-
-    @Override
-    protected void setActivityTitle() {
-        sourcePhraseTitle.setText(String.format(getString(R.string.enter_source_phrase_activity_titile), getContextFromIntent().getDictionary().getLabel()));
-    }
 
     @Override
     public void inflateView() {
@@ -44,9 +38,12 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
         setBitmap(R.id.enter_source_phrase_image, R.drawable.enter_phrase_image);
     }
 
-    @OnClick(R.id.cancel_add_translation_activity)
+    @OnClick(R.id.enter_source_phrase_activity_back_label)
     public void cancelButtonClick() {
-        startNextActivity(EnterSourcePhraseActivity.this, TranslationsActivity.class);
+        String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
+        updateContextWithSourceText();
+        Class nextActivity = getContextFromIntent().isEdit() ? TranslationsActivity.class : GetStartedActivity.class;
+        startNextActivity(EnterSourcePhraseActivity.this, nextActivity);
     }
 
     @OnTextChanged(R.id.source_phrase_field)
@@ -64,11 +61,15 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     }
 
     @OnClick(R.id.activity_enter_source_phrase_next_label)
-    public void enterTranslatedPhraseSaveLabelClick(){
+    public void enterSourcePhraseNextLabelClicked(){
         if (!nextButton.isClickable()) return;
+        updateContextWithSourceText();
+        startNextActivity(EnterSourcePhraseActivity.this, EnterTranslatedPhraseActivity.class);
+    }
+
+    protected void updateContextWithSourceText() {
         String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
         getContextFromIntent().setSourceText(userEnteredSourcePhrase);
-        startNextActivity(EnterSourcePhraseActivity.this, RecordAudioActivity.class);
     }
 
 }

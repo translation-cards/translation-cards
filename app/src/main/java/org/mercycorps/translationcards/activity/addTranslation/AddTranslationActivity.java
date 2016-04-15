@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
@@ -28,7 +29,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         hideActionBar();
-        setActivityTitle();
     }
 
     @Override
@@ -36,8 +36,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         recycleBitmap();
         super.onDestroy();
     }
-
-    protected abstract void setActivityTitle();
 
     private void hideActionBar() {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -79,6 +77,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     }
 
     protected void setBitmap(int resId, int drawableId) {
+        recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(getResources(), drawableId);
         currentBitmapView = (ImageView) findViewById(resId);
         currentBitmapView.setImageBitmap(currentBitmap);

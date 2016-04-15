@@ -25,6 +25,7 @@
         android:textColor="@color/textColor"
         android:textSize="20dp"
         android:background="@color/colorPrimary"
+        android:text="@string/summary_title"
         android:id="@+id/summary_title" />
 
     <TextView
@@ -37,6 +38,7 @@
         android:paddingRight="16dp"
         android:textSize="16dp"
         android:lineSpacingExtra="3dp"
+        android:text="@string/activity_summary_instructions"
         android:id="@+id/summary_detail" />
 
     <RelativeLayout
@@ -121,18 +123,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="16dp"
-            android:id="@+id/go_to_enter_translated_phrase_activity">
+            android:id="@+id/summary_activity_back">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/back_arrow" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="16dp"
-                android:textColor="@color/primaryTextColor"
-                android:text="@string/navigation_button_back" />
         </LinearLayout>
 
         <LinearLayout

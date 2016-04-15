@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#01579b</color>
-    <color name="colorPrimaryDark">#013a68</color>
+    <color name="colorPrimaryDark">#003C6A</color>
     <color name="colorAccent">#9b5701</color>
     <color name="textColor">#fcfcfc</color>
     <color name="unselectedLanguageTabText">#89b0cf</color>
@@ -13,4 +13,10 @@
     <color name="textDisabled">#868686</color>
     <color name="colorSecondaryLight">#6B6B6B</color>
     <color name="lineColor">#E0E0E0</color>
+    <color name="red">#BE2126</color>
+    <color name="deep_red">#7C1F21</color>
+    <color name="green">#148C48</color>
+    <color name="grey">#787878</color>
+    <color name="backgroundBlue">#616A7E</color>
+    <color name="orange">#F3A536</color>
 </resources>

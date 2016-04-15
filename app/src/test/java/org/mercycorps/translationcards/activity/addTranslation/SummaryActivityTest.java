@@ -15,10 +15,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
-import org.mercycorps.translationcards.activity.addTranslation.EnterTranslatedPhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -38,6 +35,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class SummaryActivityTest {
     public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
+    private static final boolean IS_NOT_ASSET = false;
 
     @Test
     public void shouldNotBeNull(){
@@ -98,14 +96,14 @@ public class SummaryActivityTest {
         Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
         activity.findViewById(R.id.summary_translation_card).performClick();
         ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
-        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar);
+        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
 
     @Test
     public void shouldGoBackToEnterTranslatedTextActivityWhenEditIsClicked() throws Exception{
         Activity activity = createActivityToTest(SummaryActivity.class);
-        activity.findViewById(R.id.go_to_enter_translated_phrase_activity).performClick();
-        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        activity.findViewById(R.id.summary_activity_back).performClick();
+        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -117,7 +115,7 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldSaveTranslationContextWhenUserClicksSave() {
-        Activity activity = createActivityToTestWithTContextAndSourceText(SummaryActivity.class);
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(SummaryActivity.class);
         click(activity, R.id.save_translation_button);
         verify(getDbManager()).saveTranslationContext(any(NewTranslationContext.class));
     }
@@ -126,7 +124,7 @@ public class SummaryActivityTest {
     public void shouldSetSummaryTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         TextView summaryTitle = findTextView(activity, R.id.summary_title);
-        assertEquals(String.format("New %s flashcard created", DEFAULT_DICTIONARY_LABEL), summaryTitle.getText().toString());
+        assertEquals("Review and save your card", summaryTitle.getText().toString());
     }
 
     @Test
@@ -138,9 +136,9 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldSetSummaryDetailWhenActivityIsCreated() {
-        Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
+        Activity activity = createActivityToTest(SummaryActivity.class);
         TextView summaryDetail = findTextView(activity, R.id.summary_detail);
-        assertEquals(String.format("Find your new flashcard at the top of the list in the %s category.", DEFAULT_DICTIONARY_LABEL), summaryDetail.getText().toString());
+        assertEquals("Here's your new card. Before you save, be sure to review the phrase, translation, and recording.", summaryDetail.getText().toString());
     }
 
     @Test
@@ -203,7 +201,7 @@ public class SummaryActivityTest {
     public void shouldStopPlayingAudioWhenBackButtonIsClicked() {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
         Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
-        click(activity, R.id.go_to_enter_translated_phrase_activity);
+        click(activity, R.id.summary_activity_back);
         verify(getDecoratedMediaManager()).stop();
     }
 

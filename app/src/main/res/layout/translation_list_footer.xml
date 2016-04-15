@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:textSize="24sp"
+        android:textColor="@color/primaryTextColor"
+        android:text="@string/empty_deck_title"
+        android:id="@+id/empty_deck_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="24dp"
+        android:lineSpacingExtra="6dp"
+        android:gravity="center"
+        android:id="@+id/empty_deck_message"
+        android:text="@string/empty_deck_message"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/add_translation_button"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/chunky_button">
+        <ImageView
+            android:id="@+id/add_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/add"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColor"
+            android:layout_below="@id/add_image"
+            android:layout_centerHorizontal="true"
+            android:text="@string/add_translation_button_text"
+            android:paddingBottom="20dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/share_deck_button"
+        android:visibility="gone"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_alignRight="@+id/add_translation_button"
+        android:background="@drawable/chunky_button">
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/share"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColor"
+            android:layout_below="@id/share"
+            android:layout_centerHorizontal="true"
+            android:text="@string/main_export_button_text"
+            android:paddingBottom="20dp"/>
+    </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -5,6 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.Deck;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -41,4 +49,15 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
             view.setVisibility(visibility);
         }
     };
+
+    protected DbManager getDbManager(){
+        return ((MainApplication) getApplication()).getDbManager();
+    }
+
+    protected void updateListViewCentered(ListView view, Boolean isEmpty) {
+        int isCentered = isEmpty ? RelativeLayout.TRUE : 0;
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
+        view.setLayoutParams(params);
+    }
 }

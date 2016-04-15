@@ -5,20 +5,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_DICTIONARY_LABEL;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createDefaultDictionary;
@@ -34,7 +31,8 @@ public class GetStartedActivityTest {
     private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
 
     @Before
-    public void setUp() throws Exception {}
+    public void setUp() throws Exception {
+    }
 
     @Test
     public void shouldNotChangeDictionaryWhenStartingActivity() {
@@ -53,11 +51,9 @@ public class GetStartedActivityTest {
     }
 
     @Test
-    public void shouldPassNewTranslationContextWhenStartingEnterSourcePhraseActivty() {
+    public void shouldPassNewTranslationContextWhenStartingEnterSourcePhraseActivity() {
         Activity activity = createActivityToTest(GetStartedActivity.class);
-
-       click(activity, R.id.get_started_button);
-
+        click(activity, R.id.get_started_button);
         assertEquals(getContextFromIntent(activity), shadowOf(activity).getNextStartedActivity().getSerializableExtra(CONTEXT_INTENT_KEY));
     }
 
@@ -72,13 +68,27 @@ public class GetStartedActivityTest {
     public void shouldSetGetStartedActivityTitleWhenActivityStarts() throws Exception {
         Activity activity = createActivityToTest(GetStartedActivity.class);
         TextView getStartedTitle = findTextView(activity, R.id.get_started_title);
-        assertEquals(String.format("%s Flashcard Maker", DEFAULT_DICTIONARY_LABEL), getStartedTitle.getText().toString());
+        assertEquals("Card Maker", getStartedTitle.getText().toString());
     }
 
     @Test
-    public void shouldLaunchTranslationsActivityWhenGetStartedBackButtonIsClicked(){
+    public void shouldLaunchTranslationsActivityWhenGetStartedBackButtonIsClicked() {
         Activity activity = createActivityToTest(GetStartedActivity.class);
         click(activity, R.id.get_started_back);
         assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    public void shouldDisplayDescriptionWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(GetStartedActivity.class);
+        TextView getStartedDescription = findTextView(activity, R.id.get_started_detail);
+        assertEquals("Write your script, record your phrase\\nand use your card in the field.", getStartedDescription.getText().toString());
+    }
+
+    @Test
+    public void shouldDisplayDescriptionTitleWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(GetStartedActivity.class);
+        TextView getStartedDescriptionTitle = findTextView(activity, R.id.get_started_decription_title);
+        assertEquals("Make your own card", getStartedDescriptionTitle.getText().toString());
     }
 }

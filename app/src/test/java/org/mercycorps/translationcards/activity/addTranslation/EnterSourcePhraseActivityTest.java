@@ -8,11 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -29,7 +26,6 @@ public class EnterSourcePhraseActivityTest {
 
     private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     public static final String DEFAULT_TRANSLATION_TEXT = "Sleep here";
-    public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
     private static final String NO_TEXT = "";
 
     @Test
@@ -41,10 +37,10 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
-    public void shouldStartRecordAudioActivityWhenUserClicksNext() {
+    public void shouldStartEnterTranslatedPhraseActivityWhenUserClicksNext() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-        assertEquals(RecordAudioActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterTranslatedPhraseActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -89,22 +85,30 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
-    public void shouldGoToTranslationsActivityWhenCancelButtonIsClicked() {
+    public void shouldGoToGetStartedActivityWhenCancelButtonIsClicked() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
-        click(activity, R.id.cancel_add_translation_activity);
-        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(GetStartedActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    public void shouldUpdateNewTranslationContextWhenUserClicksBackWithValidSourceText() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
     }
 
     @Test
     public void shouldSetEnterSourcePhraseActivityTitleWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, createDefaultDictionary());
-        TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title); //TODO push text to string to helper
-        assertEquals(String.format("Write your %s phrase", DEFAULT_DICTIONARY_LABEL), sourcePhraseActivityTitle.getText().toString());
+        TextView sourcePhraseActivityTitle = findTextView(activity, R.id.source_phrase_title);
+        assertEquals("Write your phrase", sourcePhraseActivityTitle.getText().toString());
     }
 
     @Test
     public void shouldPopulateSourcePhraseFieldWithValueWhenTranslationContextHasSourceText(){
-        Activity activity = createActivityToTestWithTContextAndSourceText(EnterSourcePhraseActivity.class);
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterSourcePhraseActivity.class);
         TextView sourcePhraseField = findTextView(activity, R.id.source_phrase_field);
         assertEquals(DEFAULT_SOURCE_PHRASE, sourcePhraseField.getText().toString());
     }
@@ -141,6 +145,27 @@ public class EnterSourcePhraseActivityTest {
         setText(activity, R.id.source_phrase_field, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.activity_enter_source_phrase_next_image);
         assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldDisplayDescriptionWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        TextView activityDescription = findTextView(activity, R.id.source_phrase_description);
+        assertEquals("Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.", activityDescription.getText().toString());
+    }
+
+    @Test
+    public void shouldDisplayInputFieldHintWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
+        TextView inputFieldHint = findTextView(activity, R.id.source_phrase_field);
+        assertEquals("e.g. Wait here for 30 minutes", inputFieldHint.getHint().toString());
+    }
+
+    @Test
+    public void shouldStartTranslationsActivityWhenBackButtonIsPressedInEditMode() {
+        Activity activity = createActivityToTestInEditMode(EnterSourcePhraseActivity.class);
+        click(activity, R.id.enter_source_phrase_activity_back_label);
+        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     private void setSourceTextAndClick(Activity activity) {

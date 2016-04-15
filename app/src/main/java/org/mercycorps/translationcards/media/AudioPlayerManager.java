@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.media;
 
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -9,7 +11,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 public class AudioPlayerManager {
-    private static final String TAG = "MediaPlayerManager";
+    private static final String TAG = "AudioPlayerManager";
     private MediaPlayer mediaPlayer;
     private FileDescriptor fileDescriptor;
 
@@ -19,12 +21,14 @@ public class AudioPlayerManager {
     }
 
     public void stop() {
-        mediaPlayer.stop();
+        if(isPlaying()){
+            mediaPlayer.stop();
+        }
         mediaPlayer.reset();
     }
 
-    public void play(String fileName) throws IOException {
-        prepareMediaPlayer(fileName);
+    public void play(String fileName, boolean isAsset) throws IOException {
+        prepareMediaPlayer(fileName, isAsset);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -35,14 +39,26 @@ public class AudioPlayerManager {
     }
 
 
-    private void prepareMediaPlayer(String fileName) {
+    private void prepareMediaPlayer(String fileName, boolean isAsset) {
         try {
-            fileDescriptor = ((MainApplication) MainApplication.getContextFromMainApp()).getFileDescriptor(fileName);
-            mediaPlayer.setDataSource(fileDescriptor);
+            mediaPlayer.reset();
+            setMediaPlayerDataSource(fileName, isAsset);
             mediaPlayer.prepare();
         } catch (IOException e) {
             Log.d(TAG, "Error getting audio asset: " + e);
             e.printStackTrace();
+        }
+    }
+
+    private void setMediaPlayerDataSource(String fileName, boolean isAsset) throws IOException {
+        Context context = MainApplication.getContextFromMainApp();
+        if (isAsset) {
+            AssetFileDescriptor assetFileDescriptor = context.getAssets().openFd(fileName);
+            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
+            assetFileDescriptor.close();
+        } else {
+            fileDescriptor = ((MainApplication) context).getFileDescriptor(fileName);
+            mediaPlayer.setDataSource(fileDescriptor);
         }
     }
 

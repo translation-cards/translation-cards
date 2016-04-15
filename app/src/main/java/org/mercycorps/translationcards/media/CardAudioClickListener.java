@@ -1,10 +1,14 @@
 package org.mercycorps.translationcards.media;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -17,28 +21,33 @@ public class CardAudioClickListener implements View.OnClickListener {
     private static final String TAG = "CardAudioClickListener";
     private Translation translation;
     private final ProgressBar progressBar;
-    private MediaPlayerManager lastMediaPlayerManager;
+    private DecoratedMediaManager decoratedMediaManager;
 
     public CardAudioClickListener(Translation translation, ProgressBar progressBar,
-                                  MediaPlayerManager lastMediaPlayerManager) {
+                                  DecoratedMediaManager decoratedMediaManager) {
         this.translation = translation;
         this.progressBar = progressBar;
-        this.lastMediaPlayerManager = lastMediaPlayerManager;
+        this.decoratedMediaManager = decoratedMediaManager;
     }
 
     @Override
     public void onClick(View v) {
-        if(lastMediaPlayerManager.isCurrentlyPlayingSameCard(translation)) {
+        if(decoratedMediaManager.isCurrentlyPlayingSameCard(translation.getFilename())) {
             stopMediaPlayer();
         } else {
             stopMediaPlayer();
-            lastMediaPlayerManager.play(getFileDescriptor(), progressBar, translation);
+            try {
+                decoratedMediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+            } catch (AudioFileException e) {
+                Context context = progressBar.getContext();
+                ToastHelper.showToast(context, context.getString(R.string.could_not_play_audio_message));
+            }
         }
     }
 
     public void stopMediaPlayer() {
-        if (lastMediaPlayerManager != null) {
-            lastMediaPlayerManager.stop();
+        if (decoratedMediaManager != null) {
+            decoratedMediaManager.stop();
         }
     }
 

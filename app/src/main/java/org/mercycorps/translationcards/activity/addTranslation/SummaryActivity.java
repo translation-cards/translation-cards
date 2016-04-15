@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
@@ -24,16 +25,9 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.translated_text)TextView translatedTextView;
     @Bind(R.id.translation_child)LinearLayout translationChildLayout;
     @Bind(R.id.translation_grandchild)LinearLayout translationGrandchildLayout;
-    @Bind(R.id.summary_title)TextView summaryTitle;
     @Bind(R.id.summary_detail)TextView summaryDetail;
     @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
     @Bind(R.id.indicator_icon)ImageView indicatorIcon;
-
-    @Override
-    protected void setActivityTitle() {
-        updateTextInTextView(summaryTitle, String.format(getString(R.string.summary_title), getContextFromIntent().getDictionary().getLabel()));
-        updateTextInTextView(summaryDetail, String.format(getString(R.string.summary_detail), getContextFromIntent().getDictionary().getLabel()));
-    }
 
     @Override
     public void inflateView() {
@@ -95,18 +89,22 @@ public class SummaryActivity extends AddTranslationActivity {
     protected void translationCardClicked() {
         try {
             DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-            if(mediaManager.isPlaying()) mediaManager.stop();
-            else mediaManager.play(getContextFromIntent().getTranslation().getFilename(), progressBar);
+            if(mediaManager.isPlaying()) {
+                mediaManager.stop();
+            } else {
+                Translation translation = getContextFromIntent().getTranslation();
+                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+            }
         } catch (AudioFileException e) {
             showToast(getString(R.string.could_not_play_audio_message));
             Log.d(TAG, getString(R.string.could_not_play_audio_message));
         }
     }
 
-    @OnClick(R.id.go_to_enter_translated_phrase_activity)
+    @OnClick(R.id.summary_activity_back)
     protected void summaryBackClicked(){
         stopMediaManager();
-        startNextActivity(SummaryActivity.this, EnterTranslatedPhraseActivity.class);
+        startNextActivity(SummaryActivity.this, RecordAudioActivity.class);
     }
 
     @OnClick(R.id.translation_indicator_layout)

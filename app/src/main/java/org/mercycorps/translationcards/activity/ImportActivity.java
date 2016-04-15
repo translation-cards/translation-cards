@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
@@ -127,23 +128,23 @@ public class ImportActivity extends AppCompatActivity {
 
     private void attemptImport() {
         try {
-            TxcPortingUtility.ImportInfo importInfo =
+            TxcPortingUtility.ImportSpec importSpec =
                     portingUtility.prepareImport(ImportActivity.this, source);
             // Check if it's a deck we've already imported.
-            if (false && portingUtility.isExistingDeck(this, importInfo)) {
-                portingUtility.abortImport(this, importInfo);
+            if (false && portingUtility.isExistingDeck(this, importSpec)) {
+                portingUtility.abortImport(this, importSpec);
                 alertUserOfFailure(getString(R.string.import_failure_existing_deck));
                 return;
             }
             // Check if it's a different version of a deck we've already imported.
-            if (importInfo.externalId != null && !importInfo.externalId.isEmpty()) {
-                long otherVersion = portingUtility.otherVersionExists(this, importInfo);
+            if (importSpec.externalId != null && !importSpec.externalId.isEmpty()) {
+                long otherVersion = portingUtility.otherVersionExists(this, importSpec);
                 if (otherVersion != -1) {
-                    handleVersionOverride(importInfo, otherVersion);
+                    handleVersionOverride(importSpec, otherVersion);
                     return;
                 }
             }
-            portingUtility.executeImport(this, importInfo);
+            portingUtility.executeImport(this, importSpec);
         } catch (ImportException e) {
             handleError(e);
             return;
@@ -152,7 +153,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private void handleVersionOverride(
-            final TxcPortingUtility.ImportInfo importInfo, final long otherVersion) {
+            final TxcPortingUtility.ImportSpec importSpec, final long otherVersion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.import_version_override_title)
                 .setItems(R.array.version_override_options, new DialogInterface.OnClickListener() {
@@ -163,7 +164,7 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importInfo);
+                                    portingUtility.executeImport(ImportActivity.this, importSpec);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
@@ -172,7 +173,7 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 2:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importInfo);
+                                    portingUtility.executeImport(ImportActivity.this, importSpec);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
@@ -215,7 +216,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private void goToMainScreen() {
-        Intent intent = new Intent(this, DecksActivity.class);
+        Intent intent = new Intent(this, MyDecksActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

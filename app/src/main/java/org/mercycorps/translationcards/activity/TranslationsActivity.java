@@ -26,52 +26,60 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.porting.ExportException;
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.OnClick;
+
 /**
  * Activity for the main screen, with lists of phrases to play.
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class TranslationsActivity extends AppCompatActivity {
+public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
-    public static final String INTENT_KEY_DECK_ID = "Deck";
+    public static final String INTENT_KEY_DECK = "Deck";
     private static final String TAG = "TranslationsActivity";
 
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
+    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+    private static final boolean IS_EDIT = true;
 
+
+    @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     DbManager dbManager;
     private Dictionary[] dictionaries;
@@ -81,15 +89,14 @@ public class TranslationsActivity extends AppCompatActivity {
     private CardListAdapter listAdapter;
     private Deck deck;
     private boolean[] translationCardStates;
-    private MediaPlayerManager lastMediaPlayerManager;
+    private DecoratedMediaManager decoratedMediaManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
-        lastMediaPlayerManager = application.getMediaPlayerManager();
+        decoratedMediaManager = application.getDecoratedMediaManager();
         dbManager = application.getDbManager();
-        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK_ID);
+        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
@@ -104,9 +111,36 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void initStates() {
+        updateAddTranslationButtonVisibility();
+    }
+
+    private void updateHeaderAndShare() {
+        int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
+        findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
+        findViewById(R.id.share_deck_button).setVisibility(headerVisibility);
+    }
+
+    private void updateAddTranslationButtonVisibility() {
+        if(deck.isLocked()){
+            addTranslationButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setBitmapsForActivity() {
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, currentDictionaryIndex);
+    }
+
+    @OnClick(R.id.add_translation_button)
+    protected void addTranslationButtonClicked() {
+        launchGetStartedActivity();
     }
 
     private void initTabs() {
@@ -118,7 +152,8 @@ public class TranslationsActivity extends AppCompatActivity {
             Dictionary dictionary = dictionaries[i];
             View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
             TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-            textView.setText(dictionary.getLabel().toUpperCase());
+            textView.setText(
+                    LanguageDisplayUtil.getDestLanguageDisplayName(this, dictionary).toUpperCase());
             final int index = i;
             textFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,31 +170,37 @@ public class TranslationsActivity extends AppCompatActivity {
     private void initList() {
         ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
-        list.addHeaderView(layoutInflater.inflate(R.layout.card_list_header, list, false));
-        findViewById(R.id.card_list_header).setOnClickListener(null);
+        list.addHeaderView(layoutInflater.inflate(R.layout.translation_list_header, list, false));
+        findViewById(R.id.translation_list_header).setOnClickListener(null);
 
-        list.addFooterView(layoutInflater.inflate(R.layout.card_list_footer, list, false));
+        inflateListFooter();
+
         listAdapter = new CardListAdapter(
                 this, R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>());
         list.setAdapter(listAdapter);
-        ImageButton addTranslationButton = (ImageButton) findViewById(R.id.add_button);
-        if (deck.isLocked()) {
-            addTranslationButton.setVisibility(View.GONE);
-        } else {
-            addTranslationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    launchGetStartedActivity();
-                }
-            });
-        }
+    }
+
+    private void inflateListFooter() {
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        list.addFooterView(layoutInflater.inflate(R.layout.translation_list_footer, list, false));
+        updateWelcomeInstructionsState();
+    }
+
+    private void updateWelcomeInstructionsState() {
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        boolean isTranslationsListEmpty = dictionaries[currentDictionaryIndex].getTranslationCount() == 0;
+        int welcomeInstructionsVisibility = isTranslationsListEmpty ? View.VISIBLE : View.GONE;
+        findViewById(R.id.empty_deck_title).setVisibility(welcomeInstructionsVisibility);
+        findViewById(R.id.empty_deck_message).setVisibility(welcomeInstructionsVisibility);
+        updateListViewCentered(list, isTranslationsListEmpty);
     }
 
     private void launchGetStartedActivity(){
         Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
-        nextIntent.putExtra(INTENT_KEY_DECK_ID, deck);
+        nextIntent.putExtra(INTENT_KEY_DECK, deck);
         startActivity(nextIntent);
     }
 
@@ -168,7 +209,7 @@ public class TranslationsActivity extends AppCompatActivity {
     }
 
     private void setDictionary(int dictionaryIndex) {
-        lastMediaPlayerManager.stop();
+        decoratedMediaManager.stop();
         translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
         Arrays.fill(translationCardStates, false);
 
@@ -189,6 +230,8 @@ public class TranslationsActivity extends AppCompatActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
+        updateHeaderAndShare();
+        updateWelcomeInstructionsState();
     }
 
     @Override
@@ -209,9 +252,10 @@ public class TranslationsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        lastMediaPlayerManager.stop();
+        decoratedMediaManager.stop();
     }
 
+    @OnClick (R.id.share_deck_button)
     public void onExportButtonPress(View v) {
         final EditText nameField = new EditText(this);
         nameField.setText(deck.getLabel());
@@ -282,12 +326,13 @@ public class TranslationsActivity extends AppCompatActivity {
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(
                     R.id.list_item_progress_bar);
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                    lastMediaPlayerManager));
+                    decoratedMediaManager));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
                 translatedText.setText(String.format(getString(R.string.translated_text_hint),
-                        dictionaries[currentDictionaryIndex].getLabel()));
+                        LanguageDisplayUtil.getDestLanguageDisplayName(
+                                TranslationsActivity.this, dictionaries[currentDictionaryIndex])));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
@@ -300,7 +345,7 @@ public class TranslationsActivity extends AppCompatActivity {
 
             convertView.findViewById(R.id.translated_text_layout)
                     .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                            lastMediaPlayerManager));
+                            decoratedMediaManager));
 
             return convertView;
         }
@@ -343,22 +388,11 @@ public class TranslationsActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(TranslationsActivity.this, RecordingActivity.class);
+            Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_ID, dictionary.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_DICTIONARY_LABEL, dictionary.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_ID, translationCard.getDbId());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_LABEL,
-                    translationCard.getLabel());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_IS_ASSET,
-                    translationCard.getIsAsset());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_FILENAME,
-                    translationCard.getFilename());
-            intent.putExtra(RecordingActivity.INTENT_KEY_TRANSLATION_TEXT,
-                    translationCard.getTranslatedText());
-            intent.putExtra(INTENT_KEY_DECK_ID, deck);
-
-            startActivityForResult(intent, REQUEST_KEY_EDIT_CARD);
+            nextIntent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard, IS_EDIT));
+            nextIntent.putExtra(INTENT_KEY_DECK, deck);
+            startActivity(nextIntent);
         }
     }
 

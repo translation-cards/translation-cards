@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/empty_my_decks_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_my_decks_title"
+        android:textSize="24sp"
+        android:textColor="@color/primaryTextColor"/>
+
+    <TextView
+        android:id="@+id/empty_my_decks_message"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="6dp"
+        android:layout_marginBottom="16dp"
+        android:textSize="14sp"
+        android:text="@string/empty_my_decks_message"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp">
+        <RelativeLayout
+            android:id="@+id/create_deck_button"
+            android:layout_width="156dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/chunky_button">
+            <ImageView
+                android:id="@+id/add_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/add"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/textColor"
+                android:layout_below="@id/add_image"
+                android:layout_centerHorizontal="true"
+                android:text="@string/create_deck_button_text"
+                android:paddingBottom="20dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/import_deck_button"
+            android:layout_width="156dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/chunky_button">
+            <ImageView
+                android:id="@+id/import_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/import_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/textColor"
+                android:layout_below="@id/import_image"
+                android:layout_centerHorizontal="true"
+                android:text="@string/import_deck_button_text"
+                android:paddingBottom="20dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/feedback_button"
+        android:layout_width="330dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/feedback_button">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/main_feedback_button_text"
+            android:textColor="@color/primaryTextColor"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

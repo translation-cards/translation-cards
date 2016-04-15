@@ -8,15 +8,18 @@ import java.io.Serializable;
 public class NewTranslationContext implements Serializable {
     private final Dictionary dictionary;
     private final Translation translation;
+    private Boolean isEdit;
 
     public NewTranslationContext(Dictionary dictionary) {
         this.dictionary = dictionary;
         this.translation = new Translation();
+        isEdit = false;
     }
 
-    public NewTranslationContext(Dictionary dictionary, Translation translation){
+    public NewTranslationContext(Dictionary dictionary, Translation translation, Boolean isEdit){
         this.dictionary = dictionary;
         this.translation = translation;
+        this.isEdit = isEdit;
     }
 
     public Dictionary getDictionary() {
@@ -38,5 +41,9 @@ public class NewTranslationContext implements Serializable {
 
     public void setTranslatedText(String translatedText) {
         this.translation.setTranslatedText(translatedText);
+    }
+
+    public Boolean isEdit() {
+        return isEdit;
     }
 }
