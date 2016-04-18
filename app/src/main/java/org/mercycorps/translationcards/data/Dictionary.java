@@ -16,7 +16,11 @@
 
 package org.mercycorps.translationcards.data;
 
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
+
 import java.io.Serializable;
+
+import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getLanguageDisplayName;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -63,7 +67,7 @@ public class Dictionary implements Serializable {
     }
 
     public String getLabel() {
-        return label;
+        return isNullOrEmpty(label) ? getLanguageDisplayName(destLanguageIso) : label;
     }
 
     public int getTranslationCount() {
@@ -80,6 +84,10 @@ public class Dictionary implements Serializable {
 
     public long getDeckId() {
         return deckId;
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return (value == null) || value.isEmpty();
     }
 
 }
