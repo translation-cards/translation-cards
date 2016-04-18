@@ -20,8 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TranslationsActivity"
-            android:parentActivityName=".activity.refactored.MyDecksActivity" android:screenOrientation="portrait">
+        <activity android:name=".activity.TranslationsActivity" android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
