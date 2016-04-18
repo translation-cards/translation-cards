@@ -3,6 +3,7 @@
   <property name="sdk.dir" location="${env.APPENGINE_SDK_DIR}" />
   <property name="google-api-library.dir" location="${env.GOOGLE_API_LIBRARY_DIR}" />
   <property name="google-drive-sdk.dir" location="${env.GOOGLE_DRIVE_SDK_DIR}" />
+  <property name="drive_client_secrets" location="${env.DRIVE_CLIENT_SECRETS_FILE}" />
 
   <import file="${sdk.dir}/config/user/ant-macros.xml" />
 
@@ -41,7 +42,14 @@
     </copy>
   </target>
 
-  <target name="compile" depends="copyjars"
+  <target name="copysecrets"
+      description="Copies the client secrets JSON file to the WAR.">
+    <copy
+        file="${drive_client_secrets}"
+        tofile="war/WEB-INF/drive_client_secrets.json" />
+   </target>
+
+  <target name="compile" depends="copyjars,copysecrets"
       description="Compiles Java source and copies other source files to the WAR.">
     <mkdir dir="war/WEB-INF/classes" />
     <copy todir="war/WEB-INF/classes">
@@ -68,5 +76,12 @@
       depends="compile"
       description="Uploads the application to App Engine.">
     <appcfg action="update" war="war" />
+  </target>
+
+  <target name="clean" description="Cleans generated and copied files.">
+    <delete dir="war/WEB-INF/appengine-generated/" />
+    <delete dir="war/WEB-INF/classes/" />
+    <delete dir="war/WEB-INF/lib/" />
+    <delete file="war/WEB-INF/drive_client_secrets.json" />
   </target>
 </project>
