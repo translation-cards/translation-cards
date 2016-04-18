@@ -432,11 +432,11 @@ public class TxcPortingUtility {
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
             long dictionaryId = dbm.addDictionary(dictionary.language, null, i, deckId);
-            for (int j = 0; j < dictionary.cards.size(); j++) {
+            for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
                 dbm.addTranslation(
-                        dictionaryId, card.label, false, cardFile.getAbsolutePath(), j,
+                        dictionaryId, card.label, false, cardFile.getAbsolutePath(), dictionary.cards.size() - j,
                         card.translatedText);
             }
         }
@@ -449,9 +449,9 @@ public class TxcPortingUtility {
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
             long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.language, null, i, deckId);
-            for (int j = 0; j < dictionary.cards.size(); j++) {
+            for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
-                dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, j, card.translatedText);
+                dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
             }
         }
     }
