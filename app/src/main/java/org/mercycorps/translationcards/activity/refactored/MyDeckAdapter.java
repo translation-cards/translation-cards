@@ -80,7 +80,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
         deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
-        translationLanguagesTextView.setText(getDestLanguageListDisplay(getContext(), deck, "  "));
+        translationLanguagesTextView.setText(getDestLanguageListDisplay(deck, "  "));
     }
 
     private DbManager getDbManager(){

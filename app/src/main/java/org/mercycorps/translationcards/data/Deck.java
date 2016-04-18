@@ -78,9 +78,9 @@ public class Deck implements Serializable {
         return srcLanguageIso;
     }
 
-    public Dictionary[] getDictionaries(Context context) {
+    public Dictionary[] getDictionaries() {
         if (dictionaries == null) {
-            dictionaries = ((MainApplication) context.getApplicationContext()).getDbManager().getAllDictionariesForDeck(dbId);
+            dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().getAllDictionariesForDeck(dbId);
         }
         return dictionaries;
     }

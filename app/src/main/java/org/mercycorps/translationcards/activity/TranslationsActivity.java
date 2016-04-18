@@ -152,8 +152,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             Dictionary dictionary = dictionaries[i];
             View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
             TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-            textView.setText(
-                    LanguageDisplayUtil.getDestLanguageDisplayName(this, dictionary).toUpperCase());
+            textView.setText(LanguageDisplayUtil.getDestLanguageDisplayName(dictionary).toUpperCase());
             final int index = i;
             textFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -331,8 +330,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
                 translatedText.setText(String.format(getString(R.string.translated_text_hint),
-                        LanguageDisplayUtil.getDestLanguageDisplayName(
-                                TranslationsActivity.this, dictionaries[currentDictionaryIndex])));
+                        LanguageDisplayUtil.getDestLanguageDisplayName(dictionaries[currentDictionaryIndex])));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
