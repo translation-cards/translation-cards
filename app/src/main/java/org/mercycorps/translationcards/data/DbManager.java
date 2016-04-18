@@ -386,32 +386,6 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            long creationTimestamp = (new Date()).getTime();
-            long defaultDeckId = addDeck(
-                    db, context.getString(R.string.data_default_deck_name),
-                    context.getString(R.string.data_default_deck_publisher),
-                    creationTimestamp, null, null, false, "en");
-            populateIncludedData(db, defaultDeckId);
-        }
-
-        private void populateIncludedData(SQLiteDatabase db, long defaultDeckId) {
-            for (int dictionaryIndex = 0; dictionaryIndex < INCLUDED_DATA.length;
-                 dictionaryIndex++) {
-                Dictionary dictionary = INCLUDED_DATA[dictionaryIndex];
-                long dictionaryId = addDictionary(db, dictionary.getDestLanguageIso(),
-                        dictionary.getLabel(), dictionaryIndex,
-                        defaultDeckId);
-                for (int translationIndex = 0;
-                     translationIndex < dictionary.getTranslationCount();
-                     translationIndex++) {
-                    Translation translation =
-                            dictionary.getTranslation(translationIndex);
-                    int itemIndex = dictionary.getTranslationCount() - translationIndex - 1;
-                    addTranslation(db, dictionaryId, translation.getLabel(),
-                            translation.getIsAsset(), translation.getFilename(), itemIndex,
-                            translation.getTranslatedText());
-                }
-            }
             importBundledDeck(db);
         }
 
@@ -421,14 +395,6 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_TRANSLATED_TEXT_COLUMN);
                 db.execSQL(INIT_DECKS_SQL);
                 db.execSQL(ALTER_TABLE_ADD_DECK_FOREIGN_KEY);
-                long creationTimestamp = (new Date()).getTime() / 1000;
-                long defaultDeckId = addDeck(
-                        db, context.getString(R.string.data_default_deck_name),
-                        context.getString(R.string.data_default_deck_publisher),
-                        creationTimestamp, null, null, false, "en");
-                ContentValues defaultDeckUpdateValues = new ContentValues();
-                defaultDeckUpdateValues.put(DictionariesTable.DECK_ID, defaultDeckId);
-                db.update(DictionariesTable.TABLE_NAME, defaultDeckUpdateValues, null, null);
             }
             // Deck source languages and ISO codes for dictionary languages were added in v3 of the
             // database.
