@@ -43,7 +43,13 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         setActionBarTitle();
         List<Deck> decks = getDecks();
         initListFooter(decks);
+        initListHeader();
         updateDecksView(decks);
+    }
+
+    private void initListHeader() {
+        View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
+        myDeckListView.addHeaderView(headerView);
     }
 
     private void setActionBarTitle() {

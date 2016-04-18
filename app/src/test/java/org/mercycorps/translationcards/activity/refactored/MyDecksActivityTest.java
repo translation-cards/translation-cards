@@ -2,8 +2,11 @@ package org.mercycorps.translationcards.activity.refactored;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +23,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTestWithTranslationContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
@@ -50,7 +55,15 @@ public class MyDecksActivityTest {
         setUpMocksWithEmptyDecks();
         Activity activity = createActivityToTest(MyDecksActivity.class);
         TextView textView = findTextView(activity, R.id.empty_my_decks_title);
-        assertTrue(textView.getVisibility() == View.VISIBLE);
+        assertEquals(View.VISIBLE, textView.getVisibility());
+    }
+
+    @Test
+    public void shouldShowDecksHeader() {
+        setUpMockWithDecks();
+        Activity activity = createActivityToTest(MyDecksActivity.class);
+        LinearLayout linearLayout = findLinearLayout(activity, R.id.my_decks_header);
+        assertEquals(View.VISIBLE, linearLayout.getVisibility());
     }
 
     @Test
