@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -170,8 +171,7 @@ public class TxcPortingUtility {
             throws ExportException {
         try {
             zos.putNextEntry(new ZipEntry(filename));
-            FileInputStream translationInput =
-                    new FileInputStream(new File(translation.getFilename()));
+            FileInputStream translationInput = getFileInputStream(translation);
             byte[] buffer = new byte[BUFFER_SIZE];
             int read;
             while ((read = translationInput.read(buffer)) != -1) {
@@ -182,6 +182,16 @@ public class TxcPortingUtility {
         } catch (IOException e) {
             throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
         }
+    }
+
+    private FileInputStream getFileInputStream(Translation translation) throws IOException {
+        FileInputStream translationInput;
+        if (translation.getIsAsset()) {
+            translationInput = MainApplication.getContextFromMainApp().getAssets().openFd(translation.getFilename()).createInputStream();
+        } else {
+            translationInput = new FileInputStream(new File(translation.getFilename()));
+        }
+        return translationInput;
     }
 
     public ImportSpec prepareImport(Context context, Uri source) throws ImportException {
