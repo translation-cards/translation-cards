@@ -120,8 +120,7 @@ public class TxcPortingUtility {
                 JSONArray cardsJson = new JSONArray();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
                     Translation translation = dictionary.getTranslation(i);
-                    String translationFilename = buildUniqueFilename(
-                            translation, translationFilenames);
+                    String translationFilename = buildUniqueFilename(translation, translationFilenames);
                     translationFilenames.put(translationFilename, translation);
                     JSONObject cardJson = new JSONObject();
                     cardJson.put(JsonKeys.CARD_LABEL, translation.getLabel());

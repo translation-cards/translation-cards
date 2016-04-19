@@ -54,6 +54,10 @@ public class Translation implements Serializable {
         return dbId;
     }
 
+    public void setIsAsset(boolean isAsset) {
+        this.isAsset = isAsset;
+    }
+
     public String getTranslatedText() {
         return translatedText == null ? DEFAULT_TRANSLATED_TEXT : translatedText;
     }

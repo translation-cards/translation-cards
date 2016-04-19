@@ -214,10 +214,16 @@ public class RecordAudioActivity extends AddTranslationActivity {
         if (audioRecorderManager.isRecording()) {
             audioRecorderManager.stop();
         } else {
-            //TODO looks chaotic. Refactor
             MediaConfig mediaConfig = MediaConfig.createMediaConfig();
             getContextFromIntent().setAudioFile(mediaConfig.getAbsoluteFilePath());
+            updateIsAudioFileAsset();
             audioRecorderManager.record(mediaConfig);
+        }
+    }
+
+    private void updateIsAudioFileAsset() {
+        if (getContextFromIntent().getTranslation().getIsAsset()) {
+            getContextFromIntent().getTranslation().setIsAsset(false);
         }
     }
 

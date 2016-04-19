@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Translation;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -20,6 +21,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -414,5 +416,15 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         View audioIconLayout = findView(activity, R.id.audio_icon_layout);
         assertEquals(View.GONE, audioIconLayout.getVisibility());
+    }
+
+    @Test
+    public void shouldChangeIsAssetWhenAudioEditedAndWasAsset() {
+        Translation isAudioAssetTranslation = createTranslation();
+        isAudioAssetTranslation.setIsAsset(true);
+        NewTranslationContext translationContext = new NewTranslationContext(createDefaultDictionary(), isAudioAssetTranslation, true);
+        Activity activity = createActivityToTest(RecordAudioActivity.class, translationContext);
+        click(activity, R.id.record_audio_button);
+        assertEquals(false, isAudioAssetTranslation.getIsAsset());
     }
 }
