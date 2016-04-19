@@ -4,61 +4,37 @@ TXCs have two parts: a specification file and the audio files themselves. Those 
 
 ## Specification File
 
-The specification file should be called "spec.json", with a "deck" object at the top level. The spec.json file should be UTF-8.
+The specification file should be called "card_deck.json", with a "deck" object at the top level. The card_deck.json file should be UTF-8 encoded.
 
 ### deck Objects
 
 A deck object has:
-- a "source_language" field specifying the name of the source language for the deck
-- a "label" field, specifying the name of the deck
+- a "source_language" field, specifying the ISO code of the source language for the deck
+- a "deck_label" field, specifying the name of the deck
 - a "publisher" field, specifying the name of the organization or person who produced it
 - optionally, an "id" field, specifying a string that uniquely identifies the deck
 - optionally, a "timestamp" field, specifying the timestamp for the time the deck was created
 - optionally, a "locked" field, set to either "true" or "false", depending on whether the deck should be locked (defaults to false)
+- optionally, a "license-url" field, pointing to a specific license that the deck is distributed under
+- optionally, a "readme" field, describing the contents of the deck
 - a "languages" field with an array of objects, each containing information about the cards for one target language, as described below
 
 ### language Objects
 
 Each language object has:
-- a "name" field with the name of the language
-- a "translations" field with an array of objects, each containing information about one card, as described below
+- an "iso_code" field, specifying the ISO code of the translated language
+- a "cards" field with an array of objects, each containing information about one card, as described below
 
 ### translation Objects
 
 Each translation object has:
-- a "label" field, specifying the label
-- a "filename" field, specifying the name of the audio file
-- optionally, a "translation_text" field, containing text in the target language to display along with the audio
+- a "card_label" field, specifying the phrase of the translation
+- a "dest_audio" field, specifying the name of the audio file
+- optionally, a "dest_txt" field, specifying the translated card_label phrase
 
-## Example spec.json File Contents
+## Example card_deck.json File Contents
 
-{
-  "source_language": "English",
-  "label": "Greeting Deck",
-  "publisher": "Fred",
-  "languages": [
-    {
-      "name": "Spanish",
-      "translations": [
-        {
-          "label": "Hello",
-          "filename": "es_hello.mp3",
-          "translation_text": "Hola."
-        }
-      ]
-    },
-    {
-      "name": "Robot",
-      "translations": [
-        {
-          "label": "Hello",
-          "filename": "ro_hello.mp3",
-          "translation_text": "Beep boop beep."
-        },
-      ]
-    }
-  ]
-}
+[Humanitarian Responder - Transit Centre](https://github.com/translation-cards/default-deck/blob/master/txc/card_deck.json)
 
 ## Prior Formats
 
