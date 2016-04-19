@@ -3,8 +3,8 @@
   "readme": "Default content to be built into distributable apk. Translations by: http://translatorswithoutborders.org and http://mercycorps.org",
   "locked": false,
   "timestamp": 1460487366000,
-  "deck_label" : "Camp Aid Worker",
-  "publisher":"org.innovation.unhcr",
+  "deck_label": "Humanitarian Responder - Transit Centre",
+  "publisher": "UNHCR Innovation",
   "id": "org.innovation.unhcr.txc-default-deck",
   "source_language": "en",
   "languages": [
