@@ -13,7 +13,7 @@ A deck object has:
 - a "deck_label" field, specifying the name of the deck
 - a "publisher" field, specifying the name of the organization or person who produced it
 - optionally, an "id" field, specifying a string that uniquely identifies the deck
-- optionally, a "timestamp" field, specifying the timestamp for the time the deck was created
+- optionally, a "timestamp" field, specifying the time the deck was created. This is in [Unix Time](https://en.wikipedia.org/wiki/Unix_time), then converted to milliseconds. 
 - optionally, a "locked" field, set to either "true" or "false", depending on whether the deck should be locked (defaults to false)
 - optionally, a "license-url" field, pointing to a specific license that the deck is distributed under
 - optionally, a "readme" field, describing the contents of the deck
