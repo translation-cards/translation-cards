@@ -6,9 +6,11 @@
     android:fillViewport="true">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -25,7 +27,7 @@
         android:paddingRight="16dp"
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_below="@+id/enter_source_phrase_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -38,7 +40,7 @@
         android:paddingTop="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/source_phrase_activity_description"
         android:layout_below="@+id/source_phrase_title"
@@ -145,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="@color/textDisabled"
                 android:text="@string/navigation_button_next"
                 android:id="@+id/activity_enter_source_phrase_next_text" />

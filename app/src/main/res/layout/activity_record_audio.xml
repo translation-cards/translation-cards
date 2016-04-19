@@ -20,7 +20,7 @@
             android:paddingTop="18dp"
             android:text="@string/record_audio_title"
             android:textColor="@color/textColor"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/recording_audio_instructions"
@@ -35,7 +35,7 @@
             android:layout_marginTop="28dp"
             android:lineSpacingExtra="3dp"
             android:text="@string/activity_record_audio_instructions"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
         <include
             android:id="@+id/recording_audio_card"
@@ -173,7 +173,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/navigation_button_next"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/recording_audio_save_image"

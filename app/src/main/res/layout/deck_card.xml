@@ -14,7 +14,7 @@
         android:paddingTop="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textColor="@color/primaryTextColor"
         />
 
@@ -25,7 +25,7 @@
         android:paddingBottom="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textColor="@color/colorSecondaryLight"
         android:gravity="top" />
 
@@ -46,7 +46,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:paddingLeft="16dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/colorSecondaryLight"
             android:text="@string/default_origin_language"/>
@@ -71,7 +71,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:paddingRight="26dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:lineSpacingExtra="10dp"/>
@@ -114,7 +114,7 @@
                 android:paddingTop="25dp"
                 android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
                 android:text="@string/deck_card_expansion_make_copy" />
@@ -147,7 +147,7 @@
                 android:paddingTop="25dp"
                 android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
                 android:text="@string/deck_card_expansion_delete" />
