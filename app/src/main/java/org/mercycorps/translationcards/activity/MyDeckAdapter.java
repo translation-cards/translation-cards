@@ -46,10 +46,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
 
-    private static final String FEEDBACK_URL =
-            "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=0.3.2";
-
     public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
         this.layoutInflater = context.getLayoutInflater();
