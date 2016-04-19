@@ -40,8 +40,8 @@ public class ImportActivity extends AppCompatActivity {
         onDownloadComplete = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 downloadDialog.hide();
-                importDeck();
                 unregisterReceiver(onDownloadComplete);
+                importDeck();
             }
         };
         registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
