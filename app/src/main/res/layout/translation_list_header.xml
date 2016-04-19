@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/translation_list_header"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,4 +9,5 @@
     android:paddingBottom="8dp"
     android:textSize="14sp"
     android:lineSpacingExtra="3dp"
-    android:text="@string/main_instructions" />
+    android:text="@string/main_instructions"
+    android:id="@+id/translation_list_header" />

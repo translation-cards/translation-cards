@@ -12,11 +12,11 @@
     android:focusableInTouchMode="true">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="136dp"
-        android:background="@color/backgroundBlue">
+        android:background="@color/backgroundBlue"
+        android:id="@+id/header_layout">
 
         <include layout="@layout/header_translation_card"
             android:layout_width="328dp"
@@ -62,20 +62,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/translated_phrase_activity_description"
-        android:id="@+id/translated_phrase_input_language_label"
         android:paddingStart="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
         android:paddingTop="24dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:id="@+id/translated_phrase_input_language_label" />
 
 
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/translated_phrase_field"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -88,7 +87,8 @@
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
         android:textColorHint="@color/borderColor"
-        android:hint="@string/recording_text_hint_text" />
+        android:hint="@string/recording_text_hint_text"
+        android:id="@+id/translated_phrase_field" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such

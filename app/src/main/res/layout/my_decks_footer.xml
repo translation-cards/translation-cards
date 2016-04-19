@@ -5,17 +5,16 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/empty_my_decks_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:gravity="center_horizontal"
         android:text="@string/empty_my_decks_title"
         android:textSize="24sp"
-        android:textColor="@color/primaryTextColor"/>
+        android:textColor="@color/primaryTextColor"
+        android:id="@+id/empty_my_decks_title" />
 
     <TextView
-        android:id="@+id/empty_my_decks_message"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -23,7 +22,8 @@
         android:lineSpacingExtra="6dp"
         android:layout_marginBottom="16dp"
         android:textSize="14sp"
-        android:text="@string/empty_my_decks_message"/>
+        android:text="@string/empty_my_decks_message"
+        android:id="@+id/empty_my_decks_message" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -31,20 +31,20 @@
         android:layout_gravity="center"
         android:layout_marginTop="4dp">
         <RelativeLayout
-            android:id="@+id/create_deck_button"
             android:layout_width="156dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/chunky_button">
+            android:background="@drawable/chunky_button"
+            android:id="@+id/create_deck_button">
             <ImageView
-                android:id="@+id/add_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/add"/>
+                android:background="@drawable/add"
+                android:id="@+id/add_image" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,20 +58,20 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/import_deck_button"
             android:layout_width="156dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/chunky_button">
+            android:background="@drawable/chunky_button"
+            android:id="@+id/import_deck_button">
             <ImageView
-                android:id="@+id/import_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/import_icon"/>
+                android:background="@drawable/import_icon"
+                android:id="@+id/import_image" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,13 +86,13 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/feedback_button"
         android:layout_width="330dp"
         android:layout_height="36dp"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="35dp"
-        android:background="@drawable/feedback_button">
+        android:background="@drawable/feedback_button"
+        android:id="@+id/feedback_button">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

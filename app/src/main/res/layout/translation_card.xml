@@ -14,7 +14,6 @@
         android:paddingRight="16dp"
         android:paddingLeft="16dp">
         <TextView
-            android:id="@+id/origin_translation_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -22,15 +21,16 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:textSize="20sp"
-            android:textColor="@color/primaryTextColor"/>
+            android:textColor="@color/primaryTextColor"
+            android:id="@+id/origin_translation_text" />
 
         <FrameLayout
-            android:id="@+id/text_indicator_divider"
             android:layout_width="11dip"
             android:layout_height="match_parent"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:paddingLeft="10dp">
+            android:paddingLeft="10dp"
+            android:id="@+id/text_indicator_divider">
             <View
                 android:background="@color/lineColor"
                 android:layout_width = "match_parent"
@@ -41,12 +41,12 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/translation_indicator_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingBottom="20dp"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            android:id="@+id/translation_indicator_layout">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -58,9 +58,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/translation_child"
         android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/translation_child">
         <View
             android:background="@color/lineColor"
             android:layout_width = "fill_parent"
@@ -76,7 +76,6 @@
             android:paddingEnd="16dp"
             android:id="@+id/translated_text_layout">
             <TextView
-                android:id="@+id/translated_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
@@ -86,14 +85,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textColorHint="@color/borderColor"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/primaryTextColor"
+                android:id="@+id/translated_text" />
             <FrameLayout
-                android:id="@+id/audio_icon_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingTop="20dp"
                 android:paddingLeft="20dp"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                android:id="@+id/audio_icon_layout">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -118,8 +118,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
-                android:id="@+id/translation_card_edit"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:id="@+id/translation_card_edit">
 
                 <FrameLayout
                     android:layout_width="30dp"
@@ -130,12 +130,11 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
-                        android:id="@+id/edit_card_icon"
-                        android:src="@drawable/edit"/>
+                        android:src="@drawable/edit"
+                        android:id="@+id/edit_card_icon" />
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/edit_card_label"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:paddingTop="25dp"
@@ -143,7 +142,8 @@
                     android:paddingLeft="10dp"
                     android:textSize="12sp"
                     android:textColor="@color/colorSecondaryLight"
-                    android:text="@string/edit_label" />
+                    android:text="@string/edit_label"
+                    android:id="@+id/edit_card_label" />
 
             </LinearLayout>
 
@@ -163,12 +163,11 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
-                        android:id="@+id/delete_card_icon"
-                        android:src="@drawable/delete"/>
+                        android:src="@drawable/delete"
+                        android:id="@+id/delete_card_icon" />
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/delete_card_label"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:paddingTop="15dp"
@@ -176,10 +175,10 @@
                     android:paddingLeft="10dp"
                     android:textSize="12sp"
                     android:textColor="@color/colorSecondaryLight"
-                    android:text="@string/delete_label"/>
+                    android:text="@string/delete_label"
+                    android:id="@+id/delete_card_label" />
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

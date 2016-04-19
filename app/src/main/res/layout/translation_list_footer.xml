@@ -20,8 +20,8 @@
         android:layout_marginBottom="24dp"
         android:lineSpacingExtra="6dp"
         android:gravity="center"
-        android:id="@+id/empty_deck_message"
-        android:text="@string/empty_deck_message"/>
+        android:text="@string/empty_deck_message"
+        android:id="@+id/empty_deck_message" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,21 +30,21 @@
         android:layout_gravity="center">
 
     <RelativeLayout
-        android:id="@+id/add_translation_button"
         android:layout_width="156dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/chunky_button">
+        android:background="@drawable/chunky_button"
+        android:id="@+id/add_translation_button">
         <ImageView
-            android:id="@+id/add_image"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
-            android:background="@drawable/add"/>
+            android:background="@drawable/add"
+            android:id="@+id/add_image" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/share_deck_button"
         android:visibility="gone"
         android:layout_width="156dp"
         android:layout_height="wrap_content"
@@ -66,15 +65,16 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_alignRight="@+id/add_translation_button"
-        android:background="@drawable/chunky_button">
+        android:background="@drawable/chunky_button"
+        android:id="@+id/share_deck_button">
         <ImageView
-            android:id="@+id/share"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
-            android:background="@drawable/share"/>
+            android:background="@drawable/share"
+            android:id="@+id/share" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -14,14 +14,14 @@
         android:paddingRight="16dp"
         android:paddingLeft="16dp">
         <TextView
-            android:id="@+id/origin_translation_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingTop="17dp"
             android:paddingBottom="17dp"
             android:textSize="20sp"
-            android:textColor="@color/primaryTextColor"/>
+            android:textColor="@color/primaryTextColor"
+            android:id="@+id/origin_translation_text" />
     </LinearLayout>
 
 </LinearLayout>

@@ -51,7 +51,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/source_phrase_field"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -64,7 +63,8 @@
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
         android:textColorHint="@color/borderColor"
-        android:hint="@string/recording_label_hint_text" />
+        android:hint="@string/recording_label_hint_text"
+        android:id="@+id/source_phrase_field" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such

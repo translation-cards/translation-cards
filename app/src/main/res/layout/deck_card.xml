@@ -7,7 +7,6 @@
     android:id="@+id/translation_card">
 
     <TextView
-        android:id="@+id/deck_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -16,10 +15,9 @@
         android:paddingRight="16dp"
         android:textSize="24sp"
         android:textColor="@color/primaryTextColor"
-        />
+        android:id="@+id/deck_name" />
 
     <TextView
-        android:id="@+id/deck_information"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
@@ -27,7 +25,8 @@
         android:paddingRight="16dp"
         android:textSize="14sp"
         android:textColor="@color/colorSecondaryLight"
-        android:gravity="top" />
+        android:gravity="top"
+        android:id="@+id/deck_information"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,7 +39,6 @@
             android:layout_alignParentTop="true"/>
 
         <TextView
-            android:id="@+id/origin_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
@@ -49,13 +47,14 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/colorSecondaryLight"
-            android:text="@string/default_origin_language"/>
+            android:text="@string/default_origin_language"
+            android:id="@+id/origin_language" />
 
         <FrameLayout
-            android:id="@+id/translation_indicator_layout"
             android:layout_width="30dp"
             android:layout_height="56dp"
-            android:layout_toRightOf="@+id/origin_language">
+            android:layout_toRightOf="@+id/origin_language"
+            android:id="@+id/translation_indicator_layout">
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -64,7 +63,6 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/translation_languages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/translation_indicator_layout"
@@ -74,26 +72,27 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:lineSpacingExtra="10dp"/>
+            android:lineSpacingExtra="10dp"
+            android:id="@+id/translation_languages" />
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/deck_card_expansion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:id="@+id/deck_card_expansion">
         <View
             android:background="@color/lineColor"
             android:layout_width = "fill_parent"
             android:layout_height="1dip"/>
         <LinearLayout
-            android:id="@+id/deck_card_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:id="@+id/deck_card_copy">
             <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="56dp"
@@ -103,12 +102,11 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:id="@+id/edit_card_icon"
-                    android:src="@drawable/edit"/>
+                    android:src="@drawable/edit"
+                    android:id="@+id/edit_card_icon" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/deck_card_copy_label"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="25dp"
@@ -117,16 +115,17 @@
                 android:textSize="12sp"
                 android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
-                android:text="@string/deck_card_expansion_make_copy" />
+                android:text="@string/deck_card_expansion_make_copy"
+                android:id="@+id/deck_card_copy_label" />
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/deck_card_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:id="@+id/deck_card_delete">
             <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="56dp"
@@ -136,12 +135,11 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:id="@+id/delete_card_icon"
-                    android:src="@drawable/delete"/>
+                    android:src="@drawable/delete"
+                    android:id="@+id/delete_card_icon" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/deck_card_delete_label"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="25dp"
@@ -150,9 +148,8 @@
                 android:textSize="12sp"
                 android:fontFamily="Roboto-Regular"
                 android:textColor="@color/colorSecondaryLight"
-                android:text="@string/deck_card_expansion_delete" />
-
+                android:text="@string/deck_card_expansion_delete"
+                android:id="@+id/deck_card_delete_label" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
