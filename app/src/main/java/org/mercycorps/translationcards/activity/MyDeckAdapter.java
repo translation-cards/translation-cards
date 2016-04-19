@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity.refactored;
+package org.mercycorps.translationcards.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;

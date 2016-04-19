@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity.refactored;
+package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,9 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.activity.DeckCreationActivity;
-import org.mercycorps.translationcards.activity.ImportActivity;
 import org.mercycorps.translationcards.data.Deck;
 
 import java.util.ArrayList;

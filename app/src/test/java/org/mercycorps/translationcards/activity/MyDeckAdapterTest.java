@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity.refactored;
+package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.MyDeckAdapter;
+import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;

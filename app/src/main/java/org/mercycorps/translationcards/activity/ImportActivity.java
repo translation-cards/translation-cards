@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;

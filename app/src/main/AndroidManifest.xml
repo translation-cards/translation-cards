@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:name=".MainApplication">
 
-        <activity android:name=".activity.refactored.MyDecksActivity" android:screenOrientation="portrait">
+        <activity android:name=".activity.MyDecksActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,7 +25,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.refactored.MyDecksActivity" />
+                android:value=".activity.MyDecksActivity" />
        </activity>
         <activity android:name=".activity.addTranslation.GetStartedActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activity.addTranslation.EnterSourcePhraseActivity" android:screenOrientation="portrait"/>
