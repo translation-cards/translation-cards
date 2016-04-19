@@ -35,7 +35,7 @@ public class DeckCreationActivity extends AppCompatActivity {
                         false, // not locked
                         "en"); // for now, we assume English (certainly not the least of this
                                // screen's limitations)
-                String[] languages = targetLanguagesField.getText().toString().split(",");
+                String[] languages = targetLanguagesField.getText().toString().toLowerCase().split(",");
                 for (int i = 0; i < languages.length; i++) {
                     dbm.addDictionary(languages[i].trim(), "", i, deckId);
                 }
