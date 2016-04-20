@@ -33,12 +33,45 @@ public class GetTxcServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    Drive drive = getDriveOrOAuth(req, resp);
+    Drive drive = getDriveOrOAuth(req, resp, true);
     if (drive == null) {
       // We've already redirected.
       return;
     }
-    String spreadsheetFileId = "1VxUfQG5ewP5o7QCJCde1_a1fXt7NoMyTnW9mAAVui2E";
+    handleRequest(drive, req, resp);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    Drive drive = getDriveOrOAuth(req, resp, false);
+    if (drive == null) {
+      resp.getWriter().println("You haven't provided Drive authentication.");
+      return;
+    }
+    handleRequest(drive, req, resp);
+  }
+
+  private void handleRequest(Drive drive, HttpServletRequest req, HttpServletResponse resp)
+      throws IOException {
+    String spreadsheetFileId = req.getParameter("docid");
+    if (spreadsheetFileId == null) {
+      displayForm(resp);
+    } else {
+      produceTxcJson(drive, spreadsheetFileId, resp);
+    }
+  }
+
+  private void displayForm(HttpServletResponse resp) throws IOException {
+    resp.getWriter().println(
+        "<form method=\"post\">" +
+        "<p>Doc ID: <input type=\"text\" name=\"docid\" />" +
+        "<input type=\"submit\" />" +
+        "</form>"
+    );
+  }
+
+  private void produceTxcJson(Drive drive, String spreadsheetFileId, HttpServletResponse resp)
+      throws IOException {
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
@@ -54,19 +87,22 @@ public class GetTxcServlet extends HttpServlet {
     }
   }
 
-  private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp)
+  private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
       throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     String userId = userService.getCurrentUser().getUserId();
     AuthorizationCodeFlow flow = AuthUtils.newFlow(getServletContext());
     Credential credential = flow.loadCredential(userId);
     if (credential == null) {
-      String url = flow.newAuthorizationUrl()
-          .setRedirectUri(AuthUtils.getRedirectUri(req))
-          .build();
-      resp.sendRedirect(url);
+      if (orOAuth) {
+        String url = flow.newAuthorizationUrl()
+            .setRedirectUri(AuthUtils.getRedirectUri(req))
+            .build();
+        resp.sendRedirect(url);
+      }
       return null;
+    } else {
+      return AuthUtils.getDriveService(credential);
     }
-    return (credential == null) ? null : AuthUtils.getDriveService(credential);
   }
 }
