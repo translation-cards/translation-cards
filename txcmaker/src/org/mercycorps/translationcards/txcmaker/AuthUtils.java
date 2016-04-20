@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.txcmaker;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
@@ -40,7 +41,7 @@ class AuthUtils {
     return url.build();
   }
 
-  static GoogleAuthorizationCodeFlow newFlow(ServletContext context) throws IOException {
+  static AuthorizationCodeFlow newFlow(ServletContext context) throws IOException {
     InputStream in = context.getResourceAsStream("/WEB-INF/client_secrets.json");
     GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
     return new GoogleAuthorizationCodeFlow.Builder(
@@ -50,9 +51,7 @@ class AuthUtils {
         .build();
   }
 
-  static Drive getDriveService(ServletContext context) throws IOException {
-    String userId = UserServiceFactory.getUserService().getCurrentUser().getUserId();
-    Credential credential = newFlow(context).loadCredential(userId);
+  static Drive getDriveService(Credential credential) throws IOException {
     return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         .setApplicationName("TXC Maker")
         .build();
