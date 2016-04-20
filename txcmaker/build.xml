@@ -46,7 +46,7 @@
       description="Copies the client secrets JSON file to the WAR.">
     <copy
         file="${drive_client_secrets}"
-        tofile="war/WEB-INF/drive_client_secrets.json" />
+        tofile="war/WEB-INF/client_secrets.json" />
    </target>
 
   <target name="compile" depends="copyjars,copysecrets"

@@ -11,4 +11,13 @@
     <servlet-name>get-txc</servlet-name>
     <url-pattern>/get-txc</url-pattern>
   </servlet-mapping>
+  <security-constraint>
+      <web-resource-collection>
+          <web-resource-name>all</web-resource-name>
+          <url-pattern>/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>*</role-name>
+      </auth-constraint>
+  </security-constraint>
 </web-app>
