@@ -60,6 +60,12 @@ public class GetTxcServlet extends HttpServlet {
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
+    Credential credential = getCredentialOrOAuth(req, resp);
+    return (credential == null) ? null : AuthUtils.getDriveService(credential);
+  }
+
+  private Credential getCredentialOrOAuth(HttpServletRequest req, HttpServletResponse resp)
+      throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     String userId = userService.getCurrentUser().getUserId();
     AuthorizationCodeFlow flow = AuthUtils.newFlow(getServletContext());
@@ -71,6 +77,6 @@ public class GetTxcServlet extends HttpServlet {
       resp.sendRedirect(url);
       return null;
     }
-    return AuthUtils.getDriveService(credential);
+    return credential;
   }
 }
