@@ -55,10 +55,10 @@ class AuthUtils {
         .build();
   }
 
-  static SpreadsheetService getSpreadsheetService(Credential credential) {
-    SpreadsheetService spreadsheetService = new SpreadsheetService("TXC Maker");
-    spreadsheetService.setOAuth2Credentials(credential);
-  }
+  //static SpreadsheetService getSpreadsheetService(Credential credential) {
+   // SpreadsheetService spreadsheetService = new SpreadsheetService("TXC Maker");
+   // spreadsheetService.setOAuth2Credentials(credential);
+  //}
 
   static Drive getDriveService(Credential credential) throws IOException {
     return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)

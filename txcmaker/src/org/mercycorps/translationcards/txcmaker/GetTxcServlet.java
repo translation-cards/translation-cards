@@ -35,27 +35,30 @@ public class GetTxcServlet extends HttpServlet {
       return;
     }
     String spreadsheetFileId = "1VxUfQG5ewP5o7QCJCde1_a1fXt7NoMyTnW9mAAVui2E";
-    File spreadsheet = drive.files().get(spreadsheetFileId).execute();
-    Map<String, String> exportLinks = spreadsheet.getExportLinks();
-    URL url = new URL(exportLinks.get(CSV_EXPORT_TYPE));
-    Reader reader = new InputStreamReader(url.openStream());
+    Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
+    Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
+    CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+    //File spreadsheet = drive.files().get(spreadsheetFileId).execute();
+    //Map<String, String> exportLinks = spreadsheet.getExportLinks();
+    //URL url = new URL(spreadsheet.getDownloadUrl());
+    //Reader reader = new InputStreamReader(url.openStream());
     //CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
-    //try {
-    //  for (CSVRecord row : parser) {
-    //    //resp.getWriter().println(String.format("%s -- %s -- %s -- %s",
-    //    //    row.get("Language"), row.get("Label"), row.get("Translation"), row.get("Filename")));
-    //    resp.getWriter().println(row.toString());
-    //  }
-    //} finally {
-    //  parser.close();
-    //  reader.close();
-    //}
-    resp.getWriter().println(url.toString());
-    BufferedReader br = new BufferedReader(reader);
-    String line;
-    while ((line = br.readLine()) != null) {
-      resp.getWriter().println(line);
+    try {
+      for (CSVRecord row : parser) {
+        resp.getWriter().println(String.format("%s -- %s -- %s -- %s",
+            row.get("Language"), row.get("Label"), row.get("Translation"), row.get("Filename")));
+        resp.getWriter().println(row.toString());
+      }
+    } finally {
+      parser.close();
+      reader.close();
     }
+    //resp.getWriter().println(url.toString());
+    //BufferedReader br = new BufferedReader(reader);
+    //String line;
+    //while ((line = br.readLine()) != null) {
+    //  resp.getWriter().println(line);
+    //}
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp)
