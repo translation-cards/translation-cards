@@ -2,9 +2,9 @@
   "license-url": "http://creativecommons.org/licenses/by/4.0/",
   "readme": "Default content to be built into distributable apk. Translations by: http://translatorswithoutborders.org and http://mercycorps.org",
   "locked": false,
-  "timestamp": 1460487366000,
-  "deck_label": "Humanitarian Responder - Transit Centre",
-  "publisher": "UNHCR Innovation",
+  "timestamp" : 1460487366000,
+  "deck_label" : "Humanitarian Responder - Transit Centre",
+  "publisher" : "UNHCR Innovation",
   "id": "org.innovation.unhcr.txc-default-deck",
   "source_language": "en",
   "languages": [
@@ -142,6 +142,11 @@
           "dest_audio": "ps_file7.mp3"
         },
         {
+          "dest_txt": "زه کولاي سم ستاسي سره ددغه موبايل د اپليکيشن له لاري خبري وکړم؟",
+          "card_label": "Can I talk to you, using this mobile application (App)?",
+          "dest_audio": "ps_file4.mp3"
+        },
+        {
           "dest_txt": "که تاسي غواړئ چه دغه معلومات تکرار سي نو ماته اشاره وکړئ.",
           "card_label": "If you want the information repeated you can signal to me",
           "dest_audio": "ps_file13.mp3"
@@ -215,11 +220,6 @@
           "dest_txt": "هلته تاسي ته کمپلونه در کول کيږي.",
           "card_label": "Blankets are distributed over there",
           "dest_audio": "ps_file3.mp3"
-        },
-        {
-          "dest_txt": "زه کولاي سم ستاسي سره ددغه موبايل د اپليکيشن له لاري خبري وکړم؟",
-          "card_label": "Can I talk to you using this mobile application (App)?",
-          "dest_audio": "ps_file4.mp3"
         },
         {
           "dest_txt": "هلته تاسي د ماشومانو لپاره کالي او بوټونه ترلاسه کولای سئ.",
