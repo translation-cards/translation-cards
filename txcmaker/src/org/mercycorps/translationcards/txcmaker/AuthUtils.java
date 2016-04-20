@@ -14,7 +14,6 @@ import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gdata.client.spreadsheet.SpreadsheetService;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,8 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 
 class AuthUtils {
 
-  private static final String SHEETS_API_SCOPE = "https://spreadsheets.google.com/feeds";
-
   private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =
       AppEngineDataStoreFactory.getDefaultInstance();
   
@@ -36,8 +33,7 @@ class AuthUtils {
 
   static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-  static final Collection<String> SCOPES = Arrays.asList(
-      DriveScopes.DRIVE_READONLY, SHEETS_API_SCOPE);
+  static final Collection<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_READONLY);
 
   static String getRedirectUri(HttpServletRequest req) {
     GenericUrl url = new GenericUrl(req.getRequestURL().toString());
@@ -54,11 +50,6 @@ class AuthUtils {
         .setAccessType("offline")
         .build();
   }
-
-  //static SpreadsheetService getSpreadsheetService(Credential credential) {
-   // SpreadsheetService spreadsheetService = new SpreadsheetService("TXC Maker");
-   // spreadsheetService.setOAuth2Credentials(credential);
-  //}
 
   static Drive getDriveService(Credential credential) throws IOException {
     return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)

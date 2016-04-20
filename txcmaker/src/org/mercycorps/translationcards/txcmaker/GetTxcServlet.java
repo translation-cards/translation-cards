@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +26,11 @@ public class GetTxcServlet extends HttpServlet {
 
   private static final String CSV_EXPORT_TYPE = "text/csv";
 
+  private static final String SRC_HEADER_LANGUAGE = "Language";
+  private static final String SRC_HEADER_LABEL = "Label";
+  private static final String SRC_HEADER_TRANSLATION_TEXT = "Translation";
+  private static final String SRC_HEADER_FILENAME = "Filename";
+
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     Drive drive = getDriveOrOAuth(req, resp);
@@ -38,11 +42,6 @@ public class GetTxcServlet extends HttpServlet {
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
-    //File spreadsheet = drive.files().get(spreadsheetFileId).execute();
-    //Map<String, String> exportLinks = spreadsheet.getExportLinks();
-    //URL url = new URL(spreadsheet.getDownloadUrl());
-    //Reader reader = new InputStreamReader(url.openStream());
-    //CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT);
     try {
       for (CSVRecord row : parser) {
         resp.getWriter().println(String.format("%s -- %s -- %s -- %s",
@@ -53,21 +52,9 @@ public class GetTxcServlet extends HttpServlet {
       parser.close();
       reader.close();
     }
-    //resp.getWriter().println(url.toString());
-    //BufferedReader br = new BufferedReader(reader);
-    //String line;
-    //while ((line = br.readLine()) != null) {
-    //  resp.getWriter().println(line);
-    //}
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    Credential credential = getCredentialOrOAuth(req, resp);
-    return (credential == null) ? null : AuthUtils.getDriveService(credential);
-  }
-
-  private Credential getCredentialOrOAuth(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     String userId = userService.getCurrentUser().getUserId();
@@ -80,6 +67,6 @@ public class GetTxcServlet extends HttpServlet {
       resp.sendRedirect(url);
       return null;
     }
-    return credential;
+    return (credential == null) ? null : AuthUtils.getDriveService(credential);
   }
 }
