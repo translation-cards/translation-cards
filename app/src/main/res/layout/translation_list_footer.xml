@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
-        android:textSize="24sp"
+        android:textSize="24.5sp"
         android:textColor="@color/primaryTextColor"
         android:text="@string/empty_deck_title"
         android:id="@+id/empty_deck_title"/>
@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="24.5dp"
         android:lineSpacingExtra="6dp"
         android:gravity="center"
         android:text="@string/empty_deck_message"

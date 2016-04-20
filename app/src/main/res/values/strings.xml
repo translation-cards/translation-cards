@@ -73,7 +73,7 @@
     <string name="enter_translated_phrase_title">Optional: add the translation</string>
     <string name="enter_source_phrase_activity_title">Write your phrase</string>
     <string name="activity_enter_translated_phrase_description">Add optional translation so you\'re able to\nshow the card to people who may prefer to\nread.</string>
-    <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal speed. When you\'re done, tap record again. Play back and re-record until you\'re satisfied.</string>
+    <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal\nspeed. When you\'re done, tap record again.\nPlay back and re-record until you\'re satisfied.</string>
     <string name="activity_summary_instructions">Here\'s your new card. Before you save, be sure to review the phrase, translation, and recording.</string>
     <string name="translated_phrase_input_language_label">"%s TEXT"</string>
     <string name="empty_my_decks_message">Looks like you don\'t have any Translation Card Decks</string>

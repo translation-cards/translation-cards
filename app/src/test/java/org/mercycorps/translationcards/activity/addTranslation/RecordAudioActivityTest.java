@@ -348,7 +348,7 @@ public class RecordAudioActivityTest {
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         TextView activityDescription = findTextView(activity, R.id.recording_audio_instructions);
-        assertEquals("Tap record then speak clearly at a normal speed. When you're done, tap record again. Play back and re-record until you're satisfied.", activityDescription.getText().toString());
+        assertEquals("Tap record then speak clearly at a normal\\nspeed. When you're done, tap record again.\\nPlay back and re-record until you're satisfied.", activityDescription.getText().toString());
     }
 
     @Test

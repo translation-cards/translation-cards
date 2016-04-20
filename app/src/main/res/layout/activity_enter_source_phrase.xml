@@ -40,7 +40,7 @@
         android:paddingTop="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="17sp"
+        android:textSize="16.5sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/source_phrase_activity_description"
         android:layout_below="@+id/source_phrase_title"

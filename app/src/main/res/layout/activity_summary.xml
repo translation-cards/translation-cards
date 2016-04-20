@@ -36,7 +36,7 @@
         android:paddingBottom="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="16sp"
+        android:textSize="16.5sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/activity_summary_instructions"
         android:id="@+id/summary_detail" />

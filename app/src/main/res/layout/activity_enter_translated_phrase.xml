@@ -50,7 +50,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
-        android:textSize="17sp"
+        android:textSize="16.5sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/activity_enter_translated_phrase_description"
         android:layout_below="@+id/translated_phrase_title"
@@ -67,7 +67,7 @@
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
         android:paddingTop="24dp"
-        android:textSize="15sp"
+        android:textSize="14.5sp"
         android:id="@+id/translated_phrase_input_language_label" />
 
 
