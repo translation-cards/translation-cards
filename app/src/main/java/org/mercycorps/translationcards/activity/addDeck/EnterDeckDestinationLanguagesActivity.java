@@ -14,6 +14,11 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity{
         setContentView(R.layout.activity_deck_destination_languages);
     }
 
+    @Override
+    public void initStates(){
+
+    }
+
     @OnClick(R.id.enter_destination_next_label)
     public void nextButtonClicked(){
         startNextActivity(EnterDeckDestinationLanguagesActivity.this, MyDecksActivity.class);
