@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -22,10 +21,14 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     private void setDeckTitle() {
         deckTitleInput.setText(getContextFromIntent().getDeck().getLabel());
     }
-
     @Override
     public void inflateView() {
-        setContentView(R.layout.activity_deck_set_title);
+        setContentView(R.layout.activity_enter_deck_title);
+    }
+
+    @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.enter_deck_title_image, R.drawable.enter_phrase_image);
     }
 
     @OnClick(R.id.enter_title_back)

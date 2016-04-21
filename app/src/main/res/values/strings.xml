@@ -85,7 +85,7 @@
     <string name="empty_deck_message">This deck doesn\'t have any cards.\nGet started by creating your first card.</string>
     <string name="add_translation_button_text">ADD NEW CARD</string>
     <string name="deck_get_started_title">Deck Maker</string>
-    <string name="enter_deck_title">Enter the Deck Title</string>
+    <string name="enter_deck_title">Enter the deck title</string>
     <string name="deck_title_hint_text">e.g. Lesvos Beach Arrivals</string>
     <string name="record_audio">Record Audio</string>
     <string name="play_audio">Play Audio</string>
