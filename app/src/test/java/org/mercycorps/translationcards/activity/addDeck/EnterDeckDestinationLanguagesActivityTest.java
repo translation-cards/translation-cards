@@ -13,7 +13,7 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDeckContext;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -27,7 +27,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldGoToMyDecksActivityWhenNextButtonClicked() {
         NewDeckContext deckContext = new NewDeckContext(new Deck("MercyCorps Deck", "", "", -1, true, "en"));
-        Activity activity = createActivityToTestWithDeckContext(EnterDeckDestinationLanguagesActivity.class, deckContext);
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
         click(activity, R.id.enter_destination_next_label);
         assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
@@ -35,7 +35,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldGoToEnterTitleActivityWhenBackButtonIsClicked() {
         NewDeckContext deckContext = new NewDeckContext(new Deck("MercyCorps Deck", "", "", -1, true, "en"));
-        Activity activity = createActivityToTestWithDeckContext(EnterDeckDestinationLanguagesActivity.class, deckContext);
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
         click(activity, R.id.enter_destination_back_arrow);
         assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }

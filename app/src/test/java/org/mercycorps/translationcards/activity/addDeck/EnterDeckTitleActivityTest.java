@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDeckContext;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
@@ -37,8 +37,7 @@ public class EnterDeckTitleActivityTest {
 
     @Test
     public void shouldGoToDestinationLanguageActivityWhenNextButtonIsClicked() {
-        NewDeckContext deckContext = new NewDeckContext(new Deck("MercyCorps Deck", "", "", -1, true, "en"));
-        Activity activity = createActivityToTestWithDeckContext(EnterDeckTitleActivity.class, deckContext);
+        Activity activity = createActivityToTestWithDefaultDeck(EnterDeckTitleActivity.class);
         click(activity, R.id.enter_deck_title_next_label);
         assertEquals(EnterDeckDestinationLanguagesActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }

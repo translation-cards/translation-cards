@@ -10,14 +10,14 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.activity.addDeck.AddDeckActivity.INTENT_KEY_DECK;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDeckContext;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
@@ -36,8 +36,8 @@ public class GetStartedDeckActivityTest {
 
     @Test
     public void shouldPassDeckToNextActivity() {
-        NewDeckContext expectedDeckContext = new NewDeckContext();
-        Activity activity = createActivityToTestWithDeckContext(GetStartedDeckActivity.class, expectedDeckContext);
+        Activity activity = createActivityToTestWithDefaultDeck(GetStartedDeckActivity.class);
+        NewDeckContext expectedDeckContext = getContextFromIntent(activity);
         click(activity, R.id.deck_get_started_button);
         Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
         NewDeckContext actualDeckContext = (NewDeckContext) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
