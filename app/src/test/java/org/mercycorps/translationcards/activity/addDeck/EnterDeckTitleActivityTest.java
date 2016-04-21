@@ -48,8 +48,8 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldShowHintTextInDeckTitleInputField() {
         Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
-        TextView textView = findTextView(activity, R.id.deck_title_input);
-        assertEquals("e.g. Lesvos Beach Arrivals", textView.getHint().toString());
+        TextView inputTitleField = findTextView(activity, R.id.deck_title_input);
+        assertEquals("e.g. Lesvos Beach Arrivals", inputTitleField.getHint().toString());
     }
 
     @Test
@@ -70,5 +70,12 @@ public class EnterDeckTitleActivityTest {
         Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
         ImageView imageView = findImageView(activity, R.id.enter_deck_title_image);
         assertEquals(R.drawable.enter_phrase_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldShowActivityDescriptionWhenCreated() {
+        Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
+        TextView description = findTextView(activity, R.id.enter_deck_title_description);
+        assertEquals("Let's begin by entering the deck title. A good\\ntranslation card deck helps with translations\\nin a specific scenario. The title should be\\nshort and descriptive.", description.getText().toString());
     }
 }
