@@ -7,7 +7,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
+import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.data.Deck;
 
 import java.util.ArrayList;
@@ -99,6 +101,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
             @Override
             public void onClick(View v) {
                 Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
+                createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext());
                 startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
             }
         });
