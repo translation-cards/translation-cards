@@ -8,6 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <ImageView
@@ -131,7 +133,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/navigation_button_next"
                     android:textColor="@color/textDisabled"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/enter_deck_title_next_image"

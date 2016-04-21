@@ -1,5 +1,8 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +15,8 @@ import butterknife.OnTextChanged;
 public class EnterDeckTitleActivity extends AddDeckActivity {
     @Bind(R.id.deck_title_input)TextView deckTitleInput;
     @Bind(R.id.enter_deck_title_next_label)LinearLayout nextButton;
+    @Bind(R.id.enter_deck_title_next_text)TextView nextButtonText;
+    @Bind(R.id.enter_deck_title_next_image)ImageView nextButtonImage;
 
     @Override
     public void initStates(){
@@ -44,7 +49,18 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
 
     @OnTextChanged(R.id.deck_title_input)
     protected void deckTitleInputTextChanged(){
-        String deckTitle = deckTitleInput.getText().toString();
-        nextButton.setClickable(!deckTitle.isEmpty());
+        nextButton.setClickable(!isDeckTitleEmpty());
+        updateNextButtonColor();
+    }
+
+    private void updateNextButtonColor() {
+        Integer textColor = isDeckTitleEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
+        Integer nextArrow = isDeckTitleEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        nextButtonText.setTextColor(ContextCompat.getColor(this, textColor));
+        nextButtonImage.setBackgroundResource(nextArrow);
+    }
+
+    private boolean isDeckTitleEmpty() {
+        return deckTitleInput.getText().toString().isEmpty();
     }
 }
