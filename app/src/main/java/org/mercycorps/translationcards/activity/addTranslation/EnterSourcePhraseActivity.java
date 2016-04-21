@@ -40,7 +40,6 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
 
     @OnClick(R.id.enter_source_phrase_activity_back_label)
     public void cancelButtonClick() {
-        String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
         updateContextWithSourceText();
         Class nextActivity = getContextFromIntent().isEdit() ? TranslationsActivity.class : GetStartedActivity.class;
         startNextActivity(EnterSourcePhraseActivity.this, nextActivity);
@@ -68,8 +67,7 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     }
 
     protected void updateContextWithSourceText() {
-        String userEnteredSourcePhrase = sourcePhraseTextView.getText().toString();
-        getContextFromIntent().setSourceText(userEnteredSourcePhrase);
+        getContextFromIntent().setSourceText(sourcePhraseTextView.getText().toString());
     }
 
 }

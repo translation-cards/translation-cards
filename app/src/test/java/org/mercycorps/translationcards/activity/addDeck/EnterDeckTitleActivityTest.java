@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -8,10 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.util.TestAddDeckActivityHelper;
-import org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -21,7 +19,9 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
@@ -40,7 +40,7 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldReturnToGetStartedActivityWhenBackButtonIsClicked(){
         Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
-        click(activity, R.id.enter_title_back);
+        click(activity, R.id.enter_deck_title_back);
         assertEquals(GetStartedDeckActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
@@ -117,5 +117,28 @@ public class EnterDeckTitleActivityTest {
         setText(activity, R.id.deck_title_input, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_deck_title_next_image);
         assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldSetDeckTitleWhenActivityIsCreatedWithExistingDeckTitle() {
+        Activity activity = createActivityToTestWithDefaultDeck(EnterDeckTitleActivity.class);
+        EditText enterDeckTitle = findAnyView(activity, R.id.deck_title_input);
+        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, enterDeckTitle.getText().toString());
+    }
+
+    @Test
+    public void shouldSaveDeckTitleToContextWhenNextButtonIsClicked() {
+        Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
+        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        click(activity, R.id.enter_deck_title_next_label);
+        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, getContextFromIntent(activity).getDeck().getLabel());
+    }
+
+    @Test
+    public void shouldSaveDeckTitleToContextWhenBackButtonIsClicked() {
+        Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
+        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        click(activity, R.id.enter_deck_title_back);
+        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, getContextFromIntent(activity).getDeck().getLabel());
     }
 }

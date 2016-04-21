@@ -88,4 +88,8 @@ public class Deck implements Serializable {
         }
         return dictionaries;
     }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 }

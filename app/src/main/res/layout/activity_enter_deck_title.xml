@@ -77,7 +77,7 @@
             android:background="@color/navBarColor">
 
             <LinearLayout
-                android:id="@+id/enter_title_back"
+                android:id="@+id/enter_deck_title_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"

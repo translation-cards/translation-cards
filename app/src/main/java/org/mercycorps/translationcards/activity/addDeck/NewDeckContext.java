@@ -21,4 +21,8 @@ public class NewDeckContext implements Serializable{
     public Deck getDeck(){
         return deck;
     }
+
+    public void setDeckTitle(String deckTitle) {
+        deck.setLabel(deckTitle);
+    }
 }

@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,27 +22,25 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
         setDeckTitle();
     }
 
-    private void setDeckTitle() {
-        deckTitleInput.setText(getContextFromIntent().getDeck().getLabel());
-    }
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_enter_deck_title);
     }
-
     @Override
     public void setBitmapsForActivity() {
         setBitmap(R.id.enter_deck_title_image, R.drawable.enter_phrase_image);
     }
 
-    @OnClick(R.id.enter_title_back)
+    @OnClick(R.id.enter_deck_title_back)
     protected void enterTitleBackButtonClicked(){
+        updateContextWithDeckTitle();
         startNextActivity(EnterDeckTitleActivity.this, GetStartedDeckActivity.class);
     }
 
     @OnClick(R.id.enter_deck_title_next_label)
     protected void enterTitleNextButtonClicked(){
         if(!nextButton.isClickable())return;
+        updateContextWithDeckTitle();
         startNextActivity(EnterDeckTitleActivity.this, EnterDeckDestinationLanguagesActivity.class);
     }
 
@@ -51,6 +48,14 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     protected void deckTitleInputTextChanged(){
         nextButton.setClickable(!isDeckTitleEmpty());
         updateNextButtonColor();
+    }
+
+    private void setDeckTitle() {
+        deckTitleInput.setText(getContextFromIntent().getDeck().getLabel());
+    }
+
+    private void updateContextWithDeckTitle() {
+        getContextFromIntent().setDeckTitle(deckTitleInput.getText().toString());
     }
 
     private void updateNextButtonColor() {
