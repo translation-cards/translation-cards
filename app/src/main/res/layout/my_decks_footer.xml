@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -26,13 +28,16 @@
         android:id="@+id/empty_my_decks_message" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:layout_marginTop="4dp">
         <RelativeLayout
-            android:layout_width="156dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight=".5"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/chunky_button"
@@ -58,8 +63,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="156dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight=".5"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:background="@drawable/chunky_button"
@@ -86,7 +92,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
