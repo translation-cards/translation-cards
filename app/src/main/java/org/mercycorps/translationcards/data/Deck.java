@@ -51,6 +51,10 @@ public class Deck implements Serializable {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label=label;
+    }
+
     public String getPublisher() {
         return publisher;
     }

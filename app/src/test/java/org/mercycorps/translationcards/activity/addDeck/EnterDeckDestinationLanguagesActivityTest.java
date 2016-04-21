@@ -35,7 +35,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldGoToEnterTitleActivityWhenBackButtonIsClicked() {
         NewDeckContext deckContext = new NewDeckContext(new Deck("MercyCorps Deck", "", "", -1, true, "en"));
-        Activity activity = createActivityToTestWithDeckContext(EnterDeckTitleActivity.class, deckContext);
+        Activity activity = createActivityToTestWithDeckContext(EnterDeckDestinationLanguagesActivity.class, deckContext);
         click(activity, R.id.enter_destination_back_arrow);
         assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }

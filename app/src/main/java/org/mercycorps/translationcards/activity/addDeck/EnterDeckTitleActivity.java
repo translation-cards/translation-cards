@@ -36,6 +36,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     @OnClick(R.id.enter_deck_title_next_label)
     protected void enterTitleNextButtonClicked(){
         if(!nextButton.isClickable())return;
+        getContextFromIntent().getDeck().setLabel(deckTitleInput.getText().toString());
         startNextActivity(EnterDeckTitleActivity.this, EnterDeckDestinationLanguagesActivity.class);
     }
 
