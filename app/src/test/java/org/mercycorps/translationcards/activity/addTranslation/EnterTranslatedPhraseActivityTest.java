@@ -103,7 +103,7 @@ public class EnterTranslatedPhraseActivityTest {
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         TextView activityDescription = findTextView(activity, R.id.translated_phrase_activity_description);
-        assertEquals("Add optional translation so you're able to show the card to people who may prefer to read.", activityDescription.getText().toString());
+        assertEquals("Add optional translation so you're able to\\nshow the card to people who may prefer to\\nread.", activityDescription.getText().toString());
     }
 
     @Test

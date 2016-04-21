@@ -12,7 +12,7 @@
         android:layout_marginBottom="6dp"
         android:gravity="center_horizontal"
         android:text="@string/empty_my_decks_title"
-        android:textSize="24sp"
+        android:textSize="24.5sp"
         android:textColor="@color/primaryTextColor"
         android:id="@+id/empty_my_decks_title" />
 
@@ -23,7 +23,7 @@
         android:gravity="center_horizontal"
         android:lineSpacingExtra="6dp"
         android:layout_marginBottom="16dp"
-        android:textSize="14sp"
+        android:textSize="14.5sp"
         android:text="@string/empty_my_decks_message"
         android:id="@+id/empty_my_decks_message" />
 

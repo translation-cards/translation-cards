@@ -34,7 +34,7 @@
             android:layout_marginTop="28dp"
             android:lineSpacingExtra="3dp"
             android:text="@string/activity_record_audio_instructions"
-            android:textSize="16sp"
+            android:textSize="16.5sp"
             android:id="@+id/recording_audio_instructions" />
 
         <include
