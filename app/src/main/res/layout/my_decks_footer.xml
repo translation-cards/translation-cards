@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight=".5"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/chunky_button"
             android:id="@+id/create_deck_button">
             <ImageView
@@ -66,8 +66,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/chunky_button"
             android:id="@+id/import_deck_button">
             <ImageView
@@ -95,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_gravity="center"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="35dp"
         android:background="@drawable/feedback_button"
         android:id="@+id/feedback_button">
