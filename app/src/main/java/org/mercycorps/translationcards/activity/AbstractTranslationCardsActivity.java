@@ -2,9 +2,12 @@ package org.mercycorps.translationcards.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -17,7 +20,24 @@ import java.util.List;
 import butterknife.ButterKnife;
 
 public abstract class AbstractTranslationCardsActivity extends AppCompatActivity {
+    private Bitmap currentBitmap;
+    private ImageView currentBitmapView;
 
+    protected void setBitmap(int resId, int drawableId) {
+        recycleBitmap();
+        currentBitmap = BitmapFactory.decodeResource(getResources(), drawableId);
+        currentBitmapView = (ImageView) findViewById(resId);
+        currentBitmapView.setImageBitmap(currentBitmap);
+    }
+
+    protected void recycleBitmap() {
+        if (currentBitmap != null) {
+            currentBitmap.recycle();
+            if (currentBitmapView != null) currentBitmapView.setImageBitmap(null);
+            currentBitmap = null;
+            System.gc();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

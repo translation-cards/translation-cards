@@ -42,7 +42,6 @@ public class GetStartedActivityTest {
         assertEquals(dict, newTranslationContext.getDictionary());
     }
 
-
     @Test
     public void shouldStartEnterSourcePhraseActivityWhenGetStartedButtonClicked() {
         Activity activity = createActivityToTest(GetStartedActivity.class);

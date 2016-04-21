@@ -12,6 +12,11 @@ public class GetStartedDeckActivity extends AddDeckActivity {
         setContentView(R.layout.activity_deck_get_started);
     }
 
+    @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.deck_get_started_image, R.drawable.get_started_image);
+    }
+
     @OnClick(R.id.deck_get_started_button)
     protected void getStartedButtonClicked() {
         startNextActivity(GetStartedDeckActivity.this, EnterDeckTitleActivity.class);

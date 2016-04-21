@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,45 +11,82 @@
         android:orientation="vertical">
 
         <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:id="@+id/deck_get_started_titlebar">
+            android:id="@+id/deck_get_started_titlebar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="24dp"
-            android:background="@drawable/back"
-            android:id="@+id/deck_get_started_back" />
+            <ImageButton
+                android:id="@+id/deck_get_started_back"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/back"
+                android:contentDescription="@string/navigation_button_back" />
 
-        <TextView
+            <TextView
+                android:id="@+id/deck_get_started_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/deck_get_started_title"
+                android:textColor="@color/textColor"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/deck_get_started_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="20dp"
-            android:textColor="@color/textColor"
-            android:text="@string/deck_get_started_title"
-            android:id="@+id/deck_get_started_title" />
-    </LinearLayout>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/deck_get_started_titlebar"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/deck_get_started_header" />
 
-    <Button
-        android:id="@+id/deck_get_started_button"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:layout_marginTop="24dp"
-        android:textSize="14sp"
-        android:textColor="@color/textColor"
-        android:background="@color/colorPrimary"
-        android:layout_below="@+id/deck_get_started_titlebar"
-        android:text="@string/get_started_button_getstarted"/>
+        <TextView
+            android:id="@+id/deck_get_started_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/deck_get_started_image"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/deck_get_started_header"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/deck_get_started_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/deck_get_started_header"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/deck_get_started_detail"
+            android:textSize="15.5sp" />
+
+        <Button
+            android:id="@+id/deck_get_started_button"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_below="@+id/deck_get_started_detail"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="21dp"
+            android:paddingRight="21dp"
+            android:text="@string/get_started_button_getstarted"
+            android:textColor="@color/textColor"
+            android:textSize="15.5sp" />
 
     </RelativeLayout>
 

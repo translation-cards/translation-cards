@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.activity.addTranslation;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -19,8 +18,6 @@ import org.mercycorps.translationcards.uiHelper.ToastHelper;
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
     public static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     public static final String INTENT_KEY_DECK_ID = "Deck";
-    private Bitmap currentBitmap;
-    private ImageView currentBitmapView;
 
 
     @Override
@@ -69,21 +66,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         return getMainApplication().getAudioRecorderManager();
     }
 
-    protected void setBitmap(int resId, int drawableId) {
-        recycleBitmap();
-        currentBitmap = BitmapFactory.decodeResource(getResources(), drawableId);
-        currentBitmapView = (ImageView) findViewById(resId);
-        currentBitmapView.setImageBitmap(currentBitmap);
-    }
-
-    protected void recycleBitmap() {
-        if (currentBitmap != null) {
-            currentBitmap.recycle();
-            if (currentBitmapView != null) currentBitmapView.setImageBitmap(null);
-            currentBitmap = null;
-            System.gc();
-        }
-    }
     private void hideActionBar() {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.hide();
