@@ -3,17 +3,14 @@ package org.mercycorps.translationcards;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.fileUtil.FileHelper;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
-import org.mercycorps.translationcards.media.MediaPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static org.mockito.Mockito.mock;
@@ -23,7 +20,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DbManager dbManager = mock(DbManager.class);
     private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
     private AudioPlayerManager audioPlayerManager = mock(AudioPlayerManager.class);
-    private FileHelper fileHelper = mock(FileHelper.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
     private ScheduledExecutorService mockedScheduledExecutorService = mock(ScheduledExecutorService.class);
     private DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
@@ -44,11 +40,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public MediaPlayerManager getMediaPlayerManager() {
-        return mock(MediaPlayerManager.class);
-    }
-
-    @Override
     public DbManager getDbManager() {
         return dbManager;
     }
@@ -61,11 +52,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public AudioPlayerManager getAudioPlayerManager() {
         return audioPlayerManager;
-    }
-
-    @Override
-    public FileHelper getFileHelper(){
-        return fileHelper;
     }
 
     @Override

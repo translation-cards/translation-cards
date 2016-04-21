@@ -27,12 +27,11 @@ public class DecoratedMediaManager {
     }
 
     //// TODO: 3/28/16 There is an implicit order here. Play has to be called before you can call maxDuration or getCurrentPosition.
-    // Bad API design by google
-    public void play(String filename, ProgressBar progressBar) throws AudioFileException {
+    public void play(String filename, ProgressBar progressBar, boolean isAsset) throws AudioFileException {
         this.progressBar = progressBar;
         this.filename = filename;
         try {
-            getAudioPlayerManager().play(this.filename);
+            getAudioPlayerManager().play(this.filename, isAsset);
             progressBar.setMax(getAudioPlayerManager().getMaxDuration());
             schedule();
         } catch (IOException e) {

@@ -2,19 +2,30 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:id="@+id/enter_translated_phrase_image" />
+        android:minHeight="136dp"
+        android:background="@color/backgroundBlue"
+        android:id="@+id/header_layout">
+
+        <include layout="@layout/header_translation_card"
+            android:layout_width="328dp"
+            android:layout_marginBottom="36dp"
+            android:layout_marginTop="36dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/summary_translation_card"/>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -25,8 +36,8 @@
         android:paddingRight="16dp"
         android:textColor="@color/textColor"
         android:background="@color/colorPrimary"
-        android:textSize="20dp"
-        android:layout_below="@+id/enter_translated_phrase_image"
+        android:textSize="20sp"
+        android:layout_below="@+id/header_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:text="@string/enter_translated_phrase_title"
@@ -39,7 +50,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
-        android:textSize="16dp"
+        android:textSize="16.5sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/activity_enter_translated_phrase_description"
         android:layout_below="@+id/translated_phrase_title"
@@ -51,23 +62,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/translated_phrase_activity_description"
-        android:id="@+id/translated_phrase_input_language_label"
         android:paddingStart="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
         android:paddingTop="24dp"
-        android:textSize="16dp"/>
+        android:textSize="14.5sp"
+        android:id="@+id/translated_phrase_input_language_label" />
 
 
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/translated_phrase_field"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_below="@+id/translated_phrase_input_language_label"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -77,7 +87,8 @@
         android:textColorHighlight="@color/colorPrimary"
         android:imeOptions="actionDone"
         android:textColorHint="@color/borderColor"
-        android:hint="@string/recording_text_hint_text" />
+        android:hint="@string/recording_text_hint_text"
+        android:id="@+id/translated_phrase_field" />
 
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the text field (on small screens, the soft keyboard can reduce the available height such
@@ -159,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_skip"
                 android:id="@+id/recording_label_next_text" />

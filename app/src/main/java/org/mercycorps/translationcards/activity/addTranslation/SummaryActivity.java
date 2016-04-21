@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
@@ -88,8 +89,12 @@ public class SummaryActivity extends AddTranslationActivity {
     protected void translationCardClicked() {
         try {
             DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-            if(mediaManager.isPlaying()) mediaManager.stop();
-            else mediaManager.play(getContextFromIntent().getTranslation().getFilename(), progressBar);
+            if(mediaManager.isPlaying()) {
+                mediaManager.stop();
+            } else {
+                Translation translation = getContextFromIntent().getTranslation();
+                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+            }
         } catch (AudioFileException e) {
             showToast(getString(R.string.could_not_play_audio_message));
             Log.d(TAG, getString(R.string.could_not_play_audio_message));

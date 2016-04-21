@@ -23,7 +23,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textColor="@color/textColor"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:background="@color/colorPrimary"
         android:text="@string/summary_title"
         android:id="@+id/summary_title" />
@@ -36,7 +36,7 @@
         android:paddingBottom="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="16dp"
+        android:textSize="16.5sp"
         android:lineSpacingExtra="3dp"
         android:text="@string/activity_summary_instructions"
         android:id="@+id/summary_detail" />
@@ -49,7 +49,6 @@
         android:layout_marginRight="16dp">
 
         <ProgressBar
-            android:id="@+id/summary_progress_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@android:style/Widget.ProgressBar.Horizontal"
@@ -57,7 +56,8 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:minHeight="1dp"
-            android:maxHeight="1dp"/>
+            android:maxHeight="1dp"
+            android:id="@+id/summary_progress_bar" />
 
         <include layout="@layout/translation_card"
             android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_save"
                 android:id="@+id/recording_done_text" />

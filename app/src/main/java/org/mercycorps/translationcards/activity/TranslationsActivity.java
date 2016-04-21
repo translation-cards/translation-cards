@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
@@ -51,6 +52,7 @@ import org.mercycorps.translationcards.porting.TxcPortingUtility;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,8 +79,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final boolean IS_EDIT = true;
 
 
-    @Bind(R.id.add_translation_button) LinearLayout addTranslationButton;
-    @Bind(R.id.translation_list_header) TextView listHeader;
+    @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     DbManager dbManager;
     private Dictionary[] dictionaries;
@@ -114,9 +115,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         updateAddTranslationButtonVisibility();
     }
 
-    private void updateHeader() {
+    private void updateHeaderAndShare() {
         int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
+        findViewById(R.id.share_deck_button).setVisibility(headerVisibility);
     }
 
     private void updateAddTranslationButtonVisibility() {
@@ -186,9 +188,12 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateWelcomeInstructionsState() {
-        int welcomeInstructionsVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.VISIBLE : View.GONE;
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        boolean isTranslationsListEmpty = dictionaries[currentDictionaryIndex].getTranslationCount() == 0;
+        int welcomeInstructionsVisibility = isTranslationsListEmpty ? View.VISIBLE : View.GONE;
         findViewById(R.id.empty_deck_title).setVisibility(welcomeInstructionsVisibility);
         findViewById(R.id.empty_deck_message).setVisibility(welcomeInstructionsVisibility);
+        updateListViewCentered(list, isTranslationsListEmpty);
     }
 
     private void launchGetStartedActivity(){
@@ -224,7 +229,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
-        updateHeader();
+        updateHeaderAndShare();
         updateWelcomeInstructionsState();
     }
 
@@ -249,6 +254,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         decoratedMediaManager.stop();
     }
 
+    @OnClick (R.id.share_deck_button)
     public void onExportButtonPress(View v) {
         final EditText nameField = new EditText(this);
         nameField.setText(deck.getLabel());

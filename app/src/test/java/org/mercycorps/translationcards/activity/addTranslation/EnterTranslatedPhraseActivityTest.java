@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyChar;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -84,13 +86,6 @@ public class EnterTranslatedPhraseActivityTest {
     }
 
     @Test
-    public void shouldContainImageWhenLoaded() {
-        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
-        ImageView getStartedImage = findImageView(activity, R.id.enter_translated_phrase_image);
-        assertEquals(R.drawable.enter_phrase_image, shadowOf(getStartedImage.getDrawable()).getCreatedFromResId());
-    }
-
-    @Test
     public void shouldPopulateTranslatedPhraseFieldWithValueWhenTranslationContextHasTranslatedText(){
         Activity activity = createActivityToTestWithTranslationContext(EnterTranslatedPhraseActivity.class);
         TextView translatedPhraseTextField = findTextView(activity, R.id.translated_phrase_field);
@@ -108,7 +103,7 @@ public class EnterTranslatedPhraseActivityTest {
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         TextView activityDescription = findTextView(activity, R.id.translated_phrase_activity_description);
-        assertEquals("Add optional translation so you're able to show the card to people who may prefer to read.", activityDescription.getText().toString());
+        assertEquals("Add optional translation so you're able to\\nshow the card to people who may prefer to\\nread.", activityDescription.getText().toString());
     }
 
     @Test
@@ -139,7 +134,12 @@ public class EnterTranslatedPhraseActivityTest {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         TextView skipLabel = findTextView(activity,R.id.recording_label_next_text);
         assertEquals("SKIP", skipLabel.getText().toString());
+    }
 
-
+    @Test
+    public void shouldIncludeSourcePhraseInHeaderWhenActivityIsCreated() {
+        Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterTranslatedPhraseActivity.class);
+        TextView sourceText = findTextView(activity, R.id.origin_translation_text);
+        assertEquals(DEFAULT_SOURCE_PHRASE, sourceText.getText().toString());
     }
 }

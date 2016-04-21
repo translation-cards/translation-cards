@@ -5,10 +5,8 @@
     android:background="@color/listBackgroundColor">
 
     <ListView
-        android:paddingTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
         android:id="@+id/my_decks_list"/>

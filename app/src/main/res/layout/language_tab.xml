@@ -3,17 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:layout_weight="1">
+    android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="52dp"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:layout_marginTop="13dp"
+        android:gravity="center"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColor="@color/unselectedLanguageTabText"
         android:id="@+id/tab_label_text" />
     <View

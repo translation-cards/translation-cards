@@ -11,9 +11,9 @@
         android:text="@string/deck_creation_field_label_deck_name" />
 
     <EditText
-        android:id="@+id/field_deck_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/field_deck_name"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,13 +21,13 @@
         android:text="@string/deck_creation_field_label_target_languages" />
 
     <EditText
-        android:id="@+id/field_target_languages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_add_deck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/deck_creation_add_button" />
+        android:id="@+id/field_target_languages"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/deck_creation_add_button"
+        android:id="@+id/button_add_deck"/>
 </LinearLayout>

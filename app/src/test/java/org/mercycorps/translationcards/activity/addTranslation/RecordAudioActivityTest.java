@@ -2,20 +2,17 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Translation;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import javolution.util.stripped.FastCollection;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static java.lang.Thread.sleep;
@@ -24,6 +21,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -34,24 +32,26 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class RecordAudioActivityTest {
 
+    private static final boolean IS_NOT_ASSET = false;
+
     @Test
-    public void shouldNotBeAbleToPlayAudioWhenActivityStarts() {
+    public void playButtonShouldBeGreyWhenActivityStarts() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
-        ImageView playButton = findImageView(activity, R.id.play_audio_button);
-        assertEquals(R.drawable.play_button_disabled, shadowOf(playButton.getBackground()).getCreatedFromResId());
+        View playButton = findView(activity, R.id.play_audio_button);
+        assertEquals(R.color.grey, shadowOf(playButton.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void whenThereIsNoAudioFilePlayButtonShouldBeDisabled() {
+    public void shouldNotBeAbleToClickPlayButtonWhenThereIsNoAudioFilePresent() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
-        ImageView playButton = findImageView(activity, R.id.play_audio_button);
+        View playButton = findView(activity, R.id.play_audio_button);
         assertFalse(playButton.isClickable());
     }
 
     @Test
     public void shouldBeAbleToClickPlayButtonWhenAudioFileIsPresent() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
-        ImageView playButton = findImageView(activity, R.id.play_audio_button);
+        View playButton = findView(activity, R.id.play_audio_button);
         assertTrue(playButton.isClickable());
     }
 
@@ -181,7 +181,7 @@ public class RecordAudioActivityTest {
         setupAudioPlayerManager();
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
         click(activity, R.id.play_audio_button);
-        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE);
+        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE, IS_NOT_ASSET);
     }
 
     @Test
@@ -213,55 +213,48 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldNotHaveClickablePlayButtonWhenAFileIsNotRecorded() {
-        Activity activity = createActivityToTest(RecordAudioActivity.class);
-        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
-        assertFalse(playButton.isClickable());
-    }
-
-    @Test
     public void shouldHavePlayButtonBeClickableWhenAFileIsRecorded() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
-        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
+        View playButton = activity.findViewById(R.id.play_audio_button);
         assertTrue(playButton.isClickable());
     }
 
     @Test
-    public void shouldChangePlayButtonsImageWhenItBecomesClickable() {
+    public void shouldChangePlayButtonsBackgroundToGreenWhenItBecomesClickable() {
         Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
-        ImageButton playButton = (ImageButton) activity.findViewById(R.id.play_audio_button);
-        assertEquals(R.drawable.play_button_enabled, shadowOf(playButton.getBackground()).getCreatedFromResId());
+        View playButton = activity.findViewById(R.id.play_audio_button);
+        assertEquals(R.color.green, shadowOf(playButton.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldChangeRecordButtonToActiveImageWhenItIsRecording() {
+    public void shouldChangeRecordBackgroundToDeepRedWhenItIsRecording() {
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
-        ImageButton recordButton = (ImageButton) activity.findViewById(R.id.record_audio_button);
-        assertEquals(R.drawable.button_record_active, shadowOf(recordButton.getBackground()).getCreatedFromResId());
+        View recordButton = activity.findViewById(R.id.record_audio_button);
+        assertEquals(R.color.deep_red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldChangeRecordButtonToEnabledImageWhenItIsFinishedRecording() {
+    public void shouldChangeRecordButtonBackgroundToRedWhenItIsFinishedRecording() {
         when(getAudioRecorderManager().isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
-        ImageButton recordButton = (ImageButton) activity.findViewById(R.id.record_audio_button);
-        assertEquals(R.drawable.button_record_enabled, shadowOf(recordButton.getBackground()).getCreatedFromResId());
+        View recordButton = activity.findViewById(R.id.record_audio_button);
+        assertEquals(R.color.red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldChangeRecordButtonToEnabledImageWhenItIsFinishedRecordingByPressingPlay() {
+    public void shouldChangeRecordButtonBackgroundToRedWhenItIsFinishedRecordingByPressingPlay() {
         when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
-        ImageButton recordButton = (ImageButton) activity.findViewById(R.id.record_audio_button);
-        assertEquals(R.drawable.button_record_enabled, shadowOf(recordButton.getBackground()).getCreatedFromResId());
+        View recordButton = activity.findViewById(R.id.record_audio_button);
+        assertEquals(R.color.red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -338,16 +331,100 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldNotShowTranslationTextIndicatorDividerOnStart() {
+    public void shouldShowCollapseArrowIconWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
-        View indicatorDivider = findView(activity, R.id.text_indicator_divider);
-        assertEquals(View.GONE, indicatorDivider.getVisibility());
+        ImageView expandArrowIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.collapse_arrow, shadowOf(expandArrowIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldShowTranslationChildWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        View translationChild = findView(activity, R.id.translation_child);
+        assertEquals(View.VISIBLE, translationChild.getVisibility());
     }
 
     @Test
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(RecordAudioActivity.class);
         TextView activityDescription = findTextView(activity, R.id.recording_audio_instructions);
-        assertEquals("Tap record then speak clearly at a normal speed. When you're done, tap record again. Play back and re-record until you're satisfied.", activityDescription.getText().toString());
+        assertEquals("Tap record then speak clearly at a normal\\nspeed. When you're done, tap record again.\\nPlay back and re-record until you're satisfied.", activityDescription.getText().toString());
+    }
+
+    @Test
+    public void shouldBeAbleToClickIndicatorIcon() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        View indicatorLayout = findView(activity, R.id.translation_indicator_layout);
+        assertTrue(indicatorLayout.isClickable());
+    }
+
+    @Test
+    public void shouldCollapseCardWhenIndicatorIconIsClicked() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        View translationChild = findView(activity, R.id.translation_child);
+        assertEquals(View.GONE, translationChild.getVisibility());
+    }
+
+    @Test
+    public void shouldMakeTranslationGrandchildLinearLayoutGone() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        assertEquals(View.GONE, activity.findViewById(R.id.translation_grandchild).getVisibility());
+    }
+
+    @Test
+    public void shouldShowExpandCardIndicatorWhenTranslationCardIsCollapsed() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.expand_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldExpandTranslationCardWhenCardIndicatorIsClickedTwice() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        assertEquals(View.VISIBLE, findView(activity, R.id.translation_child).getVisibility());
+    }
+
+    @Test
+    public void shouldShowCollapseCardIndicatorWhenTranslationCardIsClickedTwice() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        click(activity, R.id.translation_indicator_layout);
+        click(activity, R.id.translation_indicator_layout);
+        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
+        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldShowTranslatedPhraseInCardView() {
+        Activity activity = createActivityToTestWithTranslationContext(RecordAudioActivity.class);
+        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
+        assertEquals(DEFAULT_TRANSLATED_TEXT, translatedTextView.getText().toString());
+    }
+
+    @Test
+    public void shouldShowHintTextWhenNoTranslatedTextPhraseIsProvided() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class, createDefaultDictionary());
+        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
+        assertEquals(String.format("Add %s translation", DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
+    }
+
+    @Test
+    public void shouldNotShowAudioIconInTranslationCardWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+        View audioIconLayout = findView(activity, R.id.audio_icon_layout);
+        assertEquals(View.GONE, audioIconLayout.getVisibility());
+    }
+
+    @Test
+    public void shouldChangeIsAssetWhenAudioEditedAndWasAsset() {
+        Translation isAudioAssetTranslation = createTranslation();
+        isAudioAssetTranslation.setIsAsset(true);
+        NewTranslationContext translationContext = new NewTranslationContext(createDefaultDictionary(), isAudioAssetTranslation, true);
+        Activity activity = createActivityToTest(RecordAudioActivity.class, translationContext);
+        click(activity, R.id.record_audio_button);
+        assertEquals(false, isAudioAssetTranslation.getIsAsset());
     }
 }

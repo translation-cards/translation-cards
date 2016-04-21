@@ -6,11 +6,11 @@
     <string name="main_export_button_text">SHARE</string>
     <string name="get_started_title">Card Maker</string>
     <string name="get_started_header">Make your own card</string>
-    <string name="get_started_detail">Write your script, record your phrase,\nand use your card in the field.</string>
+    <string name="get_started_detail">Write your script, record your phrase\nand use your flashcard in the field.</string>
     <string name="get_started_button_getstarted">GET STARTED</string>
     <string name="recording_label_create_title">Write your %s phrase and translation</string>
     <string name="recording_label_edit_title">Update or delete your flashcard</string>
-    <string name="source_phrase_activity_description">Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.</string>
+    <string name="source_phrase_activity_description">Keep it short, direct, and really clear. Your\nphrase should make it really easy for the\nlistener to know how to respond.</string>
     <string name="recording_label_hint_text">e.g. Wait here for 30 minutes</string>
     <string name="record_audio_title">Record your phrase</string>
     <string name="recording_text_create_title">Enter the translation text</string>
@@ -72,14 +72,14 @@
     <string name="navigation_button_cancel">CANCEL</string>
     <string name="enter_translated_phrase_title">Optional: add the translation</string>
     <string name="enter_source_phrase_activity_title">Write your phrase</string>
-    <string name="activity_enter_translated_phrase_description">Add optional translation so you\'re able to show the card to people who may prefer to read.</string>
-    <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal speed. When you\'re done, tap record again. Play back and re-record until you\'re satisfied.</string>
+    <string name="activity_enter_translated_phrase_description">Add optional translation so you\'re able to\nshow the card to people who may prefer to\nread.</string>
+    <string name="activity_record_audio_instructions">Tap record then speak clearly at a normal\nspeed. When you\'re done, tap record again.\nPlay back and re-record until you\'re satisfied.</string>
     <string name="activity_summary_instructions">Here\'s your new card. Before you save, be sure to review the phrase, translation, and recording.</string>
     <string name="translated_phrase_input_language_label">"%s TEXT"</string>
-    <string name="empty_myDecks_message">Looks like you don\'t have any Translation Card Decks</string>
-    <string name="empty_myDecks_title">Let\'s Get Started</string>
+    <string name="empty_my_decks_message">Looks like you don\'t have any Translation Card Decks</string>
+    <string name="empty_my_decks_title">Let\'s get started</string>
     <string name="import_deck_button_text">IMPORT DECK</string>
-    <string name="create_deck_button_text">CREATE DECK</string>
+    <string name="create_deck_button_text">MAKE DECK</string>
     <string name="navigation_button_skip">SKIP</string>
     <string name="empty_deck_title">Let\'s make this useful</string>
     <string name="empty_deck_message">This deck doesn\'t have any cards.\nGet started by creating your first card.</string>
@@ -87,6 +87,8 @@
     <string name="deck_get_started_title">Deck Maker</string>
     <string name="enter_deck_title">Enter the Deck Title</string>
     <string name="deck_title_hint_text">e.g. Lesvos Beach Arrivals</string>
+    <string name="record_audio">Record Audio</string>
+    <string name="play_audio">Play Audio</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

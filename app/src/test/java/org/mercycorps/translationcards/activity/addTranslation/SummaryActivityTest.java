@@ -35,6 +35,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class SummaryActivityTest {
     public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
+    private static final boolean IS_NOT_ASSET = false;
 
     @Test
     public void shouldNotBeNull(){
@@ -95,7 +96,7 @@ public class SummaryActivityTest {
         Activity activity = createActivityToTestWithTranslationContext(SummaryActivity.class);
         activity.findViewById(R.id.summary_translation_card).performClick();
         ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
-        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar);
+        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
 
     @Test

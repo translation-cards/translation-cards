@@ -1,7 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.refactored.MyDecksActivity;
+import org.mercycorps.translationcards.activity.MyDecksActivity;
 
 import butterknife.OnClick;
 
