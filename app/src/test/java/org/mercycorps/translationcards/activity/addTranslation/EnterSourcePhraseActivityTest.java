@@ -51,13 +51,6 @@ public class EnterSourcePhraseActivityTest {
     }
 
     @Test
-    public void shouldUpdateTranslationSourceTextToUserInputtedText() {
-        Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
-        setSourceTextAndClick(activity);
-        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
-    }
-
-    @Test
     public void shouldNotStartNextActivityWhenThereIsNoSourceText() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         click(activity, R.id.activity_enter_source_phrase_next_label);

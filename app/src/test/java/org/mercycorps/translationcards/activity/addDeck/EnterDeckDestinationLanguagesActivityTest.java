@@ -9,16 +9,22 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.data.Deck;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
@@ -68,5 +74,41 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
         TextView input = findTextView(activity, R.id.enter_deck_destination_input);
         assertEquals("e.g. Arabic, Farsi, Pashto", input.getHint().toString());
+    }
+
+    @Test
+    public void shouldUpdateNewDeckContextWhenUserClicksSaveWithLanguages() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic, Farsi");
+        click(activity, R.id.enter_destination_next_label);
+        verify(newDeckContext, times(2)).addLanguage(anyString());
+    }
+
+    @Test
+    public void shouldUpdateNewDeckContextWithCorrectLanguageWhenUserClicksSave() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
+        click(activity, R.id.enter_destination_next_label);
+        verify(newDeckContext).addLanguage("arabic");
+    }
+
+    @Test
+    public void shouldSaveNewDeckContextWhenUserClicksSave() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
+        click(activity, R.id.enter_destination_next_label);
+        verify(newDeckContext).save();
+    }
+
+    @Test
+    public void shouldUpdateNewDeckContextWhenUserClicksBack() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
+        click(activity, R.id.enter_destination_back_arrow);
+        verify(newDeckContext).addLanguage("arabic");
     }
 }

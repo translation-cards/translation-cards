@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
@@ -26,6 +27,8 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
@@ -128,17 +131,19 @@ public class EnterDeckTitleActivityTest {
 
     @Test
     public void shouldSaveDeckTitleToContextWhenNextButtonIsClicked() {
-        Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckTitleActivity.class, newDeckContext);
         setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
         click(activity, R.id.enter_deck_title_next_label);
-        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, getContextFromIntent(activity).getDeck().getLabel());
+        verify(newDeckContext).setDeckTitle(TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
     }
 
     @Test
     public void shouldSaveDeckTitleToContextWhenBackButtonIsClicked() {
-        Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckTitleActivity.class, newDeckContext);
         setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
         click(activity, R.id.enter_deck_title_back);
-        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, getContextFromIntent(activity).getDeck().getLabel());
+        verify(newDeckContext).setDeckTitle(TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
     }
 }

@@ -29,6 +29,12 @@ public class TestAddDeckActivityHelper {
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
+    public static Activity createActivityToTestWithContext(Class<? extends AbstractTranslationCardsActivity> instanceOfClass, NewDeckContext newDeckContext) {
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_KEY_DECK, newDeckContext);
+        return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
+    }
+
     public static NewDeckContext getContextFromIntent(Activity activity) {
         return (NewDeckContext) activity.getIntent().getSerializableExtra(AddDeckActivity.INTENT_KEY_DECK);
     }

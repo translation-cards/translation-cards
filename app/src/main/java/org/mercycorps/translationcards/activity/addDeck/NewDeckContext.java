@@ -1,28 +1,38 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by njimenez on 4/12/16.
- */
 public class NewDeckContext implements Serializable{
     private Deck deck;
+    private List<Dictionary> dictionaries;
 
     public NewDeckContext(){
-        this.deck = new Deck();
+        this(new Deck());
     }
 
     public NewDeckContext(Deck deck) {
         this.deck = deck;
-    }
-
-    public Deck getDeck(){
-        return deck;
+        this.dictionaries = new ArrayList<>();
     }
 
     public void setDeckTitle(String deckTitle) {
         deck.setLabel(deckTitle);
+    }
+
+    public void addLanguage(String language) {
+        dictionaries.add(new Dictionary(language));
+    }
+
+    public void save() {
+
+    }
+
+    public String getDeckLabel() {
+        return deck.getLabel();
     }
 }
