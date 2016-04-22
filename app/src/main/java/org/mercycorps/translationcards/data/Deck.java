@@ -1,8 +1,5 @@
 package org.mercycorps.translationcards.data;
 
-import android.content.Context;
-import android.os.Parcelable;
-
 import org.mercycorps.translationcards.MainApplication;
 
 import java.io.Serializable;
@@ -91,5 +88,9 @@ public class Deck implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public Long save() {
+        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, srcLanguageIso);
     }
 }

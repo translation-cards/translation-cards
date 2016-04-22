@@ -16,7 +16,7 @@
 
 package org.mercycorps.translationcards.data;
 
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
+import org.mercycorps.translationcards.MainApplication;
 
 import java.io.Serializable;
 
@@ -30,11 +30,12 @@ import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getLanguage
 public class Dictionary implements Serializable {
 
 
-    private final long dbId;
-    private final long deckId;
-    private final String destLanguageIso;
-    private final String label;
+    private long dbId;
+    private long deckId;
+    private String destLanguageIso;
+    private String label;
     private Translation[] translations;
+
 
     public Dictionary(String destLanguageIso, String label, Translation[] translations, long dbId,
                       long deckId) {
@@ -52,14 +53,6 @@ public class Dictionary implements Serializable {
         this.dbId = -1;
         this.deckId = -1;
         this.destLanguageIso = "";
-    }
-
-    Dictionary(long dbId, long deckId, String destLanguageIso, String label) {
-        this.dbId = dbId;
-        this.deckId = deckId;
-        this.destLanguageIso = destLanguageIso;
-        this.label = label;
-        translations = null;
     }
 
     public String getDestLanguageIso() {
@@ -82,12 +75,15 @@ public class Dictionary implements Serializable {
         return dbId;
     }
 
-    public long getDeckId() {
-        return deckId;
-    }
-
     private boolean isNullOrEmpty(String value) {
         return (value == null) || value.isEmpty();
     }
 
+    public void save(Integer itemIndex) {
+        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDictionary(destLanguageIso, label, itemIndex, deckId);
+    }
+
+    public void setDeckId(long deckId) {
+        this.deckId = deckId;
+    }
 }
