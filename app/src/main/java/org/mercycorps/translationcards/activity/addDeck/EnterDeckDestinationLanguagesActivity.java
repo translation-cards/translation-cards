@@ -15,6 +15,11 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity{
     }
 
     @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.enter_deck_destination_image, R.drawable.enter_phrase_image);
+    }
+
+    @Override
     public void initStates(){
 
     }

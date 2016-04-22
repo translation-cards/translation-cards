@@ -1,152 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="#ffffff"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/enter_deck_title_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/enter_deck_title" />
+
+    <TextView
+        android:id="@+id/enter_deck_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/enter_deck_title_image"
+        android:background="@color/colorPrimary"
+        android:paddingBottom="18dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="18dp"
+        android:text="@string/enter_deck_title"
+        android:textColor="@color/textColor"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/enter_deck_title_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_deck_title"
+        android:lineSpacingExtra="3dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="24dp"
+        android:text="@string/enter_deck_title_description"
+        android:textSize="16.5sp" />
+
+
+    <EditText
+        android:id="@+id/deck_title_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_deck_title_description"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="24dp"
+        android:hint="@string/deck_title_hint_text"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:textColorHighlight="@color/colorPrimary"
+        android:textColorHint="@color/borderColor" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="66dp"
+        android:layout_below="@id/deck_title_input" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/navBarColor">
 
-        <ImageView
-            android:id="@+id/enter_deck_title_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/enter_deck_title" />
-
-        <TextView
-            android:id="@+id/enter_deck_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/enter_deck_title_image"
-            android:background="@color/colorPrimary"
-            android:paddingBottom="18dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="18dp"
-            android:text="@string/enter_deck_title"
-            android:textColor="@color/textColor"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/enter_deck_title_description"
+        <LinearLayout
+            android:id="@+id/enter_deck_title_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/enter_deck_title"
-            android:lineSpacingExtra="3dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="24dp"
-            android:text="@string/enter_deck_title_description"
-            android:textSize="16.5sp" />
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="16dp">
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back_arrow" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/deck_title_input"
+        <LinearLayout
+            android:id="@+id/create_deck_step_marker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_selected" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/enter_deck_title_next_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/enter_deck_title_description"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="24dp"
-            android:hint="@string/deck_title_hint_text"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:textColorHighlight="@color/colorPrimary"
-            android:textColorHint="@color/borderColor" />
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="20dp"
+            android:paddingTop="16dp">
 
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="66dp"
-            android:layout_below="@id/deck_title_input" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@color/navBarColor">
-
-            <LinearLayout
-                android:id="@+id/enter_deck_title_back"
+            <TextView
+                android:id="@+id/enter_deck_title_next_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="16dp">
+                android:layout_gravity="center_vertical"
+                android:text="@string/navigation_button_next"
+                android:textColor="@color/textDisabled"
+                android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/back_arrow" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/create_deck_step_marker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/step_selected" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/step_unselected" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/enter_deck_title_next_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="20dp"
-                android:paddingTop="16dp">
-
-                <TextView
-                    android:id="@+id/enter_deck_title_next_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/navigation_button_next"
-                    android:textColor="@color/textDisabled"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/enter_deck_title_next_image"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/forward_arrow_40p" />
-            </LinearLayout>
-        </RelativeLayout>
-
+            <ImageView
+                android:id="@+id/enter_deck_title_next_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/forward_arrow_40p" />
+        </LinearLayout>
     </RelativeLayout>
-</ScrollView>
+
+</RelativeLayout>

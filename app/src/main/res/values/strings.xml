@@ -92,6 +92,9 @@
     <string name="deck_get_started_header">Make your own deck</string>
     <string name="deck_get_started_detail">Creating a new deck allows you to add\ncustom translation cards.</string>
     <string name="enter_deck_title_description">Let\'s begin by entering the deck title. A good\ntranslation card deck helps with translations\nin a specific scenario. The title should be\nshort and descriptive.</string>
+    <string name="enter_deck_destination_title">Set the destination language</string>
+    <string name="enter_deck_destination_language_description">A deck has one or more destination\nlanguages, these are the languages you\nwould like to translate to. Separate each language by using a comma.</string>
+    <string name="enter_deck_destination_input">e.g. Arabic, Farsi, Pashto</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
