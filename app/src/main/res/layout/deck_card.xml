@@ -1,154 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/translation_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/card_background"
-    android:id="@+id/translation_card">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingTop="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textSize="24sp"
-        android:textColor="@color/primaryTextColor"
-        android:id="@+id/deck_name" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textSize="14sp"
-        android:textColor="@color/colorSecondaryLight"
-        android:gravity="top"
-        android:id="@+id/deck_information"/>
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/deck_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="350dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="24sp" />
+
+    <FrameLayout
+        android:id="@+id/deck_menu"
+        android:layout_width="30dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/deck_menu" />
+    </FrameLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/deck_information"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:paddingBottom="20dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/colorSecondaryLight"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <View
-            android:background="@color/lineColor"
-            android:layout_width = "fill_parent"
+            android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:layout_centerVertical ="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:background="@color/lineColor" />
 
         <TextView
+            android:id="@+id/origin_language"
             android:layout_width="wrap_content"
             android:layout_height="54dp"
             android:gravity="center"
             android:paddingLeft="16dp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorSecondaryLight"
             android:text="@string/default_origin_language"
-            android:id="@+id/origin_language" />
+            android:textColor="@color/colorSecondaryLight"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <FrameLayout
+            android:id="@+id/translation_indicator_layout"
             android:layout_width="30dp"
             android:layout_height="54dp"
-            android:layout_toRightOf="@+id/origin_language"
-            android:id="@+id/translation_indicator_layout">
+            android:layout_toRightOf="@+id/origin_language">
+
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:src="@drawable/small_arrow"/>
+                android:src="@drawable/small_arrow" />
         </FrameLayout>
 
         <TextView
+            android:id="@+id/translation_languages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/translation_indicator_layout"
-            android:paddingRight="26dp"
-            android:textSize="14sp"
-            android:paddingTop="16.5dp"
-            android:paddingBottom="6.5dp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
             android:lineSpacingExtra="10dp"
-            android:id="@+id/translation_languages" />
+            android:paddingBottom="6.5dp"
+            android:paddingRight="26dp"
+            android:paddingTop="16.5dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/deck_card_expansion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:id="@+id/deck_card_expansion">
+        android:visibility="visible">
+
         <View
-            android:background="@color/lineColor"
-            android:layout_width = "fill_parent"
-            android:layout_height="1dip"/>
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/lineColor" />
+
         <LinearLayout
+            android:id="@+id/deck_card_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:weightSum="1"
-            android:id="@+id/deck_card_copy">
+            android:weightSum="1">
+
             <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="56dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp">
+
                 <ImageView
+                    android:id="@+id/edit_card_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/edit"
-                    android:id="@+id/edit_card_icon" />
+                    android:src="@drawable/edit" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/deck_card_copy_label"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="25dp"
+                android:fontFamily="Roboto-Regular"
                 android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
-                android:textSize="14sp"
-                android:fontFamily="Roboto-Regular"
-                android:textColor="@color/colorSecondaryLight"
+                android:paddingTop="25dp"
                 android:text="@string/deck_card_expansion_make_copy"
-                android:id="@+id/deck_card_copy_label" />
+                android:textColor="@color/colorSecondaryLight"
+                android:textSize="14sp" />
 
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/deck_card_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:weightSum="1"
-            android:id="@+id/deck_card_delete">
+            android:weightSum="1">
+
             <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="56dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp">
+
                 <ImageView
+                    android:id="@+id/delete_card_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/delete"
-                    android:id="@+id/delete_card_icon" />
+                    android:src="@drawable/delete" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/deck_card_delete_label"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="25dp"
+                android:fontFamily="Roboto-Regular"
                 android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
-                android:textSize="14sp"
-                android:fontFamily="Roboto-Regular"
-                android:textColor="@color/colorSecondaryLight"
+                android:paddingTop="25dp"
                 android:text="@string/deck_card_expansion_delete"
-                android:id="@+id/deck_card_delete_label" />
+                android:textColor="@color/colorSecondaryLight"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
