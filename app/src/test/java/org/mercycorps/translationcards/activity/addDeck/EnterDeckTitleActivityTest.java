@@ -85,7 +85,7 @@ public class EnterDeckTitleActivityTest {
     public void shouldShowActivityDescriptionWhenCreated() {
         Activity activity = createActivityToTest(EnterDeckTitleActivity.class);
         TextView description = findTextView(activity, R.id.enter_deck_title_description);
-        assertEquals("Let's begin by entering the deck title. A good\\ntranslation card deck helps with translations\\nin a specific scenario. The title should be\\nshort and descriptive.", description.getText().toString());
+        assertEquals("Let's begin by entering the deck title. A good translation card deck helps with translations in a specific scenario. The title should be short and descriptive.", description.getText().toString());
     }
 
     @Test

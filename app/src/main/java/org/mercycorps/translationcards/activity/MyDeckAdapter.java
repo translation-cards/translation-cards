@@ -20,6 +20,7 @@ import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -75,7 +76,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
         deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
-        translationLanguagesTextView.setText(getDestLanguageListDisplay(deck, "  "));
+        translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries()), "  "));
     }
 
     private DbManager getDbManager(){

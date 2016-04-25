@@ -126,14 +126,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/navigation_button_save"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/textDisabled"
                 android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/enter_destination_next_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:background="@drawable/forward_arrow"
+                android:background="@drawable/forward_arrow_40p"
                 android:contentDescription="@string/navigation_button_save" />
         </LinearLayout>
     </RelativeLayout>

@@ -69,7 +69,7 @@ public class GetStartedDeckActivityTest {
     public void shouldDisplayGetStartedDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(GetStartedDeckActivity.class);
         TextView description = findTextView(activity, R.id.deck_get_started_detail);
-        assertEquals("Creating a new deck allows you to add\\ncustom translation cards.", description.getText().toString());
+        assertEquals("Creating a new deck allows you to add custom translation cards.", description.getText().toString());
 
     }
 }

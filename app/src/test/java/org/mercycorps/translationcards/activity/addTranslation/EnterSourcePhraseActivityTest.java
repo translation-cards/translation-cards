@@ -144,7 +144,7 @@ public class EnterSourcePhraseActivityTest {
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         TextView activityDescription = findTextView(activity, R.id.source_phrase_description);
-        assertEquals("Keep it short, direct, and really clear. Your\\nphrase should make it really easy for the\\nlistener to know how to respond.", activityDescription.getText().toString());
+        assertEquals("Keep it short, direct, and really clear. Your phrase should make it really easy for the listener to know how to respond.", activityDescription.getText().toString());
     }
 
     @Test

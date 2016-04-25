@@ -7,6 +7,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 
+import java.util.List;
+
 /**
  * A utility class for displaying information about languages keyed by ISO code.
  *
@@ -14,16 +16,15 @@ import org.mercycorps.translationcards.data.Dictionary;
  */
 public class LanguageDisplayUtil {
 
-    public static String getDestLanguageListDisplay(Deck deck, String delimiter) {
-        Dictionary[] dictionaries = deck.getDictionaries();
-        if (dictionaries.length == 0) {
+    public static String getDestLanguageListDisplay(List<Dictionary> dictionaries, String delimiter) {
+        if (dictionaries.size() == 0) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(dictionaries[0].getLabel().toUpperCase());
-        for (int i = 1; i < dictionaries.length; i++) {
+        sb.append(dictionaries.get(0).getLabel().toUpperCase());
+        for (int i = 1; i < dictionaries.size(); i++) {
             sb.append(delimiter);
-            sb.append(dictionaries[i].getLabel().toUpperCase());
+            sb.append(dictionaries.get(i).getLabel().toUpperCase());
         }
         return sb.toString();
     }

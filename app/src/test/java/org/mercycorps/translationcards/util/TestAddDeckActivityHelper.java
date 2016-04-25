@@ -27,7 +27,7 @@ public class TestAddDeckActivityHelper {
 
     public static Activity createActivityToTestWithDefaultDeck(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewDeckContext defaultDeckContext = new NewDeckContext(new Deck(DEFAULT_DECK_NAME, "", "", -1, true, DEFAULT_DECK_ISO_CODE), new ArrayList<Dictionary>());
+        NewDeckContext defaultDeckContext = new NewDeckContext(new Deck(DEFAULT_DECK_NAME, "", "", -1, true, DEFAULT_DECK_ISO_CODE), "");
         intent.putExtra(INTENT_KEY_DECK, defaultDeckContext);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }

@@ -1,19 +1,29 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import android.support.v4.content.ContextCompat;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity{
     private static final String LANGUAGE_DELIMITER = ",";
+    private static final String INPUT_DELIMITER = ", ";
     @Bind(R.id.enter_deck_destination_input) EditText input;
+    @Bind(R.id.enter_destination_next_label) LinearLayout nextButton;
+    @Bind(R.id.enter_destination_next_text) TextView nextButtonText;
+    @Bind(R.id.enter_destination_next_image) ImageView nextButtonImage;
 
     @Override
     public void inflateView() {
@@ -26,27 +36,45 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity{
     }
 
     @Override
-    public void initStates(){
+    public void initStates() {
+        fillDestinationLanguageField();
+    }
 
+    private void fillDestinationLanguageField() {
+        input.setText(getContextFromIntent().getLanguagesInput());
     }
 
     @OnClick(R.id.enter_destination_next_label)
-    public void nextButtonClicked(){
-        addDictionariesToNewDeckContext();
+    public void nextButtonClicked() {
+        if (!nextButton.isClickable()) {
+            return;
+        }
+        updateContextWithLanguagesInput();
         getContextFromIntent().save();
         startNextActivity(EnterDeckDestinationLanguagesActivity.this, MyDecksActivity.class);
     }
 
-    protected void addDictionariesToNewDeckContext() {
-        String[] languages = input.getText().toString().toLowerCase().split(LANGUAGE_DELIMITER);
-        for (String language : languages) {
-            getContextFromIntent().addLanguage(language.trim());
-        }
-    }
-
     @OnClick(R.id.enter_destination_back_arrow)
     public void backButtonClicked() {
-        addDictionariesToNewDeckContext();
+        updateContextWithLanguagesInput();
         startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterDeckTitleActivity.class);
+    }
+
+    private void updateContextWithLanguagesInput() {
+        getContextFromIntent().updateLanguagesInput(input.getText().toString());
+    }
+
+    @OnTextChanged(R.id.enter_deck_destination_input)
+    public void destinationInputTextChanged() {
+        String destinationLanguages = input.getText().toString();
+        nextButton.setClickable(!destinationLanguages.isEmpty());
+        updateNextButtonState(destinationLanguages);
+    }
+
+    protected void updateNextButtonState(String destinationLanguages) {
+        int backgroundResource = destinationLanguages.isEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        int buttonColor = destinationLanguages.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
+        nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
+        nextButtonImage.setBackgroundResource(backgroundResource);
     }
 }

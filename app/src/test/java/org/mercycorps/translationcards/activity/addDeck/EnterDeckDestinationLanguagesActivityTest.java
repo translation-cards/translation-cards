@@ -4,21 +4,27 @@ import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
+
+import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -27,16 +33,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
-/**
- * Created by njimenez on 4/21/16.
- */
+
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterDeckDestinationLanguagesActivityTest {
 
+    private static final String A_LANGUAGE = "Arabic";
+    private static final String EMPTY_LANGUAGE = "";
+
     @Test
     public void shouldGoToMyDecksActivityWhenNextButtonClicked() {
-        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE);
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
         click(activity, R.id.enter_destination_next_label);
         assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
@@ -66,7 +74,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldSetActivityDescriptionWhenCreated() {
         Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
         TextView description = findTextView(activity, R.id.enter_deck_destination_description);
-        assertEquals("A deck has one or more destination\\nlanguages, these are the languages you\\nwould like to translate to. Separate each language by using a comma.", description.getText().toString());
+        assertEquals("A deck has one or more destination languages, these are the languages you would like to translate to. Separate each language by using a comma.", description.getText().toString());
     }
 
     @Test
@@ -80,18 +88,10 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldUpdateNewDeckContextWhenUserClicksSaveWithLanguages() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic, Farsi");
+        String languagesInput = "Arabic, Farsi";
+        setText(activity, R.id.enter_deck_destination_input, languagesInput);
         click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext, times(2)).addLanguage(anyString());
-    }
-
-    @Test
-    public void shouldUpdateNewDeckContextWithCorrectLanguageWhenUserClicksSave() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
-        click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext).addLanguage("arabic");
+        verify(newDeckContext).updateLanguagesInput(languagesInput);
     }
 
     @Test
@@ -107,8 +107,57 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldUpdateNewDeckContextWhenUserClicksBack() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
+        setText(activity, R.id.enter_deck_destination_input, "Arabic, Farsi");
         click(activity, R.id.enter_destination_back_arrow);
-        verify(newDeckContext).addLanguage("arabic");
+        verify(newDeckContext).updateLanguagesInput("Arabic, Farsi");
+    }
+
+    @Test
+    public void shouldChangeNextButtonColorWhenDestinationLanguageIsNotEmpty() {
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
+        assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+        assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldChangeNextButtonColorWhenDestinationLanguageIsSetEmpty() {
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
+        TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldChangeNextButtonArrowColorToDisabledWhenDestinationLanguageIsSetEmpty() {
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
+        ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldFillDestinationLanguageFieldWhenActivityIsCreatedWithLanguages() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, "Arabic");
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+        TextView destinationLanguageField = findTextView(activity, R.id.enter_deck_destination_input);
+        assertEquals("Arabic", destinationLanguageField.getText().toString());
+    }
+
+    @Test
+    public void shouldNotBeAbleToClickSaveWhenNoDestinationLanguagesHaveBeenEntered() {
+        Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
+        click(activity, R.id.enter_destination_next_label);
+        assertNull(shadowOf(activity).getNextStartedActivity());
     }
 }
