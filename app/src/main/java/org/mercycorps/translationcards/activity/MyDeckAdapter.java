@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
@@ -19,15 +21,15 @@ import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,6 +48,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.deck_card_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
+    @Bind(R.id.deck_menu) FrameLayout deckMenu;
 
     public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
@@ -141,6 +144,15 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                                     }
                                 })
                         .show();
+            }
+        });
+        deckMenu.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                PopupMenu deckMenu = new PopupMenu(getContext(), view);
+                deckMenu.getMenuInflater().inflate(R.menu.popup_menu, deckMenu.getMenu());
+                deckMenu.show();
             }
         });
     }

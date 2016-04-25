@@ -1,33 +1,34 @@
 package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-
-import junit.framework.TestCase;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDeckAdapter;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowDialog;
+import org.robolectric.shadows.ShadowPopupMenu;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
@@ -37,12 +38,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
-/**
- * Created by karthikbalasubramanian on 4/1/16.
- */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-public class MyDeckAdapterTest extends TestCase {
+public class MyDeckAdapterTest {
 
     private static final String DEFAULT_DECK_NAME = "DefaultDeckName";
     private static final String DEFAULT_PUBLISHER = "DefaultPublisher";
@@ -130,6 +128,43 @@ public class MyDeckAdapterTest extends TestCase {
         View view = adapter.getView(0, null, null);
         LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.deck_card_copy);
         assertTrue(linearLayout.getVisibility() == View.VISIBLE);
+    }
+
+    @Test
+    public void shouldHaveAClickListenerWhenCreatingDeckMenuIcon() {
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
+        View view = adapter.getView(0, null, null);
+        View deckMenu = view.findViewById(R.id.deck_menu);
+        assertNotNull(shadowOf(deckMenu).getOnClickListener());
+    }
+
+    @Test
+    public void shouldShowPopupMenuWhenMenuIsClicked(){
+        PopupMenu deckMenu = setupAdapterAndGetPopupMenu();
+        assertNotNull(deckMenu);
+    }
+
+    @Test
+     public void shouldShowDeleteButtonWhenMenuIsClicked() {
+        PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
+        assertEquals("Delete", popupMenu.getMenu().getItem(0).toString());
+    }
+
+    @Test
+    public void shouldShowShareButtonWhenMenuIsClicked() {
+        PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
+        assertEquals("Share", popupMenu.getMenu().getItem(1).toString());
+    }
+
+    @NonNull
+    private PopupMenu setupAdapterAndGetPopupMenu() {
+        setupMocks();
+        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
+        View view = adapter.getView(0, null, null);
+        View deckMenu = view.findViewById(R.id.deck_menu);
+        deckMenu.performClick();
+        return ShadowPopupMenu.getLatestPopupMenu();
     }
 
     private ArrayAdapter<Deck> createAdapterUnlockedDeck(){
