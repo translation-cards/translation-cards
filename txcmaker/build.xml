@@ -1,21 +1,18 @@
 <project>
   <property environment="env" />
-  <property name="sdk.dir" location="${env.APPENGINE_SDK_DIR}" />
-  <property name="google-api-library.dir" location="${env.GOOGLE_API_LIBRARY_DIR}" />
+  <property name="appengine-sdk.dir" location="${env.APPENGINE_SDK_DIR}" />
   <property name="google-drive-sdk.dir" location="${env.GOOGLE_DRIVE_SDK_DIR}" />
-  <property name="drive_client_secrets" location="${env.DRIVE_CLIENT_SECRETS_FILE}" />
-  <property name="apache_csv_library.dir" location="${env.APACHE_CSV_LIBRARY}" />
-  <property name="gdata_api_client.dir" location="${env.GDATA_API_CLIENT_DIR}" />
-  <property name="gdata_sheets_client.jar" location="${env.GDATA_SHEETS_CLIENT_JAR}" />
+  <property name="apache-csv-library.dir" location="${env.APACHE_CSV_DIR}" />
+  <property name="client_secrets" location="${env.CLIENT_SECRETS_FILE}" />
 
-  <import file="${sdk.dir}/config/user/ant-macros.xml" />
+  <import file="${appengine-sdk.dir}/config/user/ant-macros.xml" />
 
   <path id="project.classpath">
     <pathelement path="war/WEB-INF/classes" />
     <fileset dir="war/WEB-INF/lib">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${sdk.dir}/lib">
+    <fileset dir="${appengine-sdk.dir}/lib">
       <include name="shared/**/*.jar" />
     </fileset>
   </path>
@@ -25,14 +22,7 @@
     <copy
         todir="war/WEB-INF/lib"
         flatten="true">
-      <fileset dir="${sdk.dir}/lib/user">
-        <include name="**/*.jar" />
-      </fileset>
-    </copy>
-    <copy
-        todir="war/WEB-INF/lib"
-        flatten="true">
-      <fileset dir="${google-api-library.dir}/libs">
+      <fileset dir="${appengine-sdk.dir}/lib/user">
         <include name="**/*.jar" />
       </fileset>
     </copy>
@@ -44,24 +34,14 @@
       </fileset>
     </copy>
     <copy
-        file="${apache_csv_library.dir}/commons-csv-1.2.jar"
-        todir="war/WEB-INF/lib" />
-    <copy
-      todir="war/WEB-INF/lib"
-      flatten="true">
-      <fileset dir="${gdata_api_client.dir}/gdata/lib/">
-        <include name="*.jar" />
-      </fileset>
-    </copy>
-    <copy
-        file="${gdata_sheets_client.jar}"
+        file="${apache-csv-library.dir}/commons-csv-1.2.jar"
         todir="war/WEB-INF/lib" />
   </target>
 
   <target name="copysecrets"
       description="Copies the client secrets JSON file to the WAR.">
     <copy
-        file="${drive_client_secrets}"
+        file="${client_secrets}"
         tofile="war/WEB-INF/client_secrets.json" />
    </target>
 
@@ -98,6 +78,6 @@
     <delete dir="war/WEB-INF/appengine-generated/" />
     <delete dir="war/WEB-INF/classes/" />
     <delete dir="war/WEB-INF/lib/" />
-    <delete file="war/WEB-INF/drive_client_secrets.json" />
+    <delete file="war/WEB-INF/client_secrets.json" />
   </target>
 </project>

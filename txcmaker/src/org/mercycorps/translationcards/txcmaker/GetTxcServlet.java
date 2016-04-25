@@ -33,12 +33,14 @@ public class GetTxcServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    // We don't actually need the Drive service yet, but we authenticate in advance because
+    // otherwise OAuth will send them back here anyway.
     Drive drive = getDriveOrOAuth(req, resp, true);
     if (drive == null) {
       // We've already redirected.
       return;
     }
-    handleRequest(drive, req, resp);
+    displayForm(resp);
   }
 
   @Override
@@ -48,43 +50,49 @@ public class GetTxcServlet extends HttpServlet {
       resp.getWriter().println("You haven't provided Drive authentication.");
       return;
     }
-    handleRequest(drive, req, resp);
-  }
-
-  private void handleRequest(Drive drive, HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    String spreadsheetFileId = req.getParameter("docid");
-    if (spreadsheetFileId == null) {
-      displayForm(resp);
-    } else {
-      produceTxcJson(drive, spreadsheetFileId, resp);
-    }
+    produceTxcJson(drive, req, resp);
   }
 
   private void displayForm(HttpServletResponse resp) throws IOException {
     resp.getWriter().println(
         "<form method=\"post\">" +
-        "<p>Doc ID: <input type=\"text\" name=\"docid\" />" +
-        "<input type=\"submit\" />" +
+        "<p>Doc ID: <input type=\"text\" name=\"docId\" /><br />" +
+        "Deck name: <input type=\"text\" name=\"deckName\" /><br />" +
+        "Publisher: <input type=\"text\" name=\"publisher\" /><br />" +
+        "Deck ID: <input type=\"text\" name=\"deckId\" /><br />" +
+        "License URL: <input type=\"text\" name=\"licenseUrl\" /><br />" +
+        "Locked: <input type=\"checkbox\" name=\"locked\" /><br />" +
+        "<input type=\"submit\" /></p>" +
         "</form>"
     );
   }
 
-  private void produceTxcJson(Drive drive, String spreadsheetFileId, HttpServletResponse resp)
+  private void produceTxcJson(Drive drive, HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
+    TxcPortingUtility.ExportSpec exportSpec = new TxcPortingUtility.ExportSpec()
+        .setDeckLabel(req.getParameter("deckName"))
+        .setPublisher(req.getParameter("publisher"))
+        .setDeckId(req.getParameter("deckId"))
+        .setLicenseUrl(req.getParameter("licenseUrl"))
+        .setLocked(req.getParameter("locked") != null);
+    String spreadsheetFileId = req.getParameter("docId");
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
     try {
       for (CSVRecord row : parser) {
-        resp.getWriter().println(String.format("%s -- %s -- %s -- %s",
-            row.get("Language"), row.get("Label"), row.get("Translation"), row.get("Filename")));
-        resp.getWriter().println(row.toString());
+        String language = row.get(SRC_HEADER_LANGUAGE);
+        TxcPortingUtility.CardSpec card = new TxcPortingUtility.CardSpec()
+            .setLabel(row.get(SRC_HEADER_LABEL))
+            .setFilename(row.get(SRC_HEADER_FILENAME))
+            .setTranslationText(row.get(SRC_HEADER_TRANSLATION_TEXT));
+        exportSpec.addCard(language, card);
       }
     } finally {
       parser.close();
       reader.close();
     }
+    resp.getWriter().println(TxcPortingUtility.buildTxcJson(exportSpec));
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
