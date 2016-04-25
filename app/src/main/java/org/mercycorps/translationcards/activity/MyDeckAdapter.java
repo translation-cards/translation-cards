@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
@@ -152,6 +154,14 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
             public void onClick(View view) {
                 PopupMenu deckMenu = new PopupMenu(getContext(), view);
                 deckMenu.getMenuInflater().inflate(R.menu.popup_menu, deckMenu.getMenu());
+
+                deckMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        return false;
+                    }
+                });
                 deckMenu.show();
             }
         });

@@ -157,6 +157,19 @@ public class MyDeckAdapterTest {
         assertEquals("Share", popupMenu.getMenu().getItem(1).toString());
     }
 
+    @Test
+    public void shouldHaveClickListenerWhenDeleteDeckMenuItemIsClicked() {
+        PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
+        assertNotNull(shadowOf(popupMenu).getOnMenuItemClickListener());
+    }
+
+    @Test
+    public void shouldDeleteDeckWhenDeleteDeckMenuItemIsClicked() {
+        PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
+        popupMenu.getMenu().getItem(0).getActionView().performClick();
+        verify(getDbManager()).deleteDeck(0);
+    }
+
     @NonNull
     private PopupMenu setupAdapterAndGetPopupMenu() {
         setupMocks();
