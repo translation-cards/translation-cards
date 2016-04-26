@@ -5,6 +5,7 @@ import org.mercycorps.translationcards.MainApplication;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -66,9 +67,8 @@ public class Deck implements Serializable {
 
     public String getCreationDateString() {
         Date date = new Date(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        String formattedDate = dateFormat.format(date);
-        return formattedDate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
+        return dateFormat.format(date);
     }
 
     public boolean isLocked() {
