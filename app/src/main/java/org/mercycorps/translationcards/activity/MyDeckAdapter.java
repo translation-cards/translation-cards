@@ -20,6 +20,7 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.porting.ExportTask;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +42,8 @@ import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLang
  * Created by njimenez on 3/31/16.
  */
 public class MyDeckAdapter extends ArrayAdapter<Deck> {
+    public static final String DELETE_DECK = "Delete";
+    public static final String SHARE_DECK = "Share";
     private final MyDecksActivity activity;
     private LayoutInflater layoutInflater;
     @Bind(R.id.deck_name)TextView deckNameTextView;
@@ -115,6 +118,27 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         alertDialog.show();
     }
 
+    private void shareDeck(final Deck deck) {
+        final EditText nameField = new EditText(getContext());
+        nameField.setText(deck.getLabel());
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.deck_export_dialog_title)
+                .setView(nameField)
+                .setPositiveButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        (new ExportTask(nameField.getText().toString(), deck, activity)).execute();
+                    }
+                })
+                .setNegativeButton(R.string.misc_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing.
+                    }
+                })
+                .show();
+    }
+
     public void setClickListeners(final Deck deck) {
         deckItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,18 +172,27 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                         .show();
             }
         });
-        deckMenu.setOnClickListener(new View.OnClickListener(){
+        deckMenu.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 PopupMenu deckMenu = new PopupMenu(getContext(), view);
                 deckMenu.getMenuInflater().inflate(R.menu.popup_menu, deckMenu.getMenu());
 
-                deckMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+                deckMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        optionallyDelete(deck);
+                        switch (item.getTitle().toString()) {
+                            case DELETE_DECK:
+                                optionallyDelete(deck);
+                                break;
+                            case SHARE_DECK:
+                                shareDeck(deck);
+                                break;
+                            default:
+                                break;
+                        }
                         return true;
                     }
                 });

@@ -17,12 +17,9 @@
 package org.mercycorps.translationcards.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -48,13 +45,11 @@ import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.porting.ExportException;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.porting.TxcPortingUtility;
+import org.mercycorps.translationcards.porting.ExportTask;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -264,7 +259,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 .setPositiveButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        (new ExportTask(nameField.getText().toString())).execute();
+                        (new ExportTask(nameField.getText().toString(), deck, TranslationsActivity.this)).execute();
                     }
                 })
                 .setNegativeButton(R.string.misc_cancel, new DialogInterface.OnClickListener() {
@@ -421,74 +416,5 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                     }).show();
         }
     }
-
-    private class ExportTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String exportedDeckName;
-        private File targetFile;
-        private ProgressDialog loadingDialog;
-
-        public ExportTask(String exportedDeckName) {
-            this.exportedDeckName = exportedDeckName;
-        }
-
-        protected void onPreExecute() {
-            loadingDialog = ProgressDialog.show(
-                    TranslationsActivity.this,
-                    getString(R.string.export_progress_dialog_title),
-                    getString(R.string.export_progress_dialog_message),
-                    true);
-        }
-
-        protected Boolean doInBackground(Void... params) {
-            targetFile = new File(getExternalCacheDir(), getString(R.string.export_filename));
-            if (targetFile.exists()) {
-                targetFile.delete();
-            }
-            TxcPortingUtility portingUtility = new TxcPortingUtility();
-            try {
-                portingUtility.exportData(
-                        deck, exportedDeckName,
-                        dbManager.getAllDictionariesForDeck(deck.getDbId()), targetFile);
-            } catch (final ExportException e) {
-                TranslationsActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertUserOfExportFailure(e);
-                    }
-                });
-                return false;
-            }
-            return true;
-        }
-
-        protected void onPostExecute(Boolean result) {
-            loadingDialog.cancel();
-            if (result) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(targetFile));
-                startActivity(intent);
-            }
-        }
-    }
-
-    private void alertUserOfExportFailure(ExportException error) {
-        String errorMessage = getString(R.string.import_failure_default_error_message);
-        if (error.getProblem() == ExportException.ExportProblem.TARGET_FILE_NOT_FOUND) {
-            errorMessage = getString(R.string.export_failure_target_file_not_found_error_message);
-        } else if (error.getProblem() == ExportException.ExportProblem.WRITE_ERROR) {
-            errorMessage = getString(R.string.export_failure_write_error_error_message);
-        } else if (error.getProblem() ==
-                ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES) {
-            errorMessage = getString(
-                    R.string.export_failure_too_many_duplicate_filenames_error_message);
-        }
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.import_failure_alert_title)
-                .setMessage(errorMessage)
-                .show();
-    }
-
 
 }

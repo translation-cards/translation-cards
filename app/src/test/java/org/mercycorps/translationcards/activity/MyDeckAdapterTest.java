@@ -51,6 +51,7 @@ public class MyDeckAdapterTest {
     public static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
     private Deck deck;
     private View view;
+    private MyDecksActivity activity;
 
     @Before
     public void setUp() throws Exception {
@@ -60,7 +61,7 @@ public class MyDeckAdapterTest {
 
     private View getAdapterViewForDeck(Deck deck) {
         Intent intent = new Intent();
-        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
         when(deck.getDictionaries()).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck));
         return adapter.getView(0, null, null);
@@ -177,16 +178,27 @@ public class MyDeckAdapterTest {
         assertEquals(View.VISIBLE, frameLayout.getVisibility());
     }
 
-//    @Test
-//    public void shouldShowPopupAlertDialogWhenShareMenuItemIsClicked() {
-//        PopupMenu popupMenu = openDeckPopupMenu();
-//
-//        clickMenuItemAtIndex(popupMenu, 1);
-//
-//        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
-//        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
-//        assertThat(alertDialogTitle, is(NAME_FOR_SHARED_DECK));
-//    }
+    @Test
+    public void shouldShowPopupAlertDialogWhenShareMenuItemIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 1);
+
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
+        assertEquals(NAME_FOR_SHARED_DECK, alertDialogTitle);
+    }
+
+    @Test
+    public void shouldStartExportTaskWhenShareMenuItemIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 1);
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+
+        assertEquals(Intent.ACTION_SEND, shadowOf(activity).getNextStartedActivity().getAction());
+    }
 
     private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {
         shadowOf(popupMenu).getOnMenuItemClickListener().onMenuItemClick(popupMenu.getMenu().getItem(index));
