@@ -47,7 +47,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.deck_name)TextView deckNameTextView;
     @Bind(R.id.deck_information)TextView deckInformationTextView;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
-    @Bind(R.id.deck_card_delete)LinearLayout deckCardExpansionDeleteLinearLayout;
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
@@ -95,7 +94,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getDbManager().deleteDeck(deck.getDbId());
+                                deck.delete();
                                 activity.refreshMyDecksList();
                             }
                         })
@@ -110,12 +109,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     }
 
     public void setClickListeners(final Deck deck) {
-        deckCardExpansionDeleteLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                optionallyDelete(deck);
-            }});
-
         deckItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +152,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        deck.delete();
+                        optionallyDelete(deck);
                         return true;
                     }
                 });

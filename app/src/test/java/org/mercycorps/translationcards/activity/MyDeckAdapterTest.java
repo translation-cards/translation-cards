@@ -83,28 +83,6 @@ public class MyDeckAdapterTest {
     }
 
     @Test
-    public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
-        setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
-        View view = adapter.getView(0, null, null);
-        click(view, R.id.deck_card_delete);
-        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
-        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
-        assertThat(alertDialogTitle, is(DEFAULT_ALERT_DIALOG_TITLE));
-    }
-
-    @Test
-    public void shouldCallDbManagerDeleteWhenDeleteButtonIsClicked(){
-        setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
-        View view = adapter.getView(0, null, null);
-        click(view, R.id.deck_card_delete);
-        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
-        alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(getDbManager()).deleteDeck(0);
-    }
-
-    @Test
     public void shouldOpenDeckWhenTitleClicked(){
         setupMocks();
         ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
@@ -166,9 +144,20 @@ public class MyDeckAdapterTest {
     }
 
     @Test
+    public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
+        PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
+        clickMenuItemAtIndex(popupMenu, 0);
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
+        assertThat(alertDialogTitle, is(DEFAULT_ALERT_DIALOG_TITLE));
+    }
+
+    @Test
     public void shouldDeleteDeckWhenDeleteDeckMenuItemIsClicked() {
         PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
         clickMenuItemAtIndex(popupMenu, 0);
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         verify(unlockedDeck).delete();
     }
 

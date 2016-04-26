@@ -144,39 +144,5 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/deck_card_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:weightSum="1">
-
-            <FrameLayout
-                android:layout_width="30dp"
-                android:layout_height="56dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="20dp">
-
-                <ImageView
-                    android:id="@+id/delete_card_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/delete" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/deck_card_delete_label"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="Roboto-Regular"
-                android:paddingBottom="20dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="25dp"
-                android:text="@string/deck_card_expansion_delete"
-                android:textColor="@color/colorSecondaryLight"
-                android:textSize="14sp" />
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
