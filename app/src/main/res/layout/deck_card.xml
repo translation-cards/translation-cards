@@ -9,43 +9,68 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/deck_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="350dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="20dp"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="24sp" />
 
-    <FrameLayout
-        android:id="@+id/deck_menu"
-        android:layout_width="30dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
-        <ImageView
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/deck_name"
+            android:layout_width="325dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/deck_menu" />
-    </FrameLayout>
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="20dp"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp" />
+
+        <FrameLayout
+            android:id="@+id/deck_menu"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/deck_menu" />
+        </FrameLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/deck_information"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top"
-        android:paddingBottom="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textColor="@color/colorSecondaryLight"
-        android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/lock_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="top"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_lock_gray_24dp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/deck_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="top"
+            android:paddingBottom="20dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/colorSecondaryLight"
+            android:textSize="15sp" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

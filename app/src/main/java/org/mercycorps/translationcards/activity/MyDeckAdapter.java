@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
@@ -50,6 +49,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
+    @Bind(R.id.lock_icon) FrameLayout lockIcon;
 
     public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
@@ -66,14 +66,21 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         }
         initFields(deck);
         setClickListeners(deck);
-        disableDeckCopyingIfUnlocked(deck);
+        disableDeckCopyingAndLockIconIfUnlocked(deck);
         return view;
     }
 
-    private void disableDeckCopyingIfUnlocked(Deck deck) {
+    private void disableDeckCopyingAndLockIconIfUnlocked(Deck deck) {
         if(!deck.isLocked()){
             copyDeck.setVisibility(View.GONE);
+            lockIcon.setVisibility(View.GONE);
+            deckInformationTextView.setPadding(getPaddingInPx(16), 0, getPaddingInPx(16), getPaddingInPx(20));
         }
+    }
+
+    private int getPaddingInPx(int padding) {
+        final float scale = translationLanguagesTextView.getResources().getDisplayMetrics().density;
+        return (int) (padding* scale + 0.5f);
     }
 
     private void initFields(Deck deck){

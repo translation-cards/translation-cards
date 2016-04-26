@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -155,6 +156,31 @@ public class MyDeckAdapterTest {
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         verify(deck).delete();
+    }
+
+    @Test
+    public void shouldNotDisplayLockIconWhenDeckIsUnlocked() {
+        when(deck.isLocked()).thenReturn(false);
+
+        View view = getAdapterViewForDeck(deck);
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
+        assertEquals(View.GONE, frameLayout.getVisibility());
+    }
+
+    @Test
+    public void shouldDisplayLockIconWhenDeckIsLocked() {
+        when(deck.isLocked()).thenReturn(true);
+
+        View view = getAdapterViewForDeck(deck);
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
+        assertEquals(View.VISIBLE, frameLayout.getVisibility());
+    }
+
+    @Test
+    public void should() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        assertNotNull(shadowOf(popupMenu).getOnMenuItemClickListener());
     }
 
     private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {
