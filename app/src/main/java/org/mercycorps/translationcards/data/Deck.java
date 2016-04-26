@@ -93,4 +93,8 @@ public class Deck implements Serializable {
     public Long save() {
         return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, srcLanguageIso);
     }
+
+    public void delete() {
+
+    }
 }

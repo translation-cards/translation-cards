@@ -34,6 +34,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -50,6 +51,7 @@ public class MyDeckAdapterTest {
     public static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
+    private Deck unlockedDeck;
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() throws Exception{
@@ -166,24 +168,35 @@ public class MyDeckAdapterTest {
     @Test
     public void shouldDeleteDeckWhenDeleteDeckMenuItemIsClicked() {
         PopupMenu popupMenu = setupAdapterAndGetPopupMenu();
-        popupMenu.getMenu().getItem(0).getActionView().performClick();
-        verify(getDbManager()).deleteDeck(0);
+        clickMenuItemAtIndex(popupMenu, 0);
+        verify(unlockedDeck).delete();
+    }
+
+    private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {
+        shadowOf(popupMenu).getOnMenuItemClickListener().onMenuItemClick(popupMenu.getMenu().getItem(index));
     }
 
     @NonNull
     private PopupMenu setupAdapterAndGetPopupMenu() {
-        setupMocks();
-        ArrayAdapter<Deck> adapter = createAdapterUnlockedDeck();
+        setupMockDeck();
+        ArrayAdapter<Deck> adapter = createAdapterWithMockUnlockDeck();
         View view = adapter.getView(0, null, null);
         View deckMenu = view.findViewById(R.id.deck_menu);
         deckMenu.performClick();
         return ShadowPopupMenu.getLatestPopupMenu();
     }
 
+    private ArrayAdapter<Deck> createAdapterWithMockUnlockDeck() {
+        Intent intent = new Intent();
+        MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(unlockedDeck));
+    }
+
     private ArrayAdapter<Deck> createAdapterUnlockedDeck(){
         Intent intent = new Intent();
         MyDecksActivity activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
-        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(createUnlockedTestDeck()));
+        Deck unlockedDeck = createUnlockedTestDeck();
+        return new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(unlockedDeck));
     }
 
     private ArrayAdapter<Deck> createAdapterLockedDeck(){
@@ -203,6 +216,12 @@ public class MyDeckAdapterTest {
     private void setupMocks(){
         setupMockDictionaries();
         when(getDbManager().getAllDecks()).thenReturn(null);
+    }
+
+    private void setupMockDeck() {
+        unlockedDeck = mock(Deck.class);
+        when(unlockedDeck.getDbId()).thenReturn(5l);
+        when(unlockedDeck.getDictionaries()).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
     }
 
     private void setupMockDictionaries() {

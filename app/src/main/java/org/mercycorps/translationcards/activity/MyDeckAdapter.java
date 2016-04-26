@@ -159,7 +159,8 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        return false;
+                        deck.delete();
+                        return true;
                     }
                 });
                 deckMenu.show();
