@@ -48,6 +48,7 @@ public class MyDeckAdapterTest {
     public static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
+    public static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
     private Deck deck;
     private View view;
 
@@ -176,12 +177,16 @@ public class MyDeckAdapterTest {
         assertEquals(View.VISIBLE, frameLayout.getVisibility());
     }
 
-    @Test
-    public void should() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        assertNotNull(shadowOf(popupMenu).getOnMenuItemClickListener());
-    }
+//    @Test
+//    public void shouldShowPopupAlertDialogWhenShareMenuItemIsClicked() {
+//        PopupMenu popupMenu = openDeckPopupMenu();
+//
+//        clickMenuItemAtIndex(popupMenu, 1);
+//
+//        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+//        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
+//        assertThat(alertDialogTitle, is(NAME_FOR_SHARED_DECK));
+//    }
 
     private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {
         shadowOf(popupMenu).getOnMenuItemClickListener().onMenuItemClick(popupMenu.getMenu().getItem(index));

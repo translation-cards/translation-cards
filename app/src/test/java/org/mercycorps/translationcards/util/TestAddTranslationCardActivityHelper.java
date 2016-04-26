@@ -189,6 +189,6 @@ public class TestAddTranslationCardActivityHelper {
     }
 
     public static int getAlertDialogTitleId(){
-        return 2131558473; //// TODO: 4/1/16 How did I get this?
+        return 2131558473;
     }
 }
