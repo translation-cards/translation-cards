@@ -57,35 +57,5 @@
             android:paddingBottom="20dp"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:visibility="gone"
-        android:layout_width="156dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_alignRight="@+id/add_translation_button"
-        android:background="@drawable/chunky_button"
-        android:id="@+id/share_deck_button">
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/share"
-            android:id="@+id/share" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/textColor"
-            android:layout_below="@id/share"
-            android:layout_centerHorizontal="true"
-            android:text="@string/main_export_button_text"
-            android:paddingBottom="20dp"/>
-    </RelativeLayout>
-
     </LinearLayout>
 </LinearLayout>

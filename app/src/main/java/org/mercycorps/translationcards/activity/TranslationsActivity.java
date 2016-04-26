@@ -28,27 +28,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
-import org.mercycorps.translationcards.data.Translation;
-import org.mercycorps.translationcards.media.CardAudioClickListener;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
-import org.mercycorps.translationcards.porting.ExportException;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.porting.ExportTask;
+import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,10 +107,9 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         updateAddTranslationButtonVisibility();
     }
 
-    private void updateHeaderAndShare() {
+    private void updateHeader() {
         int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
-        findViewById(R.id.share_deck_button).setVisibility(headerVisibility);
     }
 
     private void updateAddTranslationButtonVisibility() {
@@ -224,7 +220,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
              translationIndex++) {
             listAdapter.add(dictionary.getTranslation(translationIndex));
         }
-        updateHeaderAndShare();
+        updateHeader();
         updateWelcomeInstructionsState();
     }
 
@@ -247,28 +243,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     protected void onPause() {
         super.onPause();
         decoratedMediaManager.stop();
-    }
-
-    @OnClick (R.id.share_deck_button)
-    public void onExportButtonPress(View v) {
-        final EditText nameField = new EditText(this);
-        nameField.setText(deck.getLabel());
-        (new AlertDialog.Builder(this))
-                .setTitle(R.string.deck_export_dialog_title)
-                .setView(nameField)
-                .setPositiveButton(R.string.misc_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        (new ExportTask(nameField.getText().toString(), deck, TranslationsActivity.this)).execute();
-                    }
-                })
-                .setNegativeButton(R.string.misc_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing.
-                    }
-                })
-                .show();
     }
 
     private class CardListAdapter extends ArrayAdapter<Translation> {
