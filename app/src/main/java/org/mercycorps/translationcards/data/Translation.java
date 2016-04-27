@@ -22,7 +22,6 @@ public class Translation implements Serializable {
     private String filename;
     private long dbId;
     private String translatedText;
-    private String la;
 
 
     public Translation(String label, boolean isAsset, String filename, long dbId, String translatedText) {
