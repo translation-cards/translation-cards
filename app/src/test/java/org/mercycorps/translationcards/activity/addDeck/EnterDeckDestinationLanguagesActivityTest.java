@@ -24,6 +24,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -152,5 +153,18 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = createActivityToTest(EnterDeckDestinationLanguagesActivity.class);
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
+    }
+
+    @Test
+    public void shouldUpdateDeckInDatabaseWhenDeckIsSavedAfterEditing() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        when(newDeckContext.getIsEditFlag()).thenReturn(true);
+        when(newDeckContext.getLanguagesInput()).thenReturn("arabic");
+
+        Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
+
+        click(activity, R.id.enter_destination_next_label);
+
+        verify(newDeckContext).update();
     }
 }

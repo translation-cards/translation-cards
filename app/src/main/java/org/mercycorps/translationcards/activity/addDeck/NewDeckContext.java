@@ -60,4 +60,8 @@ public class NewDeckContext implements Serializable {
     public boolean getIsEditFlag() {
         return isEdit;
     }
+
+    public void update() {
+
+    }
 }

@@ -97,4 +97,8 @@ public class Deck implements Serializable {
     public void delete() {
         ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().deleteDeck(dbId);
     }
+
+    public void update() {
+
+    }
 }
