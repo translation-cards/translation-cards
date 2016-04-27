@@ -86,4 +86,9 @@ public class Dictionary implements Serializable {
     public void setDeckId(long deckId) {
         this.deckId = deckId;
     }
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }

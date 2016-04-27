@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
+import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.Robolectric;
@@ -121,7 +123,7 @@ public class MyDeckAdapterTest {
      public void shouldShowDeleteButtonWhenMenuIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        assertEquals("Delete", popupMenu.getMenu().getItem(0).toString());
+        assertEquals("Delete", popupMenu.getMenu().getItem(2).toString());
     }
 
     @Test
@@ -142,7 +144,7 @@ public class MyDeckAdapterTest {
     public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 0);
+        clickMenuItemAtIndex(popupMenu, 2);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
@@ -153,7 +155,7 @@ public class MyDeckAdapterTest {
     public void shouldDeleteDeckWhenDeleteDeckMenuItemIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 0);
+        clickMenuItemAtIndex(popupMenu, 2);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
@@ -198,6 +200,49 @@ public class MyDeckAdapterTest {
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
 
         assertEquals(Intent.ACTION_SEND, shadowOf(activity).getNextStartedActivity().getAction());
+    }
+
+    @Test
+    public void shouldShowEditButtonWhenMenuIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        assertEquals("Edit", popupMenu.getMenu().getItem(0).toString());
+    }
+
+    @Test
+    public void shouldOpenEnterDeckTitleUserFlowWhenEditMenuOptionIsSelected() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 0);
+
+        assertEquals(EnterDeckTitleActivity.class.getCanonicalName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    public void shouldBuildCorrectLanguagesInputForNewDeckContextWhenEditMenuOptionIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 0);
+
+        assertEquals(ALPHABETICALLY_HIGH_LANGUAGE + ", " + DEFAULT_TRANSLATION_LANGUAGE, ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getLanguagesInput());
+    }
+
+    @Test
+    public void shouldPassCorrectDeckForNewDeckContextWhenEditMenuOptionIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 0);
+
+        assertEquals(deck.getLabel(), ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getDeckLabel());
+    }
+
+    @Test
+    public void shouldPassEditFlagWhenEditMenuOptionIsClicked() {
+        PopupMenu popupMenu = openDeckPopupMenu();
+
+        clickMenuItemAtIndex(popupMenu, 0);
+
+        assertEquals(true, ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getIsEditFlag());
     }
 
     private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {

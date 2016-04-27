@@ -27,7 +27,7 @@ public class NewDeckContextTest {
     public void setUp() throws Exception {
         deck = mock(Deck.class);
         dictionary = mock(Dictionary.class);
-        newDeckContext = new NewDeckContext(deck, "");
+        newDeckContext = new NewDeckContext(deck, "", false);
     }
 
     @Test

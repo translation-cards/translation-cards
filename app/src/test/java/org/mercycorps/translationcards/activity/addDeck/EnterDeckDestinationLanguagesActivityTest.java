@@ -4,18 +4,14 @@ import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.Collections;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -26,11 +22,8 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -43,7 +36,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldGoToMyDecksActivityWhenNextButtonClicked() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE, false);
         Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
         click(activity, R.id.enter_destination_next_label);
         assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
@@ -148,7 +141,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldFillDestinationLanguageFieldWhenActivityIsCreatedWithLanguages() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "Arabic");
+        NewDeckContext newDeckContext = new NewDeckContext(null, "Arabic", false);
         Activity activity = createActivityToTestWithContext(EnterDeckDestinationLanguagesActivity.class, newDeckContext);
         TextView destinationLanguageField = findTextView(activity, R.id.enter_deck_destination_input);
         assertEquals("Arabic", destinationLanguageField.getText().toString());

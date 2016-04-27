@@ -3,6 +3,7 @@ package org.mercycorps.translationcards.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
+import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
+import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -44,6 +48,7 @@ import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLang
 public class MyDeckAdapter extends ArrayAdapter<Deck> {
     public static final String DELETE_DECK = "Delete";
     public static final String SHARE_DECK = "Share";
+    public static final String EDIT_DECK = "Edit";
     private final MyDecksActivity activity;
     private LayoutInflater layoutInflater;
     @Bind(R.id.deck_name)TextView deckNameTextView;
@@ -190,6 +195,12 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                             case SHARE_DECK:
                                 shareDeck(deck);
                                 break;
+                            case EDIT_DECK:
+                                Intent intent = new Intent(activity, EnterDeckTitleActivity.class);
+                                String languagesForDeck = getLanguagesStringForDeck(deck);
+                                intent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext(deck, languagesForDeck, true));
+                                activity.startActivity(intent);
+                                break;
                             default:
                                 break;
                         }
@@ -199,6 +210,10 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                 deckMenu.show();
             }
         });
+    }
+
+    private String getLanguagesStringForDeck(Deck deck) {
+        return TextUtils.join(", ", deck.getDictionaries());
     }
 
     private void copyDeck(Deck deck, String deckName) {
