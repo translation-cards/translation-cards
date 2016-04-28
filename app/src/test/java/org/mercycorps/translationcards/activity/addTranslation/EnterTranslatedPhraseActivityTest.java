@@ -3,8 +3,11 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -142,5 +145,12 @@ public class EnterTranslatedPhraseActivityTest {
         Activity activity = createActivityToTestWithSourceAndTranslatedText(EnterTranslatedPhraseActivity.class);
         TextView sourceText = findTextView(activity, R.id.origin_translation_text);
         assertEquals(DEFAULT_SOURCE_PHRASE, sourceText.getText().toString());
+    }
+
+    @Test
+    public void shouldDisplayLanguageTabsFragmentWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
+
+        assertNotNull(activity.findViewById(R.id.languages_scroll));
     }
 }

@@ -205,6 +205,13 @@ public class SummaryActivityTest {
         verify(getDecoratedMediaManager()).stop();
     }
 
+    @Test
+    public void shouldDisplayLanguageTabsFragmentWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+
+        assertNotNull(activity.findViewById(R.id.languages_scroll));
+    }
+
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
     }

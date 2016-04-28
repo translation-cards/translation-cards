@@ -19,6 +19,7 @@ import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
@@ -426,5 +427,12 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTest(RecordAudioActivity.class, translationContext);
         click(activity, R.id.record_audio_button);
         assertEquals(false, isAudioAssetTranslation.getIsAsset());
+    }
+
+    @Test
+    public void shouldDisplayLanguageTabsFragmentWhenActivityIsCreated() {
+        Activity activity = createActivityToTest(RecordAudioActivity.class);
+
+        assertNotNull(activity.findViewById(R.id.languages_scroll));
     }
 }

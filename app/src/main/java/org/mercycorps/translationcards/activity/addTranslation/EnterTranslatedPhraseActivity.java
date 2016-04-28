@@ -1,15 +1,8 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -28,22 +21,10 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
 
     @Override
     public void initStates(){
-        inflateFragmentInView();
+        inflateLanguageTabsFragment();
         includeSourcePhraseInHeader();
         updateInputLanguageLabel();
         updateTranslatedPhraseTextField();
-    }
-
-    private void inflateFragmentInView() {
-        Fragment translationTabsFragment = new TranslationTabsFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        Bundle arguments = new Bundle();
-        ArrayList<Dictionary> dictionaries = new ArrayList<>();
-        dictionaries.add(getContextFromIntent().getDictionary());
-        arguments.putSerializable("Dictionaries", dictionaries);
-        translationTabsFragment.setArguments(arguments);
-        transaction.replace(R.id.language_tabs_fragment, translationTabsFragment);
-        transaction.commit();
     }
 
     @OnClick(R.id.enter_translated_phrase_next_label)

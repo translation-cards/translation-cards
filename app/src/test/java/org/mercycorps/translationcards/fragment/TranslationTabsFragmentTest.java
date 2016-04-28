@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.fragment;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -67,7 +69,19 @@ public class TranslationTabsFragmentTest {
         assertEquals("ARABIC", ((TextView)linearLayout.getChildAt(0).findViewById(R.id.tab_label_text)).getText());
     }
 
+    @Test
+    public void shouldSeeTabBorderUnderneathCurrentLanguageTab() {
+        View tabBorder = getFragmentView().findViewById(R.id.tab_border);
 
+        assertEquals(R.color.textColor, shadowOf(tabBorder.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldSetLanguageTextToActiveColor() {
+        TextView languageTextView = (TextView) getFragmentView().findViewById(R.id.tab_label_text);
+
+        assertEquals(ContextCompat.getColor(languageTextView.getContext(), R.color.textColor), languageTextView.getCurrentTextColor());
+    }
 
     private View getFragmentView() {
         return translationTabsFragment.getView();

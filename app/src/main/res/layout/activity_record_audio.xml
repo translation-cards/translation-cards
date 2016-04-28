@@ -11,6 +11,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/record_audio_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -19,69 +20,74 @@
             android:paddingTop="18dp"
             android:text="@string/record_audio_title"
             android:textColor="@color/textColor"
-            android:textSize="20sp"
-            android:id="@+id/record_audio_title"/>
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:id="@+id/language_tabs_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/record_audio_title" />
 
         <TextView
+            android:id="@+id/recording_audio_instructions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/record_audio_title"
+            android:layout_below="@+id/language_tabs_fragment"
             android:layout_marginBottom="56dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="28dp"
             android:lineSpacingExtra="3dp"
             android:text="@string/activity_record_audio_instructions"
-            android:textSize="16.5sp"
-            android:id="@+id/recording_audio_instructions" />
+            android:textSize="16.5sp" />
 
         <include
+            android:id="@+id/recording_audio_card"
             layout="@layout/translation_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recording_audio_instructions"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:id="@+id/recording_audio_card"/>
+            android:layout_marginRight="16dp" />
 
         <LinearLayout
+            android:id="@+id/record_or_play_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/nav_bar"
             android:baselineAligned="false"
-            android:weightSum="1.0"
-            android:id="@+id/record_or_play_action">
+            android:weightSum="1.0">
 
             <RelativeLayout
+                android:id="@+id/record_audio_button"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="0.5"
-                android:background="@color/red"
-                android:id="@+id/record_audio_button">
+                android:background="@color/red">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/record_audio"
-                    android:background="@drawable/record"/>
+                    android:background="@drawable/record"
+                    android:contentDescription="@string/record_audio" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/play_audio_button"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="0.5"
-                android:background="@color/grey"
-                android:id="@+id/play_audio_button">
+                android:background="@color/grey">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/play_audio"
-                    android:background="@drawable/play"/>
+                    android:background="@drawable/play"
+                    android:contentDescription="@string/play_audio" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -96,27 +102,27 @@
             android:layout_below="@id/record_or_play_action" />
 
         <RelativeLayout
+            android:id="@+id/nav_bar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@color/navBarColor"
-            android:orientation="horizontal"
-            android:id="@+id/nav_bar">
+            android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/record_activity_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:paddingTop="16dp"
-                android:id="@+id/record_activity_back">
+                android:paddingTop="16dp">
 
                 <ImageView
+                    android:id="@+id/recording_audio_back_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/back_arrow"
-                    android:id="@+id/recording_audio_back_image" />
+                    android:src="@drawable/back_arrow" />
             </LinearLayout>
 
             <LinearLayout
@@ -157,29 +163,29 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/record_activity_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="20dp"
-                android:paddingTop="16dp"
-                android:id="@+id/record_activity_next">
+                android:paddingTop="16dp">
 
                 <TextView
+                    android:id="@+id/recording_audio_next_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/navigation_button_next"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="16sp"
-                    android:id="@+id/recording_audio_next_text" />
+                    android:textSize="16sp" />
 
                 <ImageView
+                    android:id="@+id/recording_audio_save_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="@drawable/forward_arrow"
-                    android:id="@+id/recording_audio_save_image"/>
+                    android:background="@drawable/forward_arrow" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

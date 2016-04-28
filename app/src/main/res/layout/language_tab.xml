@@ -17,5 +17,5 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="@dimen/language_tab_border_width"
-        android:id="@+id/tab_border" />
+        android:id="@+id/tab_border"/>
 </LinearLayout>

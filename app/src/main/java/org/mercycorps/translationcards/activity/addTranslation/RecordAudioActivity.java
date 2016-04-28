@@ -60,6 +60,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @Override
     public void initStates() {
+        inflateLanguageTabsFragment();
         updatePlayButtonState();
         showTranslationSourcePhrase();
         updateTranslatedTextView();
