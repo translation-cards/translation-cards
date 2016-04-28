@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/languages_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:fillViewport="true">
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:fillViewport="true"
-        android:id="@+id/languages_scroll">
+    <LinearLayout
+        android:id="@+id/languages_scroll_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal" />
 
-    </HorizontalScrollView>
-</LinearLayout>
+</HorizontalScrollView>
