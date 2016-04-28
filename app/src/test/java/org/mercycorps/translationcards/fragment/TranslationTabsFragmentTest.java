@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.fragment;
 
+import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.ListView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,12 +34,16 @@ public class TranslationTabsFragmentTest {
 
     @Test
     public void shouldInflateFragmentWithLanguagesTab() {
-        assertNotNull(translationTabsFragment.getView());
+        assertNotNull(getFragmentView());
     }
 
     @Test
     public void shouldContainHorizontalScrollView() {
-        HorizontalScrollView horizontalScrollView = (HorizontalScrollView)translationTabsFragment.getView().findViewById(R.id.languages_scroll);
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) getFragmentView().findViewById(R.id.languages_scroll);
         assertNotNull(horizontalScrollView);
+    }
+
+    private View getFragmentView() {
+        return translationTabsFragment.getView();
     }
 }
