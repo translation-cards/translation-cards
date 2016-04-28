@@ -46,13 +46,11 @@
             android:textColor="@color/textColor"
             android:textSize="20sp" />
 
-        <fragment
-            android:name="org.mercycorps.translationcards.fragment.TranslationTabsFragment"
-            android:id="@+id/language_tabs_fragment"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/translated_phrase_title"
-            tools:layout="@layout/fragment_translation_tabs" />
+            android:id="@+id/language_tabs_fragment"
+            android:layout_below="@id/translated_phrase_title"/>
 
         <TextView
             android:id="@+id/translated_phrase_activity_description"

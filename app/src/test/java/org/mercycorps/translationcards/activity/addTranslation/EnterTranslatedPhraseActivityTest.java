@@ -25,7 +25,6 @@ import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-@Ignore
 public class EnterTranslatedPhraseActivityTest {
     public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
     private static final String DEFAULT_TRANSLATED_TEXT = "Translation";

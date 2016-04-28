@@ -42,9 +42,6 @@ import butterknife.ButterKnife;
 
 import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLanguageListDisplay;
 
-/**
- * Created by njimenez on 3/31/16.
- */
 public class MyDeckAdapter extends ArrayAdapter<Deck> {
     public static final String DELETE_DECK = "Delete";
     public static final String SHARE_DECK = "Share";
