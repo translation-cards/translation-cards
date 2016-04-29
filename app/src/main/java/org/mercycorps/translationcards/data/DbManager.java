@@ -26,15 +26,13 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcPortingUtility;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 /**
  * Manages database operations.
@@ -284,7 +282,7 @@ public class DbManager {
         return translations;
     }
 
-    public void saveTranslationContext(NewTranslationContext context) {
+    public void saveTranslationContext(NewTranslation context) {
         Translation translation = context.getTranslation();
         if (context.isEdit()) {
             updateTranslation(translation.getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());

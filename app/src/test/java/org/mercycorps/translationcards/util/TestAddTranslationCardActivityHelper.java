@@ -12,9 +12,9 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
@@ -51,41 +51,41 @@ public class TestAddTranslationCardActivityHelper {
 
     public static Activity createActivityToTest(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewTranslationContext newTranslationContext = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
     public static Activity createActivityToTestInEditMode(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewTranslationContext newTranslationContext = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL), new Translation(), IS_EDIT);
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL), new Translation(), IS_EDIT);
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
     public static AppCompatActivity createCompatActivityToTest(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewTranslationContext newTranslationContext = new NewTranslationContext(new Dictionary(DEFAULT_DICTIONARY_LABEL));
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
     public static Activity createActivityToTestWithTranslationContext(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewTranslationContext newTranslationContext = createTranslationContextWithSourcePhraseAndTranslatedText();
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = createTranslationContextWithSourcePhraseAndTranslatedText();
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
     public static Activity createActivityToTestWithSourceAndTranslatedText(Class<? extends AddTranslationActivity> instanceOfClass) {
         Intent intent = new Intent();
-        NewTranslationContext newTranslationContext = createTranslationContextWithSourcePhraseAndTranslatedText();
-        newTranslationContext.setSourceText(DEFAULT_SOURCE_PHRASE);
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = createTranslationContextWithSourcePhraseAndTranslatedText();
+        newTranslation.setSourceText(DEFAULT_SOURCE_PHRASE);
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
@@ -95,8 +95,8 @@ public class TestAddTranslationCardActivityHelper {
     }
 
     public static Activity createActivityToTest(Class<? extends AddTranslationActivity> instanceOfClass, Dictionary dict) {
-        NewTranslationContext newTranslationContext = new NewTranslationContext(dict);
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslationContext));
+        NewTranslation newTranslation = new NewTranslation(dict);
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
         return createActivityToTest(instanceOfClass, context);
     }
 
@@ -126,8 +126,8 @@ public class TestAddTranslationCardActivityHelper {
         return (AddNewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
     }
 
-    public static NewTranslationContext createTranslationContextWithSourcePhraseAndTranslatedText() {
-        return new NewTranslationContext(createDefaultDictionary(), createTranslation(), false);
+    public static NewTranslation createTranslationContextWithSourcePhraseAndTranslatedText() {
+        return new NewTranslation(createDefaultDictionary(), createTranslation(), false);
     }
 
     public static Translation createTranslation() {
@@ -180,8 +180,8 @@ public class TestAddTranslationCardActivityHelper {
     }
 
 
-    public static NewTranslationContext getContextFromIntent(Activity activity) {
-        return (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+    public static NewTranslation getContextFromIntent(Activity activity) {
+        return (NewTranslation) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
     }
 
     public static DbManager getDbManager() {

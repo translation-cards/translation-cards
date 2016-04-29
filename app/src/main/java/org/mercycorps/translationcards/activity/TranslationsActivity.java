@@ -40,7 +40,7 @@ import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslation
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -68,7 +68,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
-    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     private static final boolean IS_EDIT = true;
 
 
@@ -197,11 +196,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     //// TODO: FACTORY
     private AddNewTranslationContext createTranslationContext() {
-        ArrayList<NewTranslationContext> newTranslationContexts = new ArrayList<>();
+        ArrayList<NewTranslation> newTranslations = new ArrayList<>();
         for (Dictionary dictionary : dictionaries) {
-            newTranslationContexts.add(new NewTranslationContext(dictionary));
+            newTranslations.add(new NewTranslation(dictionary));
         }
-        return new AddNewTranslationContext(newTranslationContexts);
+        return new AddNewTranslationContext(newTranslations);
     }
 
     private void setDictionary(int dictionaryIndex) {
@@ -363,7 +362,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         public void onClick(View view) {
             Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
             Dictionary dictionary = dictionaries[currentDictionaryIndex];
-            nextIntent.putExtra(CONTEXT_INTENT_KEY, new NewTranslationContext(dictionary, translationCard, IS_EDIT));
+            nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, new NewTranslation(dictionary, translationCard, IS_EDIT));
             nextIntent.putExtra(INTENT_KEY_DECK, deck);
             startActivity(nextIntent);
         }

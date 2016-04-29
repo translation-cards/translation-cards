@@ -16,7 +16,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -39,7 +39,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Mockito.times;
@@ -278,7 +277,7 @@ public class TranslationsActivityTest {
         firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertEquals(translation, context.getTranslation());
     }
 
@@ -289,7 +288,7 @@ public class TranslationsActivityTest {
         translationListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertEquals(dictionary, context.getDictionary());
     }
 
@@ -421,7 +420,7 @@ public class TranslationsActivityTest {
         firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertTrue(context.isEdit());
     }
 
@@ -430,7 +429,7 @@ public class TranslationsActivityTest {
         click(translationsActivity, R.id.add_translation_button);
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslationContext context = (NewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertFalse(context.isEdit());
     }
 

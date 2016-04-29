@@ -24,7 +24,6 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterSourcePhraseActivityTest {
 
-    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
     public static final String DEFAULT_TRANSLATION_TEXT = "Sleep here";
     private static final String NO_TEXT = "";
 
@@ -32,8 +31,8 @@ public class EnterSourcePhraseActivityTest {
     public void shouldNotChangeNewTranslationContextWhenStartingActivity() {
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, dict);
-        NewTranslationContext newTranslationContext = (NewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(dict, newTranslationContext.getDictionary());
+        NewTranslation newTranslation = (NewTranslation) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(dict, newTranslation.getDictionary());
     }
 
     @Test

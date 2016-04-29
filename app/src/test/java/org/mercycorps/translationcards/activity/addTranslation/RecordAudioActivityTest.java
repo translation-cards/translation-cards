@@ -24,7 +24,6 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -425,7 +424,7 @@ public class RecordAudioActivityTest {
     public void shouldChangeIsAssetWhenAudioEditedAndWasAsset() {
         Translation isAudioAssetTranslation = createTranslation();
         isAudioAssetTranslation.setIsAsset(true);
-        NewTranslationContext translationContext = new NewTranslationContext(createDefaultDictionary(), isAudioAssetTranslation, true);
+        NewTranslation translationContext = new NewTranslation(createDefaultDictionary(), isAudioAssetTranslation, true);
         AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(translationContext));
         Activity activity = createActivityToTest(RecordAudioActivity.class, context);
         click(activity, R.id.record_audio_button);

@@ -5,18 +5,18 @@ import org.mercycorps.translationcards.data.Translation;
 
 import java.io.Serializable;
 
-public class NewTranslationContext implements Serializable {
+public class NewTranslation implements Serializable {
     private final Dictionary dictionary;
     private final Translation translation;
     private Boolean isEdit;
 
-    public NewTranslationContext(Dictionary dictionary) {
+    public NewTranslation(Dictionary dictionary) {
         this.dictionary = dictionary;
         this.translation = new Translation();
         isEdit = false;
     }
 
-    public NewTranslationContext(Dictionary dictionary, Translation translation, Boolean isEdit){
+    public NewTranslation(Dictionary dictionary, Translation translation, Boolean isEdit){
         this.dictionary = dictionary;
         this.translation = translation;
         this.isEdit = isEdit;

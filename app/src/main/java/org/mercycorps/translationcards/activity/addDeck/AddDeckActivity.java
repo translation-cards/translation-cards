@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 
 public abstract class AddDeckActivity extends AbstractTranslationCardsActivity {
     public static final String INTENT_KEY_DECK = "Deck";

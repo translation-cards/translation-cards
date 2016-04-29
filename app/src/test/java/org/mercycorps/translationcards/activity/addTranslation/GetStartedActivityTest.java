@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -28,7 +27,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class GetStartedActivityTest {
 
-    private static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+    private static final String CONTEXT_INTENT_KEY = "AddNewTranslationContext";
 
     @Before
     public void setUp() throws Exception {
@@ -38,8 +37,8 @@ public class GetStartedActivityTest {
     public void shouldNotChangeDictionaryWhenStartingActivity() {
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(GetStartedActivity.class, dict);
-        NewTranslationContext newTranslationContext = getContextFromIntent(activity);
-        assertEquals(dict, newTranslationContext.getDictionary());
+        NewTranslation newTranslation = getContextFromIntent(activity);
+        assertEquals(dict, newTranslation.getDictionary());
     }
 
     @Test
