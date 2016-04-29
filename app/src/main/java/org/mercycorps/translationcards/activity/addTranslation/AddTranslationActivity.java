@@ -21,9 +21,8 @@ import java.util.ArrayList;
 
 
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
-    public static final String CONTEXT_INTENT_KEY = "NewTranslationContext";
+    public static final String CONTEXT_INTENT_KEY = "AddNewTranslationContext";
     public static final String INTENT_KEY_DECK_ID = "Deck";
-    public static final String DICTIONARY_FRAGMENT_KEY = "Dictionaries";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,8 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         //Override this if you want to set bitmaps for your activity
     }
 
-    protected NewTranslationContext getContextFromIntent() {
-        return (NewTranslationContext) getObjectFromIntent(CONTEXT_INTENT_KEY);
+    protected AddNewTranslationContext getContextFromIntent() {
+        return (AddNewTranslationContext) getObjectFromIntent(CONTEXT_INTENT_KEY);
     }
 
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {
@@ -80,9 +79,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         Fragment translationTabsFragment = new TranslationTabsFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle arguments = new Bundle();
-        ArrayList<Dictionary> dictionaries = new ArrayList<>();
-        dictionaries.add(getContextFromIntent().getDictionary());
-        arguments.putSerializable(DICTIONARY_FRAGMENT_KEY, dictionaries);
+        arguments.putSerializable(CONTEXT_INTENT_KEY, getContextFromIntent());
         translationTabsFragment.setArguments(arguments);
         transaction.replace(R.id.language_tabs_fragment, translationTabsFragment);
         transaction.commit();

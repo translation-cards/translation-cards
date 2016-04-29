@@ -30,7 +30,7 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     }
 
     private void setSourcePhrase() {
-        sourcePhraseTextView.setText(getContextFromIntent().getTranslation().getLabel());
+        sourcePhraseTextView.setText(getContextFromIntent().getSourcePhrase());
     }
 
     @Override

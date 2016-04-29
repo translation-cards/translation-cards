@@ -48,21 +48,21 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     }
 
     private void includeSourcePhraseInHeader() {
-        sourcePhrase.setText(getContextFromIntent().getTranslation().getLabel());
+        sourcePhrase.setText(getContextFromIntent().getSourcePhrase());
     }
 
     private void updateInputLanguageLabel() {
-        String inputLanguageLabel = getContextFromIntent().getDictionary().getLabel().toUpperCase();
-        translatedPhraseInputLanguageLabel.setText(String.format(getString(R.string.translated_phrase_input_language_label), inputLanguageLabel));
+//        String inputLanguageLabel = getContextFromIntent().getDictionary().getLabel().toUpperCase();
+//        translatedPhraseInputLanguageLabel.setText(String.format(getString(R.string.translated_phrase_input_language_label), inputLanguageLabel));
     }
 
     private void updateTranslatedPhraseTextField() {
-        translatedPhraseTextView.setText(getContextFromIntent().getTranslation().getTranslatedText());
+//        translatedPhraseTextView.setText(getContextFromIntent().getTranslation().getTranslatedText());
     }
 
     private void updateContextWithTranslatedText() {
-        String translatedText  = translatedPhraseTextView.getText().toString();
-        getContextFromIntent().setTranslatedText(translatedText);
+//        String translatedText  = translatedPhraseTextView.getText().toString();
+//        getContextFromIntent().setTranslatedText(translatedText);
     }
 
 

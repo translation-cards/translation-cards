@@ -44,14 +44,6 @@ public class SummaryActivityTest {
     }
 
     @Test
-    public void shouldHaveValidTranslationContextOnStart(){ // TODO: 3/23/16 Does this even make sense to test this?
-        Dictionary dict = createDefaultDictionary();
-        Activity activity = createActivityToTest(SummaryActivity.class, dict);
-        NewTranslationContext newTranslationContext = fetchTranslationContext(activity);
-        assertEquals(dict, newTranslationContext.getDictionary());
-    }
-
-    @Test
     public void shouldStartTranslationActivityWhenUserClicksDone() {
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(SummaryActivity.class, dict);

@@ -38,7 +38,7 @@ public class SummaryActivity extends AddTranslationActivity {
     public void initStates(){
         inflateLanguageTabsFragment();
         setTranslationCardChildrenVisibility();
-        updateTextInTextView(sourceTextView, getContextFromIntent().getTranslation().getLabel());
+        updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
         updateTranslatedTextView();
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
     }
@@ -60,12 +60,12 @@ public class SummaryActivity extends AddTranslationActivity {
     };
 
     private void updateTranslatedTextView() {
-        String translatedText = getContextFromIntent().getTranslation().getTranslatedText();
-        if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getContextFromIntent().getDictionary().getLabel()));
-        } else {
-            updateTextInTextView(translatedTextView, translatedText);
-        }
+//        String translatedText = getContextFromIntent().getTranslation().getTranslatedText();
+//        if (translatedText.isEmpty()) {
+//            translatedTextView.setHint(String.format("Add %s translation", getContextFromIntent().getDictionary().getLabel()));
+//        } else {
+//            updateTextInTextView(translatedTextView, translatedText);
+//        }
     }
 
     private void updateTextInTextView(TextView textView, String textToBeUpdated){
@@ -88,18 +88,18 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @OnClick(R.id.summary_translation_card)
     protected void translationCardClicked() {
-        try {
-            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-            if(mediaManager.isPlaying()) {
-                mediaManager.stop();
-            } else {
-                Translation translation = getContextFromIntent().getTranslation();
-                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
-            }
-        } catch (AudioFileException e) {
-            showToast(getString(R.string.could_not_play_audio_message));
-            Log.d(TAG, getString(R.string.could_not_play_audio_message));
-        }
+//        try {
+//            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
+//            if(mediaManager.isPlaying()) {
+//                mediaManager.stop();
+//            } else {
+//                Translation translation = getContextFromIntent().getTranslation();
+//                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+//            }
+//        } catch (AudioFileException e) {
+//            showToast(getString(R.string.could_not_play_audio_message));
+//            Log.d(TAG, getString(R.string.could_not_play_audio_message));
+//        }
     }
 
     @OnClick(R.id.summary_activity_back)
@@ -124,6 +124,6 @@ public class SummaryActivity extends AddTranslationActivity {
         return getMainApplication().getDecoratedMediaManager();
     }
     private void saveTranslation() {
-        getMainApplication().getDbManager().saveTranslationContext(getContextFromIntent());
+//        getMainApplication().getDbManager().saveTranslationContext(getContextFromIntent());
     }
 }

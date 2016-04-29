@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
@@ -194,8 +195,13 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         startActivity(nextIntent);
     }
 
-    private NewTranslationContext createTranslationContext() {
-        return new NewTranslationContext(dictionaries[currentDictionaryIndex]);
+    //// TODO: FACTORY
+    private AddNewTranslationContext createTranslationContext() {
+        ArrayList<NewTranslationContext> newTranslationContexts = new ArrayList<>();
+        for (Dictionary dictionary : dictionaries) {
+            newTranslationContexts.add(new NewTranslationContext(dictionary));
+        }
+        return new AddNewTranslationContext(newTranslationContexts);
     }
 
     private void setDictionary(int dictionaryIndex) {

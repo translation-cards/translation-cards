@@ -12,11 +12,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslationContext;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,19 +34,21 @@ import static org.robolectric.util.FragmentTestUtil.startFragment;
 @RunWith(RobolectricGradleTestRunner.class)
 public class TranslationTabsFragmentTest {
 
-    public static final String BUNDLE_KEY_DICTIONARIES = "Dictionaries";
+    public static final String BUNDLE_KEY_DICTIONARIES = "AddNewTranslationContext";
     private TranslationTabsFragment translationTabsFragment;
-    private Dictionary dictionary;
 
     @Before
     public void setUp() throws Exception {
         translationTabsFragment = new TranslationTabsFragment();
+
         Bundle bundle = new Bundle();
-        ArrayList<Dictionary> arrayList = new ArrayList<>();
-        dictionary = mock(Dictionary.class);
-        when(dictionary.getLabel()).thenReturn("arabic");
-        arrayList.add(dictionary);
-        bundle.putSerializable(BUNDLE_KEY_DICTIONARIES, arrayList);
+
+        NewTranslationContext newTranslationContext = new NewTranslationContext(new Dictionary("arabic"));
+        NewTranslationContext secondTranslationContext = new NewTranslationContext(new Dictionary("pashto"));
+        List<NewTranslationContext> newTranslationContexts = Arrays.asList(newTranslationContext, secondTranslationContext);
+        AddNewTranslationContext addNewTranslationContext = new AddNewTranslationContext(newTranslationContexts);
+        bundle.putSerializable(BUNDLE_KEY_DICTIONARIES, addNewTranslationContext);
+
         translationTabsFragment.setArguments(bundle);
         startFragment(translationTabsFragment);
     }
@@ -66,7 +73,7 @@ public class TranslationTabsFragmentTest {
     public void shouldContainArabicInLanguageTabWhenNewTranslationContextLanguageIsArabic() {
         LinearLayout linearLayout = (LinearLayout) getFragmentView().findViewById(R.id.languages_scroll_list);
 
-        assertEquals("ARABIC", ((TextView)linearLayout.getChildAt(0).findViewById(R.id.tab_label_text)).getText());
+        assertEquals("ARABIC", ((TextView) linearLayout.getChildAt(0).findViewById(R.id.tab_label_text)).getText());
     }
 
     @Test
@@ -81,6 +88,29 @@ public class TranslationTabsFragmentTest {
         TextView languageTextView = (TextView) getFragmentView().findViewById(R.id.tab_label_text);
 
         assertEquals(ContextCompat.getColor(languageTextView.getContext(), R.color.textColor), languageTextView.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldHaveLanguageTabClickListenerWhenLanguageTabHasBeenCreated() {
+        View languageTab = getFragmentView().findViewById(R.id.language_tab);
+
+        assertNotNull(shadowOf(languageTab).getOnClickListener());
+    }
+
+    @Test
+    public void shouldReturnCurrentTranslationForTab() {
+        NewTranslationContext newTranslationContext = translationTabsFragment.getCurrentTranslation();
+
+        assertEquals("arabic", newTranslationContext.getDictionary().getLabel());
+    }
+
+    @Test
+    public void shouldReturnTranslationForSecondTabAfterSecondTabHasBeenClicked() {
+        ((LinearLayout) getFragmentView().findViewById(R.id.languages_scroll_list)).getChildAt(1).performClick();
+
+        NewTranslationContext newTranslationContext = translationTabsFragment.getCurrentTranslation();
+
+        assertEquals("pashto", newTranslationContext.getDictionary().getLabel());
     }
 
     private View getFragmentView() {

@@ -14,6 +14,8 @@ import org.mercycorps.translationcards.data.Translation;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
+
 import static android.support.v4.content.ContextCompat.getColor;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
@@ -424,7 +426,8 @@ public class RecordAudioActivityTest {
         Translation isAudioAssetTranslation = createTranslation();
         isAudioAssetTranslation.setIsAsset(true);
         NewTranslationContext translationContext = new NewTranslationContext(createDefaultDictionary(), isAudioAssetTranslation, true);
-        Activity activity = createActivityToTest(RecordAudioActivity.class, translationContext);
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(translationContext));
+        Activity activity = createActivityToTest(RecordAudioActivity.class, context);
         click(activity, R.id.record_audio_button);
         assertEquals(false, isAudioAssetTranslation.getIsAsset());
     }
