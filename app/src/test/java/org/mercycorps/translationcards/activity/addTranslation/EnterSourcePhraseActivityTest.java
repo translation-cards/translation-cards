@@ -31,7 +31,7 @@ public class EnterSourcePhraseActivityTest {
     public void shouldNotChangeNewTranslationContextWhenStartingActivity() {
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class, dict);
-        NewTranslation newTranslation = (NewTranslation) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+        NewTranslation newTranslation = getFirstNewTranslationFromContext(activity);
         assertEquals(dict, newTranslation.getDictionary());
     }
 
@@ -46,7 +46,7 @@ public class EnterSourcePhraseActivityTest {
     public void shouldUpdateNewTranslationContextWhenUserClicksNextWithValidSourceText() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setSourceTextAndClick(activity);
-        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getFirstNewTranslationFromContext(activity).getTranslation().getLabel());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class EnterSourcePhraseActivityTest {
     public void shouldNotUpdateNewTranslationContextWhenThereIsNoSourceText() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         click(activity, R.id.activity_enter_source_phrase_next_label);
-        assertEquals(null, getContextFromIntent(activity).getTranslation().getLabel());
+        assertEquals(null, getFirstNewTranslationFromContext(activity).getTranslation().getLabel());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class EnterSourcePhraseActivityTest {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
         click(activity, R.id.enter_source_phrase_activity_back_label);
-        assertEquals(DEFAULT_TRANSLATION_TEXT, getContextFromIntent(activity).getTranslation().getLabel());
+        assertEquals(DEFAULT_TRANSLATION_TEXT, getFirstNewTranslationFromContext(activity).getTranslation().getLabel());
     }
 
     @Test

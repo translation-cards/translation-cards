@@ -122,21 +122,21 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void updateTranslatedTextView() {
-//        String translatedText = getContextFromIntent().getTranslation().getTranslatedText();
-//        if (translatedText.isEmpty()) {
-//            translatedTextView.setHint(String.format("Add %s translation", getContextFromIntent().getDictionary().getLabel()));
-//        } else {
-//            translatedTextView.setText(translatedText);
-//        }
+        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
+        if (translatedText.isEmpty()) {
+            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
+        } else {
+            translatedTextView.setText(translatedText);
+        }
     }
 
     private void updateNextButtonState() {
-//        Boolean isAudioFilePresent = getContextFromIntent().getTranslation().isAudioFilePresent();
-//        nextButton.setClickable(isAudioFilePresent);
-//        int nextButtonTextColor = isAudioFilePresent ? R.color.primaryTextColor : R.color.textDisabled;
-//        nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonTextColor));
-//        int nextButtonArrowColor = isAudioFilePresent ? R.drawable.forward_arrow : R.drawable.forward_arrow_40p;
-//        nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
+        Boolean isAudioFilePresent = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
+        nextButton.setClickable(isAudioFilePresent);
+        int nextButtonTextColor = isAudioFilePresent ? R.color.primaryTextColor : R.color.textDisabled;
+        nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonTextColor));
+        int nextButtonArrowColor = isAudioFilePresent ? R.drawable.forward_arrow : R.drawable.forward_arrow_40p;
+        nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
     }
 
     protected void showBackButton() {
@@ -153,17 +153,16 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private int getVisibility() {
-//        boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
-//        return translationHasAudioFile && !getAudioRecorderManager().isRecording() ? View.VISIBLE : View.GONE;
-        return 1;
+        boolean translationHasAudioFile = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
+        return translationHasAudioFile && !getAudioRecorderManager().isRecording() ? View.VISIBLE : View.GONE;
     }
 
     private void updatePlayButtonState() {
-//        boolean translationHasAudioFile = getContextFromIntent().getTranslation().isAudioFilePresent();
-//        if (translationHasAudioFile) {
-//            playAudioButton.setBackgroundResource(R.color.green);
-//        }
-//        playAudioButton.setClickable(translationHasAudioFile);
+        boolean translationHasAudioFile = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
+        if (translationHasAudioFile) {
+            playAudioButton.setBackgroundResource(R.color.green);
+        }
+        playAudioButton.setClickable(translationHasAudioFile);
     }
 
     private void stopIfRecording() {
@@ -203,30 +202,31 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void playAudioFile() throws AudioFileException {
-//        try {
-//            Translation translation = getContextFromIntent().getTranslation();
-//            getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
-//        } catch (IOException e) {
-//            throw new AudioFileException("Unable to play audio file", e);
-//        }
+        try {
+            Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+            getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
+        } catch (IOException e) {
+            throw new AudioFileException("Unable to play audio file", e);
+        }
     }
 
     private void handleIsRecordingState() throws RecordAudioException {
-//        AudioRecorderManager audioRecorderManager = getAudioRecorderManager();
-//        if (audioRecorderManager.isRecording()) {
-//            audioRecorderManager.stop();
-//        } else {
-//            MediaConfig mediaConfig = MediaConfig.createMediaConfig();
-//            getContextFromIntent().setAudioFile(mediaConfig.getAbsoluteFilePath());
-//            updateIsAudioFileAsset();
-//            audioRecorderManager.record(mediaConfig);
-//        }
+        AudioRecorderManager audioRecorderManager = getAudioRecorderManager();
+        if (audioRecorderManager.isRecording()) {
+            audioRecorderManager.stop();
+        } else {
+            MediaConfig mediaConfig = MediaConfig.createMediaConfig();
+            getLanguageTabsFragment().getCurrentTranslation().setAudioFile(mediaConfig.getAbsoluteFilePath());
+            updateIsAudioFileAsset();
+            audioRecorderManager.record(mediaConfig);
+        }
     }
 
     private void updateIsAudioFileAsset() {
-//        if (getContextFromIntent().getTranslation().getIsAsset()) {
-//            getContextFromIntent().getTranslation().setIsAsset(false);
-//        }
+        Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+        if (translation.getIsAsset()) {
+            translation.setIsAsset(false);
+        }
     }
 
 }

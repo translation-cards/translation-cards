@@ -175,7 +175,7 @@ public class RecordAudioActivityTest {
         Activity activity = createActivityToTestWithSourceAndTranslatedText(RecordAudioActivity.class);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
-        assertTrue(getContextFromIntent(activity).getTranslation().getFilename().contains("TranslationCards"));
+        assertTrue(getFirstNewTranslationFromContext(activity).getTranslation().getFilename().contains("TranslationCards"));
     }
 
     @Test

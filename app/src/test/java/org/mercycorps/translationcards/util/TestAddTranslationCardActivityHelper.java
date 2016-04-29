@@ -60,7 +60,7 @@ public class TestAddTranslationCardActivityHelper {
     public static Activity createActivityToTestInEditMode(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL), new Translation(), IS_EDIT);
-        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
+        AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation), IS_EDIT);
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
@@ -180,8 +180,12 @@ public class TestAddTranslationCardActivityHelper {
     }
 
 
-    public static NewTranslation getContextFromIntent(Activity activity) {
-        return (NewTranslation) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+    public static AddNewTranslationContext getContextFromIntent(Activity activity) {
+        return (AddNewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+    }
+
+    public static NewTranslation getFirstNewTranslationFromContext(Activity activity) {
+        return getContextFromIntent(activity).getNewTranslations().get(0);
     }
 
     public static DbManager getDbManager() {

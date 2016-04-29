@@ -43,7 +43,7 @@ public class EnterTranslatedPhraseActivityTest {
     public void shouldHaveValidTranslationContextOnStart(){
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class, dict);
-        assertEquals(dict, getContextFromIntent(activity).getDictionary());
+        assertEquals(dict, getFirstNewTranslationFromContext(activity).getDictionary());
     }
 
     @Test
@@ -57,14 +57,14 @@ public class EnterTranslatedPhraseActivityTest {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         setText(activity, R.id.translated_phrase_field, DEFAULT_TRANSLATED_TEXT);
         click(activity, R.id.enter_translated_phrase_next_label);
-        assertEquals(DEFAULT_TRANSLATED_TEXT, getContextFromIntent(activity).getTranslation().getTranslatedText());
+        assertEquals(DEFAULT_TRANSLATED_TEXT, getFirstNewTranslationFromContext(activity).getTranslation().getTranslatedText());
     }
 
     @Test
     public void shouldUpdateTranslationContextWithEmptyStringWhenNoTranslationAddedAndSaveButtonIsClicked() {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         click(activity, R.id.enter_translated_phrase_next_label);
-        assertEquals(EMPTY_STRING, getContextFromIntent(activity).getTranslation().getTranslatedText());
+        assertEquals(EMPTY_STRING, getFirstNewTranslationFromContext(activity).getTranslation().getTranslatedText());
     }
 
     @Test
@@ -86,14 +86,14 @@ public class EnterTranslatedPhraseActivityTest {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
         setText(activity, R.id.translated_phrase_field, DEFAULT_TRANSLATED_TEXT);
         click(activity, R.id.enter_translated_phrase_back_label);
-        assertEquals(DEFAULT_TRANSLATED_TEXT, getContextFromIntent(activity).getTranslation().getTranslatedText());
+        assertEquals(DEFAULT_TRANSLATED_TEXT, getFirstNewTranslationFromContext(activity).getTranslation().getTranslatedText());
     }
 
     @Test
     public void shouldPopulateTranslatedPhraseFieldWithValueWhenTranslationContextHasTranslatedText(){
         Activity activity = createActivityToTestWithTranslationContext(EnterTranslatedPhraseActivity.class);
         TextView translatedPhraseTextField = findTextView(activity, R.id.translated_phrase_field);
-        assertEquals(getContextFromIntent(activity).getTranslation().getTranslatedText(), translatedPhraseTextField.getText().toString());
+        assertEquals(getFirstNewTranslationFromContext(activity).getTranslation().getTranslatedText(), translatedPhraseTextField.getText().toString());
     }
 
     @Test

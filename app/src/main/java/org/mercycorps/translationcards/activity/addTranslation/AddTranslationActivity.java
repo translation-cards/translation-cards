@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
     public static final String CONTEXT_INTENT_KEY = "AddNewTranslationContext";
     public static final String INTENT_KEY_DECK_ID = "Deck";
+    private TranslationTabsFragment translationTabsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +77,18 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     }
 
     protected void inflateLanguageTabsFragment() {
-        Fragment translationTabsFragment = new TranslationTabsFragment();
+        translationTabsFragment = new TranslationTabsFragment();
+        translationTabsFragment.setCurrentTranslation(getContextFromIntent().getNewTranslations().get(0));
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle arguments = new Bundle();
         arguments.putSerializable(CONTEXT_INTENT_KEY, getContextFromIntent());
         translationTabsFragment.setArguments(arguments);
         transaction.replace(R.id.language_tabs_fragment, translationTabsFragment);
         transaction.commit();
+    }
+
+    protected TranslationTabsFragment getLanguageTabsFragment() {
+        return translationTabsFragment;
     }
 }

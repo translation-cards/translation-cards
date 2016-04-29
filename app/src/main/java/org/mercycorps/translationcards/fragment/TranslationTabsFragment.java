@@ -52,6 +52,10 @@ public class TranslationTabsFragment extends Fragment {
         return languageTab;
     }
 
+    public void setCurrentTranslation(NewTranslation currentTranslation) {
+        this.currentTranslation = currentTranslation;
+    }
+
     public NewTranslation getCurrentTranslation() {
         return currentTranslation;
     }

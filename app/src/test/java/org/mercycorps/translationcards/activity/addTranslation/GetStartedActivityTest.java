@@ -37,8 +37,8 @@ public class GetStartedActivityTest {
     public void shouldNotChangeDictionaryWhenStartingActivity() {
         Dictionary dict = createDefaultDictionary();
         Activity activity = createActivityToTest(GetStartedActivity.class, dict);
-        NewTranslation newTranslation = getContextFromIntent(activity);
-        assertEquals(dict, newTranslation.getDictionary());
+        AddNewTranslationContext newTranslation = getContextFromIntent(activity);
+        assertEquals(dict, newTranslation.getNewTranslations().get(0).getDictionary());
     }
 
     @Test

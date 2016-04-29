@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
@@ -277,8 +278,8 @@ public class TranslationsActivityTest {
         firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(translation, context.getTranslation());
+        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(translation, context.getNewTranslations().get(0).getTranslation());
     }
 
     @Test
@@ -288,8 +289,8 @@ public class TranslationsActivityTest {
         translationListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(dictionary, context.getDictionary());
+        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(dictionary, context.getNewTranslations().get(0).getDictionary());
     }
 
     @Test
@@ -420,7 +421,7 @@ public class TranslationsActivityTest {
         firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertTrue(context.isEdit());
     }
 
@@ -429,7 +430,7 @@ public class TranslationsActivityTest {
         click(translationsActivity, R.id.add_translation_button);
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        NewTranslation context = (NewTranslation) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertFalse(context.isEdit());
     }
 
