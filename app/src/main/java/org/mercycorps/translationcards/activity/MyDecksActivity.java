@@ -91,6 +91,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private void setFooterClickListeners() {
+        findViewById(R.id.my_decks_footer).setOnClickListener(null);
+
         findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

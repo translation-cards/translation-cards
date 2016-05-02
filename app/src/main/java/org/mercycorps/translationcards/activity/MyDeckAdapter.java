@@ -57,6 +57,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
     @Bind(R.id.lock_icon) FrameLayout lockIcon;
+    @Bind(R.id.deck_item) View deckItem;
 
     public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks) {
         super(context, deckItemResource, deckNameResource, decks);
@@ -147,6 +148,8 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     }
 
     public void setClickListeners(final Deck deck) {
+        deckItem.setOnClickListener(null);
+
         deckItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
