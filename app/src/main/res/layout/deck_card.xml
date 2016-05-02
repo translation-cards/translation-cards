@@ -6,36 +6,36 @@
     android:background="@drawable/card_background"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/deck_name"
-            android:layout_width="325dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp"
             android:textColor="@color/primaryTextColor"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:layout_weight="0.85"/>
 
         <FrameLayout
             android:id="@+id/deck_menu"
-            android:layout_width="30dp"
+            android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_weight="0.15">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/deck_menu" />
         </FrameLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
