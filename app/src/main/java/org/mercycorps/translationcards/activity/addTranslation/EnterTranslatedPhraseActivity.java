@@ -3,12 +3,13 @@ package org.mercycorps.translationcards.activity.addTranslation;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
+public class EnterTranslatedPhraseActivity extends AddTranslationActivity implements TranslationTabsFragment.OnLanguageTabSelectedListener {
     @Bind(R.id.translated_phrase_field)TextView translatedPhraseTextView;
     @Bind(R.id.translated_phrase_input_language_label)TextView translatedPhraseInputLanguageLabel;
     @Bind(R.id.recording_label_next_text)TextView skipLabel;
@@ -19,6 +20,7 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
         setContentView(R.layout.activity_enter_translated_phrase);
     }
 
+
     @Override
     public void initStates(){
         inflateLanguageTabsFragment();
@@ -28,7 +30,6 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
     }
 
     @OnClick(R.id.enter_translated_phrase_next_label)
-
     protected void enterTranslatedTextNextLabelClicked(){
         updateContextWithTranslatedText();
         startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
@@ -65,5 +66,8 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity {
         getLanguageTabsFragment().getCurrentTranslation().setTranslatedText(translatedText);
     }
 
+    @Override
+    public void onLanguageTabSelected(NewTranslation currentTranslation) {
 
+    }
 }

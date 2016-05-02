@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -19,6 +21,22 @@ import java.util.List;
 public class TranslationTabsFragment extends Fragment {
 
     private NewTranslation currentTranslation;
+    OnLanguageTabSelectedListener listener;
+
+    public interface OnLanguageTabSelectedListener {
+        public void onLanguageTabSelected(NewTranslation currentTranslation);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (OnLanguageTabSelectedListener) getActivity();
+        }
+        catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() + " must implement OnLanguageTabSelectedListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,16 +47,17 @@ public class TranslationTabsFragment extends Fragment {
         currentTranslation = newTranslations.get(0);
         for (NewTranslation newTranslation : newTranslations) {
             View languageTab = inflateLanguageTab(inflater, languagesScrollList, newTranslation);
-
-            TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
-            languageTabText.setText(newTranslation.getDictionary().getLabel().toUpperCase());
-            languageTabText.setTextColor(ContextCompat.getColor(getActivity(), R.color.textColor));
-
-            languageTab.findViewById(R.id.tab_border).setBackgroundResource(R.color.textColor);
-
+            addContentToTab(newTranslation, languageTab);
             languagesScrollList.addView(languageTab);
         }
         return fragmentView;
+    }
+
+    private void addContentToTab(NewTranslation newTranslation, View languageTab) {
+        TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
+        languageTabText.setText(newTranslation.getDictionary().getLabel().toUpperCase());
+        languageTabText.setTextColor(ContextCompat.getColor(getActivity(), R.color.textColor));
+        languageTab.findViewById(R.id.tab_border).setBackgroundResource(R.color.textColor);
     }
 
     private View inflateLanguageTab(LayoutInflater inflater, LinearLayout languagesScrollList, final NewTranslation newTranslation) {
@@ -47,6 +66,7 @@ public class TranslationTabsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 currentTranslation = newTranslation;
+                listener.onLanguageTabSelected(currentTranslation);
             }
         });
         return languageTab;

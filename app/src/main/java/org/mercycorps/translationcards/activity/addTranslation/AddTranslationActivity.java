@@ -79,7 +79,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     protected void inflateLanguageTabsFragment() {
         translationTabsFragment = new TranslationTabsFragment();
         translationTabsFragment.setCurrentTranslation(getContextFromIntent().getNewTranslations().get(0));
-
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle arguments = new Bundle();
         arguments.putSerializable(CONTEXT_INTENT_KEY, getContextFromIntent());

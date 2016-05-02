@@ -1,6 +1,11 @@
 package org.mercycorps.translationcards.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -15,6 +20,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -103,11 +109,21 @@ public class TranslationTabsFragmentTest {
 
     @Test
     public void shouldReturnTranslationForSecondTabAfterSecondTabHasBeenClicked() {
+        setEmptyOnTabSelectedListener();
         ((LinearLayout) getFragmentView().findViewById(R.id.languages_scroll_list)).getChildAt(1).performClick();
 
         NewTranslation newTranslation = translationTabsFragment.getCurrentTranslation();
 
         assertEquals("pashto", newTranslation.getDictionary().getLabel());
+    }
+
+    private void setEmptyOnTabSelectedListener() {
+        translationTabsFragment.listener = new TranslationTabsFragment.OnLanguageTabSelectedListener() {
+            @Override
+            public void onLanguageTabSelected(NewTranslation currentTranslation) {
+
+            }
+        };
     }
 
     private View getFragmentView() {
