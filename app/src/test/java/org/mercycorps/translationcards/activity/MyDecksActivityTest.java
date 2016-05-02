@@ -25,15 +25,11 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
-/**
- * Created by njimenez on 3/31/16.
- */
-
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
-            "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.1";
+            "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.2";
     private static final String DEFAULT_ISO_CODE = "en";
 
     @Test
