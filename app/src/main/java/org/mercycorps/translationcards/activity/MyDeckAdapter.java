@@ -55,7 +55,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.deck_information)TextView deckInformationTextView;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
     @Bind(R.id.translation_card)LinearLayout deckItemLayout;
-    @Bind(R.id.deck_card_copy)LinearLayout copyDeck;
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
     @Bind(R.id.lock_icon) FrameLayout lockIcon;
 
@@ -80,9 +79,12 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
     private void disableDeckCopyingAndLockIconIfUnlocked(Deck deck) {
         if(!deck.isLocked()){
-            copyDeck.setVisibility(View.GONE);
             lockIcon.setVisibility(View.GONE);
             deckInformationTextView.setPadding(getPaddingInPx(16), 0, getPaddingInPx(16), getPaddingInPx(20));
+        }
+        else{
+            lockIcon.setVisibility(View.VISIBLE);
+            deckInformationTextView.setPadding(getPaddingInPx(5), 0, getPaddingInPx(16), getPaddingInPx(20));
         }
     }
 
@@ -153,30 +155,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                 activity.startActivity(decksIntent);
             }
         });
-        copyDeck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final EditText deckNameField = new EditText(activity);
-                new AlertDialog.Builder(activity)
-                        .setTitle(R.string.deck_copy_dialog_title)
-                        .setView(deckNameField)
-                        .setPositiveButton(R.string.misc_ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        copyDeck(deck, deckNameField.getText().toString());
-                                        activity.refreshMyDecksList();
-                                    }
-                                })
-                        .setNegativeButton(R.string.misc_cancel,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                })
-                        .show();
-            }
-        });
         deckMenu.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -214,50 +192,5 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
     private String getLanguagesStringForDeck(Deck deck) {
         return TextUtils.join(", ", deck.getDictionaries());
-    }
-
-    private void copyDeck(Deck deck, String deckName) {
-        File targetDir = new File(new File(getContext().getFilesDir(), "recordings"),
-                String.format("copy-%d", (new Random()).nextInt()));
-        targetDir.mkdirs();
-        long deckId = getDbManager().addDeck(deckName, getContext().getString(R.string.data_self_publisher), (new Date()).getTime(), null, null, false, deck.getSrcLanguageIso());
-        Dictionary[] dictionaries = getDbManager().getAllDictionariesForDeck(deck.getDbId());
-        int dictionaryIndex = dictionaries.length - 1;
-        try {
-            for (Dictionary dictionary : dictionaries) {
-                long dictionaryId = getDbManager().addDictionary(dictionary.getDestLanguageIso(), dictionary.getLabel(), dictionaryIndex, deckId);
-                dictionaryIndex--;
-                int translationDbIndex = dictionary.getTranslationCount() - 1;
-                for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                    Translation translation = dictionary.getTranslation(i);
-                    String filename = translation.getFilename();
-                    if (!translation.getIsAsset()) {
-                        File srcFile = new File(filename);
-                        File targetFile = new File(targetDir,
-                                String.format("%s-%d",
-                                        srcFile.getName(), (new Random()).nextInt()));
-                        copyFile(srcFile, targetFile);
-                        filename = targetFile.getAbsolutePath();
-                    }
-                    getDbManager().addTranslation(dictionaryId, translation.getLabel(), translation.getIsAsset(),
-                            filename, translationDbIndex, translation.getTranslatedText());
-                    translationDbIndex--;
-                }
-            }
-        } catch (IOException e) {
-            getDbManager().deleteDeck(deckId);
-        }
-    }
-
-    private void copyFile(File src, File target) throws IOException {
-        InputStream inStream = new FileInputStream(src);
-        OutputStream outStream = new FileOutputStream(target);
-        byte[] buf = new byte[1024];
-        int read;
-        while ((read = inStream.read(buf)) > 0) {
-            outStream.write(buf, 0, read);
-        }
-        inStream.close();
-        outStream.close();
     }
 }
