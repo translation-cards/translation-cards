@@ -1,8 +1,6 @@
 package org.mercycorps.translationcards.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -18,24 +16,22 @@ import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 
 import java.util.List;
 
-public class TranslationTabsFragment extends Fragment {
+public class TranslationTabsFragment extends Fragment  {
 
     private NewTranslation currentTranslation;
-    OnLanguageTabSelectedListener listener;
+    private OnLanguageTabSelectedListener onLanguageTabSelectedListener = new OnLanguageTabSelectedListener() {
+        @Override
+        public void onLanguageTabSelected(NewTranslation currentTranslation) {
+
+        }
+    };
 
     public interface OnLanguageTabSelectedListener {
         public void onLanguageTabSelected(NewTranslation currentTranslation);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            listener = (OnLanguageTabSelectedListener) getActivity();
-        }
-        catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement OnLanguageTabSelectedListener");
-        }
+    public void setOnLanguageTabSelectedListener(OnLanguageTabSelectedListener onLanguageTabSelectedListener) {
+        this.onLanguageTabSelectedListener = onLanguageTabSelectedListener;
     }
 
     @Override
@@ -66,7 +62,7 @@ public class TranslationTabsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 currentTranslation = newTranslation;
-                listener.onLanguageTabSelected(currentTranslation);
+                onLanguageTabSelectedListener.onLanguageTabSelected(currentTranslation);
             }
         });
         return languageTab;

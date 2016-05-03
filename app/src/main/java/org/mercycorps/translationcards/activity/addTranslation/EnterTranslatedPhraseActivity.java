@@ -9,7 +9,9 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class EnterTranslatedPhraseActivity extends AddTranslationActivity implements TranslationTabsFragment.OnLanguageTabSelectedListener {
+import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
+
+public class EnterTranslatedPhraseActivity extends AddTranslationActivity  {
     @Bind(R.id.translated_phrase_field)TextView translatedPhraseTextView;
     @Bind(R.id.translated_phrase_input_language_label)TextView translatedPhraseInputLanguageLabel;
     @Bind(R.id.recording_label_next_text)TextView skipLabel;
@@ -64,10 +66,5 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity implem
     private void updateContextWithTranslatedText() {
         String translatedText  = translatedPhraseTextView.getText().toString();
         getLanguageTabsFragment().getCurrentTranslation().setTranslatedText(translatedText);
-    }
-
-    @Override
-    public void onLanguageTabSelected(NewTranslation currentTranslation) {
-
     }
 }

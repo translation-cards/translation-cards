@@ -11,12 +11,14 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
 import static org.mercycorps.translationcards.uiHelper.ToastHelper.showToast;
 
 public class SummaryActivity extends AddTranslationActivity {
@@ -123,6 +125,7 @@ public class SummaryActivity extends AddTranslationActivity {
     private DecoratedMediaManager getDecoratedMediaManager(){
         return getMainApplication().getDecoratedMediaManager();
     }
+
     private void saveTranslation() {
         getContextFromIntent().save();
     }

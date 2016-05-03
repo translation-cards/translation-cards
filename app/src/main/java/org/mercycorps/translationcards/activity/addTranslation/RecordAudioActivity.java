@@ -13,6 +13,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
+import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 
@@ -22,6 +23,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
 
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
@@ -228,5 +231,4 @@ public class RecordAudioActivity extends AddTranslationActivity {
             translation.setIsAsset(false);
         }
     }
-
 }
