@@ -19,6 +19,7 @@ import java.util.List;
 public class TranslationTabsFragment extends Fragment  {
 
     private NewTranslation currentTranslation;
+    private View currentLanguageTab;
     private OnLanguageTabSelectedListener onLanguageTabSelectedListener = new OnLanguageTabSelectedListener() {
         @Override
         public void onLanguageTabSelected(NewTranslation currentTranslation) {
@@ -40,29 +41,45 @@ public class TranslationTabsFragment extends Fragment  {
         LinearLayout languagesScrollList = (LinearLayout) fragmentView.findViewById(R.id.languages_scroll_list);
         AddNewTranslationContext addNewTranslationContext = (AddNewTranslationContext) getArguments().getSerializable(AddTranslationActivity.CONTEXT_INTENT_KEY);
         List<NewTranslation> newTranslations = addNewTranslationContext.getNewTranslations();
+
         currentTranslation = newTranslations.get(0);
         for (NewTranslation newTranslation : newTranslations) {
             View languageTab = inflateLanguageTab(inflater, languagesScrollList, newTranslation);
             addContentToTab(newTranslation, languageTab);
             languagesScrollList.addView(languageTab);
+            if (currentTranslation == newTranslation) {
+                currentLanguageTab = languageTab;
+            }
         }
+
         return fragmentView;
     }
 
     private void addContentToTab(NewTranslation newTranslation, View languageTab) {
         TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
         languageTabText.setText(newTranslation.getDictionary().getLabel().toUpperCase());
-        languageTabText.setTextColor(ContextCompat.getColor(getActivity(), R.color.textColor));
-        languageTab.findViewById(R.id.tab_border).setBackgroundResource(R.color.textColor);
+
+        updateTranslationTabColor(newTranslation, languageTab);
+    }
+
+    private void updateTranslationTabColor(NewTranslation newTranslation, View languageTab) {
+        TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
+        int tabBorderColor = currentTranslation == newTranslation ? R.color.textColor : R.color.colorPrimary;
+        int tabTextColor = currentTranslation == newTranslation ? R.color.textColor : R.color.unselectedLanguageTabText;
+        languageTabText.setTextColor(ContextCompat.getColor(getActivity(), tabTextColor));
+        languageTab.findViewById(R.id.tab_border).setBackgroundResource(tabBorderColor);
     }
 
     private View inflateLanguageTab(LayoutInflater inflater, LinearLayout languagesScrollList, final NewTranslation newTranslation) {
-        View languageTab = inflater.inflate(R.layout.language_tab, languagesScrollList, false);
+        final View languageTab = inflater.inflate(R.layout.language_tab, languagesScrollList, false);
         languageTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                updateTranslationTabColor(newTranslation, currentLanguageTab);
+                currentLanguageTab = languageTab;
                 currentTranslation = newTranslation;
                 onLanguageTabSelectedListener.onLanguageTabSelected(currentTranslation);
+                updateTranslationTabColor(newTranslation, languageTab);
             }
         });
         return languageTab;

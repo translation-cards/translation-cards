@@ -21,6 +21,7 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.support.v4.content.ContextCompat.getColor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -102,11 +103,61 @@ public class TranslationTabsFragmentTest {
 
     @Test
     public void shouldReturnTranslationContextForSecondTabAfterSecondTabHasBeenClicked() {
-        ((LinearLayout) getFragmentView().findViewById(R.id.languages_scroll_list)).getChildAt(1).performClick();
+        getLanguageTabAtPosition(1).performClick();
 
         NewTranslation newTranslation = translationTabsFragment.getCurrentTranslation();
 
         assertEquals("pashto", newTranslation.getDictionary().getLabel());
+    }
+
+    @Test
+    public void shouldNotUnderlineALanguageTabWhenItIsNotSelected() {
+        View tabBorder = getLanguageTabAtPosition(1).findViewById(R.id.tab_border);
+
+        assertEquals(R.color.colorPrimary, shadowOf(tabBorder.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldNotHighlightLanguageTabTextWhenItIsNotSelected() {
+        TextView tabText = (TextView) getLanguageTabAtPosition(1).findViewById(R.id.tab_label_text);
+
+        assertEquals(getColor(translationTabsFragment.getActivity(), R.color.unselectedLanguageTabText), tabText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldHighlightLanguageTabBorderWhenTabIsSelected() {
+        getLanguageTabAtPosition(1).performClick();
+        View tabBorder = getLanguageTabAtPosition(1).findViewById(R.id.tab_border);
+
+        assertEquals(R.color.textColor, shadowOf(tabBorder.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldHighlightLanguageTabTextWhenTabIsSelected() {
+        getLanguageTabAtPosition(1).performClick();
+        TextView tabText = (TextView) getLanguageTabAtPosition(1).findViewById(R.id.tab_label_text);
+
+        assertEquals(getColor(translationTabsFragment.getActivity(), R.color.textColor), tabText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldNotHighlightLanguageTabBorderWhenTabIsNoLongerSelected() {
+        getLanguageTabAtPosition(1).performClick();
+        View tabBorder = getLanguageTabAtPosition(0).findViewById(R.id.tab_border);
+
+        assertEquals(R.color.colorPrimary, shadowOf(tabBorder.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldNotHighlightLanguageTabTextWhenTabIsNoLongerSelected() {
+        getLanguageTabAtPosition(1).performClick();
+        TextView tabText = (TextView) getLanguageTabAtPosition(0).findViewById(R.id.tab_label_text);
+
+        assertEquals(getColor(translationTabsFragment.getActivity(), R.color.unselectedLanguageTabText), tabText.getCurrentTextColor());
+    }
+
+    private View getLanguageTabAtPosition(int position) {
+        return ((LinearLayout) getFragmentView().findViewById(R.id.languages_scroll_list)).getChildAt(position);
     }
 
     private View getFragmentView() {
