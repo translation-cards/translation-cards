@@ -175,6 +175,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         ListView list = (ListView) findViewById(R.id.translations_list);
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addFooterView(layoutInflater.inflate(R.layout.translation_list_footer, list, false));
+        findViewById(R.id.translations_list_footer).setOnClickListener(null);
         updateWelcomeInstructionsState();
     }
 

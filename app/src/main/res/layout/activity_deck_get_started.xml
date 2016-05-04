@@ -13,22 +13,21 @@
         <LinearLayout
             android:id="@+id/deck_get_started_titlebar"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <ImageButton
+            <FrameLayout
                 android:id="@+id/deck_get_started_back"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/back"
-                android:contentDescription="@string/navigation_button_back" />
+                android:layout_width="56dp"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/back"
+                    android:contentDescription="@string/navigation_button_back"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/deck_get_started_title"
