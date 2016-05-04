@@ -64,12 +64,23 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void initStates() {
         inflateLanguageTabsFragment();
+        setOnLanguageTabClickListener();
         updatePlayButtonState();
         showTranslationSourcePhrase();
         updateTranslatedTextView();
         updateNextButtonState();
         expandTranslationCard();
         hideGrandchildAndAudioIcon();
+    }
+
+    private void setOnLanguageTabClickListener() {
+        getLanguageTabsFragment().setOnLanguageTabSelectedListener(new OnLanguageTabSelectedListener() {
+            @Override
+            public void onLanguageTabSelected(NewTranslation previousTranslation) {
+                updatePlayButtonState();
+                updateTranslatedTextView();
+            }
+        });
     }
 
     @OnClick(R.id.record_activity_next)
@@ -126,10 +137,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updateTranslatedTextView() {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
+        translatedTextView.setText(translatedText);
         if (translatedText.isEmpty()) {
             translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
-        } else {
-            translatedTextView.setText(translatedText);
         }
     }
 
@@ -162,9 +172,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updatePlayButtonState() {
         boolean translationHasAudioFile = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
-        if (translationHasAudioFile) {
-            playAudioButton.setBackgroundResource(R.color.green);
-        }
+        int playButtonColor = translationHasAudioFile ? R.color.green : R.color.grey;
+        playAudioButton.setBackgroundResource(playButtonColor);
         playAudioButton.setClickable(translationHasAudioFile);
     }
 

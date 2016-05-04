@@ -437,4 +437,33 @@ public class RecordAudioActivityTest {
 
         assertNotNull(activity.findViewById(R.id.languages_scroll));
     }
+
+    @Test
+    public void shouldUpdatePlayButtonToStateWhenNewTranslationTabIsSelectedAndNoAudioHasBeenRecorded() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(RecordAudioActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+
+        View playButton = activity.findViewById(R.id.play_audio_button);
+        assertEquals(R.color.grey, shadowOf(playButton.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldUpdateTranslatedTextWhenNewTranslationTabIsSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(RecordAudioActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+
+        assertEquals("Arabic Translation", findTextView(activity, R.id.translated_text).getText().toString());
+    }
+
+    @Test
+    public void shouldDisplayHintTextWhenNewTranslationTabIsSelectedWithNoTranslatedText() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(RecordAudioActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+        clickLanguageTabAtPosition(activity, 0);
+
+        assertEquals("Add Dictionary translation", findTextView(activity, R.id.translated_text).getHint().toString());
+    }
 }
