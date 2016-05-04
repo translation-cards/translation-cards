@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
@@ -24,6 +25,8 @@ import org.robolectric.Robolectric;
 
 import org.robolectric.RuntimeEnvironment;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -47,12 +50,24 @@ public class TestAddTranslationCardActivityHelper {
     public static final int DEFAULT_POSITION = 5;
     public static final int DEFAULT_MAX = 10;
     private static final boolean IS_EDIT = true;
+    private static final String ARABIC_DICTIONARY_LABEL = "Arabic";
+    private static final String ARABIC_TRANSLATION = "Arabic Translation";
 
 
     public static Activity createActivityToTest(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
         AddNewTranslationContext context = new AddNewTranslationContext(Collections.singletonList(newTranslation));
+        intent.putExtra(CONTEXT_INTENT_KEY, context);
+        return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
+    }
+
+    public static Activity createActivityToTestWithMultipleNewTranslationContexts(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
+        Intent intent = new Intent();
+        NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
+        NewTranslation newArabicTranslation = new NewTranslation(new Dictionary(ARABIC_DICTIONARY_LABEL));
+        newArabicTranslation.setTranslatedText(ARABIC_TRANSLATION);
+        AddNewTranslationContext context = new AddNewTranslationContext(Arrays.asList(newTranslation, newArabicTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
@@ -202,5 +217,9 @@ public class TestAddTranslationCardActivityHelper {
 
     public static int getAlertDialogTitleId(){
         return 2131558473;
+    }
+
+    public static void clickLanguageTabAtPosition(Activity activity, Integer position) {
+        ((LinearLayout) findView(activity, R.id.language_tabs_fragment).findViewById(R.id.languages_scroll_list)).getChildAt(position).performClick();
     }
 }

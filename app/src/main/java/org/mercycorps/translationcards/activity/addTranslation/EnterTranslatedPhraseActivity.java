@@ -24,22 +24,34 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity  {
 
 
     @Override
-    public void initStates(){
+    public void initStates() {
         inflateLanguageTabsFragment();
+        setOnLanguageTabClickListener();
         includeSourcePhraseInHeader();
         updateInputLanguageLabel();
         updateTranslatedPhraseTextField();
     }
 
+    private void setOnLanguageTabClickListener() {
+        getLanguageTabsFragment().setOnLanguageTabSelectedListener(new OnLanguageTabSelectedListener() {
+            @Override
+            public void onLanguageTabSelected(NewTranslation previousTranslation) {
+                updateContextWithTranslatedText(previousTranslation);
+                updateInputLanguageLabel();
+                updateTranslatedPhraseTextField();
+            }
+        });
+    }
+
     @OnClick(R.id.enter_translated_phrase_next_label)
     protected void enterTranslatedTextNextLabelClicked(){
-        updateContextWithTranslatedText();
+        updateContextWithTranslatedText(getLanguageTabsFragment().getCurrentTranslation());
         startNextActivity(EnterTranslatedPhraseActivity.this, RecordAudioActivity.class);
     }
 
     @OnClick(R.id.enter_translated_phrase_back_label)
     protected void enterTranslatedPhraseBackLabelClicked() {
-        updateContextWithTranslatedText();
+        updateContextWithTranslatedText(getLanguageTabsFragment().getCurrentTranslation());
         startNextActivity(EnterTranslatedPhraseActivity.this, EnterSourcePhraseActivity.class);
     }
 
@@ -63,8 +75,8 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity  {
         translatedPhraseTextView.setText(getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText());
     }
 
-    private void updateContextWithTranslatedText() {
+    private void updateContextWithTranslatedText(NewTranslation newTranslation) {
         String translatedText  = translatedPhraseTextView.getText().toString();
-        getLanguageTabsFragment().getCurrentTranslation().setTranslatedText(translatedText);
+        newTranslation.setTranslatedText(translatedText);
     }
 }

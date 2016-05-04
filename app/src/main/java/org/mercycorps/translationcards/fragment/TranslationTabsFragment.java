@@ -75,10 +75,11 @@ public class TranslationTabsFragment extends Fragment  {
         languageTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NewTranslation previousNewTranslation = currentTranslation;
                 updateTranslationTabColor(newTranslation, currentLanguageTab);
                 currentLanguageTab = languageTab;
                 currentTranslation = newTranslation;
-                onLanguageTabSelectedListener.onLanguageTabSelected(currentTranslation);
+                onLanguageTabSelectedListener.onLanguageTabSelected(previousNewTranslation);
                 updateTranslationTabColor(newTranslation, languageTab);
             }
         });

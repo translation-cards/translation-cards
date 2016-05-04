@@ -2,14 +2,9 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 
 import android.app.Activity;
-import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import junit.framework.Assert;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -22,7 +17,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyChar;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -152,5 +146,33 @@ public class EnterTranslatedPhraseActivityTest {
         Activity activity = createActivityToTest(EnterTranslatedPhraseActivity.class);
 
         assertNotNull(activity.findViewById(R.id.languages_scroll));
+    }
+
+    @Test
+    public void shouldDisplayArabicLanguageAboveInputFieldWhenArabicLanguageTabSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(EnterTranslatedPhraseActivity.class);
+        clickLanguageTabAtPosition(activity, 1);
+
+        assertEquals("ARABIC TEXT", findTextView(activity, R.id.translated_phrase_input_language_label).getText().toString());
+    }
+
+    @Test
+    public void shouldUpdateTranslatedTextFieldWhenArabicLanguageTabSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(EnterTranslatedPhraseActivity.class);
+        clickLanguageTabAtPosition(activity, 1);
+
+        assertEquals("Arabic Translation", findTextView(activity, R.id.translated_phrase_field).getText().toString());
+    }
+
+    @Test
+    public void shouldSaveTranslatedPhraseToContextPhraseWhenNewLanguageTabIsSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(EnterTranslatedPhraseActivity.class);
+        String translatedPhrase = "TranslatedPhrase";
+        findTextView(activity, R.id.translated_phrase_field).setText(translatedPhrase);
+
+        clickLanguageTabAtPosition(activity, 1);
+        clickLanguageTabAtPosition(activity, 0);
+
+        assertEquals(translatedPhrase, findTextView(activity, R.id.translated_phrase_field).getText().toString());
     }
 }
