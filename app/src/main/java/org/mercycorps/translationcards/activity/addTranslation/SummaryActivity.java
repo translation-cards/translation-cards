@@ -83,9 +83,9 @@ public class SummaryActivity extends AddTranslationActivity {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         if (translatedText.isEmpty()) {
             translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
-        } else {
-            updateTextInTextView(translatedTextView, translatedText);
         }
+
+        updateTextInTextView(translatedTextView, translatedText);
     }
 
     private void updateTextInTextView(TextView textView, String textToBeUpdated){

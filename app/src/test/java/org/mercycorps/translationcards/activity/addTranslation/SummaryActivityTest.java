@@ -72,6 +72,17 @@ public class SummaryActivityTest {
     }
 
     @Test
+    public void shouldSetTextViewToEmptyStringWhenNoTranslatedTextPhraseIsProvided() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(SummaryActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+        clickLanguageTabAtPosition(activity, 0);
+
+        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
+        assertEquals("", translatedTextView.getText().toString());
+    }
+
+    @Test
     public void shouldMakeTranslationChildLinearLayoutVisibleWhenLayoutIsLoaded() {
         Activity activity = createActivityToTest(SummaryActivity.class, createDefaultDictionary());
         assertEquals(View.VISIBLE, activity.findViewById(R.id.translation_child).getVisibility());
