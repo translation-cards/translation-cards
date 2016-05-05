@@ -39,10 +39,28 @@ public class SummaryActivity extends AddTranslationActivity {
     @Override
     public void initStates(){
         inflateLanguageTabsFragment();
+        setOnLanguageTabClickListener();
         setTranslationCardChildrenVisibility();
         updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
         updateTranslatedTextView();
+        updateSummaryTextView();
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
+    }
+
+    private void updateSummaryTextView() {
+        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
+        int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
+        summaryDetail.setText(detailText);
+    }
+
+    private void setOnLanguageTabClickListener() {
+        getLanguageTabsFragment().setOnLanguageTabSelectedListener(new OnLanguageTabSelectedListener() {
+            @Override
+            public void onLanguageTabSelected(NewTranslation previousTranslation) {
+                updateTranslatedTextView();
+                updateSummaryTextView();
+            }
+        });
     }
 
     @Override
