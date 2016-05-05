@@ -37,6 +37,11 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.summary_image, R.drawable.summary_image);
+    }
+
+    @Override
     public void initStates(){
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
@@ -45,6 +50,44 @@ public class SummaryActivity extends AddTranslationActivity {
         updateTranslatedTextView();
         updateSummaryTextView();
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
+    }
+
+    @OnClick(R.id.save_translation_button)
+    protected void summaryDoneClicked() {
+        saveTranslation();
+        stopMediaManager();
+        startNextActivity(SummaryActivity.this, TranslationsActivity.class);
+    }
+
+    @OnClick(R.id.summary_translation_card)
+    protected void translationCardClicked() {
+        Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+        if (translation.getFilename() == null) return;
+        try {
+            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
+            if(mediaManager.isPlaying()) {
+                mediaManager.stop();
+            } else {
+                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+            }
+        } catch (AudioFileException e) {
+            showToast(getString(R.string.could_not_play_audio_message));
+            Log.d(TAG, getString(R.string.could_not_play_audio_message));
+        }
+    }
+
+    @OnClick(R.id.summary_activity_back)
+    protected void summaryBackClicked(){
+        stopMediaManager();
+        startNextActivity(SummaryActivity.this, RecordAudioActivity.class);
+    }
+
+    @OnClick(R.id.translation_indicator_layout)
+    protected void indicatorLayoutClicked() {
+        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
+        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        translationChildLayout.setVisibility(visibility);
+        indicatorIcon.setBackgroundResource(backgroundResource);
     }
 
     private void updateSummaryTextView() {
@@ -61,11 +104,6 @@ public class SummaryActivity extends AddTranslationActivity {
                 updateSummaryTextView();
             }
         });
-    }
-
-    @Override
-    public void setBitmapsForActivity() {
-        setBitmap(R.id.summary_image, R.drawable.summary_image);
     }
 
     private void setTranslationCardChildrenVisibility() {
@@ -92,48 +130,11 @@ public class SummaryActivity extends AddTranslationActivity {
         textView.setText(textToBeUpdated);
     }
 
-    @OnClick(R.id.save_translation_button)
-    protected void summaryDoneClicked() {
-        saveTranslation();
-        stopMediaManager();
-        startNextActivity(SummaryActivity.this, TranslationsActivity.class);
-    }
-
     private void stopMediaManager() {
         DecoratedMediaManager mediaManager = getDecoratedMediaManager();
         if (mediaManager.isPlaying()) {
             mediaManager.stop();
         }
-    }
-
-    @OnClick(R.id.summary_translation_card)
-    protected void translationCardClicked() {
-        try {
-            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-            if(mediaManager.isPlaying()) {
-                mediaManager.stop();
-            } else {
-                Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
-            }
-        } catch (AudioFileException e) {
-            showToast(getString(R.string.could_not_play_audio_message));
-            Log.d(TAG, getString(R.string.could_not_play_audio_message));
-        }
-    }
-
-    @OnClick(R.id.summary_activity_back)
-    protected void summaryBackClicked(){
-        stopMediaManager();
-        startNextActivity(SummaryActivity.this, RecordAudioActivity.class);
-    }
-
-    @OnClick(R.id.translation_indicator_layout)
-    protected void indicatorLayoutClicked() {
-        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
-        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
-        translationChildLayout.setVisibility(visibility);
-        indicatorIcon.setBackgroundResource(backgroundResource);
     }
 
     private boolean isTranslationChildVisible() {

@@ -24,9 +24,12 @@ import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -233,6 +236,15 @@ public class SummaryActivityTest {
 
         assertEquals("It looks like you didn't record the phrase audio for this language. You can record the audio now but it's okay to come back later when you're ready."
                 , findTextView(activity, R.id.summary_detail).getText().toString());
+    }
+
+    @Test
+    public void shouldNotPlayAudioWhenATranslationCardWithNoAudioIsClicked() throws AudioFileException {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+
+        click(activity, R.id.summary_translation_card);
+
+        verifyZeroInteractions(getDecoratedMediaManager());
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
