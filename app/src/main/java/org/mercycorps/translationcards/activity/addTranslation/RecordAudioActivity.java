@@ -144,7 +144,14 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void updateNextButtonState() {
-        Boolean isAudioFilePresent = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
+        List<NewTranslation> translations = getContextFromIntent().getNewTranslations();
+        Boolean isAudioFilePresent=false;
+        for(NewTranslation translation: translations){
+            if(translation.getTranslation().isAudioFilePresent()){
+                isAudioFilePresent=true;
+                break;
+            }
+        }
         nextButton.setClickable(isAudioFilePresent);
         int nextButtonTextColor = isAudioFilePresent ? R.color.primaryTextColor : R.color.textDisabled;
         nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonTextColor));

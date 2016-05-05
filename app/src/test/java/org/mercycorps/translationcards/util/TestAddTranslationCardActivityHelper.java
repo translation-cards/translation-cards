@@ -73,6 +73,17 @@ public class TestAddTranslationCardActivityHelper {
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
+    public static Activity createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
+        Intent intent = new Intent();
+        NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
+        NewTranslation newArabicTranslation = new NewTranslation(new Dictionary(ARABIC_DICTIONARY_LABEL));
+        newArabicTranslation.setAudioFile(DEFAULT_AUDIO_FILE);
+        newArabicTranslation.setTranslatedText(ARABIC_TRANSLATION);
+        AddNewTranslationContext context = new AddNewTranslationContext(Arrays.asList(newTranslation, newArabicTranslation));
+        intent.putExtra(CONTEXT_INTENT_KEY, context);
+        return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
+    }
+
     public static Activity createActivityToTestInEditMode(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
         NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL), new Translation(), IS_EDIT);

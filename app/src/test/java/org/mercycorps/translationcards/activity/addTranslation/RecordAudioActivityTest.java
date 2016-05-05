@@ -466,4 +466,11 @@ public class RecordAudioActivityTest {
 
         assertEquals("Add Dictionary translation", findTextView(activity, R.id.translated_text).getHint().toString());
     }
+
+    @Test
+    public void shouldEnableNextButtonWhenSecondLanguageHasAudioRecordedAndFirstLanguageDoesNot() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab(RecordAudioActivity.class);
+        LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
+        assertTrue(nextButton.isClickable());
+    }
 }
