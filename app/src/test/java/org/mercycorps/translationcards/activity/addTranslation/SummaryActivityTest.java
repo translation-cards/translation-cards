@@ -128,7 +128,10 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldSetSummaryDetailWhenActivityIsCreated() {
-        Activity activity = createActivityToTest(SummaryActivity.class);
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(SummaryActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+
         TextView summaryDetail = findTextView(activity, R.id.summary_detail);
         assertEquals("Here's your new card. Before you save, be sure to review the phrase, translation, and recording.", summaryDetail.getText().toString());
     }
@@ -202,6 +205,23 @@ public class SummaryActivityTest {
         Activity activity = createActivityToTest(SummaryActivity.class);
 
         assertNotNull(activity.findViewById(R.id.languages_scroll));
+    }
+
+    @Test
+    public void shouldChangeTranslatedPhraseWhenANewLanguageTabIsSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(SummaryActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+
+        assertEquals("Arabic Translation", findTextView(activity, R.id.translated_text).getText().toString());
+    }
+
+    @Test
+    public void shouldUpdateSummaryDetailWhenALanguageTabIsSelectedWithNoAudioRecording() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(SummaryActivity.class);
+
+        assertEquals("It looks like you didn't record the phrase audio for this language. You can record the audio now but it's okay to come back later when you're ready."
+                , findTextView(activity, R.id.summary_detail).getText().toString());
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {

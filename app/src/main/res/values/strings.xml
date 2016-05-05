@@ -98,6 +98,7 @@
     <string name="delete_deck">Delete</string>
     <string name="share_deck">Share</string>
     <string name="edit_deck">Edit</string>
+    <string name="summary_detail_no_audio">It looks like you didn\'t record the phrase audio for this language. You can record the audio now but it\'s okay to come back later when you\'re ready.</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
