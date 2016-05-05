@@ -19,6 +19,7 @@ import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -255,6 +256,16 @@ public class SummaryActivityTest {
         clickLanguageTabAtPosition(activity, 1);
 
         verify(getDecoratedMediaManager()).stop();
+    }
+
+    @Test
+    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab(SummaryActivity.class);
+
+        clickLanguageTabAtPosition(activity, 1);
+
+        TextView translationText = findTextView(activity, R.id.origin_translation_text);
+        assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
