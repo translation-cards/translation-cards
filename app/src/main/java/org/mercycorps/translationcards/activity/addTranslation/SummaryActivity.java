@@ -37,6 +37,11 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.summary_image, R.drawable.summary_image);
+    }
+
+    @Override
     public void initStates(){
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
@@ -47,51 +52,6 @@ public class SummaryActivity extends AddTranslationActivity {
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
     }
 
-    private void updateSummaryTextView() {
-        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
-        int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
-        summaryDetail.setText(detailText);
-    }
-
-    private void setOnLanguageTabClickListener() {
-        getLanguageTabsFragment().setOnLanguageTabSelectedListener(new OnLanguageTabSelectedListener() {
-            @Override
-            public void onLanguageTabSelected(NewTranslation previousTranslation) {
-                updateTranslatedTextView();
-                updateSummaryTextView();
-            }
-        });
-    }
-
-    @Override
-    public void setBitmapsForActivity() {
-        setBitmap(R.id.summary_image, R.drawable.summary_image);
-    }
-
-    private void setTranslationCardChildrenVisibility() {
-        translationChildLayout.setVisibility(View.VISIBLE);
-        translationGrandchildLayout.setVisibility(View.GONE);
-    }
-
-    static final ButterKnife.Setter<View, Boolean> INVISIBLE = new ButterKnife.Setter<View, Boolean>() {
-        @Override public void set(View view, Boolean value, int index) {
-            view.setEnabled(value);
-        }
-    };
-
-    private void updateTranslatedTextView() {
-        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
-        if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
-        } else {
-            updateTextInTextView(translatedTextView, translatedText);
-        }
-    }
-
-    private void updateTextInTextView(TextView textView, String textToBeUpdated){
-        textView.setText(textToBeUpdated);
-    }
-
     @OnClick(R.id.save_translation_button)
     protected void summaryDoneClicked() {
         saveTranslation();
@@ -99,21 +59,15 @@ public class SummaryActivity extends AddTranslationActivity {
         startNextActivity(SummaryActivity.this, TranslationsActivity.class);
     }
 
-    private void stopMediaManager() {
-        DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-        if (mediaManager.isPlaying()) {
-            mediaManager.stop();
-        }
-    }
-
     @OnClick(R.id.summary_translation_card)
     protected void translationCardClicked() {
+        Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+        if (translation.getFilename() == null) return;
         try {
             DecoratedMediaManager mediaManager = getDecoratedMediaManager();
             if(mediaManager.isPlaying()) {
                 mediaManager.stop();
             } else {
-                Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
                 mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
             }
         } catch (AudioFileException e) {
@@ -134,6 +88,53 @@ public class SummaryActivity extends AddTranslationActivity {
         int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
         translationChildLayout.setVisibility(visibility);
         indicatorIcon.setBackgroundResource(backgroundResource);
+    }
+
+    private void updateSummaryTextView() {
+        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
+        int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
+        summaryDetail.setText(detailText);
+    }
+
+    private void setOnLanguageTabClickListener() {
+        getLanguageTabsFragment().setOnLanguageTabSelectedListener(new OnLanguageTabSelectedListener() {
+            @Override
+            public void onLanguageTabSelected(NewTranslation previousTranslation) {
+                updateTranslatedTextView();
+                updateSummaryTextView();
+            }
+        });
+    }
+
+    private void setTranslationCardChildrenVisibility() {
+        translationChildLayout.setVisibility(View.VISIBLE);
+        translationGrandchildLayout.setVisibility(View.GONE);
+    }
+
+    static final ButterKnife.Setter<View, Boolean> INVISIBLE = new ButterKnife.Setter<View, Boolean>() {
+        @Override public void set(View view, Boolean value, int index) {
+            view.setEnabled(value);
+        }
+    };
+
+    private void updateTranslatedTextView() {
+        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
+        if (translatedText.isEmpty()) {
+            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
+        }
+
+        updateTextInTextView(translatedTextView, translatedText);
+    }
+
+    private void updateTextInTextView(TextView textView, String textToBeUpdated){
+        textView.setText(textToBeUpdated);
+    }
+
+    private void stopMediaManager() {
+        DecoratedMediaManager mediaManager = getDecoratedMediaManager();
+        if (mediaManager.isPlaying()) {
+            mediaManager.stop();
+        }
     }
 
     private boolean isTranslationChildVisible() {

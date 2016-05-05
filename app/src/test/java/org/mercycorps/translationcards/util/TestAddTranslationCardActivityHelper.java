@@ -64,10 +64,13 @@ public class TestAddTranslationCardActivityHelper {
 
     public static Activity createActivityToTestWithMultipleNewTranslationContexts(Class<? extends AbstractTranslationCardsActivity> instanceOfClass) {
         Intent intent = new Intent();
+
         NewTranslation newTranslation = new NewTranslation(new Dictionary(DEFAULT_DICTIONARY_LABEL));
         newTranslation.setAudioFile(DEFAULT_AUDIO_FILE);
+
         NewTranslation newArabicTranslation = new NewTranslation(new Dictionary(ARABIC_DICTIONARY_LABEL));
         newArabicTranslation.setTranslatedText(ARABIC_TRANSLATION);
+
         AddNewTranslationContext context = new AddNewTranslationContext(Arrays.asList(newTranslation, newArabicTranslation));
         intent.putExtra(CONTEXT_INTENT_KEY, context);
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
