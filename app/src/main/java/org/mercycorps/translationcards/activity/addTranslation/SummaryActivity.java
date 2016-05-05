@@ -102,6 +102,7 @@ public class SummaryActivity extends AddTranslationActivity {
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updateTranslatedTextView();
                 updateSummaryTextView();
+                stopMediaManager();
             }
         });
     }

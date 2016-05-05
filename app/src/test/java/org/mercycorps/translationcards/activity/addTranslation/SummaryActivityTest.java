@@ -247,6 +247,16 @@ public class SummaryActivityTest {
         verifyZeroInteractions(getDecoratedMediaManager());
     }
 
+    @Test
+    public void shouldStopAudioWhenAudioIsPlayingAndDifferentLanguageTabSelected() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(SummaryActivity.class);
+        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+
+        clickLanguageTabAtPosition(activity, 1);
+
+        verify(getDecoratedMediaManager()).stop();
+    }
+
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
     }
