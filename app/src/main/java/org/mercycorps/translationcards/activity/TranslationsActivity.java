@@ -296,6 +296,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             TextView cardTextView = (TextView) convertView.findViewById(
                     R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
+            int cardTextColor = getItem(position).getFilename() == null ? R.color.textDisabled : R.color.primaryTextColor;
+            cardTextView.setTextColor(ContextCompat.getColor(TranslationsActivity.this, cardTextColor));
 
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(
                     R.id.list_item_progress_bar);

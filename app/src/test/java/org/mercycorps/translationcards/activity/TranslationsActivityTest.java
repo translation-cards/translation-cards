@@ -17,7 +17,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
@@ -31,6 +30,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 
+import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
@@ -90,7 +90,7 @@ public class TranslationsActivityTest {
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
                 TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(
-                TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, null);
+                TRANSLATION_LABEL, false, null, DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);
@@ -239,7 +239,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldHaveCorrectHintMessageWhenTranslatedTextIsEmpty() {
-        View translationsListItem = listItemWithNoTranslatedText();
+        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -249,7 +249,7 @@ public class TranslationsActivityTest {
     @Test
     public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
         int disabledTextColor = -7960954;
-        View translationsListItem = listItemWithNoTranslatedText();
+        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -434,13 +434,20 @@ public class TranslationsActivityTest {
         assertFalse(context.isEdit());
     }
 
+    @Test
+    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded() {
+        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
+        TextView translationText = (TextView)translationsListItem.findViewById(R.id.origin_translation_text);
+        assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity
                 .findViewById(R.id.translations_list);
         return translationsList.getAdapter().getView(1, null, translationsList);
     }
 
-    private View listItemWithNoTranslatedText() {
+    private View listItemWithNoTranslatedTextOrAudio() {
         ListView translationsList = (ListView) translationsActivity.findViewById(
                 R.id.translations_list);
         return translationsList.getAdapter().getView(2, null, translationsList);
