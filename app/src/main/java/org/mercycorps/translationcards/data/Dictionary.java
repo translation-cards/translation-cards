@@ -71,6 +71,19 @@ public class Dictionary implements Serializable {
         return translations[index];
     }
 
+    public Translation getTranslationBySourcePhrase(String sourcePhrase) {
+        for(Translation translation : translations) {
+            if(sourcePhrase.equals(translation.getLabel())) {
+                return translation;
+            }
+        }
+        Translation translation = new Translation();
+        translation.setLabel(sourcePhrase);
+        translation.saveWithDictionary(dbId);
+        return translation;
+    }
+
+
     public long getDbId() {
         return dbId;
     }

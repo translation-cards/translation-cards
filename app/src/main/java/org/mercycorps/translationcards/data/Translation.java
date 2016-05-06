@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
+import org.mercycorps.translationcards.MainApplication;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -94,5 +96,9 @@ public class Translation implements Serializable {
 
     public FileDescriptor createFileDescriptor() throws IOException {
         return new FileInputStream(filename).getFD();
+    }
+
+    public void saveWithDictionary(Long dictionaryId) {
+        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
     }
 }

@@ -87,13 +87,10 @@ public class TranslationsActivityTest {
 
     private void initializeMockDbManager() {
         Dictionary[] dictionaries = new Dictionary[1];
-        translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
-                TRANSLATED_TEXT);
-        Translation nullTranslatedTextTranslation = new Translation(
-                TRANSLATION_LABEL, false, "", DEFAULT_LONG, null);
+        translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
+        Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
-        dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
-                DEFAULT_DECK_ID);
+        dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[0] = dictionary;
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }

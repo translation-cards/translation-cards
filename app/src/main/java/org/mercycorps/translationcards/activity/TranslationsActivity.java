@@ -366,7 +366,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
             List<NewTranslation> newTranslations = new ArrayList<>();
             for (Dictionary dictionary : dictionaries) {
-                newTranslations.add(new NewTranslation(dictionary, translationCard, IS_EDIT));
+                Translation translation = dictionary.getTranslationBySourcePhrase(translationCard.getLabel());
+                newTranslations.add(new NewTranslation(dictionary, translation, IS_EDIT));
             }
             nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, new AddNewTranslationContext(newTranslations, IS_EDIT));
             nextIntent.putExtra(INTENT_KEY_DECK, deck);
