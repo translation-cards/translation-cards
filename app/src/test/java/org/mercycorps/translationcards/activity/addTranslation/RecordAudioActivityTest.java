@@ -473,4 +473,24 @@ public class RecordAudioActivityTest {
         LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
         assertTrue(nextButton.isClickable());
     }
+
+    @Test
+    public void shouldStopAudioWhenPlayingAndLanguageTabIsChanged() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(RecordAudioActivity.class);
+
+        when(getAudioPlayerManager().isPlaying()).thenReturn(true);
+        clickLanguageTabAtPosition(activity, 1);
+
+        verify(getAudioPlayerManager()).stop();
+    }
+
+    @Test
+    public void shouldStopRecordingWhenLanguageTabIsChanged() {
+        Activity activity = createActivityToTestWithMultipleNewTranslationContexts(RecordAudioActivity.class);
+
+        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        clickLanguageTabAtPosition(activity, 1);
+
+        verify(getAudioRecorderManager()).stop();
+    }
 }

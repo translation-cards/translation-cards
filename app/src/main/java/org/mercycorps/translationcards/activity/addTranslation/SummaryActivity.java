@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,11 +45,12 @@ public class SummaryActivity extends AddTranslationActivity {
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
         setTranslationCardChildrenVisibility();
-        updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
+        updateSourceTextView();
         updateTranslatedTextView();
         updateSummaryTextView();
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
     }
+
 
     @OnClick(R.id.save_translation_button)
     protected void summaryDoneClicked() {
@@ -88,6 +90,7 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     private void updateSummaryTextView() {
+        updateSourceTextView();
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
         summaryDetail.setText(detailText);
@@ -99,6 +102,7 @@ public class SummaryActivity extends AddTranslationActivity {
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updateTranslatedTextView();
                 updateSummaryTextView();
+                stopMediaManager();
             }
         });
     }
@@ -121,6 +125,13 @@ public class SummaryActivity extends AddTranslationActivity {
         }
 
         updateTextInTextView(translatedTextView, translatedText);
+    }
+    private void updateSourceTextView() {
+        sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
+        if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
+            sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
+        }
+        updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
     }
 
     private void updateTextInTextView(TextView textView, String textToBeUpdated){

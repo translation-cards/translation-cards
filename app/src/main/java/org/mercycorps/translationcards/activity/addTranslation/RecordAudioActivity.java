@@ -77,6 +77,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updatePlayButtonState();
                 updateTranslatedTextView();
+                stopAudioIfPlaying();
+                stopIfRecording();
             }
         });
     }
