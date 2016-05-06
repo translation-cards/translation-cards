@@ -18,6 +18,7 @@ import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowToast;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -27,6 +28,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -103,6 +105,17 @@ public class SummaryActivityTest {
         activity.findViewById(R.id.summary_translation_card).performClick();
         ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
         verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
+    }
+
+    @Test
+    public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
+        Activity activity = createActivityToTest(SummaryActivity.class);
+        when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
+        doThrow(new AudioFileException("error message")).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
+
+        activity.findViewById(R.id.summary_translation_card).performClick();
+
+        assertNotNull(ShadowToast.getLatestToast());
     }
 
     @Test
@@ -236,15 +249,6 @@ public class SummaryActivityTest {
 
         assertEquals("It looks like you didn't record the phrase audio for this language. You can record the audio now but it's okay to come back later when you're ready."
                 , findTextView(activity, R.id.summary_detail).getText().toString());
-    }
-
-    @Test
-    public void shouldNotPlayAudioWhenATranslationCardWithNoAudioIsClicked() throws AudioFileException {
-        Activity activity = createActivityToTest(SummaryActivity.class);
-
-        click(activity, R.id.summary_translation_card);
-
-        verifyZeroInteractions(getDecoratedMediaManager());
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {

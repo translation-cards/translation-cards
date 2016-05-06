@@ -30,13 +30,9 @@ public class DecoratedMediaManager {
     public void play(String filename, ProgressBar progressBar, boolean isAsset) throws AudioFileException {
         this.progressBar = progressBar;
         this.filename = filename;
-        try {
-            getAudioPlayerManager().play(this.filename, isAsset);
-            progressBar.setMax(getAudioPlayerManager().getMaxDuration());
-            schedule();
-        } catch (IOException e) {
-            throw new AudioFileException(e);
-        }
+        getAudioPlayerManager().play(this.filename, isAsset);
+        progressBar.setMax(getAudioPlayerManager().getMaxDuration());
+        schedule();
     }
 
 

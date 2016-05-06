@@ -90,7 +90,7 @@ public class TranslationsActivityTest {
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG,
                 TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(
-                TRANSLATION_LABEL, false, null, DEFAULT_LONG, null);
+                TRANSLATION_LABEL, false, "", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG,
                 DEFAULT_DECK_ID);

@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.media;
 
+import android.app.Application;
 import android.media.MediaPlayer;
 
 import org.junit.Before;
@@ -7,6 +8,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.exception.AudioFileException;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -20,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-public class AudioPlayerMangerTest {
+public class AudioPlayerManagerTest {
 
     private static final boolean IS_NOT_ASSET = false;
     private MediaPlayer mediaPlayer;
@@ -33,21 +37,14 @@ public class AudioPlayerMangerTest {
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
     }
 
-    @Ignore
     @Test
-    public void shouldSetMediaPlayerDataSourceToSomeFile() throws IOException {
-        audioPlayerManager.play(ANY_FILE, IS_NOT_ASSET);
-        verify(mediaPlayer).setDataSource(new FileDescriptor()); //TODO Unable to test because w need an actual FileDescriptor
-    }
-
-    @Test
-    public void shouldPrepareMediaPlayer() throws IOException {
+    public void shouldPrepareMediaPlayer() throws AudioFileException, IOException {
         audioPlayerManager.play(ANY_FILE, IS_NOT_ASSET);
         verify(mediaPlayer).prepare();
     }
 
     @Test
-    public void shouldStartMediaPlayer() throws IOException {
+    public void shouldStartMediaPlayer() throws AudioFileException {
         audioPlayerManager.play(ANY_FILE, IS_NOT_ASSET);
         verify(mediaPlayer).start();
     }
@@ -68,5 +65,10 @@ public class AudioPlayerMangerTest {
         audioPlayerManager.stop();
 
         verify(mediaPlayer).reset();
+    }
+
+    @Test (expected = AudioFileException.class)
+    public void shouldThrowExceptionWhenNoAudioFileIsFound() throws AudioFileException, IOException {
+        audioPlayerManager.play("", false);
     }
 }

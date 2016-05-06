@@ -13,11 +13,9 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
-import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -118,7 +116,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     @OnClick(R.id.translation_indicator_layout)
-    protected void translationIndicatorLayoutClick(){
+    protected void translationIndicatorLayoutClick() {
         int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
         int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
         translationChild.setVisibility(visibility);
@@ -145,10 +143,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void updateNextButtonState() {
         List<NewTranslation> translations = getContextFromIntent().getNewTranslations();
-        Boolean isAudioFilePresent=false;
-        for(NewTranslation translation: translations){
-            if(translation.getTranslation().isAudioFilePresent()){
-                isAudioFilePresent=true;
+        Boolean isAudioFilePresent = false;
+        for (NewTranslation translation : translations) {
+            if (translation.getTranslation().isAudioFilePresent()) {
+                isAudioFilePresent = true;
                 break;
             }
         }
@@ -221,12 +219,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void playAudioFile() throws AudioFileException {
-        try {
-            Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-            getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
-        } catch (IOException e) {
-            throw new AudioFileException("Unable to play audio file", e);
-        }
+        Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+        getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
     }
 
     private void handleIsRecordingState() throws RecordAudioException {

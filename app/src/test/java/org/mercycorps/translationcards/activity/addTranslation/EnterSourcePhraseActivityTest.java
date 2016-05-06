@@ -60,7 +60,7 @@ public class EnterSourcePhraseActivityTest {
     public void shouldNotUpdateNewTranslationContextWhenThereIsNoSourceText() {
         Activity activity = createActivityToTest(EnterSourcePhraseActivity.class);
         click(activity, R.id.activity_enter_source_phrase_next_label);
-        assertEquals(null, getFirstNewTranslationFromContext(activity).getTranslation().getLabel());
+        assertEquals("", getFirstNewTranslationFromContext(activity).getTranslation().getLabel());
     }
 
     @Test

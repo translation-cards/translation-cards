@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.exception.AudioFileException;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -27,7 +28,10 @@ public class AudioPlayerManager {
         mediaPlayer.reset();
     }
 
-    public void play(String fileName, boolean isAsset) throws IOException {
+    public void play(String fileName, boolean isAsset) throws AudioFileException {
+        if(fileName.isEmpty()) {
+            throw new AudioFileException();
+        }
         prepareMediaPlayer(fileName, isAsset);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -39,14 +43,15 @@ public class AudioPlayerManager {
     }
 
 
-    private void prepareMediaPlayer(String fileName, boolean isAsset) {
+    private void prepareMediaPlayer(String fileName, boolean isAsset) throws AudioFileException{
         try {
             mediaPlayer.reset();
             setMediaPlayerDataSource(fileName, isAsset);
             mediaPlayer.prepare();
         } catch (IOException e) {
-            Log.d(TAG, "Error getting audio asset: " + e);
-            e.printStackTrace();
+            String message = "Error getting audio asset: " + e;
+            Log.d(TAG, message);
+            throw new AudioFileException(message);
         }
     }
 

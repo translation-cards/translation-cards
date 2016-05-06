@@ -33,6 +33,11 @@ public class Translation implements Serializable {
     }
 
     public Translation() {
+        label = "";
+        isAsset = false;
+        filename = "";
+        dbId = -1;
+        translatedText = "";
     }
 
 
@@ -84,7 +89,7 @@ public class Translation implements Serializable {
     }
 
     public boolean isAudioFilePresent(){
-        return filename != null;
+        return !filename.isEmpty();
     }
 
     public FileDescriptor createFileDescriptor() throws IOException {

@@ -11,7 +11,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
-import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import butterknife.Bind;
@@ -19,7 +18,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
-import static org.mercycorps.translationcards.uiHelper.ToastHelper.showToast;
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
@@ -62,7 +60,6 @@ public class SummaryActivity extends AddTranslationActivity {
     @OnClick(R.id.summary_translation_card)
     protected void translationCardClicked() {
         Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-        if (translation.getFilename() == null) return;
         try {
             DecoratedMediaManager mediaManager = getDecoratedMediaManager();
             if(mediaManager.isPlaying()) {
@@ -71,8 +68,8 @@ public class SummaryActivity extends AddTranslationActivity {
                 mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
             }
         } catch (AudioFileException e) {
-            showToast(getString(R.string.could_not_play_audio_message));
-            Log.d(TAG, getString(R.string.could_not_play_audio_message));
+            showToast(e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
     }
 
