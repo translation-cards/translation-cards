@@ -266,8 +266,6 @@ public class SummaryActivityTest {
     public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
         Activity activity = createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab(SummaryActivity.class);
 
-        clickLanguageTabAtPosition(activity, 1);
-
         TextView translationText = findTextView(activity, R.id.origin_translation_text);
         assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
