@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
 
 import java.io.FileDescriptor;
@@ -30,7 +31,7 @@ public class AudioPlayerManager {
 
     public void play(String fileName, boolean isAsset) throws AudioFileException {
         if(fileName.isEmpty()) {
-            throw new AudioFileException();
+            throw new AudioFileException(MainApplication.getContextFromMainApp().getString(R.string.could_not_play_audio_message));
         }
         prepareMediaPlayer(fileName, isAsset);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

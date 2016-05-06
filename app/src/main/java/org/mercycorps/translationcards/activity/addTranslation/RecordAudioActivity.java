@@ -113,7 +113,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
             playAudioFile();
         } catch (AudioFileException e) {
             Log.d(TAG, "Error getting audio asset: " + e);
-            showToast(e.getLocalizedMessage());
+            showToast(e.getMessage());
         }
     }
 

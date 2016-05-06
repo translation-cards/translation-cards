@@ -5,7 +5,6 @@ import android.widget.ProgressBar;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 
-import java.io.IOException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -53,10 +52,14 @@ public class DecoratedMediaManager {
 
 
     public void stop() {
-        if (progressBar == null) return;
+        if (playHasNotBeenCalled()) return;
         getAudioPlayerManager().stop();
         progressBar.setProgress(RESET_PROGRESS_BAR);
         scheduledFuture.cancel(true);
+    }
+
+    private boolean playHasNotBeenCalled() {
+        return progressBar == null || scheduledFuture == null;
     }
 
     private AudioPlayerManager getAudioPlayerManager() {

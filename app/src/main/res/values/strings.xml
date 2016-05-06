@@ -68,7 +68,7 @@
     <string name="file_download_title">Downloading File</string>
     <string name="no_audio_file_message">Unable to play audio file</string>
     <string name="unable_to_record_message">Unable to Record Audio.</string>
-    <string name="could_not_play_audio_message">Could not play audio file.</string>
+    <string name="could_not_play_audio_message">Audio file not found.</string>
     <string name="navigation_button_cancel">CANCEL</string>
     <string name="enter_translated_phrase_title">Optional: add the translation</string>
     <string name="enter_source_phrase_activity_title">Write your phrase</string>

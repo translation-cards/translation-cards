@@ -1,24 +1,19 @@
 package org.mercycorps.translationcards.media;
 
-import android.app.Application;
 import android.media.MediaPlayer;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,5 +65,14 @@ public class AudioPlayerManagerTest {
     @Test (expected = AudioFileException.class)
     public void shouldThrowExceptionWhenNoAudioFileIsFound() throws AudioFileException, IOException {
         audioPlayerManager.play("", false);
+    }
+
+    @Test
+    public void shouldThrowExceptionWithMessageWhenNoAudioFileIsFound() {
+        try {
+            audioPlayerManager.play("", false);
+        } catch(AudioFileException e) {
+            assertEquals("Audio file not found.", e.getMessage());
+        }
     }
 }
