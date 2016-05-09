@@ -230,21 +230,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_KEY_ADD_CARD:
-            case REQUEST_KEY_EDIT_CARD:
-                if (resultCode == RESULT_OK) {
-                    dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
-                    setDictionary(currentDictionaryIndex);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         decoratedMediaManager.stop();
