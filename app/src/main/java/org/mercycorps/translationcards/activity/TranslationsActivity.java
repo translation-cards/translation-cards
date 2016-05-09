@@ -289,7 +289,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 deleteView.setVisibility(View.GONE);
             } else {
                 editView.setOnClickListener(new CardEditClickListener(getItem(position)));
-                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position).getDbId()));
+                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position)));
             }
 
             TextView cardTextView = (TextView) convertView.findViewById(
@@ -376,10 +376,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private class CardDeleteClickListener implements View.OnClickListener {
 
-        long translationId;
+        Translation translation;
 
-        public CardDeleteClickListener(long translationId) {
-            this.translationId = translationId;
+        public CardDeleteClickListener(Translation translation) {
+            this.translation = translation;
         }
 
         @Override
@@ -389,7 +389,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                     .setMessage(R.string.delete_dialog_message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dbManager.deleteTranslation(translationId);
+                            for (Dictionary dictionary : dictionaries) {
+                                Translation translationBySourcePhrase = dictionary.getTranslationBySourcePhrase(translation.getLabel());
+                                dbManager.deleteTranslation(translationBySourcePhrase.getDbId());
+                            }
                             dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
                             setDictionary(currentDictionaryIndex);
                             listAdapter.notifyDataSetChanged();

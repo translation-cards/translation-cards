@@ -325,7 +325,7 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(dbManagerMock).deleteTranslation(translation.getDbId());
+        verify(dbManagerMock, times(3)).deleteTranslation(translation.getDbId());
         verify(dbManagerMock, times(2)).getAllDictionariesForDeck(DEFAULT_DECK_ID);
     }
 
