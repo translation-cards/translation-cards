@@ -64,7 +64,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     public static final String INTENT_KEY_DECK = "Deck";
     private static final String TAG = "TranslationsActivity";
-
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
@@ -386,8 +385,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         @Override
         public void onClick(View view) {
             new AlertDialog.Builder(TranslationsActivity.this)
-                    .setTitle("Delete Flashcard")
-                    .setMessage("Are you sure you want to delete this translation card?")
+                    .setTitle(R.string.delete_dialog_title)
+                    .setMessage(R.string.delete_dialog_message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dbManager.deleteTranslation(translationId);

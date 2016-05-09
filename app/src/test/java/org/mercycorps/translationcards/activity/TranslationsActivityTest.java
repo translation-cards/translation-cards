@@ -60,6 +60,8 @@ public class TranslationsActivityTest {
     public static final String NO_VALUE = "";
     public static final long DEFAULT_LONG = -1;
     public static final String DICTIONARY_TEST_LABEL = "TestLabel";
+    public static final String DICTIONARY_ARABIC_LABEL = "ARABIC";
+    public static final String DICTIONARY_FARSI_LABEL = "FARSI";
     public static final String TRANSLATED_TEXT = "TranslatedText";
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
@@ -71,8 +73,8 @@ public class TranslationsActivityTest {
     private TranslationsActivity translationsActivity;
     private DbManager dbManagerMock;
     private Translation translation;
-    private Dictionary dictionary;
     private Deck deck;
+    private Dictionary[] dictionaries;
 
     @Before
     public void setUp() {
@@ -86,12 +88,13 @@ public class TranslationsActivityTest {
     }
 
     private void initializeMockDbManager() {
-        Dictionary[] dictionaries = new Dictionary[1];
+        dictionaries = new Dictionary[3];
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
-        dictionary = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
-        dictionaries[0] = dictionary;
+        dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
+        dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
+        dictionaries[2] = new Dictionary(NO_ISO_CODE, DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
     }
 
@@ -276,18 +279,23 @@ public class TranslationsActivityTest {
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        assertEquals(3, context.getNewTranslations().size());
         assertEquals(translation, context.getNewTranslations().get(0).getTranslation());
+        assertEquals(translation, context.getNewTranslations().get(1).getTranslation());
+        assertEquals(translation, context.getNewTranslations().get(2).getTranslation());
     }
 
     @Test
-    public void shouldPassCorrectDictionaryWhenEditCardIsClicked() {
+    public void shouldPassCorrectDictionariesWhenEditCardIsClicked() {
         View translationListItem = firstTranslationCardInListView();
 
         translationListItem.findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(dictionary, context.getNewTranslations().get(0).getDictionary());
+        assertEquals(dictionaries[0], context.getNewTranslations().get(0).getDictionary());
+        assertEquals(dictionaries[1], context.getNewTranslations().get(1).getDictionary());
+        assertEquals(dictionaries[2], context.getNewTranslations().get(2).getDictionary());
     }
 
     @Test
@@ -308,10 +316,10 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
-        assertThat(shadowAlertDialog.getMessage().toString(), is("Are you sure you want to delete this translation card?"));}
+        assertThat(shadowAlertDialog.getMessage().toString(), is("Are you sure you want to delete this translation card from all languages?"));}
 
     @Test
-    public void onClick_shouldDeleteCorrectTranslationWhenDeleteButtonIsClicked() {
+    public void onClick_shouldDeleteCorrectTranslationsWhenDeleteButtonIsClicked() {
         View translationsListItem = firstTranslationCardInListView();
 
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
@@ -391,7 +399,7 @@ public class TranslationsActivityTest {
     public void initTabs_shouldShowLanguageTabWhenOnHomeScreen() {
         LinearLayout tabContainer = (LinearLayout) translationsActivity.findViewById(R.id.tabs);
 
-        assertThat(tabContainer.getChildCount(), is(1));
+        assertThat(tabContainer.getChildCount(), is(3));
 
         TextView languageTabText = (TextView) tabContainer.getChildAt(0).findViewById(R.id.tab_label_text);
         assertThat(languageTabText.getText().toString(), is(DICTIONARY_TEST_LABEL.toUpperCase()));
