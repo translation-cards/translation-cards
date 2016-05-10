@@ -4,7 +4,7 @@
 
 - Increment the versionCode in app/build.gradle (note that this value is just an integer that goes up with each release).
 - Update the versionName in app/build.gradle.
-- Update the version number in FEEDBACK_URL in DecksActivity.java (end of the string).
+- Update the version number in FEEDBACK_URL in MyDecksActivity.java (end of the string).
 
 ## Tagging
 
