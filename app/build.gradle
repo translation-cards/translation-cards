@@ -8,8 +8,8 @@ android {
         applicationId "org.mercycorps.translationcards"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.0.1"
+        versionCode 9
+        versionName "1.0.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
