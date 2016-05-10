@@ -91,7 +91,7 @@ public class Translation implements Serializable {
     }
 
     public boolean isAudioFilePresent(){
-        return !filename.isEmpty();
+        return !(filename == null || filename.isEmpty());
     }
 
     public FileDescriptor createFileDescriptor() throws IOException {

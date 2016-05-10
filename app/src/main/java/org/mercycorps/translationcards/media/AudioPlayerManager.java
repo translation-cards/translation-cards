@@ -30,7 +30,7 @@ public class AudioPlayerManager {
     }
 
     public void play(String fileName, boolean isAsset) throws AudioFileException {
-        if(fileName.isEmpty()) {
+        if(fileName == null || fileName.isEmpty()) {
             throw new AudioFileException(MainApplication.getContextFromMainApp().getString(R.string.could_not_play_audio_message));
         }
         prepareMediaPlayer(fileName, isAsset);
