@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:layout_below="@+id/deck_source_language_description"
-        android:id="@+id/deck_source_language_input">
+        android:id="@+id/deck_source_language_picker">
 
     <FrameLayout
         android:layout_width="25dp"

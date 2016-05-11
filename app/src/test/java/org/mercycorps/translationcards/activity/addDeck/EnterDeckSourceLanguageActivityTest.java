@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.ImageView;
 
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
@@ -54,4 +56,10 @@ public class EnterDeckSourceLanguageActivityTest {
         verify(newDeckContext).setSourceLanguageIso(TestAddDeckActivityHelper.DEFAULT_SOURCE_LANGUAGE_ISO);
     }
 
+    @Test
+    public void shouldSetSourceLanguagePickerAsClickable() {
+        Activity activity = createActivityToTest(EnterDeckSourceLanguageActivity.class);
+        View sourceLanguagePicker = activity.findViewById(R.id.deck_source_language_picker);
+        assertTrue(sourceLanguagePicker.isClickable());
+    }
 }

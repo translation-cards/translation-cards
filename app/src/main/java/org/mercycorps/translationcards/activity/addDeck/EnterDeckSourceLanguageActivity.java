@@ -34,6 +34,11 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         startNextActivity(this, EnterDeckTitleActivity.class);
     }
 
+    @OnClick(R.id.deck_source_language_picker)
+    public void sourceLanguagePickerClicked() {
+
+    }
+
     private void updateContextWithSourceLanguage() {
         String sourceLanguageIso = getLocaleForLanguage(sourceLanguageInput.getText().toString());
         getContextFromIntent().setSourceLanguageIso(sourceLanguageIso);
