@@ -34,7 +34,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
+            android:name=".activity.addDeck.EnterDeckSourceLanguageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.addDeck.AuthorAndLockActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.addDeck.ReviewAndSaveActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.addTranslation.GetStartedActivity"
