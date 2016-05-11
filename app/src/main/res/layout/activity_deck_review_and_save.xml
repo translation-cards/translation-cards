@@ -54,21 +54,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
-        <ProgressBar
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/play_progress"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:minHeight="1dp"
-            android:maxHeight="1dp"
-            android:id="@+id/deck_review_and_save_progress_bar" />
-
         <include layout="@layout/deck_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/summary_progress_bar"
             android:id="@+id/deck_review_and_save_deck_card"/>
     </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
@@ -97,7 +85,13 @@
             android:layout_gravity="center"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/recording_label_step_marker">
+            android:id="@+id/deck_review_and_save_step_marker">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
