@@ -105,6 +105,9 @@
     <string name="deck_author_and_lock_title">Set the author name and lock</string>
     <string name="deck_author_and_lock_description">It\'s important to know who created a Translation Cards deck. Usually this is just your full name or your organisation if it\'s an official deck.</string>
     <string name="deck_author_hint_text">Your name or organisation</string>
+    <string name="deck_source_language_title">Set the source language</string>
+    <string name="deck_source_language_description">A deck has one source language. This is the language you would like to translate from. It\'s often the language your field workers are comfortable speaking.</string>
+    <string name="deck_source_language_input">Source language</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
