@@ -110,7 +110,7 @@ public class TxcPortingUtility {
                 json.put(JsonKeys.EXTERNAL_ID, deck.getExternalId());
             }
             json.put(JsonKeys.TIMESTAMP, deck.getTimestamp());
-            json.put(JsonKeys.SOURCE_LANGUAGE, deck.getSrcLanguageIso());
+            json.put(JsonKeys.SOURCE_LANGUAGE, deck.getSourceLanguageIso());
             json.put(JsonKeys.LOCKED, deck.isLocked());
             JSONArray dictionariesJson = new JSONArray();
             for (Dictionary dictionary : dictionaries) {

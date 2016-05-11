@@ -24,6 +24,9 @@ public class NewDeckContext implements Serializable {
         this.isEdit = isEdit;
     }
 
+    public void setSourceLanguageIso(String sourceLanguageIso) {
+        deck.setSourceLanguageIso(sourceLanguageIso);
+    }
     public void setDeckTitle(String deckTitle) {
         deck.setLabel(deckTitle);
     }
@@ -61,7 +64,4 @@ public class NewDeckContext implements Serializable {
         return isEdit;
     }
 
-    public void update() {
-
-    }
 }

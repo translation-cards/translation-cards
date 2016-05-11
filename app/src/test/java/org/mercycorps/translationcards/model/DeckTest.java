@@ -39,6 +39,6 @@ public class DeckTest {
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
         deck.save();
 
-        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).addDeck(deck.getLabel(), deck.getPublisher(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSrcLanguageIso());
+        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).addDeck(deck.getLabel(), deck.getPublisher(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
     }
 }

@@ -20,25 +20,25 @@ public class Deck implements Serializable {
     private long dbId;
     private long timestamp;
     private boolean locked;
-    private String srcLanguageIso;
+    private String sourceLanguageIso;
     // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
 
     public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
-                boolean locked, String srcLanguageIso) {
+                boolean locked, String sourceLanguageIso) {
         this.label = label;
         this.publisher = publisher;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.srcLanguageIso = srcLanguageIso;
+        this.sourceLanguageIso = sourceLanguageIso;
         dictionaries = null;
     }
 
     public Deck(String label, String publisher, String externalId, long timestamp, boolean locked,
-                String srcLanguageIso) {
-        this(label, publisher, externalId, -1, timestamp, locked, srcLanguageIso);
+                String sourceLanguageIso) {
+        this(label, publisher, externalId, -1, timestamp, locked, sourceLanguageIso);
     }
 
     public Deck() {
@@ -75,8 +75,8 @@ public class Deck implements Serializable {
         return locked;
     }
 
-    public String getSrcLanguageIso() {
-        return srcLanguageIso;
+    public String getSourceLanguageIso() {
+        return sourceLanguageIso;
     }
 
     public Dictionary[] getDictionaries() {
@@ -91,7 +91,7 @@ public class Deck implements Serializable {
     }
 
     public Long save() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, srcLanguageIso);
+        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, sourceLanguageIso);
     }
 
     public void delete() {
@@ -101,4 +101,19 @@ public class Deck implements Serializable {
     public void update() {
 
     }
+
+    public void setSourceLanguageIso(String sourceLanguageIso){
+        this.sourceLanguageIso = sourceLanguageIso;
+
+    }
+
+    public String getDisplayLanguage() {
+        for (Locale locale : Locale.getAvailableLocales()) {
+            if (locale.getLanguage().equals(this.sourceLanguageIso)) {
+                return locale.getDisplayLanguage();
+            }
+        }
+        return "English";
+    }
+
 }

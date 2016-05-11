@@ -11,10 +11,13 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
+import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -40,6 +43,15 @@ public class EnterDeckSourceLanguageActivityTest {
         Activity activity = createActivityToTest(EnterDeckSourceLanguageActivity.class);
         ImageView imageView = findImageView(activity, R.id.deck_source_language_image);
         assertEquals(R.drawable.enter_phrase_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldSaveSourceLanguageToContextWhenNextButtonIsClicked() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(EnterDeckSourceLanguageActivity.class, newDeckContext);
+        setText(activity, R.id.deck_source_language_text, TestAddDeckActivityHelper.DEFAULT_SOURCE_LANGUAGE);
+        click(activity, R.id.deck_source_language_next_label);
+        verify(newDeckContext).setSourceLanguageIso(TestAddDeckActivityHelper.DEFAULT_SOURCE_LANGUAGE_ISO);
     }
 
 }
