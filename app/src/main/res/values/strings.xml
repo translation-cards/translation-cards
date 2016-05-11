@@ -108,6 +108,8 @@
     <string name="deck_source_language_title">Set the source language</string>
     <string name="deck_source_language_description">A deck has one source language. This is the language you would like to translate from. It\'s often the language your field workers are comfortable speaking.</string>
     <string name="deck_source_language_input">Source language</string>
+    <string name="deck_deck_review_and_save_title">Review and save your deck</string>
+    <string name="activity_deck_review_and_save_description">Here\'s your new deck. Before you save, be sure to review the title, author, and languages</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
