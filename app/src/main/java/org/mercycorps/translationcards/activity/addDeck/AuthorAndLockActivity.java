@@ -22,5 +22,8 @@ public class AuthorAndLockActivity extends AddDeckActivity{
         startNextActivity(this, EnterDeckDestinationLanguagesActivity.class);
     }
 
-
+    @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.deck_author_and_lock_image, R.drawable.enter_phrase_image);
+    }
 }

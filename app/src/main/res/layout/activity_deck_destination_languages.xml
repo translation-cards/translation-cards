@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/navigation_button_save"
+                android:text="@string/navigation_button_next"
                 android:textColor="@color/textDisabled"
                 android:textSize="16sp" />
 
@@ -151,7 +151,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="@drawable/forward_arrow_40p"
-                android:contentDescription="@string/navigation_button_save" />
+                android:contentDescription="@string/navigation_button_next" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

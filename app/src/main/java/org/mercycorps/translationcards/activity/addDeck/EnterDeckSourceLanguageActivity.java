@@ -11,6 +11,11 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         setContentView(R.layout.activity_deck_source_language);
     }
 
+    @Override
+    public void setBitmapsForActivity() {
+        setBitmap(R.id.deck_source_language_image, R.drawable.enter_phrase_image);
+    }
+
     @OnClick(R.id.deck_source_language_next_label)
     protected void nextButtonClicked() {
         startNextActivity(this, EnterDeckDestinationLanguagesActivity.class);
