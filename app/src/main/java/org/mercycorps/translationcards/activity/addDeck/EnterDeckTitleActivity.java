@@ -41,7 +41,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     protected void enterTitleNextButtonClicked(){
         if(!nextButton.isClickable())return;
         updateContextWithDeckTitle();
-        startNextActivity(EnterDeckTitleActivity.this, EnterDeckDestinationLanguagesActivity.class);
+        startNextActivity(EnterDeckTitleActivity.this, EnterDeckSourceLanguageActivity.class);
     }
 
     @OnTextChanged(R.id.deck_title_input)

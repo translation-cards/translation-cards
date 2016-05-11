@@ -54,10 +54,10 @@ public class EnterDeckTitleActivityTest {
     }
 
     @Test
-    public void shouldGoToDestinationLanguageActivityWhenNextButtonIsClicked() {
+    public void shouldGoToSourceLanguageActivityWhenNextButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithDefaultDeck();
         click(activity, R.id.enter_deck_title_next_label);
-        assertEquals(EnterDeckDestinationLanguagesActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterDeckSourceLanguageActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test

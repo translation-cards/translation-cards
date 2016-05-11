@@ -9,15 +9,17 @@ public class AuthorAndLockActivity extends AddDeckActivity{
 
     @Override
     public void inflateView() {
-
+        setContentView(R.layout.activity_deck_author_and_lock);
     }
 
     @OnClick(R.id.deck_author_and_lock_next_label)
-    protected void getStartedButtonClicked() {
+    protected void nextButtonClicked() {
+        startNextActivity(this, ReviewAndSaveActivity.class);
     }
 
     @OnClick(R.id.deck_author_and_lock_back)
-    public void getStartedBackButtonClicked(){
+    public void backButtonClicked(){
+        startNextActivity(this, EnterDeckDestinationLanguagesActivity.class);
     }
 
 

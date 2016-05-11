@@ -54,18 +54,14 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
             return;
         }
         updateContextWithLanguagesInput();
-        if (getContextFromIntent().getIsEditFlag()) {
-            getContextFromIntent().update();
-        } else {
-            getContextFromIntent().save();
-        }
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, MyDecksActivity.class);
+
+        startNextActivity(EnterDeckDestinationLanguagesActivity.this, AuthorAndLockActivity.class);
     }
 
     @OnClick(R.id.enter_destination_back_arrow)
     public void backButtonClicked() {
         updateContextWithLanguagesInput();
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterDeckTitleActivity.class);
+        startNextActivity(this, EnterDeckSourceLanguageActivity.class);
     }
 
     private void updateContextWithLanguagesInput() {

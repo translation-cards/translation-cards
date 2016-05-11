@@ -48,18 +48,18 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldGoToMyDecksActivityWhenNextButtonClicked() {
+    public void shouldGoToAuthorAndLockActivityWhenNextButtonClicked() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE, false);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.enter_destination_next_label);
-        assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(AuthorAndLockActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldGoToEnterTitleActivityWhenBackButtonIsClicked() {
+    public void shouldGoToEnterDeckSourceLanguageActivityWhenBackButtonIsClicked() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_back_arrow);
-        assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterDeckSourceLanguageActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
