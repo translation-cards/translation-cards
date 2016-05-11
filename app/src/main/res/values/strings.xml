@@ -102,6 +102,9 @@
     <string name="summary_detail_no_audio">It looks like you didn\'t record the phrase audio for this language. You can record the audio now but it\'s okay to come back later when you\'re ready.</string>
     <string name="delete_dialog_title">Delete Flashcard</string>
     <string name="no_audio_toggle_text">Hide %d cards that don\'t have audio in this language</string>
+    <string name="deck_author_and_lock_title">Set the author name and lock</string>
+    <string name="deck_author_and_lock_description">It\'s important to know who created a Translation Cards deck. Usually this is just your full name or your organisation if it\'s an official deck.</string>
+    <string name="deck_author_hint_text">Your name or organisation</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
