@@ -20,7 +20,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_review_and_save_back)
     public void backButtonClicked(){
-        startNextActivity(this, AuthorAndLockActivity.class);
+        startNextActivity(this, EnterAuthorActivity.class);
     }
 
     @Override

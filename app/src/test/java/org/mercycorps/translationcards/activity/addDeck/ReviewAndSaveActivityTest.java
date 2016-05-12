@@ -31,7 +31,7 @@ public class ReviewAndSaveActivityTest {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), "", false);
         Activity activity = createActivityToTestWithContext(ReviewAndSaveActivity.class, newDeckContext);
         click(activity, R.id.deck_review_and_save_back);
-        assertEquals(AuthorAndLockActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test

@@ -40,7 +40,7 @@
             android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.addDeck.AuthorAndLockActivity"
+            android:name=".activity.addDeck.EnterAuthorActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.addDeck.ReviewAndSaveActivity"

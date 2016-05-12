@@ -7,11 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -55,7 +50,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
         }
         updateContextWithLanguagesInput();
 
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, AuthorAndLockActivity.class);
+        startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterAuthorActivity.class);
     }
 
     @OnClick(R.id.enter_destination_back_arrow)

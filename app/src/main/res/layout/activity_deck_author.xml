@@ -9,35 +9,35 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/deck_author_and_lock_image"
+        android:id="@+id/deck_author_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/deck_author_and_lock_title" />
+        android:contentDescription="@string/deck_author_title" />
 
     <TextView
-        android:id="@+id/deck_author_and_lock"
+        android:id="@+id/deck_author"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/deck_author_and_lock_image"
+        android:layout_below="@id/deck_author_image"
         android:background="@color/colorPrimary"
         android:paddingBottom="18dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="18dp"
-        android:text="@string/deck_author_and_lock_title"
+        android:text="@string/deck_author_title"
         android:textColor="@color/textColor"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/deck_author_and_lock_description"
+        android:id="@+id/deck_author_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/deck_author_and_lock"
+        android:layout_below="@+id/deck_author"
         android:lineSpacingExtra="3dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -47,27 +47,28 @@
 
 
     <EditText
-        android:id="@+id/deck_input"
+        android:id="@+id/deck_author_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/deck_author_and_lock_description"
+        android:layout_below="@+id/deck_author_description"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="24dp"
         android:hint="@string/deck_author_hint_text"
         android:imeOptions="actionDone"
         android:inputType="text"
+        android:maxLength="50"
         android:textColorHighlight="@color/colorPrimary"
         android:textColorHint="@color/borderColor" />
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="66dp"
-        android:layout_below="@id/deck_input" />
+        android:layout_below="@id/deck_author_input" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -78,7 +79,7 @@
         android:background="@color/navBarColor">
 
         <LinearLayout
-            android:id="@+id/deck_author_and_lock_back"
+            android:id="@+id/deck_author_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -135,7 +136,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/deck_author_and_lock_next_label"
+            android:id="@+id/deck_author_next_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -145,7 +146,7 @@
             android:paddingTop="16dp">
 
             <TextView
-                android:id="@+id/deck_author_and_lock_next_text"
+                android:id="@+id/deck_author_next_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -154,7 +155,7 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/deck_author_and_lock_next_image"
+                android:id="@+id/deck_author_next_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="@drawable/forward_arrow_40p" />

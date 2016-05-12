@@ -15,7 +15,7 @@ import java.util.Locale;
 public class Deck implements Serializable {
 
     private String label;
-    private String publisher;
+    private String author;
     private String externalId;
     private long dbId;
     private long timestamp;
@@ -24,10 +24,10 @@ public class Deck implements Serializable {
     // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
 
-    public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
+    public Deck(String label, String author, String externalId, long dbId, long timestamp,
                 boolean locked, String sourceLanguageIso) {
         this.label = label;
-        this.publisher = publisher;
+        this.author = author;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
@@ -36,9 +36,9 @@ public class Deck implements Serializable {
         dictionaries = null;
     }
 
-    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked,
+    public Deck(String label, String author, String externalId, long timestamp, boolean locked,
                 String sourceLanguageIso) {
-        this(label, publisher, externalId, -1, timestamp, locked, sourceLanguageIso);
+        this(label, author, externalId, -1, timestamp, locked, sourceLanguageIso);
     }
 
     public Deck() {
@@ -49,8 +49,8 @@ public class Deck implements Serializable {
         return label;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public String getAuthor() {
+        return author;
     }
 
     public String getExternalId() {
@@ -91,7 +91,7 @@ public class Deck implements Serializable {
     }
 
     public Long save() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, sourceLanguageIso);
+        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, author, timestamp, externalId, "", locked, sourceLanguageIso);
     }
 
     public void delete() {
@@ -116,4 +116,7 @@ public class Deck implements Serializable {
         return "English";
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

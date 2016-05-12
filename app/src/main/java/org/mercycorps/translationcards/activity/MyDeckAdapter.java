@@ -84,7 +84,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     private void initFields(Deck deck){
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
-        deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
+        deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
         translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries()), "  "));
     }
 

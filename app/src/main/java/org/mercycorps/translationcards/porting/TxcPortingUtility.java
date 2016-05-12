@@ -105,7 +105,7 @@ public class TxcPortingUtility {
         JSONObject json = new JSONObject();
         try {
             json.put(JsonKeys.DECK_LABEL, exportedDeckName);
-            json.put(JsonKeys.PUBLISHER, deck.getPublisher());
+            json.put(JsonKeys.PUBLISHER, deck.getAuthor());
             if (deck.getExternalId() != null) {
                 json.put(JsonKeys.EXTERNAL_ID, deck.getExternalId());
             }

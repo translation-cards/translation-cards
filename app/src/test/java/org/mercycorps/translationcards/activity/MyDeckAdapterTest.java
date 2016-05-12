@@ -89,7 +89,7 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldHaveDeckInformationWhenDeckIsPresent() {
-        when(deck.getPublisher()).thenReturn("DefaultPublisher");
+        when(deck.getAuthor()).thenReturn("DefaultPublisher");
         when(deck.getCreationDateString()).thenReturn("12/31/69");
         View view = getAdapterViewForDeck(deck);
 
