@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
@@ -91,6 +92,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
+        translationCardStates = new boolean[dictionaries[currentDictionaryIndex].getTranslationCount()];
+
         initTabs();
         initList();
         setDictionary(currentDictionaryIndex);
@@ -205,8 +208,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void setDictionary(int dictionaryIndex) {
         decoratedMediaManager.stop();
-        translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
-        Arrays.fill(translationCardStates, false);
+//        translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
+//        Arrays.fill(translationCardStates, false);
 
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
@@ -244,31 +247,28 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater layoutInflater = getLayoutInflater();
-                convertView = layoutInflater.inflate(R.layout.translation_item, parent, false);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.expand_arrow);
+        public View getView(int position, View translationItemView, ViewGroup parent) {
+            if (translationItemView == null) {
+                translationItemView = inflateTranslationItemView(parent);
             }
 
             if (translationCardStates[position]) {
-                convertView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                translationItemView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
+                translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
                         R.drawable.collapse_arrow);
             } else {
-                convertView.findViewById(R.id.translation_child).setVisibility(View.GONE);
-                convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                translationItemView.findViewById(R.id.translation_child).setVisibility(View.GONE);
+                translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
                         R.drawable.expand_arrow);
             }
 
-            convertView.setOnClickListener(null);
+            translationItemView.setOnClickListener(null);
 
-            convertView.findViewById(R.id.translation_indicator_layout)
-                    .setOnClickListener(new CardIndicatorClickListener(convertView, position));
+            translationItemView.findViewById(R.id.translation_indicator_layout)
+                    .setOnClickListener(new CardIndicatorClickListener(translationItemView, position));
 
-            View editView = convertView.findViewById(R.id.translation_card_edit);
-            View deleteView = convertView.findViewById(R.id.translation_card_delete);
+            View editView = translationItemView.findViewById(R.id.translation_card_edit);
+            View deleteView = translationItemView.findViewById(R.id.translation_card_delete);
             if (deck.isLocked()) {
                 editView.setVisibility(View.GONE);
                 deleteView.setVisibility(View.GONE);
@@ -277,18 +277,42 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position)));
             }
 
+            String currentDictionaryLabel = dictionaries[currentDictionaryIndex].getLabel();
+
+            ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
+                    R.id.list_item_progress_bar);
+
+            setCardTextView(position, translationItemView, currentDictionaryLabel, progressBar);
+
+            setTranslatedTextView(position, translationItemView, currentDictionaryLabel);
+
+            translationItemView.findViewById(R.id.translated_text_layout)
+                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
+                            decoratedMediaManager, currentDictionaryLabel));
+
+            return translationItemView;
+        }
+
+        @NonNull
+        private View inflateTranslationItemView(ViewGroup parent) {
+            View translationItemView;LayoutInflater layoutInflater = getLayoutInflater();
+            translationItemView = layoutInflater.inflate(R.layout.translation_item, parent, false);
+            translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                    R.drawable.expand_arrow);
+            return translationItemView;
+        }
+
+        private void setCardTextView(int position, View convertView, String currentDictionaryLabel, ProgressBar progressBar) {
             TextView cardTextView = (TextView) convertView.findViewById(
                     R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
             int cardTextColor = getItem(position).isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
             cardTextView.setTextColor(ContextCompat.getColor(TranslationsActivity.this, cardTextColor));
-
-            ProgressBar progressBar = (ProgressBar) convertView.findViewById(
-                    R.id.list_item_progress_bar);
-            String currentDictionaryLabel = dictionaries[currentDictionaryIndex].getLabel();
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
                     decoratedMediaManager, currentDictionaryLabel));
+        }
 
+        private void setTranslatedTextView(int position, View convertView, String currentDictionaryLabel) {
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
                 translatedText.setText(String.format(getString(R.string.translated_text_hint), currentDictionaryLabel));
@@ -301,12 +325,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                         R.color.primaryTextColor));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             }
-
-            convertView.findViewById(R.id.translated_text_layout)
-                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                            decoratedMediaManager, currentDictionaryLabel));
-
-            return convertView;
         }
     }
 
