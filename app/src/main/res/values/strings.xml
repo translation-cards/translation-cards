@@ -101,6 +101,7 @@
     <string name ="delete_dialog_message">Are you sure you want to delete this translation card from all languages?</string>
     <string name="summary_detail_no_audio">It looks like you didn\'t record the phrase audio for this language. You can record the audio now but it\'s okay to come back later when you\'re ready.</string>
     <string name="delete_dialog_title">Delete Flashcard</string>
+    <string name="no_audio_toggle_text">Hide %d cards that don\'t have audio in this language</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
