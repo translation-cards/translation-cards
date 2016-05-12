@@ -14,6 +14,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
+        getContextFromIntent().save();
         startNextActivity(this, MyDecksActivity.class);
     }
 

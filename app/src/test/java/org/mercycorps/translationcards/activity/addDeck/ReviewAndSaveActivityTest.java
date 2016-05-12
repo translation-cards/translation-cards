@@ -13,11 +13,12 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -49,4 +50,11 @@ public class ReviewAndSaveActivityTest {
         assertEquals(R.drawable.summary_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
     }
 
+    @Test
+    public void shouldSaveNewDeckContextWhenUserClicksSave() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = createActivityToTestWithContext(ReviewAndSaveActivity.class, newDeckContext);
+        click(activity, R.id.deck_review_and_save_button);
+        verify(newDeckContext).save();
+    }
 }
