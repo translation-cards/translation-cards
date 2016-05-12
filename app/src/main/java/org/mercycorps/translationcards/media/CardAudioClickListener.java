@@ -22,12 +22,14 @@ public class CardAudioClickListener implements View.OnClickListener {
     private Translation translation;
     private final ProgressBar progressBar;
     private DecoratedMediaManager decoratedMediaManager;
+    private String currentDictionary;
 
     public CardAudioClickListener(Translation translation, ProgressBar progressBar,
-                                  DecoratedMediaManager decoratedMediaManager) {
+                                  DecoratedMediaManager decoratedMediaManager, String currentDictionary) {
         this.translation = translation;
         this.progressBar = progressBar;
         this.decoratedMediaManager = decoratedMediaManager;
+        this.currentDictionary = currentDictionary;
     }
 
     @Override
@@ -40,7 +42,8 @@ public class CardAudioClickListener implements View.OnClickListener {
                 decoratedMediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
             } catch (AudioFileException e) {
                 Context context = progressBar.getContext();
-                ToastHelper.showToast(context, context.getString(R.string.could_not_play_audio_message));
+                String noAudioMessage = String.format(context.getString(R.string.could_not_play_audio_message), currentDictionary);
+                ToastHelper.showToast(context, noAudioMessage);
             }
         }
     }

@@ -285,13 +285,13 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
             ProgressBar progressBar = (ProgressBar) convertView.findViewById(
                     R.id.list_item_progress_bar);
+            String currentDictionaryLabel = dictionaries[currentDictionaryIndex].getLabel();
             cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                    decoratedMediaManager));
+                    decoratedMediaManager, currentDictionaryLabel));
 
             TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
             if(getItem(position).getTranslatedText().isEmpty()){
-                translatedText.setText(String.format(getString(R.string.translated_text_hint),
-                        dictionaries[currentDictionaryIndex].getLabel()));
+                translatedText.setText(String.format(getString(R.string.translated_text_hint), currentDictionaryLabel));
                 translatedText.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.textDisabled));
                 translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
@@ -304,7 +304,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
             convertView.findViewById(R.id.translated_text_layout)
                     .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                            decoratedMediaManager));
+                            decoratedMediaManager, currentDictionaryLabel));
 
             return convertView;
         }

@@ -112,11 +112,11 @@ public class SummaryActivityTest {
     public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
         Activity activity = createActivityToTest(SummaryActivity.class);
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
-        doThrow(new AudioFileException("error message")).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
+        doThrow(new AudioFileException()).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
 
         activity.findViewById(R.id.summary_translation_card).performClick();
 
-        assertNotNull(ShadowToast.getLatestToast());
+        assertEquals(DEFAULT_DICTIONARY_LABEL + " translation not recorded.", ShadowToast.getTextOfLatestToast());
     }
 
     @Test

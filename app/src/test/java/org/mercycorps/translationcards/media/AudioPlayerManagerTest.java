@@ -66,13 +66,4 @@ public class AudioPlayerManagerTest {
     public void shouldThrowExceptionWhenNoAudioFileIsFound() throws AudioFileException, IOException {
         audioPlayerManager.play("", false);
     }
-
-    @Test
-    public void shouldThrowExceptionWithMessageWhenNoAudioFileIsFound() {
-        try {
-            audioPlayerManager.play("", false);
-        } catch(AudioFileException e) {
-            assertEquals("Audio file not found.", e.getMessage());
-        }
-    }
 }

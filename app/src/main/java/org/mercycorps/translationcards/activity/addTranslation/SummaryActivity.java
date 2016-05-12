@@ -70,7 +70,9 @@ public class SummaryActivity extends AddTranslationActivity {
                 mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
             }
         } catch (AudioFileException e) {
-            showToast(e.getMessage());
+            String message = String.format(getString(R.string.could_not_play_audio_message),
+                    getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel());
+            showToast(message);
             Log.d(TAG, e.getMessage());
         }
     }
