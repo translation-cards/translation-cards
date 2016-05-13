@@ -83,6 +83,16 @@ public class Dictionary implements Serializable {
         return translation;
     }
 
+    public int getNumberOfTranslationsWithNoRecording() {
+        int count = 0;
+        for(Translation translation : translations) {
+            if(!translation.isAudioFilePresent()) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
 
     public long getDbId() {
         return dbId;

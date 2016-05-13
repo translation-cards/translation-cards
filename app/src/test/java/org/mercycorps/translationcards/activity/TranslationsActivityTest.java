@@ -40,6 +40,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Mockito.times;
@@ -136,13 +137,13 @@ public class TranslationsActivityTest {
     @Test
     public void shouldNotDisplayHeaderInEmptyDeck() {
         Activity activity= createEmptyTranslationsActivity();
-        TextView header = findTextView(activity, R.id.translation_list_header);
+        LinearLayout header = findLinearLayout(activity, R.id.translation_list_header);
         assertEquals(View.GONE, header.getVisibility());
     }
 
     @Test
     public void shouldDisplayHeaderWhenDeckIsPopulated() {
-        TextView header = findTextView(translationsActivity, R.id.translation_list_header);
+        LinearLayout header = findLinearLayout(translationsActivity, R.id.translation_list_header);
         assertEquals(View.VISIBLE, header.getVisibility());
     }
 
@@ -431,7 +432,7 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldNotSetEditFlagInContextWhenCreateNewTranslationButtonIsClicked() {
+    public void shouldNotSetEditFlagInContextWhenCreateNewTranslationButtonIsClicked(){
         click(translationsActivity, R.id.add_translation_button);
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
@@ -440,10 +441,16 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded() {
+    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
         View translationsListItem = listItemWithNoTranslatedTextOrAudio();
         TextView translationText = (TextView)translationsListItem.findViewById(R.id.origin_translation_text);
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayNumberOfCardsWithNoAudioInNoAudioToggleText(){
+        TextView noAudioText = findTextView(translationsActivity, R.id.no_audio_toggle_text);
+        assertEquals("Hide 2 cards that don't have audio in this language", noAudioText.getText().toString());
     }
 
     private View firstTranslationCardInListView() {

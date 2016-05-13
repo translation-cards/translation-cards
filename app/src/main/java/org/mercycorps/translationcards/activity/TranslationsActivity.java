@@ -112,6 +112,9 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private void updateHeader() {
         int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
+        int numberofTranslations = dictionaries[currentDictionaryIndex].getNumberOfTranslationsWithNoRecording();
+        String message = String.format(getString(R.string.no_audio_toggle_text), numberofTranslations);
+        ((TextView)findViewById(R.id.no_audio_toggle_text)).setText(message);
     }
 
     private void updateAddTranslationButtonVisibility() {
