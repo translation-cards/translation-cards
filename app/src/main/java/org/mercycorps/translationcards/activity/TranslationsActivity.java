@@ -53,6 +53,8 @@ import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -82,7 +84,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private View[] languageTabBorders;
     private CardListAdapter listAdapter;
     private Deck deck;
-    private boolean[] translationCardStates;
+    private List<Boolean> translationCardStates;
     private DecoratedMediaManager decoratedMediaManager;
     private Boolean hideTranslationsWithoutAudioToggle;
 
@@ -95,7 +97,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
-        translationCardStates = new boolean[dictionaries[currentDictionaryIndex].getTranslationCount()];
+        translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[dictionaries[currentDictionaryIndex].getTranslationCount()]));
+        Collections.fill(translationCardStates, Boolean.FALSE);
         hideTranslationsWithoutAudioToggle = false;
 
         initTabs();
@@ -113,9 +116,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateHeader() {
-        int headerVisibility = dictionaries[currentDictionaryIndex].getTranslationCount() == 0 ? View.GONE : View.VISIBLE;
+        Dictionary currentDictionary = dictionaries[currentDictionaryIndex];
+
+        int headerVisibility = (currentDictionary.getTranslationCount() == 0) ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
-        int numberofTranslations = dictionaries[currentDictionaryIndex].getNumberOfTranslationsWithNoRecording();
+        int numberofTranslations = currentDictionary.getNumberOfTranslationsWithNoRecording();
         String message = String.format(getString(R.string.no_audio_toggle_text), numberofTranslations);
         ((TextView)findViewById(R.id.no_audio_toggle_text)).setText(message);
     }
@@ -127,6 +132,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideTranslationsWithoutAudioToggle = isChecked;
+                Collections.fill(translationCardStates, Boolean.FALSE);
                 setDictionary(currentDictionaryIndex);
             }
         });
@@ -271,7 +277,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 translationItemView = inflateTranslationItemView(parent);
             }
 
-            if (translationCardStates[position]) {
+            if (translationCardStates.get(position)) {
                 translationItemView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
                 translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
                         R.drawable.collapse_arrow);
@@ -366,12 +372,12 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 translationChild.setVisibility(View.VISIBLE);
                 translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
                         R.drawable.collapse_arrow);
-                translationCardStates[position] = true;
+                translationCardStates.set(position, true);
             } else {
                 translationChild.setVisibility(View.GONE);
                 translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
                         R.drawable.expand_arrow);
-                translationCardStates[position] = false;
+                translationCardStates.set(position, false);
             }
         }
     }
