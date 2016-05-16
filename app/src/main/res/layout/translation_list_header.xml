@@ -5,11 +5,9 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_marginTop="28dp"
 android:paddingBottom="8dp"
-android:paddingTop="16dp"
+android:paddingTop="24dp"
 android:layout_below="@+id/tabScroll"
 android:id="@+id/translation_list_header"
-xmlns:tools="http://schemas.android.com/tools"
-tools:targetApi="14"
 android:weightSum="1">
 
 <TextView
@@ -22,12 +20,13 @@ android:weightSum="1">
     android:lineSpacingExtra="3dp"
     android:text="@string/no_audio_toggle_text"
     android:textSize="16.5sp"
-    android:layout_weight=".8"/>
-<Switch
+    android:layout_weight=".80"/>
+<android.support.v7.widget.SwitchCompat
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_marginRight="16dp"
     android:layout_marginEnd="16dp"
-    android:layout_weight=".2"/>
-
+    android:layout_weight=".20"
+    android:switchMinWidth="54dp"
+    android:id="@+id/no_audio_toggle"/>
 </LinearLayout>

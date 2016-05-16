@@ -40,6 +40,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
@@ -91,7 +92,7 @@ public class TranslationsActivityTest {
     private void initializeMockDbManager() {
         dictionaries = new Dictionary[3];
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
-        Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "", DEFAULT_LONG, null);
+        Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "audio.mp3", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
@@ -240,7 +241,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldHaveCorrectHintMessageWhenTranslatedTextIsEmpty() {
-        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
+        View translationsListItem = listItemWithNoTranslatedText();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -250,7 +251,7 @@ public class TranslationsActivityTest {
     @Test
     public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
         int disabledTextColor = -7960954;
-        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
+        View translationsListItem = listItemWithNoTranslatedText();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -442,7 +443,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
-        View translationsListItem = listItemWithNoTranslatedTextOrAudio();
+        View translationsListItem = firstTranslationCardInListView();
         TextView translationText = (TextView)translationsListItem.findViewById(R.id.origin_translation_text);
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
@@ -450,7 +451,24 @@ public class TranslationsActivityTest {
     @Test
     public void shouldDisplayNumberOfCardsWithNoAudioInNoAudioToggleText(){
         TextView noAudioText = findTextView(translationsActivity, R.id.no_audio_toggle_text);
-        assertEquals("Hide 2 cards that don't have audio in this language", noAudioText.getText().toString());
+        assertEquals("Hide 1 cards that don't have audio in this language", noAudioText.getText().toString());
+    }
+
+    @Test
+    public void shouldHideOneCardWithNoAudioWhenToggleIsClicked() {
+        click(translationsActivity, R.id.no_audio_toggle);
+
+        ListView translationsList = findAnyView(translationsActivity, R.id.translations_list);
+        assertEquals(3, translationsList.getAdapter().getCount());
+    }
+
+    @Test
+    public void shouldShowAllCardsWhenToggleIsClickedOff() {
+        click(translationsActivity, R.id.no_audio_toggle);
+        click(translationsActivity, R.id.no_audio_toggle);
+
+        ListView translationsList = findAnyView(translationsActivity, R.id.translations_list);
+        assertEquals(4, translationsList.getAdapter().getCount());
     }
 
     private View firstTranslationCardInListView() {
@@ -459,7 +477,7 @@ public class TranslationsActivityTest {
         return translationsList.getAdapter().getView(1, null, translationsList);
     }
 
-    private View listItemWithNoTranslatedTextOrAudio() {
+    private View listItemWithNoTranslatedText() {
         ListView translationsList = (ListView) translationsActivity.findViewById(
                 R.id.translations_list);
         return translationsList.getAdapter().getView(2, null, translationsList);

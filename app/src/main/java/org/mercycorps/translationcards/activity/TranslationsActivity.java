@@ -24,11 +24,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SwitchCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -50,7 +53,6 @@ import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -82,6 +84,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private Deck deck;
     private boolean[] translationCardStates;
     private DecoratedMediaManager decoratedMediaManager;
+    private Boolean hideTranslationsWithoutAudioToggle;
 
     @Override
     public void inflateView() {
@@ -93,11 +96,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
         translationCardStates = new boolean[dictionaries[currentDictionaryIndex].getTranslationCount()];
+        hideTranslationsWithoutAudioToggle = false;
 
         initTabs();
         initList();
         setDictionary(currentDictionaryIndex);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -115,6 +118,18 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         int numberofTranslations = dictionaries[currentDictionaryIndex].getNumberOfTranslationsWithNoRecording();
         String message = String.format(getString(R.string.no_audio_toggle_text), numberofTranslations);
         ((TextView)findViewById(R.id.no_audio_toggle_text)).setText(message);
+    }
+
+    private void setSwitchClickListener() {
+        SwitchCompat noAudioSwitch = (SwitchCompat) findViewById(R.id.no_audio_toggle);
+
+        noAudioSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hideTranslationsWithoutAudioToggle = isChecked;
+                setDictionary(currentDictionaryIndex);
+            }
+        });
     }
 
     private void updateAddTranslationButtonVisibility() {
@@ -167,7 +182,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.translation_list_header, list, false));
         findViewById(R.id.translation_list_header).setOnClickListener(null);
-
+        setSwitchClickListener();
         inflateListFooter();
 
         listAdapter = new CardListAdapter(
@@ -211,8 +226,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void setDictionary(int dictionaryIndex) {
         decoratedMediaManager.stop();
-//        translationCardStates = new boolean[dictionaries[dictionaryIndex].getTranslationCount()];
-//        Arrays.fill(translationCardStates, false);
 
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
@@ -226,10 +239,13 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         currentDictionaryIndex = dictionaryIndex;
         Dictionary dictionary = dictionaries[dictionaryIndex];
         listAdapter.clear();
-        for (int translationIndex = 0;
-             translationIndex < dictionary.getTranslationCount();
-             translationIndex++) {
-            listAdapter.add(dictionary.getTranslation(translationIndex));
+
+        for (int translationIndex = 0; translationIndex < dictionary.getTranslationCount(); translationIndex++) {
+            Translation currentTranslation = dictionary.getTranslation(translationIndex);
+            if(hideTranslationsWithoutAudioToggle && !currentTranslation.isAudioFilePresent()){
+                continue;
+            }
+            listAdapter.add(currentTranslation);
         }
         updateHeader();
         updateWelcomeInstructionsState();
@@ -298,14 +314,15 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         @NonNull
         private View inflateTranslationItemView(ViewGroup parent) {
-            View translationItemView;LayoutInflater layoutInflater = getLayoutInflater();
-            translationItemView = layoutInflater.inflate(R.layout.translation_item, parent, false);
+            View translationItemView = getLayoutInflater().inflate(R.layout.translation_item,
+                    parent, false);
             translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
                     R.drawable.expand_arrow);
             return translationItemView;
         }
 
-        private void setCardTextView(int position, View convertView, String currentDictionaryLabel, ProgressBar progressBar) {
+        private void setCardTextView(int position, View convertView, String currentDictionaryLabel,
+                                     ProgressBar progressBar) {
             TextView cardTextView = (TextView) convertView.findViewById(
                     R.id.origin_translation_text);
             cardTextView.setText(getItem(position).getLabel());
