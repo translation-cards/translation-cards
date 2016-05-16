@@ -33,7 +33,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=1.0.3";
+                    "viewform?entry.1158658650=1.0.4";
 
     @Override
     public void inflateView() {
