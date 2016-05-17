@@ -1,3 +1,5 @@
+beep boop
+
 # Translation Cards
 Build Status: [![Build Image](https://snap-ci.com/translation-cards/translation-cards/branch/master/build_image)](https://snap-ci.com/translation-cards/translation-cards/branch/master)
 
