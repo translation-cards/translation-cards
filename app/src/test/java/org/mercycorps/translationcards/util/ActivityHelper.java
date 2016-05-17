@@ -1,9 +1,10 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.util;
 
 
 import android.app.Activity;
 import android.content.Intent;
 
+import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
 

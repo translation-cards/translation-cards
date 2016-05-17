@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.activity.ActivityHelper;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.data.Deck;
-import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
 
 public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> extends ActivityHelper<T> {
 
-    public static final String DEFAULT_DECK_NAME = "MercyCorps Deck";
-    public static final String DEFAULT_DECK_ISO_CODE = "en";
+    public final String DEFAULT_DECK_NAME = "MercyCorps Deck";
+    public final String DEFAULT_DECK_ISO_CODE = "en";
 
     public AddDeckActivityHelper(Class<T> instanceOfClass) {
         super(instanceOfClass);

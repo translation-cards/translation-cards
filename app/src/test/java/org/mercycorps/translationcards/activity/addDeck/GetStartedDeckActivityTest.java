@@ -18,7 +18,6 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.activity.addDeck.AddDeckActivity.INTENT_KEY_DECK;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
@@ -84,6 +83,9 @@ public class GetStartedDeckActivityTest {
         Activity activity = helper.createActivityToTest();
         TextView description = findTextView(activity, R.id.deck_get_started_detail);
         assertEquals("Creating a new deck allows you to add custom translation cards.", description.getText().toString());
+    }
 
+    public NewDeckContext getContextFromIntent(Activity activity) {
+        return (NewDeckContext) activity.getIntent().getSerializableExtra(AddDeckActivity.INTENT_KEY_DECK);
     }
 }

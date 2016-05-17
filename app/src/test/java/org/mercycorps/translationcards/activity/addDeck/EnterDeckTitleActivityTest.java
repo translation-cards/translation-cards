@@ -12,13 +12,11 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
-import org.mercycorps.translationcards.util.TestAddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
@@ -30,9 +28,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
-/**
- * Created by njimenez on 4/12/16.
- */
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterDeckTitleActivityTest {
@@ -102,7 +97,7 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldChangeNextButtonColorWhenDeckTitleIsNotEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         TextView nextButtonLabelText = findTextView(activity, R.id.enter_deck_title_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonLabelText.getCurrentTextColor());
     }
@@ -110,7 +105,7 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldChangeNextButtonArrowColorWhenDeckTitleIsNotEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_deck_title_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
@@ -118,7 +113,7 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldChangeNextButtonColorWhenDeckTitleIsSetEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         setText(activity, R.id.deck_title_input, NO_TEXT);
         TextView nextButtonLabelText = findTextView(activity, R.id.enter_deck_title_next_text);
         assertEquals(getColor(activity, R.color.textDisabled), nextButtonLabelText.getCurrentTextColor());
@@ -127,7 +122,7 @@ public class EnterDeckTitleActivityTest {
     @Test
     public void shouldChangeNextButtonArrowColorToDisabledWhenDeckTitleIsSetEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         setText(activity, R.id.deck_title_input, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_deck_title_next_image);
         assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
@@ -137,24 +132,24 @@ public class EnterDeckTitleActivityTest {
     public void shouldSetDeckTitleWhenActivityIsCreatedWithExistingDeckTitle() {
         Activity activity = helper.createActivityToTestWithDefaultDeck();
         EditText enterDeckTitle = findAnyView(activity, R.id.deck_title_input);
-        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_NAME, enterDeckTitle.getText().toString());
+        assertEquals(helper.DEFAULT_DECK_NAME, enterDeckTitle.getText().toString());
     }
 
     @Test
     public void shouldSaveDeckTitleToContextWhenNextButtonIsClicked() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         click(activity, R.id.enter_deck_title_next_label);
-        verify(newDeckContext).setDeckTitle(TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        verify(newDeckContext).setDeckTitle(helper.DEFAULT_DECK_NAME);
     }
 
     @Test
     public void shouldSaveDeckTitleToContextWhenBackButtonIsClicked() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.deck_title_input, TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         click(activity, R.id.enter_deck_title_back);
-        verify(newDeckContext).setDeckTitle(TestAddDeckActivityHelper.DEFAULT_DECK_NAME);
+        verify(newDeckContext).setDeckTitle(helper.DEFAULT_DECK_NAME);
     }
 }
