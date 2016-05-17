@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.mercycorps.translationcards.util.TestAddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -19,10 +20,6 @@ import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
@@ -31,7 +28,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 /**

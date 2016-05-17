@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,19 +10,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
-import org.robolectric.Robolectric;
+import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.ActivityController;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
