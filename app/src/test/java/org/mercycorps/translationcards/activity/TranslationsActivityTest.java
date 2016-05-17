@@ -173,7 +173,8 @@ public class TranslationsActivityTest {
         Intent intent = new Intent();
         intent.putExtra("Deck", deck);
         initializeEmptyDeckMockDbManager();
-        return Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+        controller = Robolectric.buildActivity(TranslationsActivity.class);
+        return controller.withIntent(intent).create().get();
     }
 
     private Activity createLockedDeckTranslationsActivity() {

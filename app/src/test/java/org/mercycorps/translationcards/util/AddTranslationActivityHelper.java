@@ -5,11 +5,9 @@ import android.content.Intent;
 
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
-import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
-import org.robolectric.Robolectric;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,10 +20,6 @@ public class AddTranslationActivityHelper<T extends AbstractTranslationCardsActi
     public static final String DEFAULT_AUDIO_FILE = "DefaultAudioFile";
     public static final String DEFAULT_SOURCE_PHRASE = "SourcePhrase";
     public static final String DEFAULT_TRANSLATION_LABEL = "TranslationLabel";
-    public static final Long INITIAL_DELAY = (long) 0;
-    public static final Long PERIOD = (long) 100;
-    public static final int DEFAULT_POSITION = 5;
-    public static final int DEFAULT_MAX = 10;
     private static final boolean IS_EDIT = true;
     private static final String ARABIC_DICTIONARY_LABEL = "Arabic";
     private static final String ARABIC_TRANSLATION = "Arabic Translation";
