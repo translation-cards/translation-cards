@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowPopupMenu;
+import org.robolectric.util.ActivityController;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -53,6 +55,7 @@ public class MyDeckAdapterTest {
     private Deck deck;
     private View view;
     private MyDecksActivity activity;
+    private ActivityController<MyDecksActivity> controller;
 
     @Before
     public void setUp() throws Exception {
@@ -60,9 +63,15 @@ public class MyDeckAdapterTest {
         view = getAdapterViewForDeck(deck);
     }
 
+    @After
+    public void tearDown() {
+        controller.pause().stop().destroy();
+    }
+
     private View getAdapterViewForDeck(Deck deck) {
         Intent intent = new Intent();
-        activity = Robolectric.buildActivity(MyDecksActivity.class).withIntent(intent).create().get();
+        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        activity = controller.withIntent(intent).create().get();
         when(deck.getDictionaries()).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck));
         return adapter.getView(0, null, null);

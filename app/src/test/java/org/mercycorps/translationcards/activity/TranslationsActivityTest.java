@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.util.ActivityController;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -77,6 +79,7 @@ public class TranslationsActivityTest {
     private Translation translation;
     private Deck deck;
     private Dictionary[] dictionaries;
+    ActivityController<TranslationsActivity> controller;
 
     @Before
     public void setUp() {
@@ -86,7 +89,14 @@ public class TranslationsActivityTest {
         deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
         intent.putExtra("Deck", deck);
         initializeMockDbManager();
-        translationsActivity = Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+        controller = Robolectric.buildActivity(TranslationsActivity.class);
+        translationsActivity = controller.withIntent(intent).create().get();
+    }
+
+    @After
+    public void teardown() {
+        translationsActivity.finish();
+        controller.pause().stop().destroy();
     }
 
     private void initializeMockDbManager() {
@@ -163,7 +173,8 @@ public class TranslationsActivityTest {
         Intent intent = new Intent();
         intent.putExtra("Deck", deck);
         initializeEmptyDeckMockDbManager();
-        return Robolectric.buildActivity(TranslationsActivity.class).withIntent(intent).create().get();
+        controller = Robolectric.buildActivity(TranslationsActivity.class);
+        return controller.withIntent(intent).create().get();
     }
 
     private Activity createLockedDeckTranslationsActivity() {

@@ -5,19 +5,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createActivityToTest;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
@@ -31,18 +32,24 @@ public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
             "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.4";
     private static final String DEFAULT_ISO_CODE = "en";
+    private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
+    
+    @After 
+    public void teardown() {
+        helper.teardown();
+    }
 
     @Test
     public void testDecksActivityCreation(){
         setUpMocksWithEmptyDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         assertNotNull(activity);
     }
 
     @Test
     public void shouldShowDecksFooterTitleWhenNoDecksArePresent(){
         setUpMocksWithEmptyDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         TextView textView = findTextView(activity, R.id.empty_my_decks_title);
         assertEquals(View.VISIBLE, textView.getVisibility());
     }
@@ -50,7 +57,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldShowDecksHeader() {
         setUpMockWithDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         LinearLayout linearLayout = findLinearLayout(activity, R.id.my_decks_header);
         assertEquals(View.VISIBLE, linearLayout.getVisibility());
     }
@@ -58,7 +65,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldNotShowDecksFooterTitleWhenDecksArePresent(){
         setUpMockWithDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         TextView textView = findTextView(activity, R.id.empty_my_decks_title);
         assertEquals(View.GONE, textView.getVisibility());
     }
@@ -66,7 +73,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldNotShowDecksFooterMessageWhenDecksArePresent(){
         setUpMockWithDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         TextView textView = findAnyView(activity, R.id.empty_my_decks_message);
         assertEquals(View.GONE, textView.getVisibility());
     }
@@ -74,7 +81,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldLaunchFeedbackFormWhenFeedbackButtonIsClicked() throws Exception {
         setUpMockWithDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         click(activity, R.id.feedback_button);
         assertEquals(URI, shadowOf(activity).getNextStartedActivity().getData().toString());
     }
@@ -82,7 +89,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldLaunchImportDeckWhenImportButtonIsClicked(){
         setUpMocksWithEmptyDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         click(activity, R.id.import_deck_button);
         assertEquals("file/*", shadowOf(activity).getNextStartedActivity().getType());
     }
@@ -90,7 +97,7 @@ public class MyDecksActivityTest {
     @Test
     public void shouldLaunchCreateDeckFlowWhenCreateButtonIsClicked(){
         setUpMocksWithEmptyDecks();
-        Activity activity = createActivityToTest(MyDecksActivity.class);
+        Activity activity = helper.createActivityToTest();
         click(activity, R.id.create_deck_button);
         assertEquals(GetStartedDeckActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }

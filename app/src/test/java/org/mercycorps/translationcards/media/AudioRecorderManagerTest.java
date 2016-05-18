@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.media;
 
 import android.media.MediaRecorder;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,6 +35,11 @@ public class AudioRecorderManagerTest {
         mediaRecorder = getMediaRecorder();
         audioRecorderManager = new AudioRecorderManager();
         mediaConfig = new MediaConfig("A FILE");
+    }
+
+    @After
+    public void teardown() {
+        audioRecorderManager.stop();
     }
 
     @Test
