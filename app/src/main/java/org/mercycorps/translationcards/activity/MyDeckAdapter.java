@@ -20,6 +20,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
