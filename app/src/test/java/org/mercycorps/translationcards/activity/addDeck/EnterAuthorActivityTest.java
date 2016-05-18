@@ -5,21 +5,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.DEFAULT_DECK_AUTHOR;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTest;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithContext;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.createActivityToTestWithDefaultDeck;
-import static org.mercycorps.translationcards.util.TestAddDeckActivityHelper.getContextFromIntent;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
@@ -31,76 +28,83 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterAuthorActivityTest {
 
+    AddDeckActivityHelper<EnterAuthorActivity> helper = new AddDeckActivityHelper<>(EnterAuthorActivity.class);
+
+    @After
+    public void teardown() {
+        helper.teardown();
+    }
+
     @Test
     public void shouldGoToReviewAndSaveActivityWhenNextButtonClicked() {
-        Activity activity= createActivityToTestWithDefaultDeck(EnterAuthorActivity.class);
+        Activity activity= helper.createActivityToTestWithDefaultDeck();
         click(activity, R.id.deck_author_next_label);
         assertEquals(ReviewAndSaveActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
     public void shouldGoToEnterDestinationLanguagesActivityWhenBackButtonClicked() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         click(activity, R.id.deck_author_back);
         assertEquals(EnterDeckDestinationLanguagesActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
     public void shouldInflateAuthorAndLockImageWhenActivityIsCreated() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         ImageView imageView = findImageView(activity, R.id.deck_author_image);
         assertEquals(R.drawable.enter_phrase_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
     }
 
     @Test
     public void shouldShowHintTextInDeckAuthorInputField() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         TextView inputAuthorField = findTextView(activity, R.id.deck_author_input);
         assertEquals("Your name or organisation", inputAuthorField.getHint().toString());
     }
 
     @Test
     public void shouldNotHaveNextButtonClickableWhenThereIsNoAuthorText() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         assertFalse(findLinearLayout(activity, R.id.deck_author_next_label).isClickable());
     }
 
     @Test
     public void shouldPopulateAuthorInputFieldWithContext() {
-        Activity activity = createActivityToTestWithDefaultDeck(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTestWithDefaultDeck();
         EditText enterAuthorTitle = findAnyView(activity, R.id.deck_author_input);
-        assertEquals(TestAddDeckActivityHelper.DEFAULT_DECK_AUTHOR, enterAuthorTitle.getText().toString());
+        assertEquals(helper.DEFAULT_DECK_AUTHOR, enterAuthorTitle.getText().toString());
     }
 
     @Test
     public void shouldChangeNextButtonColorWhenAuthorTitleIsNotEmpty() {
-        Activity activity = createActivityToTestWithDefaultDeck(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTestWithDefaultDeck();
         TextView nextButtonLabelText = findTextView(activity, R.id.deck_author_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonLabelText.getCurrentTextColor());
     }
 
     @Test
     public void shouldChangeNextButtonArrowColorWhenAuthorTitleIsNotEmpty() {
-        Activity activity = createActivityToTestWithDefaultDeck(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTestWithDefaultDeck();
         ImageView nextButtonImage = findImageView(activity, R.id.deck_author_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
     public void shouldSaveAuthorToDeckContextWhenNextButtonIsPressed() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         EditText enterAuthor = findAnyView(activity, R.id.deck_author_input);
-        enterAuthor.setText(TestAddDeckActivityHelper.NEW_AUTHOR);
+        enterAuthor.setText(helper.NEW_AUTHOR);
         click(activity, R.id.deck_author_next_label);
-        assertEquals(TestAddDeckActivityHelper.NEW_AUTHOR, getContextFromIntent(activity).getAuthor());
+        assertEquals(helper.NEW_AUTHOR, helper.getContextFromIntent(activity).getAuthor());
     }
 
     @Test
     public void shouldSaveAuthorToDeckContextWhenBackButtonIsPressed() {
-        Activity activity = createActivityToTest(EnterAuthorActivity.class);
+        Activity activity = helper.createActivityToTest();
         EditText enterAuthor = findAnyView(activity, R.id.deck_author_input);
-        enterAuthor.setText(TestAddDeckActivityHelper.NEW_AUTHOR);
+        enterAuthor.setText(helper.NEW_AUTHOR);
         click(activity, R.id.deck_author_back);
-        assertEquals(TestAddDeckActivityHelper.NEW_AUTHOR, getContextFromIntent(activity).getAuthor());
+        assertEquals(helper.NEW_AUTHOR, helper.getContextFromIntent(activity).getAuthor());
     }
 }

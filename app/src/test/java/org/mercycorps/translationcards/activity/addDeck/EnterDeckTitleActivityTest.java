@@ -34,12 +34,7 @@ public class EnterDeckTitleActivityTest {
 
     private static final String NO_TEXT = "";
 
-    private AddDeckActivityHelper<EnterDeckTitleActivity> helper;
-
-    @Before
-    public void setup() {
-        helper = new AddDeckActivityHelper<>(EnterDeckTitleActivity.class);
-    }
+    private AddDeckActivityHelper<EnterDeckTitleActivity> helper = new AddDeckActivityHelper<>(EnterDeckTitleActivity.class);
 
     @After
     public void teardown() {

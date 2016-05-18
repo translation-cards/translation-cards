@@ -24,6 +24,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -33,12 +34,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     private static final String A_LANGUAGE = "Arabic";
     private static final String EMPTY_LANGUAGE = "";
-    private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper;
-
-    @Before
-    public void setup() {
-        helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
-    }
+    private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
 
     @After
     public void teardown() {
@@ -99,15 +95,6 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldSaveNewDeckContextWhenUserClicksSave() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
-        click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext).save();
-    }
-
-    @Test
     public void shouldUpdateNewDeckContextWhenUserClicksBack() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
@@ -163,18 +150,5 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
-    }
-
-    @Test
-    public void shouldUpdateDeckInDatabaseWhenDeckIsSavedAfterEditing() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getIsEditFlag()).thenReturn(true);
-        when(newDeckContext.getLanguagesInput()).thenReturn("arabic");
-
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-
-        click(activity, R.id.enter_destination_next_label);
-
-        verify(newDeckContext).update();
     }
 }

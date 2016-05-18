@@ -71,4 +71,8 @@ public class NewDeckContext implements Serializable {
     public void setAuthor(String author) {
         deck.setAuthor(author);
     }
+
+    public void update() {
+
+    }
 }
