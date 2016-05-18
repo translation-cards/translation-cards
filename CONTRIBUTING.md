@@ -16,8 +16,34 @@ possibly guide you. Coordinating up front makes it much easier to avoid
 frustration later on.
 
 ### Set up your development environment
-1. Clone the git repository (`git clone...`).
-2. Start up Android Studio, choose "Import project," and select the directory into which you cloned the repo.
+1. Install [Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) (7 or 8)
+2. Install [Git](https://git-scm.com/downloads)
+3. Fork and clone the repo.
+  - If you have been added to the repo as a collaborator, simply clone it.
+4. Install [Android Studio](https://developer.android.com/studio/index.html)
+5. Import the project into Android Studio
+  - From Android Studio, select “Import Project (Eclipse, ADT, Gradle, etc.)”
+  - Select the folder you cloned the project into, which is “translation-cards” by default
+6. Run the app
+  - From Android Studio, select Run > Run
+  - Select “app”
+  - Create New Emulator
+  - Choose a device. The Nexus 5 works well.
+  - Choose a system image. Marshmallow is recommended.
+  - Name the AVD and Finish.
+  - Select the newly created emulator and click Ok.
+7. Install the [Zenhub plugin](https://www.zenhub.io/) to your browser
+8. Navigate to the Boards tab of the Github repo
+  - This is the Storyboard for the project. 
+  The Storyboard helps track upcoming features that need to be implemented. 
+  Read more about storyboards [here](http://whatis.techtarget.com/definition/storyboard).
+  
+### Pull Requests
+* When creating a pull request, be sure to set:
+  * The base fork to `translation-cards/translation-cards`
+  * The base to `develop`
+* Pull requests into the master branch will not be accepted. 
+* Please include a descriptive title and a helpful comment.
 
 ### Code reviews
 All submissions, including submissions by project members, require review. We
