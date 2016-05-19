@@ -71,7 +71,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     }
 
     protected void updateNextButtonState(String destinationLanguages) {
-        int backgroundResource = destinationLanguages.isEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        int backgroundResource = destinationLanguages.isEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
         int buttonColor = destinationLanguages.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
         nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
         nextButtonImage.setBackgroundResource(backgroundResource);

@@ -60,7 +60,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
 
     private void updateNextButtonColor() {
         Integer textColor = isDeckTitleEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
-        Integer nextArrow = isDeckTitleEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        Integer nextArrow = isDeckTitleEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
         nextButtonText.setTextColor(ContextCompat.getColor(this, textColor));
         nextButtonImage.setBackgroundResource(nextArrow);
     }

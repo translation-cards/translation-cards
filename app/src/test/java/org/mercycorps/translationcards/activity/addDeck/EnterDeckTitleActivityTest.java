@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -120,7 +119,7 @@ public class EnterDeckTitleActivityTest {
         setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
         setText(activity, R.id.deck_title_input, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_deck_title_next_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test

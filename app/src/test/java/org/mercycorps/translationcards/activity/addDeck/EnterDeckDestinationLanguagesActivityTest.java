@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -24,7 +23,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -134,7 +132,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
         setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
         setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test

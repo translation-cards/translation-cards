@@ -53,7 +53,7 @@ public class EnterSourcePhraseActivity extends AddTranslationActivity {
     }
 
     protected void updateNextButtonState(String userEnteredSourcePhrase) {
-        int backgroundResource = userEnteredSourcePhrase.isEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        int backgroundResource = userEnteredSourcePhrase.isEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
         int buttonColor = userEnteredSourcePhrase.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
         nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
         nextButtonImage.setBackgroundResource(backgroundResource);

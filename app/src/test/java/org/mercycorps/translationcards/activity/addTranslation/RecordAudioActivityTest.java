@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -126,8 +125,8 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldDisplayGreyNextButtonArrowWhenActivityIsCreatedWithoutRecording() {
         Activity activity = helper.createActivityToTest();
-        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_next_arrow);
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -140,7 +139,7 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldDisplayBlackNextButtonArrowWhenActivityIsCreatedWithARecording() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_next_arrow);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
     }
 
@@ -156,7 +155,7 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldDisplayBlackNextButtonArrowWhenActivityIsCreatedWithoutRecordingThenWeRecord() {
         Activity activity = helper.createActivityToTest();
-        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_save_image);
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_next_arrow);
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
@@ -164,11 +163,18 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldDisableNextButtonWhenRecordingIsHappening() {
-        Activity activity = helper.createActivityToTest();
+        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
         click(activity, R.id.record_audio_button);
+
         LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
-        assertEquals(View.GONE, nextButton.getVisibility());
+        assertEquals(false, nextButton.isClickable());
+
+        TextView nextButtonText = findTextView(activity, R.id.recording_audio_next_text);
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
+
+        ImageView nextButtonArrow = findImageView(activity, R.id.recording_audio_next_arrow);
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonArrow.getBackground()).getCreatedFromResId());
     }
 
 
@@ -177,8 +183,12 @@ public class RecordAudioActivityTest {
         Activity activity = helper.createActivityToTest();
         when(getAudioRecorderManager().isRecording()).thenReturn(true);
         click(activity, R.id.record_audio_button);
-        LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_back);
-        assertEquals(View.GONE, nextButton.getVisibility());
+
+        LinearLayout backButton = findLinearLayout(activity, R.id.record_activity_back);
+        assertEquals(false, backButton.isClickable());
+
+        ImageView backButtonArrow = findImageView(activity, R.id.record_activity_back_arrow);
+        assertEquals(R.drawable.back_arrow_disabled, shadowOf(backButtonArrow.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -262,11 +272,20 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordButtonBackgroundToRedWhenItIsFinishedRecordingByPressingPlay() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
+
+        when(getAudioRecorderManager().isRecording())
+                .thenReturn(false)
+                .thenReturn(true);
         click(activity, R.id.record_audio_button);
+
+        when(getAudioRecorderManager().isRecording())
+                .thenReturn(true)
+                .thenReturn(false);
         click(activity, R.id.play_audio_button);
+
         View recordButton = activity.findViewById(R.id.record_audio_button);
+
         assertEquals(R.color.red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
     }
 

@@ -119,10 +119,10 @@
                 android:paddingTop="16dp">
 
                 <ImageView
-                    android:id="@+id/recording_audio_back_image"
+                    android:id="@+id/record_activity_back_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/back_arrow" />
+                    android:background="@drawable/back_arrow" />
             </LinearLayout>
 
             <LinearLayout
@@ -182,7 +182,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/recording_audio_save_image"
+                    android:id="@+id/recording_audio_next_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:background="@drawable/forward_arrow" />

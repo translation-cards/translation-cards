@@ -143,7 +143,7 @@ public class EnterSourcePhraseActivityTest {
         setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
         setText(activity, R.id.source_phrase_field, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.activity_enter_source_phrase_next_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test

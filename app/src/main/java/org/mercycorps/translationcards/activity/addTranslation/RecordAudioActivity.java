@@ -19,7 +19,6 @@ import org.mercycorps.translationcards.media.AudioRecorderManager;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
@@ -35,11 +34,13 @@ public class RecordAudioActivity extends AddTranslationActivity {
     TextView originTranslationText;
     @Bind(R.id.record_activity_back)
     LinearLayout backButton;
+    @Bind(R.id.record_activity_back_arrow)
+    ImageView backButtonArrow;
     @Bind(R.id.record_activity_next)
     LinearLayout nextButton;
     @Bind(R.id.recording_audio_next_text)
     TextView nextButtonText;
-    @Bind(R.id.recording_audio_save_image)
+    @Bind(R.id.recording_audio_next_arrow)
     ImageView nextButtonArrow;
     @Bind(R.id.indicator_icon)
     ImageView translationCardIndicatorIcon;
@@ -51,8 +52,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
     TextView translatedTextView;
     @Bind(R.id.audio_icon_layout)
     FrameLayout audioIconLayout;
-    @Bind({R.id.record_activity_back, R.id.record_activity_next})
-    List<LinearLayout> backAndNext;
 
     @Override
     public void inflateView() {
@@ -66,7 +65,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         updatePlayButtonState();
         showTranslationSourcePhrase();
         updateTranslatedTextView();
-        updateNextButtonState();
+        updateNextButtonState(false);
         expandTranslationCard();
         hideGrandchildAndAudioIcon();
     }
@@ -101,8 +100,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     public void recordAudioButtonClick() {
         stopAudioIfPlaying();
         tryToRecord();
-        updateRecordButtonState();
-        updateBackAndNextButtonStates();
+        boolean isRecording = getAudioRecorderManager().isRecording();
+        updateRecordButtonState(isRecording);
+        updateBackButtonState(isRecording);
+        updateNextButtonState(isRecording);
         updatePlayButtonState();
     }
 
@@ -143,7 +144,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
-    private void updateNextButtonState() {
+    private void updateNextButtonState(boolean isRecording) {
         List<NewTranslation> translations = getContextFromIntent().getNewTranslations();
         Boolean isAudioFilePresent = false;
         for (NewTranslation translation : translations) {
@@ -152,29 +153,23 @@ public class RecordAudioActivity extends AddTranslationActivity {
                 break;
             }
         }
-        nextButton.setClickable(isAudioFilePresent);
-        int nextButtonTextColor = isAudioFilePresent ? R.color.primaryTextColor : R.color.textDisabled;
+        boolean isEnabled = isAudioFilePresent && !isRecording;
+        nextButton.setClickable(isEnabled);
+        int nextButtonTextColor = isEnabled ? R.color.primaryTextColor : R.color.textDisabled;
         nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonTextColor));
-        int nextButtonArrowColor = isAudioFilePresent ? R.drawable.forward_arrow : R.drawable.forward_arrow_40p;
+        int nextButtonArrowColor = isEnabled ? R.drawable.forward_arrow : R.drawable.forward_arrow_disabled;
         nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
-    }
-
-    protected void showBackButton() {
-        backButton.setVisibility(View.VISIBLE);
     }
 
     private void showTranslationSourcePhrase() {
         originTranslationText.setText(getContextFromIntent().getSourcePhrase());
     }
 
-    private void updateBackAndNextButtonStates() {
-        ButterKnife.apply(backAndNext, VISIBILITY, getVisibility());
-        updateNextButtonState();
-    }
-
-    private int getVisibility() {
-        boolean translationHasAudioFile = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
-        return translationHasAudioFile && !getAudioRecorderManager().isRecording() ? View.VISIBLE : View.GONE;
+    private void updateBackButtonState(boolean isRecording) {
+        boolean isEnabled = !isRecording;
+        backButton.setClickable(isEnabled);
+        int backButtonArrowColor = isEnabled ? R.drawable.back_arrow : R.drawable.back_arrow_disabled;
+        backButtonArrow.setBackgroundResource(backButtonArrowColor);
     }
 
     private void updatePlayButtonState() {
@@ -187,13 +182,15 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private void stopIfRecording() {
         if (getAudioRecorderManager().isRecording()) {
             getAudioRecorderManager().stop();
-            updateBackAndNextButtonStates();
-            updateRecordButtonState();
+            boolean isRecording = getAudioRecorderManager().isRecording();
+            updateBackButtonState(isRecording);
+            updateNextButtonState(isRecording);
+            updateRecordButtonState(isRecording);
         }
     }
 
-    private void updateRecordButtonState() {
-        if (getAudioRecorderManager().isRecording()) {
+    private void updateRecordButtonState(boolean isRecording) {
+        if (isRecording) {
             recordAudioButton.setBackgroundResource(R.color.deep_red);
         } else {
             recordAudioButton.setBackgroundResource(R.color.red);

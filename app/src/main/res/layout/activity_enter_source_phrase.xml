@@ -162,7 +162,7 @@
                     android:id="@+id/activity_enter_source_phrase_next_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="@drawable/forward_arrow_40p" />
+                    android:background="@drawable/forward_arrow_disabled" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
