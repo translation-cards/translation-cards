@@ -12,6 +12,7 @@ import butterknife.OnClick;
 
 public class ReviewAndSaveActivity extends AddDeckActivity {
     @Bind(R.id.deck_name)TextView deckName;
+    @Bind(R.id.deck_information)TextView deckInformation;
 
     @Override
     public void inflateView() {
@@ -21,6 +22,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @Override
     public void initStates() {
         deckName.setText(getContextFromIntent().getDeckLabel());
+        deckInformation.setText(getContextFromIntent().getDeckInformation());
 
     }
 

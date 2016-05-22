@@ -71,21 +71,20 @@ public class ReviewAndSaveActivityTest {
     }
 
     @Test
-    public void shouldShowDeckTitleWhenActivityIsCreated() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView deckName = findTextView(activity,R.id.deck_name);
-        assertFalse(deckName.getText().toString().isEmpty());
-
-    }
-
-    @Test
     public void shouldShowDeckTitleFromContextWhenActivityIsCreated() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         when(newDeckContext.getDeckLabel()).thenReturn("Deck Title");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         TextView deckName = findTextView(activity,R.id.deck_name);
         assertEquals(deckName.getText().toString(),"Deck Title");
+    }
 
+    @Test
+    public void shouldShowDeckInformationFromContextWhenActivityIsCreated() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        when(newDeckContext.getDeckInformation()).thenReturn("Author, 11/11/1993");
+        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+        TextView deckInformation = findTextView(activity,R.id.deck_information);
+        assertEquals(deckInformation.getText().toString(),"Author, 11/11/1993");
     }
 }
