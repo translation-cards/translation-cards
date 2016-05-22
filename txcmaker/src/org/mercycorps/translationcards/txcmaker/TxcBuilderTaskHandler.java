@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -57,6 +59,11 @@ public class TxcBuilderTaskHandler extends HttpServlet {
   private static final int BUFFER_SIZE = 1024;
   private static final String GCS_BUCKET_NAME = "nworden-txcmaker2.google.com.a.appspot.com";
 
+  private static final Pattern FILE_URL_MATCHER = Pattern.compile(
+      "https?://docs.google.com/spreadsheets/d/(.*?)(/.*)?$");
+  private static final Pattern DIR_URL_MATCHER = Pattern.compile(
+      "https?://drive.google.com/corp/drive/folders/(.*)$");
+
   private byte[] buffer = new byte[BUFFER_SIZE];
   private GcsService gcsService = GcsServiceFactory.createGcsService();
 
@@ -80,6 +87,11 @@ public class TxcBuilderTaskHandler extends HttpServlet {
         .setLicenseUrl(req.getParameter("licenseUrl"))
         .setLocked(req.getParameter("locked") != null);
     String audioDirId = req.getParameter("audioDirId");
+    Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
+    if (audioDirIdMatcher.matches()) {
+      System.out.println("NICK PT A: " + audioDirIdMatcher.group(1));
+      audioDirId = audioDirIdMatcher.group(1);
+    }
     ChildList audioList = drive.children().list(audioDirId).execute();
     Map<String, String> audioFileIds = new HashMap<String, String>();
     for (ChildReference audioRef : audioList.getItems()) {
@@ -87,6 +99,11 @@ public class TxcBuilderTaskHandler extends HttpServlet {
       audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
     }
     String spreadsheetFileId = req.getParameter("docId");
+    Matcher spreadsheetFileIdMatcher = FILE_URL_MATCHER.matcher(spreadsheetFileId);
+    if (spreadsheetFileIdMatcher.matches()) {
+      System.out.println("NICK PT B: " + spreadsheetFileIdMatcher.group(1));
+      spreadsheetFileId = spreadsheetFileIdMatcher.group(1);
+    }
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());

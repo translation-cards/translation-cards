@@ -81,14 +81,18 @@ public class GetTxcServlet extends HttpServlet {
     }
     String userid = getUserId();
     Queue queue = QueueFactory.getQueue("queue-txc-building");
-    queue.add(TaskOptions.Builder.withUrl("/tasks/txc-build")
+    TaskOptions taskOptions = TaskOptions.Builder.withUrl("/tasks/txc-build")
         .param("userid", userid)
         .param("deckName", req.getParameter("deckName"))
         .param("publisher", req.getParameter("publisher"))
         .param("deckId", req.getParameter("deckId"))
         .param("docId", req.getParameter("docId"))
         .param("audioDirId", req.getParameter("audioDirId"))
-        .param("licenceUrl", req.getParameter("licenseUrl")));
+        .param("licenceUrl", req.getParameter("licenseUrl"));
+    if ((req.getParameter("locked") != null) && !req.getParameter("locked").isEmpty()) {
+      taskOptions = taskOptions.param("locked", req.getParameter("locked"));
+    }
+    queue.add(taskOptions);
     resp.getWriter().println("Your file should arrive in Drive shortly.");
   }
 
