@@ -33,7 +33,8 @@ class AuthUtils {
 
   static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-  static final Collection<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_READONLY);
+  static final Collection<String> SCOPES = Arrays.asList(
+      DriveScopes.DRIVE_READONLY, DriveScopes.DRIVE_FILE);
 
   private static final String CLIENT_SECRETS_FILENAME = "/WEB-INF/client_secrets.json";
 

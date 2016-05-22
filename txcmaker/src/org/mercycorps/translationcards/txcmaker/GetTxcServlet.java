@@ -2,17 +2,34 @@ package org.mercycorps.translationcards.txcmaker;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.ChildList;
+import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +47,12 @@ public class GetTxcServlet extends HttpServlet {
   private static final String SRC_HEADER_LABEL = "Label";
   private static final String SRC_HEADER_TRANSLATION_TEXT = "Translation";
   private static final String SRC_HEADER_FILENAME = "Filename";
+
+  private static final int BUFFER_SIZE = 1024;
+  private static final String GCS_BUCKET_NAME = "nworden-txcmaker2.google.com.a.appspot.com";
+
+  private byte[] buffer = new byte[BUFFER_SIZE];
+  private GcsService gcsService = GcsServiceFactory.createGcsService();
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -57,6 +80,7 @@ public class GetTxcServlet extends HttpServlet {
     resp.getWriter().println(
         "<form method=\"post\">" +
         "<p>Doc ID: <input type=\"text\" name=\"docId\" /><br />" +
+        "Audio directory ID: <input type=\"text\" name=\"audioDirId\" /><br />" +
         "Deck name: <input type=\"text\" name=\"deckName\" /><br />" +
         "Publisher: <input type=\"text\" name=\"publisher\" /><br />" +
         "Deck ID: <input type=\"text\" name=\"deckId\" /><br />" +
@@ -69,30 +93,58 @@ public class GetTxcServlet extends HttpServlet {
 
   private void produceTxcJson(Drive drive, HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
+    Random random = new Random();
+    GcsFilename gcsFilename = new GcsFilename(
+        GCS_BUCKET_NAME, String.format("tmp-txc-%d", random.nextInt()));
+    OutputStream gcsOutput = Channels.newOutputStream(
+        gcsService.createOrReplace(gcsFilename, GcsFileOptions.getDefaultInstance()));
     TxcPortingUtility.ExportSpec exportSpec = new TxcPortingUtility.ExportSpec()
         .setDeckLabel(req.getParameter("deckName"))
         .setPublisher(req.getParameter("publisher"))
         .setDeckId(req.getParameter("deckId"))
         .setLicenseUrl(req.getParameter("licenseUrl"))
         .setLocked(req.getParameter("locked") != null);
+    String audioDirId = req.getParameter("audioDirId");
+    ChildList audioList = drive.children().list(audioDirId).execute();
+    Map<String, String> audioFileIds = new HashMap<String, String>();
+    for (ChildReference audioRef : audioList.getItems()) {
+      resp.getWriter().println(audioRef.getId());
+      File audioFile = drive.files().get(audioRef.getId()).execute();
+      resp.getWriter().println(audioFile.getOriginalFilename());
+      resp.getWriter().println(audioFile.getWebContentLink());
+      audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
+    }
     String spreadsheetFileId = req.getParameter("docId");
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+    Set<String> includedAudioFiles = new HashSet<String>();
+    ZipOutputStream zipOutput = new ZipOutputStream(gcsOutput);
     try {
       for (CSVRecord row : parser) {
         String language = row.get(SRC_HEADER_LANGUAGE);
+        String filename = row.get(SRC_HEADER_FILENAME);
         TxcPortingUtility.CardSpec card = new TxcPortingUtility.CardSpec()
             .setLabel(row.get(SRC_HEADER_LABEL))
-            .setFilename(row.get(SRC_HEADER_FILENAME))
+            .setFilename(filename)
             .setTranslationText(row.get(SRC_HEADER_TRANSLATION_TEXT));
         exportSpec.addCard(language, card);
+        if (includedAudioFiles.contains(filename)) {
+          continue;
+        }
+        includedAudioFiles.add(filename);
+        zipOutput.putNextEntry(new ZipEntry(filename));
+        drive.files().get(audioFileIds.get(filename)).executeMediaAndDownloadTo(zipOutput);
+        zipOutput.closeEntry();
       }
+      zipOutput.putNextEntry(new ZipEntry("index.json"));
+      zipOutput.write(TxcPortingUtility.buildTxcJson(exportSpec).getBytes());
+      zipOutput.closeEntry();
     } finally {
       parser.close();
       reader.close();
+      zipOutput.close();
     }
-    resp.getWriter().println(TxcPortingUtility.buildTxcJson(exportSpec));
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
