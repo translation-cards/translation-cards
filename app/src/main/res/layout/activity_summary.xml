@@ -12,12 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:id="@+id/summary_image" />
+        android:id="@+id/enter_source_language_image" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/summary_image"
+        android:layout_below="@+id/enter_source_language_image"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
         android:paddingLeft="16dp"

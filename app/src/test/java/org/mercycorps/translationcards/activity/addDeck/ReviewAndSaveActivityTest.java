@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Test;
@@ -15,10 +16,14 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -42,7 +47,7 @@ public class ReviewAndSaveActivityTest {
     }
 
     @Test
-    public void shouldGoToMyDecksActivityWhenSavekButtonClicked() {
+    public void shouldGoToMyDecksActivityWhenSaveButtonClicked() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), "", false);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
@@ -53,8 +58,8 @@ public class ReviewAndSaveActivityTest {
     @Test
     public void shouldInflateEnterSourceLanguageImageWhenActivityIsCreated() {
         Activity activity = helper.createActivityToTest();
-        ImageView imageView = findImageView(activity, R.id.summary_image);
-        assertEquals(R.drawable.summary_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
+        ImageView imageView = findImageView(activity, R.id.enter_source_language_image);
+        assertEquals(R.drawable.enter_source_language_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
     }
 
     @Test
@@ -63,5 +68,24 @@ public class ReviewAndSaveActivityTest {
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
         verify(newDeckContext).save();
+    }
+
+    @Test
+    public void shouldShowDeckTitleWhenActivityIsCreated() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+        TextView deckName = findTextView(activity,R.id.deck_name);
+        assertFalse(deckName.getText().toString().isEmpty());
+
+    }
+
+    @Test
+    public void shouldShowDeckTitleFromContextWhenActivityIsCreated() {
+        NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        when(newDeckContext.getDeckLabel()).thenReturn("Deck Title");
+        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+        TextView deckName = findTextView(activity,R.id.deck_name);
+        assertEquals(deckName.getText().toString(),"Deck Title");
+
     }
 }
