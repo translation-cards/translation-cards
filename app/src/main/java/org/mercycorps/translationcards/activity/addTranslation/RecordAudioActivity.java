@@ -33,6 +33,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     RelativeLayout recordAudioButton;
     @Bind(R.id.origin_translation_text)
     TextView originTranslationText;
+    @Bind(R.id.record_audio_icon)
+    ImageView recordAudioIcon;
     @Bind(R.id.record_activity_back)
     LinearLayout backButton;
     @Bind(R.id.record_activity_next)
@@ -195,8 +197,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private void updateRecordButtonState() {
         if (getAudioRecorderManager().isRecording()) {
             recordAudioButton.setBackgroundResource(R.color.deep_red);
+            recordAudioIcon.setBackgroundResource(R.drawable.stop);
         } else {
             recordAudioButton.setBackgroundResource(R.color.red);
+            recordAudioIcon.setBackgroundResource(R.drawable.record);
         }
     }
 
