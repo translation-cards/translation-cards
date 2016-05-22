@@ -3,10 +3,12 @@ package org.mercycorps.translationcards.txcmaker;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.FileContent;
+import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.ParentReference;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -22,6 +24,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.channels.Channels;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -145,6 +148,12 @@ public class GetTxcServlet extends HttpServlet {
       reader.close();
       zipOutput.close();
     }
+    File targetFileInfo = new File();
+    targetFileInfo.setTitle("yourgreattxc.txc");
+    targetFileInfo.setParents(Collections.singletonList(new ParentReference().setId(audioDirId)));
+    InputStream txcContentStream = Channels.newInputStream(
+        gcsService.openPrefetchingReadChannel(gcsFilename, 0, BUFFER_SIZE));
+    drive.files().insert(targetFileInfo, new InputStreamContent(null, txcContentStream)).execute();
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
