@@ -9,6 +9,9 @@ import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -76,7 +79,17 @@ public class GetTxcServlet extends HttpServlet {
       resp.getWriter().println("You haven't provided Drive authentication.");
       return;
     }
-    produceTxcJson(drive, req, resp);
+    String userid = getUserId();
+    Queue queue = QueueFactory.getQueue("queue-txc-building");
+    queue.add(TaskOptions.Builder.withUrl("/tasks/txc-build")
+        .param("userid", userid)
+        .param("deckName", req.getParameter("deckName"))
+        .param("publisher", req.getParameter("publisher"))
+        .param("deckId", req.getParameter("deckId"))
+        .param("docId", req.getParameter("docId"))
+        .param("audioDirId", req.getParameter("audioDirId"))
+        .param("licenceUrl", req.getParameter("licenseUrl")));
+    resp.getWriter().println("Your file should arrive in Drive shortly.");
   }
 
   private void displayForm(HttpServletResponse resp) throws IOException {
@@ -94,64 +107,9 @@ public class GetTxcServlet extends HttpServlet {
     );
   }
 
-  private void produceTxcJson(Drive drive, HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    Random random = new Random();
-    GcsFilename gcsFilename = new GcsFilename(
-        GCS_BUCKET_NAME, String.format("tmp-txc-%d", random.nextInt()));
-    OutputStream gcsOutput = Channels.newOutputStream(
-        gcsService.createOrReplace(gcsFilename, GcsFileOptions.getDefaultInstance()));
-    TxcPortingUtility.ExportSpec exportSpec = new TxcPortingUtility.ExportSpec()
-        .setDeckLabel(req.getParameter("deckName"))
-        .setPublisher(req.getParameter("publisher"))
-        .setDeckId(req.getParameter("deckId"))
-        .setLicenseUrl(req.getParameter("licenseUrl"))
-        .setLocked(req.getParameter("locked") != null);
-    String audioDirId = req.getParameter("audioDirId");
-    ChildList audioList = drive.children().list(audioDirId).execute();
-    Map<String, String> audioFileIds = new HashMap<String, String>();
-    for (ChildReference audioRef : audioList.getItems()) {
-      File audioFile = drive.files().get(audioRef.getId()).execute();
-      audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
-    }
-    String spreadsheetFileId = req.getParameter("docId");
-    Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
-    Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
-    CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
-    Set<String> includedAudioFiles = new HashSet<String>();
-    ZipOutputStream zipOutput = new ZipOutputStream(gcsOutput);
-    try {
-      for (CSVRecord row : parser) {
-        String language = row.get(SRC_HEADER_LANGUAGE);
-        String filename = row.get(SRC_HEADER_FILENAME);
-        TxcPortingUtility.CardSpec card = new TxcPortingUtility.CardSpec()
-            .setLabel(row.get(SRC_HEADER_LABEL))
-            .setFilename(filename)
-            .setTranslationText(row.get(SRC_HEADER_TRANSLATION_TEXT));
-        exportSpec.addCard(language, card);
-        if (includedAudioFiles.contains(filename)) {
-          continue;
-        }
-        includedAudioFiles.add(filename);
-        zipOutput.putNextEntry(new ZipEntry(filename));
-        drive.files().get(audioFileIds.get(filename)).executeMediaAndDownloadTo(zipOutput);
-        zipOutput.closeEntry();
-      }
-      zipOutput.putNextEntry(new ZipEntry("index.json"));
-      zipOutput.write(TxcPortingUtility.buildTxcJson(exportSpec).getBytes());
-      zipOutput.closeEntry();
-    } finally {
-      parser.close();
-      reader.close();
-      zipOutput.close();
-    }
-    File targetFileInfo = new File();
-    targetFileInfo.setTitle("yourgreattxc.txc");
-    targetFileInfo.setParents(Collections.singletonList(new ParentReference().setId(audioDirId)));
-    InputStream txcContentStream = Channels.newInputStream(
-        gcsService.openPrefetchingReadChannel(gcsFilename, 0, BUFFER_SIZE));
-    drive.files().insert(targetFileInfo, new InputStreamContent(null, txcContentStream)).execute();
-    resp.getWriter().println("Your file should arrive in Drive shortly.");
+  private String getUserId() {
+    UserService userService = UserServiceFactory.getUserService();
+    return userService.getCurrentUser().getUserId();
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
