@@ -111,10 +111,7 @@ public class GetTxcServlet extends HttpServlet {
     ChildList audioList = drive.children().list(audioDirId).execute();
     Map<String, String> audioFileIds = new HashMap<String, String>();
     for (ChildReference audioRef : audioList.getItems()) {
-      resp.getWriter().println(audioRef.getId());
       File audioFile = drive.files().get(audioRef.getId()).execute();
-      resp.getWriter().println(audioFile.getOriginalFilename());
-      resp.getWriter().println(audioFile.getWebContentLink());
       audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
     }
     String spreadsheetFileId = req.getParameter("docId");
@@ -154,6 +151,7 @@ public class GetTxcServlet extends HttpServlet {
     InputStream txcContentStream = Channels.newInputStream(
         gcsService.openPrefetchingReadChannel(gcsFilename, 0, BUFFER_SIZE));
     drive.files().insert(targetFileInfo, new InputStreamContent(null, txcContentStream)).execute();
+    resp.getWriter().println("Your file should arrive in Drive shortly.");
   }
 
   private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
