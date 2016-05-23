@@ -310,7 +310,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordButtonIconToRecordIconWhenItIsFinishedRecordingByPressingPlay() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
