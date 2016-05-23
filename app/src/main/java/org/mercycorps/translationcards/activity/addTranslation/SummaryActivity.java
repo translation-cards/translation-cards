@@ -37,7 +37,7 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @Override
     public void setBitmapsForActivity() {
-        setBitmap(R.id.summary_image, R.drawable.summary_image);
+        setBitmap(R.id.enter_source_language_image, R.drawable.enter_source_language_image);
     }
 
     @Override

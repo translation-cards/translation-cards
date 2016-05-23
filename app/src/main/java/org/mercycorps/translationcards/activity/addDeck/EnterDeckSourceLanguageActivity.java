@@ -5,8 +5,6 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 
-import java.util.Locale;
-
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -45,12 +43,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private String getLocaleForLanguage(String sourceLanguage) {
-        for(Locale locale : Locale.getAvailableLocales()) {
-            if(locale.getDisplayLanguage().equals(sourceLanguage)) {
-                return locale.getLanguage();
-            }
-        }
-        return "";
+       return "en";
     }
 
 }

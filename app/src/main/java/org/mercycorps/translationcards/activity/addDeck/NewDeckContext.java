@@ -9,7 +9,7 @@ import java.util.Date;
 public class NewDeckContext implements Serializable {
     private static final String NO_VALUE = "";
     private static final String ENGLISH_ISO = "en";
-    private static final String PUBLISHER = "Self";
+
     private Deck deck;
     private String languagesInput;
     private boolean isEdit;
@@ -74,5 +74,15 @@ public class NewDeckContext implements Serializable {
 
     public void update() {
 
+    }
+
+    public String getDeckInformation(){ return deck.getDeckInformation(); }
+
+    public boolean isDeckLocked(){
+        return this.deck.isLocked();
+    }
+
+    public Dictionary[] getDeckDictionaries() {
+        return this.deck.getDictionaries();
     }
 }

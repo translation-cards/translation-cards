@@ -21,7 +21,7 @@
             android:paddingTop="20dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="24sp"
-            android:layout_weight="0.85"/>
+            android:layout_weight="0.85" />
 
         <FrameLayout
             android:id="@+id/deck_menu"
@@ -69,7 +69,8 @@
             android:paddingRight="16dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorSecondaryLight"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            />
     </LinearLayout>
 
     <RelativeLayout

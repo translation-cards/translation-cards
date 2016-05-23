@@ -71,6 +71,10 @@ public class Deck implements Serializable {
         return dateFormat.format(date);
     }
 
+    public String getDeckInformation() {
+        return getAuthor() + ", " + getCreationDateString();
+    }
+
     public boolean isLocked() {
         return locked;
     }
@@ -119,4 +123,5 @@ public class Deck implements Serializable {
     public void setAuthor(String author) {
         this.author = author;
     }
+
 }

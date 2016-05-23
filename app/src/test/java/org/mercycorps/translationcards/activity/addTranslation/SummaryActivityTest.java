@@ -10,7 +10,6 @@ import android.widget.TextView;
 import junit.framework.Assert;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -136,8 +135,8 @@ public class SummaryActivityTest {
     @Test
     public void shouldContainImageWhenLoaded() {
         Activity activity = helper.createActivityToTest();
-        ImageView getStartedImage = findImageView(activity, R.id.summary_image);
-        assertEquals(R.drawable.summary_image, shadowOf(getStartedImage.getDrawable()).getCreatedFromResId());
+        ImageView getStartedImage = findImageView(activity, R.id.enter_source_language_image);
+        assertEquals(R.drawable.enter_source_language_image, shadowOf(getStartedImage.getDrawable()).getCreatedFromResId());
     }
 
     @Test

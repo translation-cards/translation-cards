@@ -20,7 +20,7 @@ public class DeckTest {
 
     @Before
     public void setUp() throws Exception {
-        deck = new Deck("", "", "", -1, 1454946439262L, false, "");
+        deck = new Deck("", "author", "", -1, 1454946439262L, false, "");
     }
 
     @Test
@@ -40,5 +40,10 @@ public class DeckTest {
         deck.save();
 
         verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).addDeck(deck.getLabel(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
+    }
+
+    @Test
+    public void getDeckInformation_shouldFormatDeckInformation() {
+        assertThat(deck.getDeckInformation(),is("author, 02/08/16"));
     }
 }
