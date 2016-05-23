@@ -260,14 +260,33 @@ public class RecordAudioActivityTest {
         assertEquals(R.color.deep_red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
     }
 
+     @Test
+    public void shouldChangeRecordAudioIconToStopIconWhenItIsRecording() {
+        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        Activity activity = helper.createActivityToTest();
+        click(activity, R.id.record_audio_button);
+        View recordIcon = activity.findViewById(R.id.record_audio_icon);
+        assertEquals(R.drawable.stop, shadowOf(recordIcon.getBackground()).getCreatedFromResId());
+    }
+
     @Test
-    public void shouldChangeRecordButtonBackgroundToRedWhenItIsFinishedRecording() {
+    public void shouldChangeRecordButtonBackgroundToRedWhenFinishedRecording() {
         when(getAudioRecorderManager().isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
         View recordButton = activity.findViewById(R.id.record_audio_button);
         assertEquals(R.color.red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldChangeRecordAudioIconToRecordIconWhenFinishedRecording() {
+        when(getAudioRecorderManager().isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        Activity activity = helper.createActivityToTest();
+        click(activity, R.id.record_audio_button);
+        click(activity, R.id.record_audio_button);
+        View recordIcon = activity.findViewById(R.id.record_audio_icon);
+        assertEquals(R.drawable.record, shadowOf(recordIcon.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -287,6 +306,16 @@ public class RecordAudioActivityTest {
         View recordButton = activity.findViewById(R.id.record_audio_button);
 
         assertEquals(R.color.red, shadowOf(recordButton.getBackground()).getCreatedFromResId());
+    }
+
+    @Test
+    public void shouldChangeRecordButtonIconToRecordIconWhenItIsFinishedRecordingByPressingPlay() {
+        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        Activity activity = helper.createActivityToTest();
+        click(activity, R.id.record_audio_button);
+        click(activity, R.id.play_audio_button);
+        View recordIcon = activity.findViewById(R.id.record_audio_icon);
+        assertEquals(R.drawable.record, shadowOf(recordIcon.getBackground()).getCreatedFromResId());
     }
 
     @Test
