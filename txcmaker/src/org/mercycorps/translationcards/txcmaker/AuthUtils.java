@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 class AuthUtils {
 
@@ -42,6 +43,25 @@ class AuthUtils {
     GenericUrl url = new GenericUrl(req.getRequestURL().toString());
     url.setRawPath("/oauth2callback");
     return url.build();
+  }
+
+  static Drive getDriveOrOAuth(
+      ServletContext context, HttpServletRequest req, HttpServletResponse resp,
+      String userId, boolean orOAuth)
+      throws IOException {
+    AuthorizationCodeFlow flow = AuthUtils.newFlow(context);
+    Credential credential = flow.loadCredential(userId);
+    if (credential == null) {
+      if (orOAuth) {
+        String url = flow.newAuthorizationUrl()
+            .setRedirectUri(AuthUtils.getRedirectUri(req))
+            .build(); 
+        resp.sendRedirect(url);
+      }
+      return null;
+    } else {
+      return AuthUtils.getDriveService(credential);
+    }
   }
 
   static AuthorizationCodeFlow newFlow(ServletContext context) throws IOException {

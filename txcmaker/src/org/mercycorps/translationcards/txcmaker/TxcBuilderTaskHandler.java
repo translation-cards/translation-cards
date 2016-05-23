@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.txcmaker;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
@@ -74,7 +72,8 @@ public class TxcBuilderTaskHandler extends HttpServlet {
 
   private void produceTxcJson(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
-    Drive drive = getDriveOrOAuth(req, resp, req.getParameter("userid"), false);
+    Drive drive = AuthUtils.getDriveOrOAuth(
+        getServletContext(), req, resp, req.getParameter("userid"), false);
     Random random = new Random();
     GcsFilename gcsFilename = new GcsFilename(
         GCS_BUCKET_NAME, String.format("tmp-txc-%d", random.nextInt()));
@@ -145,24 +144,6 @@ public class TxcBuilderTaskHandler extends HttpServlet {
     drive.files().insert(targetFileInfo, new InputStreamContent(null, txcContentStream)).execute();
     resp.getWriter().println(
         "Your TXC is being assembled and the file should arrive in Drive in a minute or two.");
-  }
-
-  private Drive getDriveOrOAuth(
-      HttpServletRequest req, HttpServletResponse resp, String userId, boolean orOAuth)
-      throws IOException {
-    AuthorizationCodeFlow flow = AuthUtils.newFlow(getServletContext());
-    Credential credential = flow.loadCredential(userId);
-    if (credential == null) {
-      if (orOAuth) {
-        String url = flow.newAuthorizationUrl()
-            .setRedirectUri(AuthUtils.getRedirectUri(req))
-            .build();
-        resp.sendRedirect(url);
-      }
-      return null;
-    } else {
-      return AuthUtils.getDriveService(credential);
-    }
   }
 }
 

@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.txcmaker;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
@@ -72,7 +70,7 @@ public class GetTxcServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     // We don't actually need the Drive service yet, but we authenticate in advance because
     // otherwise OAuth will send them back here anyway.
-    Drive drive = getDriveOrOAuth(req, resp, getUserId(), true);
+    Drive drive = AuthUtils.getDriveOrOAuth(getServletContext(), req, resp, getUserId(), true);
     if (drive == null) {
       // We've already redirected.
       return;
@@ -83,7 +81,7 @@ public class GetTxcServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String userid = getUserId();
-    Drive drive = getDriveOrOAuth(req, resp, userid, false);
+    Drive drive = AuthUtils.getDriveOrOAuth(getServletContext(), req, resp, userid, false);
     if (drive == null) {
       resp.getWriter().println("You haven't provided Drive authentication.");
       return;
@@ -151,7 +149,7 @@ public class GetTxcServlet extends HttpServlet {
 
   private void verify(String userid, HttpServletRequest req, HttpServletResponse resp,
       List<String> warnings, List<String> errors) throws IOException {
-    Drive drive = getDriveOrOAuth(req, resp, userid, false);
+    Drive drive = AuthUtils.getDriveOrOAuth(getServletContext(), req, resp, userid, false);
     String audioDirId = req.getParameter("audioDirId");
     Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
     if (audioDirIdMatcher.matches()) {
@@ -187,24 +185,6 @@ public class GetTxcServlet extends HttpServlet {
     } finally {
       parser.close();
       reader.close();
-    }
-  }
-
-  private Drive getDriveOrOAuth(
-      HttpServletRequest req, HttpServletResponse resp, String userId, boolean orOAuth)
-      throws IOException {
-    AuthorizationCodeFlow flow = AuthUtils.newFlow(getServletContext());
-    Credential credential = flow.loadCredential(userId);
-    if (credential == null) {
-      if (orOAuth) {
-        String url = flow.newAuthorizationUrl()
-            .setRedirectUri(AuthUtils.getRedirectUri(req))
-            .build();
-        resp.sendRedirect(url);
-      }
-      return null;
-    } else {
-      return AuthUtils.getDriveService(credential);
     }
   }
 }
