@@ -124,7 +124,7 @@ public class TxcBuilderTaskHandler extends HttpServlet {
         drive.files().get(audioFileIds.get(filename)).executeMediaAndDownloadTo(zipOutput);
         zipOutput.closeEntry();
       }
-      zipOutput.putNextEntry(new ZipEntry("index.json"));
+      zipOutput.putNextEntry(new ZipEntry("card_deck.json"));
       zipOutput.write(TxcPortingUtility.buildTxcJson(exportSpec).getBytes());
       zipOutput.closeEntry();
     } finally {
