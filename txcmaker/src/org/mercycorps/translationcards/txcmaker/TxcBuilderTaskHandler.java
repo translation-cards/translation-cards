@@ -86,22 +86,14 @@ public class TxcBuilderTaskHandler extends HttpServlet {
         .setTimestamp(System.currentTimeMillis())
         .setLicenseUrl(req.getParameter("licenseUrl"))
         .setLocked(req.getParameter("locked") != null);
-    String audioDirId = req.getParameter("audioDirId");
-    Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
-    if (audioDirIdMatcher.matches()) {
-      audioDirId = audioDirIdMatcher.group(1);
-    }
+    String audioDirId = TxcPortingUtility.getAudioDirId(req);
     ChildList audioList = drive.children().list(audioDirId).execute();
     Map<String, String> audioFileIds = new HashMap<String, String>();
     for (ChildReference audioRef : audioList.getItems()) {
       File audioFile = drive.files().get(audioRef.getId()).execute();
       audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
     }
-    String spreadsheetFileId = req.getParameter("docId");
-    Matcher spreadsheetFileIdMatcher = FILE_URL_MATCHER.matcher(spreadsheetFileId);
-    if (spreadsheetFileIdMatcher.matches()) {
-      spreadsheetFileId = spreadsheetFileIdMatcher.group(1);
-    }
+    String spreadsheetFileId = TxcPortingUtility.getSpreadsheetId(req);
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
     Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
     CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
