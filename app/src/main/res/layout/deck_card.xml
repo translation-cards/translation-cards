@@ -69,7 +69,8 @@
             android:paddingRight="16dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorSecondaryLight"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            />
     </LinearLayout>
 
     <RelativeLayout

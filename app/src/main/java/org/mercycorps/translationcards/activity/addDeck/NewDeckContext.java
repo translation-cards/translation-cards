@@ -77,4 +77,12 @@ public class NewDeckContext implements Serializable {
     }
 
     public String getDeckInformation(){ return deck.getDeckInformation(); }
+
+    public boolean isDeckLocked(){
+        return this.deck.isLocked();
+    }
+
+    public Dictionary[] getDeckDictionaries() {
+        return this.deck.getDictionaries();
+    }
 }
