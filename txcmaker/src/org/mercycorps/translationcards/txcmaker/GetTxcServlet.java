@@ -93,9 +93,12 @@ public class GetTxcServlet extends HttpServlet {
     List<String> errors = new ArrayList<String>();
     verify(userid, req, resp, warnings, errors);
     if (errors.size() != 0) {
+      resp.getWriter().println("<p>");
       for (String error : errors) {
-        resp.getWriter().println(error + "\n");
+        resp.getWriter().println(error + "<br/>");
       }
+      resp.getWriter().println("Cannot build the TXC.");
+      resp.getWriter().println("</p>");
       return;
     }
 
@@ -114,13 +117,15 @@ public class GetTxcServlet extends HttpServlet {
     queue.add(taskOptions);
     if (warnings.size() == 0) {
       resp.getWriter().println(
-          "The file is being assembled and should arrive in Drive in a minute or two.");
+          "<p>The file is being assembled and should arrive in Drive in a minute or two.</p>");
     } else {
+      resp.getWriter().println("<p>");
       for (String warning : warnings) {
-        resp.getWriter().println(warning + "\n");
+        resp.getWriter().println(warning + "<br/>");
       }
       resp.getWriter().println(
           "That said, the file is being assembled and should arrive in Drive in a minute or two.");
+      resp.getWriter().println("</p>");
     }
   }
 
