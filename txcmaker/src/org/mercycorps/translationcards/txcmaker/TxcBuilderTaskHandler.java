@@ -134,7 +134,11 @@ public class TxcBuilderTaskHandler extends HttpServlet {
       zipOutput.close();
     }
     File targetFileInfo = new File();
-    targetFileInfo.setTitle("yourgreattxc.txc");
+    String targetFilename = req.getParameter("deckName")
+        .replaceAll(" ", "_")
+        .replaceAll("[^a-zA-Z_]", "");
+    targetFilename += ".txc";
+    targetFileInfo.setTitle(targetFilename);
     targetFileInfo.setParents(Collections.singletonList(new ParentReference().setId(audioDirId)));
     InputStream txcContentStream = Channels.newInputStream(
         gcsService.openPrefetchingReadChannel(gcsFilename, 0, BUFFER_SIZE));
