@@ -84,6 +84,7 @@ public class TxcBuilderTaskHandler extends HttpServlet {
         .setDeckLabel(req.getParameter("deckName"))
         .setPublisher(req.getParameter("publisher"))
         .setDeckId(req.getParameter("deckId"))
+        .setTimestamp(System.currentTimeMillis())
         .setLicenseUrl(req.getParameter("licenseUrl"))
         .setLocked(req.getParameter("locked") != null);
     String audioDirId = req.getParameter("audioDirId");

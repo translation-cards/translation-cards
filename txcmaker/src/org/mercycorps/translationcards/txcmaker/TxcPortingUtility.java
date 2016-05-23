@@ -19,6 +19,7 @@ class TxcPortingUtility {
     private String deck_label;
     private String publisher;
     private String id;
+    private long timestamp;
     private String license_url;
     private boolean locked;
     private List<LanguageSpec> languages;
@@ -41,6 +42,11 @@ class TxcPortingUtility {
 
     public ExportSpec setDeckId(String deckId) {
       this.id = deckId;
+      return this;
+    }
+
+    public ExportSpec setTimestamp(long timestamp) {
+      this.timestamp = timestamp;
       return this;
     }
 
