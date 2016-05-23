@@ -10,7 +10,9 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Dictionary;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -22,6 +24,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @Bind(R.id.deck_information)TextView deckInformation;
     @Bind(R.id.lock_icon)FrameLayout lockIcon;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
+    @Bind(R.id.deck_menu)FrameLayout deckMenu;
 
 
     @Override
@@ -37,6 +40,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
         deckInformation.setText(getContextFromIntent().getDeckInformation());
         disableDeckCopyingAndLockIconIfUnlocked();
         fillLanguagesListTextView();
+        deckMenu.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.deck_review_and_save_button)
@@ -73,12 +77,12 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
         String languagesInput = getContextFromIntent().getLanguagesInput();
         if (languagesInput != null) {
             String[] languagesList = languagesInput.split(",");
-            Dictionary[] dictionary = new Dictionary[languagesList.length];
+            List<Dictionary> dictionaries = new ArrayList<>();
             Integer itemIndex = 0;
             for (String language : languagesList) {
-                dictionary[itemIndex] = new Dictionary(language);
+                dictionaries.add(new Dictionary(language.trim()));
             }
-            translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(dictionary), "  "));
+            translationLanguagesTextView.setText(getDestLanguageListDisplay(dictionaries, "  "));
         }
     }
 }

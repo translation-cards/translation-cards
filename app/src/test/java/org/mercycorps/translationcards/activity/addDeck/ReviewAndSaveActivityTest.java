@@ -105,10 +105,10 @@ public class ReviewAndSaveActivityTest {
     @Test
     public void shouldShowLanguagesListFromContextWhenActivityIsCreated() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getLanguagesInput()).thenReturn("Arabic Chinese Spanish");
+        when(newDeckContext.getLanguagesInput()).thenReturn("Arabic, Chinese, Spanish");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         TextView translationLanguages = findTextView(activity,R.id.translation_languages);
-        assertEquals(translationLanguages.getText().toString(),"ARABIC CHINESE SPANISH");
+        assertEquals("ARABIC  CHINESE  SPANISH",translationLanguages.getText().toString());
 
     }
 }
