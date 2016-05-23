@@ -27,12 +27,15 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.channels.Channels;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -60,11 +63,16 @@ public class GetTxcServlet extends HttpServlet {
   private byte[] buffer = new byte[BUFFER_SIZE];
   private GcsService gcsService = GcsServiceFactory.createGcsService();
 
+  private static final Pattern FILE_URL_MATCHER = Pattern.compile(
+      "https?://docs.google.com/spreadsheets/d/(.*?)(/.*)?$");
+  private static final Pattern DIR_URL_MATCHER = Pattern.compile(
+      "https?://drive.google.com/corp/drive/folders/(.*)$");
+
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     // We don't actually need the Drive service yet, but we authenticate in advance because
     // otherwise OAuth will send them back here anyway.
-    Drive drive = getDriveOrOAuth(req, resp, true);
+    Drive drive = getDriveOrOAuth(req, resp, getUserId(), true);
     if (drive == null) {
       // We've already redirected.
       return;
@@ -74,12 +82,23 @@ public class GetTxcServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    Drive drive = getDriveOrOAuth(req, resp, false);
+    String userid = getUserId();
+    Drive drive = getDriveOrOAuth(req, resp, userid, false);
     if (drive == null) {
       resp.getWriter().println("You haven't provided Drive authentication.");
       return;
     }
-    String userid = getUserId();
+
+    List<String> warnings = new ArrayList<String>();
+    List<String> errors = new ArrayList<String>();
+    verify(userid, req, resp, warnings, errors);
+    if (errors.size() != 0) {
+      for (String error : errors) {
+        resp.getWriter().println(error + "\n");
+      }
+      return;
+    }
+
     Queue queue = QueueFactory.getQueue("queue-txc-building");
     TaskOptions taskOptions = TaskOptions.Builder.withUrl("/tasks/txc-build")
         .param("userid", userid)
@@ -93,7 +112,16 @@ public class GetTxcServlet extends HttpServlet {
       taskOptions = taskOptions.param("locked", req.getParameter("locked"));
     }
     queue.add(taskOptions);
-    resp.getWriter().println("Your file should arrive in Drive shortly.");
+    if (warnings.size() == 0) {
+      resp.getWriter().println(
+          "The file is being assembled and should arrive in Drive in a minute or two.");
+    } else {
+      for (String warning : warnings) {
+        resp.getWriter().println(warning + "\n");
+      }
+      resp.getWriter().println(
+          "That said, the file is being assembled and should arrive in Drive in a minute or two.");
+    }
   }
 
   private void displayForm(HttpServletResponse resp) throws IOException {
@@ -116,10 +144,50 @@ public class GetTxcServlet extends HttpServlet {
     return userService.getCurrentUser().getUserId();
   }
 
-  private Drive getDriveOrOAuth(HttpServletRequest req, HttpServletResponse resp, boolean orOAuth)
+  private void verify(String userid, HttpServletRequest req, HttpServletResponse resp,
+      List<String> warnings, List<String> errors) throws IOException {
+    Drive drive = getDriveOrOAuth(req, resp, userid, false);
+    String audioDirId = req.getParameter("audioDirId");
+    Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
+    if (audioDirIdMatcher.matches()) {
+      audioDirId = audioDirIdMatcher.group(1);
+    }
+    ChildList audioList = drive.children().list(audioDirId).execute();
+    Map<String, String> audioFileIds = new HashMap<String, String>();
+    for (ChildReference audioRef : audioList.getItems()) {
+      File audioFile = drive.files().get(audioRef.getId()).execute();
+      audioFileIds.put(audioFile.getOriginalFilename(), audioRef.getId());
+    }
+    String spreadsheetFileId = req.getParameter("docId");
+    Matcher spreadsheetFileIdMatcher = FILE_URL_MATCHER.matcher(spreadsheetFileId);
+    if (spreadsheetFileIdMatcher.matches()) {
+      spreadsheetFileId = spreadsheetFileIdMatcher.group(1);
+    }
+    Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
+    Reader reader = new InputStreamReader(sheetExport.executeMediaAsInputStream());
+    CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+    Set<String> includedAudioFiles = new HashSet<String>();
+    try {
+      for (CSVRecord row : parser) {
+        String filename = row.get(SRC_HEADER_FILENAME);
+        if (includedAudioFiles.contains(filename)) {
+          warnings.add(String.format("Used %s multiple times.", filename));
+          continue;
+        }
+        includedAudioFiles.add(filename);
+        if (!audioFileIds.containsKey(filename)) {
+          errors.add(String.format("Unknown file %s.", filename));
+        }
+      }
+    } finally {
+      parser.close();
+      reader.close();
+    }
+  }
+
+  private Drive getDriveOrOAuth(
+      HttpServletRequest req, HttpServletResponse resp, String userId, boolean orOAuth)
       throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    String userId = userService.getCurrentUser().getUserId();
     AuthorizationCodeFlow flow = AuthUtils.newFlow(getServletContext());
     Credential credential = flow.loadCredential(userId);
     if (credential == null) {

@@ -89,7 +89,6 @@ public class TxcBuilderTaskHandler extends HttpServlet {
     String audioDirId = req.getParameter("audioDirId");
     Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
     if (audioDirIdMatcher.matches()) {
-      System.out.println("NICK PT A: " + audioDirIdMatcher.group(1));
       audioDirId = audioDirIdMatcher.group(1);
     }
     ChildList audioList = drive.children().list(audioDirId).execute();
@@ -101,7 +100,6 @@ public class TxcBuilderTaskHandler extends HttpServlet {
     String spreadsheetFileId = req.getParameter("docId");
     Matcher spreadsheetFileIdMatcher = FILE_URL_MATCHER.matcher(spreadsheetFileId);
     if (spreadsheetFileIdMatcher.matches()) {
-      System.out.println("NICK PT B: " + spreadsheetFileIdMatcher.group(1));
       spreadsheetFileId = spreadsheetFileIdMatcher.group(1);
     }
     Drive.Files.Export sheetExport = drive.files().export(spreadsheetFileId, CSV_EXPORT_TYPE);
@@ -140,7 +138,8 @@ public class TxcBuilderTaskHandler extends HttpServlet {
     InputStream txcContentStream = Channels.newInputStream(
         gcsService.openPrefetchingReadChannel(gcsFilename, 0, BUFFER_SIZE));
     drive.files().insert(targetFileInfo, new InputStreamContent(null, txcContentStream)).execute();
-    resp.getWriter().println("Your file should arrive in Drive shortly.");
+    resp.getWriter().println(
+        "Your TXC is being assembled and the file should arrive in Drive in a minute or two.");
   }
 
   private Drive getDriveOrOAuth(
