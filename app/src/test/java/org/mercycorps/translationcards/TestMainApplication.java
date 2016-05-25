@@ -3,18 +3,25 @@ package org.mercycorps.translationcards;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
+import org.mockito.stubbing.Answer;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
@@ -25,6 +32,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private ScheduledExecutorService mockedScheduledExecutorService = mock(ScheduledExecutorService.class);
     private DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
     private TranslationService translationService = mock(TranslationService.class);
+    private DictionaryService dictionaryService = mock(DictionaryService.class);
 
     @Override
     public void onCreate() {
@@ -85,5 +93,10 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public TranslationService getTranslationService() {
         return translationService;
+    }
+
+    @Override
+    public DictionaryService getDictionaryService() {
+        return dictionaryService;
     }
 }

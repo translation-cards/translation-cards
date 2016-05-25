@@ -102,4 +102,8 @@ public class MainApplication extends Application {
     public TranslationService getTranslationService() {
         return translationService;
     }
+
+    public DictionaryService getDictionaryService() {
+        return dictionaryService;
+    }
 }

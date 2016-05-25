@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.List;
@@ -24,13 +25,15 @@ class CardListAdapter extends ArrayAdapter<Translation> {
 
     private TranslationsActivity translationsActivity;
     private TranslationService translationService;
+    private DictionaryService dictionaryService;
 
     public CardListAdapter(TranslationsActivity translationsActivity,
                            Context context, int resource, int textViewResourceId,
-                           List<Translation> objects, TranslationService translationService) {
+                           List<Translation> objects, TranslationService translationService, DictionaryService dictionaryService) {
         super(context, resource, textViewResourceId, objects);
         this.translationsActivity = translationsActivity;
         this.translationService = translationService;
+        this.dictionaryService = dictionaryService;
     }
 
     @Override
@@ -60,11 +63,11 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             editView.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         } else {
-            editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position)));
-            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position), translationService));
+            editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position), dictionaryService));
+            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position), translationService, dictionaryService));
         }
 
-        String currentDictionaryLabel = translationsActivity.dictionaries[translationsActivity.currentDictionaryIndex].getLabel();
+        String currentDictionaryLabel = dictionaryService.currentDictionary().getLabel();
 
         ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
                 R.id.list_item_progress_bar);

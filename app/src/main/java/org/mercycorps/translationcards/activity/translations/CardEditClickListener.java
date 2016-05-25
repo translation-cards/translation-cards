@@ -9,6 +9,7 @@ import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhrase
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.service.DictionaryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,19 @@ import java.util.List;
 class CardEditClickListener implements View.OnClickListener {
     private TranslationsActivity translationsActivity;
     private Translation translationCard;
+    private DictionaryService dictionaryService;
 
-    public CardEditClickListener(TranslationsActivity translationsActivity, Translation translationCard) {
+    public CardEditClickListener(TranslationsActivity translationsActivity, Translation translationCard, DictionaryService dictionaryService) {
         this.translationsActivity = translationsActivity;
         this.translationCard = translationCard;
+        this.dictionaryService = dictionaryService;
     }
 
     @Override
     public void onClick(View view) {
         Intent nextIntent = new Intent(translationsActivity, EnterSourcePhraseActivity.class);
         List<NewTranslation> newTranslations = new ArrayList<>();
-        for (Dictionary dictionary : translationsActivity.dictionaries) {
+        for (Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             Translation translation = dictionary.getTranslationBySourcePhrase(translationCard.getLabel());
             newTranslations.add(new NewTranslation(dictionary, translation, TranslationsActivity.IS_EDIT));
         }

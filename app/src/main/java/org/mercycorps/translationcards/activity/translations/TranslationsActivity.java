@@ -42,7 +42,6 @@ import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
-import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
@@ -72,8 +71,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     DbManager dbManager;
-    protected Dictionary[] dictionaries;
-    protected int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
@@ -82,6 +79,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     protected DecoratedMediaManager decoratedMediaManager;
     private Boolean hideTranslationsWithoutAudioToggle;
     private TranslationService translationService;
+    private DictionaryService dictionaryService;
 
 
     @Override
@@ -89,18 +87,17 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         decoratedMediaManager = application.getDecoratedMediaManager();
         translationService = application.getTranslationService();
+        dictionaryService = application.getDictionaryService();
         dbManager = application.getDbManager();
         deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
-        dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
-        currentDictionaryIndex = getIntent().getIntExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, 0);
         setContentView(R.layout.activity_translations);
-        translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[dictionaries[currentDictionaryIndex].getTranslationCount()]));
+        translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[dictionaryService.currentDictionary().getTranslationCount()]));
         Collections.fill(translationCardStates, Boolean.FALSE);
         hideTranslationsWithoutAudioToggle = false;
 
         initTabs();
         initList();
-        setDictionary(currentDictionaryIndex);
+        setDictionary(dictionaryService.getCurrentDictionaryIndex());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deck.getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -113,7 +110,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateHeader() {
-        Dictionary currentDictionary = dictionaries[currentDictionaryIndex];
+        Dictionary currentDictionary = dictionaryService.currentDictionary();
 
         int headerVisibility = (currentDictionary.getTranslationCount() == 0) ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
@@ -130,7 +127,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideTranslationsWithoutAudioToggle = isChecked;
                 Collections.fill(translationCardStates, Boolean.FALSE);
-                setDictionary(currentDictionaryIndex);
+                setDictionary(dictionaryService.getCurrentDictionaryIndex());
             }
         });
     }
@@ -149,7 +146,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, currentDictionaryIndex);
+        getIntent().putExtra(INTENT_KEY_CURRENT_DICTIONARY_INDEX, dictionaryService.currentDictionary());
     }
 
     @OnClick(R.id.add_translation_button)
@@ -159,11 +156,12 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void initTabs() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        languageTabTextViews = new TextView[dictionaries.length];
-        languageTabBorders = new View[dictionaries.length];
+        List<Dictionary> dictionaries = dictionaryService.getDictionariesForCurrentDeck();
+        languageTabTextViews = new TextView[dictionaries.size()];
+        languageTabBorders = new View[dictionaries.size()];
         LinearLayout tabContainer = (LinearLayout) findViewById(R.id.tabs);
-        for (int i = 0; i < dictionaries.length; i++) {
-            Dictionary dictionary = dictionaries[i];
+        for (int i = 0; i < dictionaries.size(); i++) {
+            Dictionary dictionary = dictionaries.get(i);
             View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
             TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
             textView.setText(dictionary.getLabel().toUpperCase());
@@ -190,7 +188,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         listAdapter = new CardListAdapter(this,
                 this, R.layout.translation_item, R.id.origin_translation_text,
-                new ArrayList<Translation>(), translationService);
+                new ArrayList<Translation>(), translationService, dictionaryService);
         list.setAdapter(listAdapter);
     }
 
@@ -204,7 +202,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void updateWelcomeInstructionsState() {
         ListView list = (ListView) findViewById(R.id.translations_list);
-        boolean isTranslationsListEmpty = dictionaries[currentDictionaryIndex].getTranslationCount() == 0;
+        boolean isTranslationsListEmpty = dictionaryService.currentDictionary().getTranslationCount() == 0;
         int welcomeInstructionsVisibility = isTranslationsListEmpty ? View.VISIBLE : View.GONE;
         findViewById(R.id.empty_deck_title).setVisibility(welcomeInstructionsVisibility);
         findViewById(R.id.empty_deck_message).setVisibility(welcomeInstructionsVisibility);
@@ -221,7 +219,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     //// TODO: FACTORY
     private AddNewTranslationContext createTranslationContext() {
         ArrayList<NewTranslation> newTranslations = new ArrayList<>();
-        for (Dictionary dictionary : dictionaries) {
+        for (Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             newTranslations.add(new NewTranslation(dictionary));
         }
         return new AddNewTranslationContext(newTranslations);
@@ -229,6 +227,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     protected void setDictionary(int dictionaryIndex) {
         decoratedMediaManager.stop();
+
+        int currentDictionaryIndex = dictionaryService.getCurrentDictionaryIndex();
 
         if (currentDictionaryIndex != -1) {
             languageTabTextViews[currentDictionaryIndex].setTextColor(
@@ -239,8 +239,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 ContextCompat.getColor(this, R.color.textColor));
         languageTabBorders[dictionaryIndex].setBackgroundColor(
                 ContextCompat.getColor(this, R.color.textColor));
-        currentDictionaryIndex = dictionaryIndex;
-        Dictionary dictionary = dictionaries[dictionaryIndex];
+        dictionaryService.setCurrentDictionary(dictionaryIndex);
+        Dictionary dictionary = dictionaryService.currentDictionary();
         listAdapter.clear();
 
         for (int translationIndex = 0; translationIndex < dictionary.getTranslationCount(); translationIndex++) {

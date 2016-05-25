@@ -5,8 +5,8 @@ import android.content.DialogInterface;
 import android.view.View;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 class CardDeleteClickListener implements View.OnClickListener {
@@ -14,11 +14,13 @@ class CardDeleteClickListener implements View.OnClickListener {
     private TranslationsActivity translationsActivity;
     private Translation translation;
     private TranslationService translationService;
+    private DictionaryService dictionaryService;
 
-    public CardDeleteClickListener(TranslationsActivity translationsActivity, Translation translation, TranslationService translationService) {
+    public CardDeleteClickListener(TranslationsActivity translationsActivity, Translation translation, TranslationService translationService, DictionaryService dictionaryService) {
         this.translationsActivity = translationsActivity;
         this.translation = translation;
         this.translationService = translationService;
+        this.dictionaryService = dictionaryService;
     }
 
     @Override
@@ -29,8 +31,8 @@ class CardDeleteClickListener implements View.OnClickListener {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         translationService.deleteTranslation(translation.getLabel());
-                        translationsActivity.dictionaries = translationsActivity.dbManager.getAllDictionariesForDeck(translationsActivity.deck.getDbId());
-                        translationsActivity.setDictionary(translationsActivity.currentDictionaryIndex);
+//                        translationsActivity.dictionaries = translationsActivity.dbManager.getAllDictionariesForDeck(translationsActivity.deck.getDbId());
+                        translationsActivity.setDictionary(dictionaryService.getCurrentDictionaryIndex());
                         translationsActivity.listAdapter.notifyDataSetChanged();
                     }
                 })
