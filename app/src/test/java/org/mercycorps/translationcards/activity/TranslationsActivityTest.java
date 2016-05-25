@@ -53,6 +53,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -123,6 +124,8 @@ public class TranslationsActivityTest {
         when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(Arrays.asList(dictionaries));
+        when(translationService.cardIsExpanded(anyInt())).thenReturn(false);
+        when(translationService.getCurrentTranslations()).thenReturn(Arrays.asList(translations));
     }
 
     @Test
@@ -479,6 +482,7 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    @Ignore //TODO move to TranslationService
     public void shouldHideOneCardWithNoAudioWhenToggleIsClicked() {
         click(translationsActivity, R.id.no_audio_toggle);
 

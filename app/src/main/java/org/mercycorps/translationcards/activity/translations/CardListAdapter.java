@@ -45,7 +45,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             translationItemView = inflateTranslationItemView(parent);
         }
 
-        if (translationsActivity.translationCardStates.get(position)) {
+        if (translationService.cardIsExpanded(position)) {
             translationItemView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
             translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
                     R.drawable.collapse_arrow);
@@ -58,7 +58,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         translationItemView.setOnClickListener(null);
 
         translationItemView.findViewById(R.id.translation_indicator_layout)
-                .setOnClickListener(new CardIndicatorClickListener(translationsActivity, translationItemView, position));
+                .setOnClickListener(new CardIndicatorClickListener(translationsActivity, translationItemView, position, translationService));
 
         View editView = translationItemView.findViewById(R.id.translation_card_edit);
         View deleteView = translationItemView.findViewById(R.id.translation_card_delete);
@@ -119,5 +119,11 @@ class CardListAdapter extends ArrayAdapter<Translation> {
                     R.color.primaryTextColor));
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         }
+    }
+
+    public void update() {
+        clear();
+        addAll(translationService.getCurrentTranslations());
+        notifyDataSetChanged();
     }
 }

@@ -3,18 +3,21 @@ package org.mercycorps.translationcards.activity.translations;
 import android.view.View;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.service.TranslationService;
 
 class CardIndicatorClickListener implements View.OnClickListener {
 
     private TranslationsActivity translationsActivity;
     private View translationItem;
     private int position;
+    private TranslationService translationService;
 
-    public CardIndicatorClickListener(TranslationsActivity translationsActivity, View translationItem, int position) {
+    public CardIndicatorClickListener(TranslationsActivity translationsActivity, View translationItem, int position, TranslationService translationService) {
         this.translationsActivity = translationsActivity;
 
         this.translationItem = translationItem;
         this.position = position;
+        this.translationService = translationService;
     }
 
     @Override
@@ -24,12 +27,12 @@ class CardIndicatorClickListener implements View.OnClickListener {
             translationChild.setVisibility(View.VISIBLE);
             translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
                     R.drawable.collapse_arrow);
-            translationsActivity.translationCardStates.set(position, true);
+            translationService.expandCard(position);
         } else {
             translationChild.setVisibility(View.GONE);
             translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
                     R.drawable.expand_arrow);
-            translationsActivity.translationCardStates.set(position, false);
+            translationService.expandCard(position);
         }
     }
 }

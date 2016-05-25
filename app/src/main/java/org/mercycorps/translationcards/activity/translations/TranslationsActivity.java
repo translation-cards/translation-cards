@@ -70,13 +70,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
-    DbManager dbManager;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
-    protected List<Boolean> translationCardStates;
     protected DecoratedMediaManager decoratedMediaManager;
-    private Boolean hideTranslationsWithoutAudioToggle;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
@@ -89,11 +86,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
-        dbManager = application.getDbManager();
         setContentView(R.layout.activity_translations);
-        translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[dictionaryService.currentDictionary().getTranslationCount()]));
-        Collections.fill(translationCardStates, Boolean.FALSE);
-        hideTranslationsWithoutAudioToggle = false;
 
         initTabs();
         initList();
@@ -125,8 +118,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         noAudioSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                hideTranslationsWithoutAudioToggle = isChecked;
-                Collections.fill(translationCardStates, Boolean.FALSE);
+                translationService.toggleDisplayCardsWithNoAudio(!isChecked);
                 setDictionary(dictionaryService.getCurrentDictionaryIndex());
             }
         });
@@ -241,15 +233,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 ContextCompat.getColor(this, R.color.textColor));
         dictionaryService.setCurrentDictionary(dictionaryIndex);
         Dictionary dictionary = dictionaryService.currentDictionary();
-        listAdapter.clear();
-
-        for (int translationIndex = 0; translationIndex < dictionary.getTranslationCount(); translationIndex++) {
-            Translation currentTranslation = dictionary.getTranslation(translationIndex);
-            if(hideTranslationsWithoutAudioToggle && !currentTranslation.isAudioFilePresent()){
-                continue;
-            }
-            listAdapter.add(currentTranslation);
-        }
+        listAdapter.update();
         updateHeader();
         updateWelcomeInstructionsState();
     }
