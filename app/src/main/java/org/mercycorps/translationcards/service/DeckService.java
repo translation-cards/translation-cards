@@ -13,9 +13,9 @@ public class DeckService {
     private List<Deck> decks;
     private Deck currentDeck;
 
-    public DeckService(MainApplication application) {
-        this.dbManager = application.getDbManager();
-        decks = Arrays.asList(dbManager.getAllDecks());
+    public DeckService(DbManager dbManager) {
+        this.dbManager = dbManager;
+        decks = Arrays.asList(this.dbManager.getAllDecks());
         currentDeck = decks.get(0);
     }
 

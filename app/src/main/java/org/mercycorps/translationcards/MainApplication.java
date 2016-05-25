@@ -10,6 +10,9 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -32,6 +35,10 @@ public class MainApplication extends Application {
     private static Context context;
     private  ScheduledExecutorService scheduledExecutorService;
     private DecoratedMediaManager decoratedMediaManager;
+    private TranslationService translationService;
+    private DictionaryService dictionaryService;
+    private DeckService deckService;
+    protected boolean isTest = false;
 
     @Override
     public void onCreate() {
@@ -45,6 +52,10 @@ public class MainApplication extends Application {
         decoratedMediaManager = new DecoratedMediaManager();
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
+        if(isTest) return;
+        deckService = new DeckService(dbManager);
+        dictionaryService = new DictionaryService(dbManager, deckService);
+        translationService = new TranslationService(dbManager, dictionaryService);
     }
 
     public DbManager getDbManager() {
@@ -86,5 +97,9 @@ public class MainApplication extends Application {
 
     public DecoratedMediaManager getDecoratedMediaManager() {
         return decoratedMediaManager;
+    }
+
+    public TranslationService getTranslationService() {
+        return translationService;
     }
 }

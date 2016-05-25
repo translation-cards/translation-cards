@@ -7,15 +7,18 @@ import android.view.View;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.service.TranslationService;
 
 class CardDeleteClickListener implements View.OnClickListener {
 
     private TranslationsActivity translationsActivity;
-    Translation translation;
+    private Translation translation;
+    private TranslationService translationService;
 
-    public CardDeleteClickListener(TranslationsActivity translationsActivity, Translation translation) {
+    public CardDeleteClickListener(TranslationsActivity translationsActivity, Translation translation, TranslationService translationService) {
         this.translationsActivity = translationsActivity;
         this.translation = translation;
+        this.translationService = translationService;
     }
 
     @Override
@@ -25,10 +28,7 @@ class CardDeleteClickListener implements View.OnClickListener {
                 .setMessage(R.string.delete_dialog_message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        for (Dictionary dictionary : translationsActivity.dictionaries) {
-                            Translation translationBySourcePhrase = dictionary.getTranslationBySourcePhrase(translation.getLabel());
-                            translationsActivity.dbManager.deleteTranslation(translationBySourcePhrase.getDbId());
-                        }
+                        translationService.deleteTranslation(translation.getLabel());
                         translationsActivity.dictionaries = translationsActivity.dbManager.getAllDictionariesForDeck(translationsActivity.deck.getDbId());
                         translationsActivity.setDictionary(translationsActivity.currentDictionaryIndex);
                         translationsActivity.listAdapter.notifyDataSetChanged();

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.List;
 
@@ -22,12 +23,14 @@ import java.util.List;
 class CardListAdapter extends ArrayAdapter<Translation> {
 
     private TranslationsActivity translationsActivity;
+    private TranslationService translationService;
 
     public CardListAdapter(TranslationsActivity translationsActivity,
                            Context context, int resource, int textViewResourceId,
-                           List<Translation> objects) {
+                           List<Translation> objects, TranslationService translationService) {
         super(context, resource, textViewResourceId, objects);
         this.translationsActivity = translationsActivity;
+        this.translationService = translationService;
     }
 
     @Override
@@ -58,7 +61,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             deleteView.setVisibility(View.GONE);
         } else {
             editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position)));
-            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position)));
+            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position), translationService));
         }
 
         String currentDictionaryLabel = translationsActivity.dictionaries[translationsActivity.currentDictionaryIndex].getLabel();

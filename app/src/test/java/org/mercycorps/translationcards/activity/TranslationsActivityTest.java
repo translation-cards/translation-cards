@@ -24,6 +24,7 @@ import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -81,11 +82,13 @@ public class TranslationsActivityTest {
     private Deck deck;
     private Dictionary[] dictionaries;
     ActivityController<TranslationsActivity> controller;
+    private TranslationService translationService;
 
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
         dbManagerMock = application.getDbManager();
+        translationService = application.getTranslationService();
         Intent intent = new Intent();
         deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
         intent.putExtra("Deck", deck);
@@ -339,7 +342,7 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(dbManagerMock, times(3)).deleteTranslation(translation.getDbId());
+        verify(translationService).deleteTranslation(translation.getLabel());
         verify(dbManagerMock, times(2)).getAllDictionariesForDeck(DEFAULT_DECK_ID);
     }
 

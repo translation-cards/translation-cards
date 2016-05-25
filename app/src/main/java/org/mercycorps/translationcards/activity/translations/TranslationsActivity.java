@@ -42,6 +42,9 @@ import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,11 +81,14 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     protected List<Boolean> translationCardStates;
     protected DecoratedMediaManager decoratedMediaManager;
     private Boolean hideTranslationsWithoutAudioToggle;
+    private TranslationService translationService;
+
 
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
         decoratedMediaManager = application.getDecoratedMediaManager();
+        translationService = application.getTranslationService();
         dbManager = application.getDbManager();
         deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
         dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
@@ -184,7 +190,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         listAdapter = new CardListAdapter(this,
                 this, R.layout.translation_item, R.id.origin_translation_text,
-                new ArrayList<Translation>());
+                new ArrayList<Translation>(), translationService);
         list.setAdapter(listAdapter);
     }
 

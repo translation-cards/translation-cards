@@ -6,6 +6,7 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
@@ -23,7 +24,13 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
     private ScheduledExecutorService mockedScheduledExecutorService = mock(ScheduledExecutorService.class);
     private DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
+    private TranslationService translationService = mock(TranslationService.class);
 
+    @Override
+    public void onCreate() {
+        isTest = false;
+        super.onCreate();
+    }
     @Override
     public void beforeTest(Method method) {
         System.out.println();
@@ -75,4 +82,8 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
         return mockedScheduledExecutorService;
     }
 
+    @Override
+    public TranslationService getTranslationService() {
+        return translationService;
+    }
 }
