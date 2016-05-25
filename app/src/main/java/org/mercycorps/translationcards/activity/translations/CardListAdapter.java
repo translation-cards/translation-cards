@@ -19,9 +19,6 @@ import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.List;
 
-/**
- * Created by agarrard on 5/18/16.
- */
 class CardListAdapter extends ArrayAdapter<Translation> {
 
     private TranslationsActivity translationsActivity;
@@ -58,7 +55,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         translationItemView.setOnClickListener(null);
 
         translationItemView.findViewById(R.id.translation_indicator_layout)
-                .setOnClickListener(new CardIndicatorClickListener(translationsActivity, translationItemView, position, translationService));
+                .setOnClickListener(new CardIndicatorClickListener(translationItemView, position, translationService));
 
         View editView = translationItemView.findViewById(R.id.translation_card_edit);
         View deleteView = translationItemView.findViewById(R.id.translation_card_delete);

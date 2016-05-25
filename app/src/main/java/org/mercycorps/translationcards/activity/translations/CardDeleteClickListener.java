@@ -30,10 +30,8 @@ class CardDeleteClickListener implements View.OnClickListener {
                 .setMessage(R.string.delete_dialog_message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        translationService.deleteTranslation(translation.getLabel());
-//                        translationsActivity.dictionaries = translationsActivity.dbManager.getAllDictionariesForDeck(translationsActivity.deck.getDbId());
-                        translationsActivity.setDictionary(dictionaryService.getCurrentDictionaryIndex());
-                        translationsActivity.listAdapter.notifyDataSetChanged();
+                        translationService.deleteTranslationBySourcePhrase(translation.getLabel());
+                        translationsActivity.updateView(dictionaryService.getCurrentDictionaryIndex());
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

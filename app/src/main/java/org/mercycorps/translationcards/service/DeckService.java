@@ -24,10 +24,6 @@ public class DeckService {
         return currentDeck;
     }
 
-    public int getNumberOfDictionaries() {
-        return currentDeck.getDictionaries().length;
-    }
-
     public Long save(Deck deck) {
         return dbManager.addDeck(
                 deck.getLabel(),

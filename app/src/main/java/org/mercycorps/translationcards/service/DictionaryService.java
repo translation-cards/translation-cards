@@ -22,10 +22,6 @@ public class DictionaryService {
         currentDictionary = getDictionariesForCurrentDeck().get(currentDictionaryIndex);
     }
 
-    public List<Dictionary> getDictionariesForDeck(Deck deck) {
-        return Arrays.asList(dbManager.getAllDictionariesForDeck(deck.getDbId()));
-    }
-
     public List<Dictionary> getDictionariesForCurrentDeck() {
         return Arrays.asList(
                 dbManager.getAllDictionariesForDeck(
@@ -44,12 +40,4 @@ public class DictionaryService {
         currentDictionaryIndex = index;
         currentDictionary = getDictionariesForCurrentDeck().get(index);
     }
-
-//    public void save(Dictionary dictionary, int itemIndex) {
-//        dbManager.addDictionary(
-//                dictionary.getDestLanguageIso(),
-//                dictionary.getLabel(),
-//                itemIndex,
-//                dictionary.getDeckId());
-//    }
 }

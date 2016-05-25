@@ -7,14 +7,11 @@ import org.mercycorps.translationcards.service.TranslationService;
 
 class CardIndicatorClickListener implements View.OnClickListener {
 
-    private TranslationsActivity translationsActivity;
     private View translationItem;
     private int position;
     private TranslationService translationService;
 
-    public CardIndicatorClickListener(TranslationsActivity translationsActivity, View translationItem, int position, TranslationService translationService) {
-        this.translationsActivity = translationsActivity;
-
+    public CardIndicatorClickListener(View translationItem, int position, TranslationService translationService) {
         this.translationItem = translationItem;
         this.position = position;
         this.translationService = translationService;
@@ -32,7 +29,7 @@ class CardIndicatorClickListener implements View.OnClickListener {
             translationChild.setVisibility(View.GONE);
             translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
                     R.drawable.expand_arrow);
-            translationService.expandCard(position);
+            translationService.minimizeCard(position);
         }
     }
 }

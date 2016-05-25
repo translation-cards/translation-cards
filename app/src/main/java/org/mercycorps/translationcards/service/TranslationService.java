@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
@@ -13,10 +11,10 @@ import java.util.List;
 
 public class TranslationService {
 
-    DbManager dbManager;
+    private DbManager dbManager;
     private DictionaryService dictionaryService;
-    List<Translation> currentTranslations;
-    boolean displayCardsWithNoAudio;
+    private List<Translation> currentTranslations;
+    private boolean displayCardsWithNoAudio;
     private List<Boolean> translationCardStates;
 
     public TranslationService(DbManager dbManager, DictionaryService dictionaryService) {
@@ -45,7 +43,7 @@ public class TranslationService {
         return findCurrentTranslations();
     }
 
-    public void deleteTranslation(String sourcePhrase) {
+    public void deleteTranslationBySourcePhrase(String sourcePhrase) {
         for(Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
             dbManager.deleteTranslation(translation.getDbId());
@@ -66,9 +64,5 @@ public class TranslationService {
 
     public boolean cardIsExpanded(int position) {
         return translationCardStates.size() > 0 && translationCardStates.get(position);
-    }
-
-    public void saveTranslationContext(NewTranslation newTranslation) {
-        dbManager.saveTranslationContext(newTranslation);
     }
 }

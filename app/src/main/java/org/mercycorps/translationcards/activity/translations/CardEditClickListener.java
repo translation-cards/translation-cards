@@ -15,9 +15,7 @@ import org.mercycorps.translationcards.service.DictionaryService;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by agarrard on 5/18/16.
- */
+
 class CardEditClickListener implements View.OnClickListener {
     private TranslationsActivity translationsActivity;
     private Translation translationCard;

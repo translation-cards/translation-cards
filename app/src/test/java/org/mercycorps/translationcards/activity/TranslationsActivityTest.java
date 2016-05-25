@@ -354,7 +354,7 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(translationService).deleteTranslation(translation.getLabel());
+        verify(translationService).deleteTranslationBySourcePhrase(translation.getLabel());
     }
 
     @Test

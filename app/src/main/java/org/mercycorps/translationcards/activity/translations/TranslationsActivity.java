@@ -37,7 +37,6 @@ import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslation
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
@@ -46,8 +45,6 @@ import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -61,14 +58,8 @@ import butterknife.OnClick;
 public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     public static final String INTENT_KEY_DECK = "Deck";
-    private static final String TAG = "TranslationsActivity";
-    private static final int REQUEST_KEY_ADD_CARD = 1;
-    private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
     protected static final boolean IS_EDIT = true;
-
-
-    @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
@@ -78,6 +69,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private DictionaryService dictionaryService;
     private DeckService deckService;
 
+    @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     @Override
     public void inflateView() {
@@ -86,11 +78,15 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
-        setContentView(R.layout.activity_translations);
 
+        setContentView(R.layout.activity_translations);
         initTabs();
         initList();
-        setDictionary(dictionaryService.getCurrentDictionaryIndex());
+        updateView(dictionaryService.getCurrentDictionaryIndex());
+        initActionBar();
+    }
+
+    private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(deckService.currentDeck().getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -104,7 +100,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void updateHeader() {
         Dictionary currentDictionary = dictionaryService.currentDictionary();
-
         int headerVisibility = (currentDictionary.getTranslationCount() == 0) ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
         int numberofTranslations = currentDictionary.getNumberOfTranslationsWithNoRecording();
@@ -114,12 +109,11 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void setSwitchClickListener() {
         SwitchCompat noAudioSwitch = (SwitchCompat) findViewById(R.id.no_audio_toggle);
-
         noAudioSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 translationService.toggleDisplayCardsWithNoAudio(!isChecked);
-                setDictionary(dictionaryService.getCurrentDictionaryIndex());
+                updateView(dictionaryService.getCurrentDictionaryIndex());
             }
         });
     }
@@ -152,22 +146,26 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         languageTabTextViews = new TextView[dictionaries.size()];
         languageTabBorders = new View[dictionaries.size()];
         LinearLayout tabContainer = (LinearLayout) findViewById(R.id.tabs);
-        for (int i = 0; i < dictionaries.size(); i++) {
-            Dictionary dictionary = dictionaries.get(i);
-            View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
-            TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-            textView.setText(dictionary.getLabel().toUpperCase());
-            final int index = i;
-            textFrame.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setDictionary(index);
-                }
-            });
-            tabContainer.addView(textFrame);
-            languageTabTextViews[i] = textView;
-            languageTabBorders[i] = textFrame.findViewById(R.id.tab_border);
+        for (int tabIndex = 0; tabIndex < dictionaries.size(); tabIndex++) {
+            initTab(inflater, dictionaries, tabContainer, tabIndex);
         }
+    }
+
+    private void initTab(LayoutInflater inflater, List<Dictionary> dictionaries, LinearLayout tabContainer, int tabIndex) {
+        Dictionary dictionary = dictionaries.get(tabIndex);
+        View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
+        TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
+        textView.setText(dictionary.getLabel().toUpperCase());
+        final int index = tabIndex;
+        textFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateView(index);
+            }
+        });
+        tabContainer.addView(textFrame);
+        languageTabTextViews[tabIndex] = textView;
+        languageTabBorders[tabIndex] = textFrame.findViewById(R.id.tab_border);
     }
 
     private void initList() {
@@ -217,25 +215,25 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         return new AddNewTranslationContext(newTranslations);
     }
 
-    protected void setDictionary(int dictionaryIndex) {
+    protected void updateView(int nextDictionaryIndex) {
         decoratedMediaManager.stop();
-
         int currentDictionaryIndex = dictionaryService.getCurrentDictionaryIndex();
-
-        if (currentDictionaryIndex != -1) {
-            languageTabTextViews[currentDictionaryIndex].setTextColor(
-                    ContextCompat.getColor(this, R.color.unselectedLanguageTabText));
-            languageTabBorders[currentDictionaryIndex].setBackgroundColor(0);
-        }
-        languageTabTextViews[dictionaryIndex].setTextColor(
-                ContextCompat.getColor(this, R.color.textColor));
-        languageTabBorders[dictionaryIndex].setBackgroundColor(
-                ContextCompat.getColor(this, R.color.textColor));
-        dictionaryService.setCurrentDictionary(dictionaryIndex);
-        Dictionary dictionary = dictionaryService.currentDictionary();
+        updateTabs(currentDictionaryIndex, nextDictionaryIndex);
+        dictionaryService.setCurrentDictionary(nextDictionaryIndex);
         listAdapter.update();
         updateHeader();
         updateWelcomeInstructionsState();
+    }
+
+    private void updateTabs(int currentDictionaryIndex, int nextDictionaryIndex) {
+        languageTabTextViews[currentDictionaryIndex].setTextColor(
+                ContextCompat.getColor(this, R.color.unselectedLanguageTabText));
+        languageTabBorders[currentDictionaryIndex].setBackgroundColor(0);
+
+        languageTabTextViews[nextDictionaryIndex].setTextColor(
+                ContextCompat.getColor(this, R.color.textColor));
+        languageTabBorders[nextDictionaryIndex].setBackgroundColor(
+                ContextCompat.getColor(this, R.color.textColor));
     }
 
     @Override
