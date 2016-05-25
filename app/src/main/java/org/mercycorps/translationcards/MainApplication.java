@@ -106,4 +106,8 @@ public class MainApplication extends Application {
     public DictionaryService getDictionaryService() {
         return dictionaryService;
     }
+
+    public DeckService getDeckService() {
+        return deckService;
+    }
 }

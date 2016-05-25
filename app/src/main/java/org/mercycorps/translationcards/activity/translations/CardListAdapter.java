@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
@@ -26,14 +27,16 @@ class CardListAdapter extends ArrayAdapter<Translation> {
     private TranslationsActivity translationsActivity;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
+    private DeckService deckService;
 
     public CardListAdapter(TranslationsActivity translationsActivity,
                            Context context, int resource, int textViewResourceId,
-                           List<Translation> objects, TranslationService translationService, DictionaryService dictionaryService) {
+                           List<Translation> objects, TranslationService translationService, DictionaryService dictionaryService, DeckService deckService) {
         super(context, resource, textViewResourceId, objects);
         this.translationsActivity = translationsActivity;
         this.translationService = translationService;
         this.dictionaryService = dictionaryService;
+        this.deckService = deckService;
     }
 
     @Override
@@ -59,11 +62,11 @@ class CardListAdapter extends ArrayAdapter<Translation> {
 
         View editView = translationItemView.findViewById(R.id.translation_card_edit);
         View deleteView = translationItemView.findViewById(R.id.translation_card_delete);
-        if (translationsActivity.deck.isLocked()) {
+        if (deckService.currentDeck().isLocked()) {
             editView.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         } else {
-            editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position), dictionaryService));
+            editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position), dictionaryService, deckService));
             deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position), translationService, dictionaryService));
         }
 

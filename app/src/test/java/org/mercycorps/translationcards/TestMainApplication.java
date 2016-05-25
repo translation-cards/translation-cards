@@ -8,6 +8,7 @@ import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mockito.stubbing.Answer;
@@ -33,6 +34,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
     private TranslationService translationService = mock(TranslationService.class);
     private DictionaryService dictionaryService = mock(DictionaryService.class);
+    private DeckService deckService = mock(DeckService.class);
 
     @Override
     public void onCreate() {
@@ -98,5 +100,10 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public DictionaryService getDictionaryService() {
         return dictionaryService;
+    }
+
+    @Override
+    public DeckService getDeckService() {
+        return deckService;
     }
 }

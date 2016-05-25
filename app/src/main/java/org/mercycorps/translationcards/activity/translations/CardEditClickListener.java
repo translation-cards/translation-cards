@@ -9,6 +9,7 @@ import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhrase
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ class CardEditClickListener implements View.OnClickListener {
     private TranslationsActivity translationsActivity;
     private Translation translationCard;
     private DictionaryService dictionaryService;
+    private DeckService deckService;
 
-    public CardEditClickListener(TranslationsActivity translationsActivity, Translation translationCard, DictionaryService dictionaryService) {
+    public CardEditClickListener(TranslationsActivity translationsActivity, Translation translationCard, DictionaryService dictionaryService, DeckService deckService) {
         this.translationsActivity = translationsActivity;
         this.translationCard = translationCard;
         this.dictionaryService = dictionaryService;
+        this.deckService = deckService;
     }
 
     @Override
@@ -37,7 +40,7 @@ class CardEditClickListener implements View.OnClickListener {
             newTranslations.add(new NewTranslation(dictionary, translation, TranslationsActivity.IS_EDIT));
         }
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, new AddNewTranslationContext(newTranslations, TranslationsActivity.IS_EDIT));
-        nextIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK, translationsActivity.deck);
+        nextIntent.putExtra(TranslationsActivity.INTENT_KEY_DECK, deckService.currentDeck());
         translationsActivity.startActivity(nextIntent);
     }
 }

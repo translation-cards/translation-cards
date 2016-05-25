@@ -38,10 +38,10 @@ import org.mercycorps.translationcards.activity.addTranslation.AddTranslationAct
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
@@ -74,12 +74,12 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
-    protected Deck deck;
     protected List<Boolean> translationCardStates;
     protected DecoratedMediaManager decoratedMediaManager;
     private Boolean hideTranslationsWithoutAudioToggle;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
+    private DeckService deckService;
 
 
     @Override
@@ -88,8 +88,8 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         decoratedMediaManager = application.getDecoratedMediaManager();
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
+        deckService = application.getDeckService();
         dbManager = application.getDbManager();
-        deck = (Deck) getIntent().getSerializableExtra(INTENT_KEY_DECK);
         setContentView(R.layout.activity_translations);
         translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[dictionaryService.currentDictionary().getTranslationCount()]));
         Collections.fill(translationCardStates, Boolean.FALSE);
@@ -99,7 +99,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         initList();
         setDictionary(dictionaryService.getCurrentDictionaryIndex());
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(deck.getLabel());
+        actionBar.setTitle(deckService.currentDeck().getLabel());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setElevation(0);
     }
@@ -133,7 +133,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateAddTranslationButtonVisibility() {
-        if(deck.isLocked()){
+        if(deckService.currentDeck().isLocked()){
             addTranslationButton.setVisibility(View.GONE);
         }
     }
@@ -188,7 +188,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
         listAdapter = new CardListAdapter(this,
                 this, R.layout.translation_item, R.id.origin_translation_text,
-                new ArrayList<Translation>(), translationService, dictionaryService);
+                new ArrayList<Translation>(), translationService, dictionaryService, deckService);
         list.setAdapter(listAdapter);
     }
 
@@ -212,7 +212,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private void launchGetStartedActivity(){
         Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
-        nextIntent.putExtra(INTENT_KEY_DECK, deck);
+        nextIntent.putExtra(INTENT_KEY_DECK, deckService.currentDeck());
         startActivity(nextIntent);
     }
 

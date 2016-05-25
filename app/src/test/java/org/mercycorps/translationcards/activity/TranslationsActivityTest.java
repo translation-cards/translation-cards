@@ -25,6 +25,7 @@ import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
@@ -88,6 +89,7 @@ public class TranslationsActivityTest {
     ActivityController<TranslationsActivity> controller;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
+    private DeckService deckService;
 
     @Before
     public void setUp() {
@@ -95,9 +97,10 @@ public class TranslationsActivityTest {
         dbManagerMock = application.getDbManager();
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
+        deckService = application.getDeckService();
         Intent intent = new Intent();
         deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
-        intent.putExtra("Deck", deck);
+        when(deckService.currentDeck()).thenReturn(deck);
         initializeMockDbManager();
         controller = Robolectric.buildActivity(TranslationsActivity.class);
         translationsActivity = controller.withIntent(intent).create().get();
@@ -191,6 +194,7 @@ public class TranslationsActivityTest {
 
     private Activity createLockedDeckTranslationsActivity() {
         Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, DEFUALT_ISO_CODE);
+        when(deckService.currentDeck()).thenReturn(deck);
         return createActivityWithDeck(deck);
     }
 
