@@ -7,11 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -54,18 +49,14 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
             return;
         }
         updateContextWithLanguagesInput();
-        if (getContextFromIntent().getIsEditFlag()) {
-            getContextFromIntent().update();
-        } else {
-            getContextFromIntent().save();
-        }
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, MyDecksActivity.class);
+
+        startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterAuthorActivity.class);
     }
 
     @OnClick(R.id.enter_destination_back_arrow)
     public void backButtonClicked() {
         updateContextWithLanguagesInput();
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterDeckTitleActivity.class);
+        startNextActivity(this, EnterDeckSourceLanguageActivity.class);
     }
 
     private void updateContextWithLanguagesInput() {
@@ -80,7 +71,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     }
 
     protected void updateNextButtonState(String destinationLanguages) {
-        int backgroundResource = destinationLanguages.isEmpty() ? R.drawable.forward_arrow_40p : R.drawable.forward_arrow;
+        int backgroundResource = destinationLanguages.isEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
         int buttonColor = destinationLanguages.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
         nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
         nextButtonImage.setBackgroundResource(backgroundResource);

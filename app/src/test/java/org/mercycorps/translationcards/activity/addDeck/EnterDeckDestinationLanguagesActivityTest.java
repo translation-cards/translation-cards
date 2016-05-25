@@ -5,12 +5,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -25,7 +23,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -35,12 +32,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     private static final String A_LANGUAGE = "Arabic";
     private static final String EMPTY_LANGUAGE = "";
-    private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper;
-
-    @Before
-    public void setup() {
-        helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
-    }
+    private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
 
     @After
     public void teardown() {
@@ -48,18 +40,18 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldGoToMyDecksActivityWhenNextButtonClicked() {
+    public void shouldGoToAuthorAndLockActivityWhenNextButtonClicked() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE, false);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.enter_destination_next_label);
-        assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldGoToEnterTitleActivityWhenBackButtonIsClicked() {
+    public void shouldGoToEnterDeckSourceLanguageActivityWhenBackButtonIsClicked() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_back_arrow);
-        assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(EnterDeckSourceLanguageActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
@@ -98,15 +90,6 @@ public class EnterDeckDestinationLanguagesActivityTest {
         setText(activity, R.id.enter_deck_destination_input, languagesInput);
         click(activity, R.id.enter_destination_next_label);
         verify(newDeckContext).updateLanguagesInput(languagesInput);
-    }
-
-    @Test
-    public void shouldSaveNewDeckContextWhenUserClicksSave() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic ");
-        click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext).save();
     }
 
     @Test
@@ -149,7 +132,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
         setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
         setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
@@ -165,18 +148,5 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
-    }
-
-    @Test
-    public void shouldUpdateDeckInDatabaseWhenDeckIsSavedAfterEditing() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getIsEditFlag()).thenReturn(true);
-        when(newDeckContext.getLanguagesInput()).thenReturn("arabic");
-
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-
-        click(activity, R.id.enter_destination_next_label);
-
-        verify(newDeckContext).update();
     }
 }

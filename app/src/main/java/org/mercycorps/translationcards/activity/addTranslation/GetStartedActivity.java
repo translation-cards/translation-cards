@@ -7,7 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 
 import butterknife.OnClick;
 

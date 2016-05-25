@@ -14,42 +14,33 @@
  * the License.
  */
 
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.activity.translations;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
-import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
-import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.util.ArrayList;
@@ -72,20 +63,20 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_KEY_ADD_CARD = 1;
     private static final int REQUEST_KEY_EDIT_CARD = 2;
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
-    private static final boolean IS_EDIT = true;
+    protected static final boolean IS_EDIT = true;
 
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     DbManager dbManager;
-    private Dictionary[] dictionaries;
-    private int currentDictionaryIndex;
+    protected Dictionary[] dictionaries;
+    protected int currentDictionaryIndex;
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
-    private CardListAdapter listAdapter;
-    private Deck deck;
-    private List<Boolean> translationCardStates;
-    private DecoratedMediaManager decoratedMediaManager;
+    protected CardListAdapter listAdapter;
+    protected Deck deck;
+    protected List<Boolean> translationCardStates;
+    protected DecoratedMediaManager decoratedMediaManager;
     private Boolean hideTranslationsWithoutAudioToggle;
 
     @Override
@@ -191,7 +182,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         setSwitchClickListener();
         inflateListFooter();
 
-        listAdapter = new CardListAdapter(
+        listAdapter = new CardListAdapter(this,
                 this, R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>());
         list.setAdapter(listAdapter);
@@ -230,7 +221,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         return new AddNewTranslationContext(newTranslations);
     }
 
-    private void setDictionary(int dictionaryIndex) {
+    protected void setDictionary(int dictionaryIndex) {
         decoratedMediaManager.stop();
 
         if (currentDictionaryIndex != -1) {
@@ -261,177 +252,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     protected void onPause() {
         super.onPause();
         decoratedMediaManager.stop();
-    }
-
-    private class CardListAdapter extends ArrayAdapter<Translation> {
-
-        public CardListAdapter(
-                Context context, int resource, int textViewResourceId,
-                List<Translation> objects) {
-            super(context, resource, textViewResourceId, objects);
-        }
-
-        @Override
-        public View getView(int position, View translationItemView, ViewGroup parent) {
-            if (translationItemView == null) {
-                translationItemView = inflateTranslationItemView(parent);
-            }
-
-            if (translationCardStates.get(position)) {
-                translationItemView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-                translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.collapse_arrow);
-            } else {
-                translationItemView.findViewById(R.id.translation_child).setVisibility(View.GONE);
-                translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.expand_arrow);
-            }
-
-            translationItemView.setOnClickListener(null);
-
-            translationItemView.findViewById(R.id.translation_indicator_layout)
-                    .setOnClickListener(new CardIndicatorClickListener(translationItemView, position));
-
-            View editView = translationItemView.findViewById(R.id.translation_card_edit);
-            View deleteView = translationItemView.findViewById(R.id.translation_card_delete);
-            if (deck.isLocked()) {
-                editView.setVisibility(View.GONE);
-                deleteView.setVisibility(View.GONE);
-            } else {
-                editView.setOnClickListener(new CardEditClickListener(getItem(position)));
-                deleteView.setOnClickListener(new CardDeleteClickListener(getItem(position)));
-            }
-
-            String currentDictionaryLabel = dictionaries[currentDictionaryIndex].getLabel();
-
-            ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
-                    R.id.list_item_progress_bar);
-
-            setCardTextView(position, translationItemView, currentDictionaryLabel, progressBar);
-
-            setTranslatedTextView(position, translationItemView, currentDictionaryLabel);
-
-            translationItemView.findViewById(R.id.translated_text_layout)
-                    .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                            decoratedMediaManager, currentDictionaryLabel));
-
-            return translationItemView;
-        }
-
-        @NonNull
-        private View inflateTranslationItemView(ViewGroup parent) {
-            View translationItemView = getLayoutInflater().inflate(R.layout.translation_item,
-                    parent, false);
-            translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                    R.drawable.expand_arrow);
-            return translationItemView;
-        }
-
-        private void setCardTextView(int position, View convertView, String currentDictionaryLabel,
-                                     ProgressBar progressBar) {
-            TextView cardTextView = (TextView) convertView.findViewById(
-                    R.id.origin_translation_text);
-            cardTextView.setText(getItem(position).getLabel());
-            int cardTextColor = getItem(position).isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
-            cardTextView.setTextColor(ContextCompat.getColor(TranslationsActivity.this, cardTextColor));
-            cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
-                    decoratedMediaManager, currentDictionaryLabel));
-        }
-
-        private void setTranslatedTextView(int position, View convertView, String currentDictionaryLabel) {
-            TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
-            if(getItem(position).getTranslatedText().isEmpty()){
-                translatedText.setText(String.format(getString(R.string.translated_text_hint), currentDictionaryLabel));
-                translatedText.setTextColor(ContextCompat.getColor(getContext(),
-                        R.color.textDisabled));
-                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-            } else {
-                translatedText.setText(getItem(position).getTranslatedText());
-                translatedText.setTextColor(ContextCompat.getColor(getContext(),
-                        R.color.primaryTextColor));
-                translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-            }
-        }
-    }
-
-    private class CardIndicatorClickListener implements View.OnClickListener {
-
-        private View translationItem;
-        private int position;
-
-        public CardIndicatorClickListener(View translationItem, int position) {
-
-            this.translationItem = translationItem;
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            View translationChild = translationItem.findViewById(R.id.translation_child);
-            if (translationChild.getVisibility() == View.GONE) {
-                translationChild.setVisibility(View.VISIBLE);
-                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.collapse_arrow);
-                translationCardStates.set(position, true);
-            } else {
-                translationChild.setVisibility(View.GONE);
-                translationItem.findViewById(R.id.indicator_icon).setBackgroundResource(
-                        R.drawable.expand_arrow);
-                translationCardStates.set(position, false);
-            }
-        }
-    }
-
-    private class CardEditClickListener implements View.OnClickListener {
-        private Translation translationCard;
-
-        public CardEditClickListener(Translation translationCard) {
-            this.translationCard = translationCard;
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent nextIntent = new Intent(TranslationsActivity.this, EnterSourcePhraseActivity.class);
-            List<NewTranslation> newTranslations = new ArrayList<>();
-            for (Dictionary dictionary : dictionaries) {
-                Translation translation = dictionary.getTranslationBySourcePhrase(translationCard.getLabel());
-                newTranslations.add(new NewTranslation(dictionary, translation, IS_EDIT));
-            }
-            nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, new AddNewTranslationContext(newTranslations, IS_EDIT));
-            nextIntent.putExtra(INTENT_KEY_DECK, deck);
-            startActivity(nextIntent);
-        }
-    }
-
-    private class CardDeleteClickListener implements View.OnClickListener {
-
-        Translation translation;
-
-        public CardDeleteClickListener(Translation translation) {
-            this.translation = translation;
-        }
-
-        @Override
-        public void onClick(View view) {
-            new AlertDialog.Builder(TranslationsActivity.this)
-                    .setTitle(R.string.delete_dialog_title)
-                    .setMessage(R.string.delete_dialog_message)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            for (Dictionary dictionary : dictionaries) {
-                                Translation translationBySourcePhrase = dictionary.getTranslationBySourcePhrase(translation.getLabel());
-                                dbManager.deleteTranslation(translationBySourcePhrase.getDbId());
-                            }
-                            dictionaries = dbManager.getAllDictionariesForDeck(deck.getDbId());
-                            setDictionary(currentDictionaryIndex);
-                            listAdapter.notifyDataSetChanged();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    }).show();
-        }
     }
 
 }

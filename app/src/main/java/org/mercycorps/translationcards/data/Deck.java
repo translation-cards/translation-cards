@@ -15,30 +15,30 @@ import java.util.Locale;
 public class Deck implements Serializable {
 
     private String label;
-    private String publisher;
+    private String author;
     private String externalId;
     private long dbId;
     private long timestamp;
     private boolean locked;
-    private String srcLanguageIso;
+    private String sourceLanguageIso;
     // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
 
-    public Deck(String label, String publisher, String externalId, long dbId, long timestamp,
-                boolean locked, String srcLanguageIso) {
+    public Deck(String label, String author, String externalId, long dbId, long timestamp,
+                boolean locked, String sourceLanguageIso) {
         this.label = label;
-        this.publisher = publisher;
+        this.author = author;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.srcLanguageIso = srcLanguageIso;
+        this.sourceLanguageIso = sourceLanguageIso;
         dictionaries = null;
     }
 
-    public Deck(String label, String publisher, String externalId, long timestamp, boolean locked,
-                String srcLanguageIso) {
-        this(label, publisher, externalId, -1, timestamp, locked, srcLanguageIso);
+    public Deck(String label, String author, String externalId, long timestamp, boolean locked,
+                String sourceLanguageIso) {
+        this(label, author, externalId, -1, timestamp, locked, sourceLanguageIso);
     }
 
     public Deck() {
@@ -49,8 +49,8 @@ public class Deck implements Serializable {
         return label;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public String getAuthor() {
+        return author;
     }
 
     public String getExternalId() {
@@ -75,8 +75,8 @@ public class Deck implements Serializable {
         return locked;
     }
 
-    public String getSrcLanguageIso() {
-        return srcLanguageIso;
+    public String getSourceLanguageIso() {
+        return sourceLanguageIso;
     }
 
     public Dictionary[] getDictionaries() {
@@ -91,7 +91,7 @@ public class Deck implements Serializable {
     }
 
     public Long save() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, publisher, timestamp, externalId, "", locked, srcLanguageIso);
+        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, author, timestamp, externalId, "", locked, sourceLanguageIso);
     }
 
     public void delete() {
@@ -100,5 +100,23 @@ public class Deck implements Serializable {
 
     public void update() {
 
+    }
+
+    public void setSourceLanguageIso(String sourceLanguageIso){
+        this.sourceLanguageIso = sourceLanguageIso;
+
+    }
+
+    public String getDisplayLanguage() {
+        for (Locale locale : Locale.getAvailableLocales()) {
+            if (locale.getLanguage().equals(this.sourceLanguageIso)) {
+                return locale.getDisplayLanguage();
+            }
+        }
+        return "English";
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

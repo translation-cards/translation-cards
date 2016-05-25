@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
 
 import java.io.File;

@@ -20,22 +20,13 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.porting.ExportTask;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -94,7 +85,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     private void initFields(Deck deck){
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
-        deckInformationTextView.setText(String.format("%s, %s", deck.getPublisher(), deck.getCreationDateString()));
+        deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
         translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries()), "  "));
     }
 

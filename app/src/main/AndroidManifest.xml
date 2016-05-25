@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.TranslationsActivity"
+            android:name=".activity.translations.TranslationsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -34,7 +34,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
+            android:name=".activity.addDeck.EnterDeckSourceLanguageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.addDeck.EnterAuthorActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.addDeck.ReviewAndSaveActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.addTranslation.GetStartedActivity"
@@ -57,10 +66,6 @@
             android:name=".activity.addTranslation.SummaryActivity"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".activity.DeckCreationActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">

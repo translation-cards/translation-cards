@@ -28,12 +28,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class GetStartedDeckActivityTest {
 
-    private AddDeckActivityHelper<GetStartedDeckActivity> helper;
-
-    @Before
-    public void setup() {
-        helper = new AddDeckActivityHelper<>(GetStartedDeckActivity.class);
-    }
+    private AddDeckActivityHelper<GetStartedDeckActivity> helper = new AddDeckActivityHelper<>(GetStartedDeckActivity.class);;
 
     @After
     public void teardown() {

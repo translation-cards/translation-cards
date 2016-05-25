@@ -11,7 +11,7 @@ The specification file should be called "card_deck.json", with a "deck" object a
 A deck object has:
 - a "source_language" field, specifying the ISO code of the source language for the deck
 - a "deck_label" field, specifying the name of the deck
-- a "publisher" field, specifying the name of the organization or person who produced it
+- a "author" field, specifying the name of the organization or person who produced it
 - optionally, an "id" field, specifying a string that uniquely identifies the deck
 - optionally, a "timestamp" field, specifying the time the deck was created. This is in [Unix Time](https://en.wikipedia.org/wiki/Unix_time), then converted to milliseconds. 
 - optionally, a "locked" field, set to either "true" or "false", depending on whether the deck should be locked (defaults to false)

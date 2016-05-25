@@ -101,13 +101,30 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
-
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_selected" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/navigation_button_save"
+                android:text="@string/navigation_button_next"
                 android:textColor="@color/textDisabled"
                 android:textSize="16sp" />
 
@@ -133,8 +150,8 @@
                 android:id="@+id/enter_destination_next_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:background="@drawable/forward_arrow_40p"
-                android:contentDescription="@string/navigation_button_save" />
+                android:background="@drawable/forward_arrow_disabled"
+                android:contentDescription="@string/navigation_button_next" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

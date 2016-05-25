@@ -5,12 +5,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.TranslationsActivity;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -144,7 +143,7 @@ public class EnterSourcePhraseActivityTest {
         setText(activity, R.id.source_phrase_field, DEFAULT_TRANSLATION_TEXT);
         setText(activity, R.id.source_phrase_field, NO_TEXT);
         ImageView nextButtonImage = findImageView(activity, R.id.activity_enter_source_phrase_next_image);
-        assertEquals(R.drawable.forward_arrow_40p, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test

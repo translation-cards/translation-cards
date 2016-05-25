@@ -15,7 +15,7 @@ public class NewDeckContext implements Serializable {
     private boolean isEdit;
 
     public NewDeckContext(){
-        this(new Deck(NO_VALUE, PUBLISHER, NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), NO_VALUE, false);
+        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), NO_VALUE, false);
     }
 
     public NewDeckContext(Deck deck, String languagesInput, boolean isEdit) {
@@ -24,6 +24,9 @@ public class NewDeckContext implements Serializable {
         this.isEdit = isEdit;
     }
 
+    public void setSourceLanguageIso(String sourceLanguageIso) {
+        deck.setSourceLanguageIso(sourceLanguageIso);
+    }
     public void setDeckTitle(String deckTitle) {
         deck.setLabel(deckTitle);
     }
@@ -59,6 +62,14 @@ public class NewDeckContext implements Serializable {
 
     public boolean getIsEditFlag() {
         return isEdit;
+    }
+
+    public String getAuthor() {
+        return deck.getAuthor();
+    }
+
+    public void setAuthor(String author) {
+        deck.setAuthor(author);
     }
 
     public void update() {
