@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.data.Repository;
 import org.mercycorps.translationcards.data.Translation;
 
 import java.util.ArrayList;
@@ -11,46 +10,42 @@ import java.util.List;
 
 public class TranslationService {
 
-    private DbManager dbManager;
+    private Repository repository;
     private DictionaryService dictionaryService;
     private List<Translation> currentTranslations;
     private boolean displayCardsWithNoAudio;
     private List<Boolean> translationCardStates;
 
-    public TranslationService(DbManager dbManager, DictionaryService dictionaryService) {
-        this.dbManager = dbManager;
+    public TranslationService(Repository repository, DictionaryService dictionaryService) {
+        this.repository = repository;
         this.dictionaryService = dictionaryService;
-        currentTranslations = findCurrentTranslations();
+        currentTranslations = repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
         translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[currentTranslations.size()]));
         Collections.fill(translationCardStates, Boolean.FALSE);
         displayCardsWithNoAudio = true;
     }
 
-    private List<Translation> findCurrentTranslations() {
-        List<Translation> translations = new ArrayList<>();
-        Dictionary currentDictionary = dictionaryService.currentDictionary();
-        for(int i = 0; i < currentDictionary.getTranslationCount(); i++) {
-            Translation translation = currentDictionary.getTranslation(i);
-            if(displayCardsWithNoAudio || translation.isAudioFilePresent()) {
-                translations.add(translation);
+    public List<Translation> getCurrentTranslations() {
+        List<Translation> translations = repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
+
+        return filterTranslationsWithNoAudio(translations);
+    }
+
+    private List<Translation> filterTranslationsWithNoAudio(List<Translation> translations) {
+        List<Translation> filteredTranslations = new ArrayList<>(translations.size());
+        for(int index = 0; index < translations.size(); index++) {
+            if(displayCardsWithNoAudio || translations.get(index).isAudioFilePresent()) {
+                filteredTranslations.add(translations.get(index));
             }
         }
-
-        return translations;
+        return filteredTranslations;
     }
 
-    public List<Translation> getCurrentTranslations() {
-        return findCurrentTranslations();
+    public void deleteTranslation(String sourcePhrase) {
+        repository.deleteTranslationBySourcePhrase(sourcePhrase, dictionaryService.getDictionariesForCurrentDeck());
     }
 
-    public void deleteTranslationBySourcePhrase(String sourcePhrase) {
-        for(Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
-            Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
-            dbManager.deleteTranslation(translation.getDbId());
-        }
-    }
-
-    public void toggleDisplayCardsWithNoAudio(boolean displayCardsWithNoAudio) {
+    public void setDisplayCardsWithNoAudio(boolean displayCardsWithNoAudio) {
         this.displayCardsWithNoAudio = displayCardsWithNoAudio;
     }
 

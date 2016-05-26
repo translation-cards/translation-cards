@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.Repository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
@@ -38,6 +39,7 @@ public class MainApplication extends Application {
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
+    private Repository repository;
     protected boolean isTest = false;
 
     @Override
@@ -53,9 +55,10 @@ public class MainApplication extends Application {
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
+        repository = new Repository(dbManager);
         deckService = new DeckService(dbManager);
         dictionaryService = new DictionaryService(dbManager, deckService);
-        translationService = new TranslationService(dbManager, dictionaryService);
+        translationService = new TranslationService(repository, dictionaryService);
     }
 
     public DbManager getDbManager() {

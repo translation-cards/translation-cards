@@ -354,7 +354,7 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(translationService).deleteTranslationBySourcePhrase(translation.getLabel());
+        verify(translationService).deleteTranslation(translation.getLabel());
     }
 
     @Test
@@ -479,24 +479,6 @@ public class TranslationsActivityTest {
     public void shouldDisplayNumberOfCardsWithNoAudioInNoAudioToggleText(){
         TextView noAudioText = findTextView(translationsActivity, R.id.no_audio_toggle_text);
         assertEquals("Hide 1 cards that don't have audio in this language", noAudioText.getText().toString());
-    }
-
-    @Test
-    @Ignore //TODO move to TranslationService
-    public void shouldHideOneCardWithNoAudioWhenToggleIsClicked() {
-        click(translationsActivity, R.id.no_audio_toggle);
-
-        ListView translationsList = findAnyView(translationsActivity, R.id.translations_list);
-        assertEquals(3, translationsList.getAdapter().getCount());
-    }
-
-    @Test
-    public void shouldShowAllCardsWhenToggleIsClickedOff() {
-        click(translationsActivity, R.id.no_audio_toggle);
-        click(translationsActivity, R.id.no_audio_toggle);
-
-        ListView translationsList = findAnyView(translationsActivity, R.id.translations_list);
-        assertEquals(4, translationsList.getAdapter().getCount());
     }
 
     private View firstTranslationCardInListView() {

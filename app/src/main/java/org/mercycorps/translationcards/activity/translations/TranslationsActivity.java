@@ -112,7 +112,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         noAudioSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                translationService.toggleDisplayCardsWithNoAudio(!isChecked);
+                translationService.setDisplayCardsWithNoAudio(!isChecked);
                 updateView(dictionaryService.getCurrentDictionaryIndex());
             }
         });
