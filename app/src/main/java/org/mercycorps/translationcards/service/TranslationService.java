@@ -12,17 +12,14 @@ public class TranslationService {
 
     private Repository repository;
     private DictionaryService dictionaryService;
-    private List<Translation> currentTranslations;
     private boolean displayCardsWithNoAudio;
     private List<Boolean> expanded;
 
     public TranslationService(Repository repository, DictionaryService dictionaryService) {
         this.repository = repository;
         this.dictionaryService = dictionaryService;
-        currentTranslations = repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
-        expanded = new ArrayList<>(Arrays.asList(new Boolean[currentTranslations.size()]));
-        Collections.fill(expanded, Boolean.FALSE);
         displayCardsWithNoAudio = true;
+        initializeCardStates();
     }
 
     public void initializeCardStates() {
