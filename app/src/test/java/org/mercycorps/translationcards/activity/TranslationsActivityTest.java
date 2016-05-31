@@ -19,12 +19,11 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
+import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.data.Translation;
-import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -49,12 +48,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -78,15 +75,12 @@ public class TranslationsActivityTest {
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
-    public static final String INTENT_KEY_DECK = "Deck";
     private static final int EMPTY_DECK_ID = 2;
     private static final String DEFUALT_ISO_CODE = "en";
     private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
-    private DbManager dbManagerMock;
     private Translation translation;
     private Deck deck;
-    private Dictionary[] dictionaries;
     ActivityController<TranslationsActivity> controller;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
@@ -95,15 +89,14 @@ public class TranslationsActivityTest {
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
-        dbManagerMock = application.getDbManager();
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
-        Intent intent = new Intent();
-        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
-        when(deckService.currentDeck()).thenReturn(deck);
-        initializeMockDbManager();
+
+        initializeStubsAndMocks();
+
         controller = Robolectric.buildActivity(TranslationsActivity.class);
+        Intent intent = new Intent();
         translationsActivity = controller.withIntent(intent).create().get();
     }
 
@@ -113,15 +106,18 @@ public class TranslationsActivityTest {
         controller.pause().stop().destroy();
     }
 
-    private void initializeMockDbManager() {
-        dictionaries = new Dictionary[3];
+    private void initializeStubsAndMocks() {
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
+        when(deckService.currentDeck()).thenReturn(deck);
+
+        Dictionary[] dictionaries = new Dictionary[3];
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "audio.mp3", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[2] = new Dictionary(NO_ISO_CODE, DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
-        when(dbManagerMock.getAllDictionariesForDeck(DEFAULT_DECK_ID)).thenReturn(dictionaries);
+
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(Arrays.asList(dictionaries));
         when(translationService.cardIsExpanded(anyInt())).thenReturn(false);
@@ -183,14 +179,13 @@ public class TranslationsActivityTest {
     }
 
     private Activity createEmptyTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, EMPTY_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
         return createActivityWithDeck(deck);
     }
 
     private Activity createActivityWithDeck(Deck deck) {
         Intent intent = new Intent();
         intent.putExtra("Deck", deck);
-        initializeEmptyDeckMockDbManager();
+        initializeStubsAndMocksForEmptyDeck();
         controller = Robolectric.buildActivity(TranslationsActivity.class);
         return controller.withIntent(intent).create().get();
     }
@@ -201,11 +196,10 @@ public class TranslationsActivityTest {
         return createActivityWithDeck(deck);
     }
 
-    private void initializeEmptyDeckMockDbManager() {
+    private void initializeStubsAndMocksForEmptyDeck() {
         Dictionary[] dictionaries = new Dictionary[1];
         dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG,
                 EMPTY_DECK_ID);
-        when(dbManagerMock.getAllDictionariesForDeck(EMPTY_DECK_ID)).thenReturn(dictionaries);
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(Arrays.asList(dictionaries));
     }
@@ -329,7 +323,6 @@ public class TranslationsActivityTest {
         translationsListItem.findViewById(R.id.translation_card_delete).performClick();
 
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(dbManagerMock, times(2)).getAllDictionariesForDeck(DEFAULT_DECK_ID);
     }
 
     @Test
