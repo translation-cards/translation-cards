@@ -303,42 +303,6 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldPassCorrectTranslationWhenEditCardIsClicked() {
-        firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
-
-        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(3, context.getNewTranslations().size());
-        assertEquals(translation, context.getNewTranslations().get(0).getTranslation());
-        assertEquals(translation, context.getNewTranslations().get(1).getTranslation());
-        assertEquals(translation, context.getNewTranslations().get(2).getTranslation());
-    }
-
-    @Test
-    public void shouldPassCorrectDictionariesWhenEditCardIsClicked() {
-        View translationListItem = firstTranslationCardInListView();
-
-        translationListItem.findViewById(R.id.translation_card_edit).performClick();
-
-        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
-        assertEquals(dictionaries[0], context.getNewTranslations().get(0).getDictionary());
-        assertEquals(dictionaries[1], context.getNewTranslations().get(1).getDictionary());
-        assertEquals(dictionaries[2], context.getNewTranslations().get(2).getDictionary());
-    }
-
-    @Test
-    public void shouldPassCorrectDeckIdWhenEditCardIsClicked() {
-        View translationListItem = firstTranslationCardInListView();
-
-        translationListItem.findViewById(R.id.translation_card_edit).performClick();
-
-        Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        Deck deck = (Deck) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
-        assertEquals(this.deck, deck);
-    }
-
-    @Test
     public void onClick_shouldShowDeleteConfirmationDialogWhenDeleteLayoutIsClicked(){
         View translationsListItem = firstTranslationCardInListView();
 

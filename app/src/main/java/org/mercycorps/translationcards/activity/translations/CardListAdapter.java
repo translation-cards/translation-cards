@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.activity.translations;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.service.DeckService;
@@ -64,7 +66,8 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             editView.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         } else {
-            editView.setOnClickListener(new CardEditClickListener(translationsActivity, item, dictionaryService, deckService));
+            Intent intent = new Intent(translationsActivity, EnterSourcePhraseActivity.class);
+            editView.setOnClickListener(new CardEditClickListener(translationsActivity, item, intent, dictionaryService, deckService));
             deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, dictionaryService));
         }
 
