@@ -38,18 +38,19 @@ class CardListAdapter extends ArrayAdapter<Translation> {
 
     @Override
     public View getView(int position, View translationItemView, ViewGroup parent) {
+        Translation item = getItem(position);
         if (translationItemView == null) {
             translationItemView = inflateTranslationItemView(parent);
         }
 
+        View translationChild = translationItemView.findViewById(R.id.translation_child);
+        View indicatorIcon = translationItemView.findViewById(R.id.indicator_icon);
         if (translationService.cardIsExpanded(position)) {
-            translationItemView.findViewById(R.id.translation_child).setVisibility(View.VISIBLE);
-            translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                    R.drawable.collapse_arrow);
+            translationChild.setVisibility(View.VISIBLE);
+            indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
         } else {
-            translationItemView.findViewById(R.id.translation_child).setVisibility(View.GONE);
-            translationItemView.findViewById(R.id.indicator_icon).setBackgroundResource(
-                    R.drawable.expand_arrow);
+            translationChild.setVisibility(View.GONE);
+            indicatorIcon.setBackgroundResource(R.drawable.expand_arrow);
         }
 
         translationItemView.setOnClickListener(null);
@@ -63,8 +64,8 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             editView.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         } else {
-            editView.setOnClickListener(new CardEditClickListener(translationsActivity, getItem(position), dictionaryService, deckService));
-            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, getItem(position), translationService, dictionaryService));
+            editView.setOnClickListener(new CardEditClickListener(translationsActivity, item, dictionaryService, deckService));
+            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, dictionaryService));
         }
 
         String currentDictionaryLabel = dictionaryService.currentDictionary().getLabel();
@@ -72,12 +73,12 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
                 R.id.list_item_progress_bar);
 
-        setCardTextView(position, translationItemView, currentDictionaryLabel, progressBar);
+        setCardTextView(item, translationItemView, currentDictionaryLabel, progressBar);
 
-        setTranslatedTextView(position, translationItemView, currentDictionaryLabel);
+        setTranslatedTextView(item, translationItemView, currentDictionaryLabel);
 
         translationItemView.findViewById(R.id.translated_text_layout)
-                .setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
+                .setOnClickListener(new CardAudioClickListener(item, progressBar,
                         translationsActivity.decoratedMediaManager, currentDictionaryLabel));
 
         return translationItemView;
@@ -92,26 +93,26 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         return translationItemView;
     }
 
-    private void setCardTextView(int position, View convertView, String currentDictionaryLabel,
+    private void setCardTextView(Translation item, View convertView, String currentDictionaryLabel,
                                  ProgressBar progressBar) {
         TextView cardTextView = (TextView) convertView.findViewById(
                 R.id.origin_translation_text);
-        cardTextView.setText(getItem(position).getLabel());
-        int cardTextColor = getItem(position).isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
+        cardTextView.setText(item.getLabel());
+        int cardTextColor = item.isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
         cardTextView.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
-        cardTextView.setOnClickListener(new CardAudioClickListener(getItem(position), progressBar,
+        cardTextView.setOnClickListener(new CardAudioClickListener(item, progressBar,
                 translationsActivity.decoratedMediaManager, currentDictionaryLabel));
     }
 
-    private void setTranslatedTextView(int position, View convertView, String currentDictionaryLabel) {
+    private void setTranslatedTextView(Translation item, View convertView, String currentDictionaryLabel) {
         TextView translatedText = (TextView) convertView.findViewById(R.id.translated_text);
-        if (getItem(position).getTranslatedText().isEmpty()) {
+        if (item.getTranslatedText().isEmpty()) {
             translatedText.setText(String.format(translationsActivity.getString(R.string.translated_text_hint), currentDictionaryLabel));
             translatedText.setTextColor(ContextCompat.getColor(getContext(),
                     R.color.textDisabled));
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         } else {
-            translatedText.setText(getItem(position).getTranslatedText());
+            translatedText.setText(item.getTranslatedText());
             translatedText.setTextColor(ContextCompat.getColor(getContext(),
                     R.color.primaryTextColor));
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
