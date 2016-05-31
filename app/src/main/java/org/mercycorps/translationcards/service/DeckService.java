@@ -37,4 +37,8 @@ public class DeckService {
     public void delete(Deck deck) {
         dbManager.deleteDeck(deck.getDbId());
     }
+
+    public void setCurrentDeck(Deck deck) {
+        currentDeck = deck;
+    }
 }

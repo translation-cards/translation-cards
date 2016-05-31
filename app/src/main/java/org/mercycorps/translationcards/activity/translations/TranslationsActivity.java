@@ -76,6 +76,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         decoratedMediaManager = application.getDecoratedMediaManager();
         translationService = application.getTranslationService();
+        translationService.initializeCardStates();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
 

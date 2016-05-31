@@ -14,15 +14,24 @@ public class TranslationService {
     private DictionaryService dictionaryService;
     private List<Translation> currentTranslations;
     private boolean displayCardsWithNoAudio;
-    private List<Boolean> translationCardStates;
+    private List<Boolean> expanded;
 
     public TranslationService(Repository repository, DictionaryService dictionaryService) {
         this.repository = repository;
         this.dictionaryService = dictionaryService;
         currentTranslations = repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
-        translationCardStates = new ArrayList<>(Arrays.asList(new Boolean[currentTranslations.size()]));
-        Collections.fill(translationCardStates, Boolean.FALSE);
+        expanded = new ArrayList<>(Arrays.asList(new Boolean[currentTranslations.size()]));
+        Collections.fill(expanded, Boolean.FALSE);
         displayCardsWithNoAudio = true;
+    }
+
+    public void initializeCardStates() {
+        expanded = new ArrayList<>(
+                Arrays.asList(
+                        new Boolean[getCurrentTranslations().size()]
+                )
+        );
+        Collections.fill(expanded, Boolean.FALSE);
     }
 
     public List<Translation> getCurrentTranslations() {
@@ -50,14 +59,14 @@ public class TranslationService {
     }
 
     public void expandCard(int position) {
-        translationCardStates.set(position, true);
+        expanded.set(position, true);
     }
 
     public void minimizeCard(int position) {
-        translationCardStates.set(position, false);
+        expanded.set(position, false);
     }
 
     public boolean cardIsExpanded(int position) {
-        return translationCardStates.size() > 0 && translationCardStates.get(position);
+        return expanded.size() > 0 && expanded.get(position);
     }
 }
