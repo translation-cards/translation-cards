@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.translations;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -68,7 +69,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         } else {
             Intent intent = new Intent(translationsActivity, EnterSourcePhraseActivity.class);
             editView.setOnClickListener(new CardEditClickListener(translationsActivity, item, intent, dictionaryService, deckService));
-            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, dictionaryService));
+            deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, new AlertDialog.Builder(translationsActivity)));
         }
 
         String currentDictionaryLabel = dictionaryService.currentDictionary().getLabel();

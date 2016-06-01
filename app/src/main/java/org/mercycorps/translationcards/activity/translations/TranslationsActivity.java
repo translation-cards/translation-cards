@@ -216,6 +216,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         return new AddNewTranslationContext(newTranslations);
     }
 
+    protected void updateView() {
+        updateView(dictionaryService.getCurrentDictionaryIndex());
+    }
+
     protected void updateView(int nextDictionaryIndex) {
         decoratedMediaManager.stop();
         int currentDictionaryIndex = dictionaryService.getCurrentDictionaryIndex();

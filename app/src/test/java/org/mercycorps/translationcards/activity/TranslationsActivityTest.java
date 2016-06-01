@@ -297,35 +297,6 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void onClick_shouldShowDeleteConfirmationDialogWhenDeleteLayoutIsClicked(){
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_card_delete).performClick();
-
-        ShadowAlertDialog shadowAlertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
-        assertThat(shadowAlertDialog.getMessage().toString(), is("Are you sure you want to delete this translation card from all languages?"));}
-
-    @Test
-    public void onClick_shouldDeleteCorrectTranslationsWhenDeleteButtonIsClicked() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_card_delete).performClick();
-
-        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(translationService).deleteTranslation(translation.getLabel());
-    }
-
-    @Test
-    @Ignore //TODO rewrite this test? Probably move it to DictionaryService
-    public void onClick_shouldRefreshCurrentDictionaryWhenATranslationCardIsDeleted() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_card_delete).performClick();
-
-        ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-    }
-
-    @Test
     public void shouldShowCollapsedCardIndicatorByDefault() {
         View translationsListItem = firstTranslationCardInListView();
 
