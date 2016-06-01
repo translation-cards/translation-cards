@@ -40,10 +40,10 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     public static final String EDIT_DECK = "Edit";
     private final MyDecksActivity activity;
     private LayoutInflater layoutInflater;
-    TextView deckNameTextView;
-    TextView deckInformationTextView;
-    TextView translationLanguagesTextView;
-    LinearLayout deckItemLayout;
+    @Bind(R.id.deck_name)TextView deckNameTextView;
+    @Bind(R.id.deck_information)TextView deckInformationTextView;
+    @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
+    @Bind(R.id.translation_card)LinearLayout deckItemLayout;
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
     @Bind(R.id.lock_icon) FrameLayout lockIcon;
     @Bind(R.id.deck_item) View deckItem;
@@ -61,20 +61,12 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         Deck deck = getItem(position);
         if (view == null) {
             view = layoutInflater.inflate(R.layout.deck_item, parent, false);
-            ButterKnife.bind(this, view);
         }
-        bindCardComponentsFrom(view);
-        setTextValues(deck);
+        ButterKnife.bind(this, view);
+        initFields(deck);
         setClickListeners(deck);
         disableDeckCopyingAndLockIconIfUnlocked(deck);
         return view;
-    }
-
-    private void bindCardComponentsFrom(View view) {
-        deckNameTextView = (TextView)view.findViewById(R.id.deck_name);
-        deckInformationTextView = (TextView)view.findViewById(R.id.deck_information);
-        translationLanguagesTextView = (TextView)view.findViewById(R.id.translation_languages);
-        deckItemLayout = (LinearLayout)view.findViewById(R.id.translation_card);
     }
 
     private void disableDeckCopyingAndLockIconIfUnlocked(Deck deck) {
@@ -93,7 +85,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         return (int) (padding* scale + 0.5f);
     }
 
-    private void setTextValues(Deck deck){
+    private void initFields(Deck deck){
         if(deck == null) return;
         deckNameTextView.setText(deck.getLabel());
         deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
