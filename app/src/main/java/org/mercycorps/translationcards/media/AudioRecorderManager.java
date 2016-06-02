@@ -4,6 +4,7 @@ import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.exception.RecordAudioException;
+import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.io.IOException;
 
@@ -46,10 +47,15 @@ public class AudioRecorderManager {
 
     public void stop() {
         if(mediaRecorder == null) return;
-        mediaRecorder.stop();
-        mediaRecorder.reset();
-        mediaRecorder.release();
-        isRecording = false;
+        try {
+            mediaRecorder.stop();
+        } catch(RuntimeException stopFailed) {
+            ToastHelper.showToast(MainApplication.getContextFromMainApp(), "STAAAAAHHP", 1);
+        } finally {
+            mediaRecorder.reset();
+            mediaRecorder.release();
+            isRecording = false;
+        }
     }
 
     public boolean isRecording() {
