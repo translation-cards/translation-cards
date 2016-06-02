@@ -22,6 +22,7 @@ import org.mercycorps.translationcards.activity.translations.TranslationsActivit
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -61,6 +62,7 @@ public class MyDeckAdapterTest {
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
+    private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
 
     @Before
     public void setUp() throws Exception {
@@ -78,7 +80,7 @@ public class MyDeckAdapterTest {
         controller = Robolectric.buildActivity(MyDecksActivity.class);
         activity = controller.withIntent(intent).create().get();
         when(deck.getDictionaries()).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
-        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService);
+        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
         return adapter.getView(0, null, null);
     }
 
@@ -116,6 +118,8 @@ public class MyDeckAdapterTest {
         click(view, R.id.translation_card);
 
         assertEquals(TranslationsActivity.class.getName(), shadowOf((MyDecksActivity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
+        verify(deckService).setCurrentDeck(deck);
+        verify(dictionaryService).setCurrentDictionary(0);
     }
 
     @Test

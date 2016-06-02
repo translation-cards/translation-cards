@@ -13,6 +13,7 @@ import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,11 +37,13 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=1.0.4";
     private DeckService deckService;
+    private DictionaryService dictionaryService;
 
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_my_decks);
         deckService = ((MainApplication)getApplication()).getDeckService();
+        dictionaryService = ((MainApplication)getApplication()).getDictionaryService();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateDecksView(List<Deck> decks) {
-        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(MyDecksActivity.this, R.layout.deck_item, R.id.deck_name, decks, deckService);
+        ArrayAdapter<Deck> listAdapter = new MyDeckAdapter(MyDecksActivity.this, R.layout.deck_item, R.id.deck_name, decks, deckService, dictionaryService);
         ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
         decksListView.setAdapter(listAdapter);
     }

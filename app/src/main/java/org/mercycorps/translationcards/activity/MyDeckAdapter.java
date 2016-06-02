@@ -25,6 +25,7 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
 import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,10 +49,12 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.lock_icon) FrameLayout lockIcon;
     @Bind(R.id.deck_item) View deckItem;
     DeckService deckService;
+    private DictionaryService dictionaryService;
 
-    public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks, DeckService deckService) {
+    public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService) {
         super(context, deckItemResource, deckNameResource, decks);
         this.deckService = deckService;
+        this.dictionaryService = dictionaryService;
         this.layoutInflater = context.getLayoutInflater();
         this.activity = context;
     }
@@ -146,6 +149,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
             public void onClick(View v) {
                 Intent decksIntent = new Intent(activity, TranslationsActivity.class);
                 deckService.setCurrentDeck(deck);
+                dictionaryService.setCurrentDictionary(0);
                 activity.startActivity(decksIntent);
             }
         });
