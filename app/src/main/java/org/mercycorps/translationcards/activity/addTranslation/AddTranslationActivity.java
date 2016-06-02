@@ -1,28 +1,28 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.app.Fragment;
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
-import java.util.ArrayList;
-
 
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
     public static final String CONTEXT_INTENT_KEY = "AddNewTranslationContext";
     public static final String INTENT_KEY_DECK_ID = "Deck";
+    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 0;
     private TranslationTabsFragment translationTabsFragment;
 
     @Override
@@ -89,5 +89,20 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
 
     protected TranslationTabsFragment getLanguageTabsFragment() {
         return translationTabsFragment;
+    }
+
+    protected boolean checkRecordingPermission() {
+        if (Build.VERSION.SDK_INT < 23) {
+            return true;
+        }
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    protected boolean permissionGranted(int[] grantResults) {
+        return grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    protected void requestRecordPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 }

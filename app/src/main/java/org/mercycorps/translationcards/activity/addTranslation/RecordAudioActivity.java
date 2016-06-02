@@ -1,10 +1,6 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -19,15 +15,15 @@ import org.mercycorps.translationcards.activity.translations.TranslationsActivit
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
-import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.media.MediaConfig;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
+import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.OnLanguageTabSelectedListener;
 
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
@@ -71,7 +67,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!checkRecordingPermission()) {
-            ActivityCompat.requestPermissions(RecordAudioActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+            requestRecordPermissions();
         }
     }
     @Override
@@ -259,10 +255,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
-    private boolean checkRecordingPermission() {
-        if (Build.VERSION.SDK_INT < 23) {
-            return true;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (!permissionGranted(grantResults)) {
+            startNextActivity(this, TranslationsActivity.class);
         }
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
     }
 }
