@@ -117,7 +117,7 @@
             android:paddingBottom="6.5dp"
             android:paddingRight="26dp"
             android:paddingTop="16.5dp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorSecondaryLight"
             android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
