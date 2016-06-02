@@ -51,22 +51,6 @@ public class TranslationServiceTest {
     }
 
     @Test
-    public void getCurrentTranslations_shouldReturnAllCardsWhenToggleIsSetToTrue() {
-        translationService.setDisplayCardsWithNoAudio(true);
-        List<Translation> translations = translationService.getCurrentTranslations();
-
-        assertEquals(translationsFromRepository, translations);
-    }
-
-    @Test
-    public void getCurrentTranslations_shouldOnlyReturnCardsWithAudioWhenToggleIsSetToFalse() {
-        translationService.setDisplayCardsWithNoAudio(false);
-        List<Translation> translations = translationService.getCurrentTranslations();
-
-        assertEquals(Collections.singletonList(defaultTranslation), translations);
-    }
-
-    @Test
     public void deleteTranslation_shouldDeleteTranslationsBySourcePhraseFromCurrentDictionaries() {
         List<Dictionary> dictionaries = Collections.emptyList();
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);

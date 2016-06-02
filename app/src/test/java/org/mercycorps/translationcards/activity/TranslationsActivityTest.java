@@ -162,13 +162,13 @@ public class TranslationsActivityTest {
     @Test
     public void shouldNotDisplayHeaderInEmptyDeck() {
         Activity activity= createEmptyTranslationsActivity();
-        LinearLayout header = findLinearLayout(activity, R.id.translation_list_header);
+        TextView header = findTextView(activity, R.id.translation_list_header);
         assertEquals(View.GONE, header.getVisibility());
     }
 
     @Test
     public void shouldDisplayHeaderWhenDeckIsPopulated() {
-        LinearLayout header = findLinearLayout(translationsActivity, R.id.translation_list_header);
+        TextView header = findTextView(translationsActivity, R.id.translation_list_header);
         assertEquals(View.VISIBLE, header.getVisibility());
     }
 
@@ -403,11 +403,6 @@ public class TranslationsActivityTest {
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
 
-    @Test
-    public void shouldDisplayNumberOfCardsWithNoAudioInNoAudioToggleText(){
-        TextView noAudioText = findTextView(translationsActivity, R.id.no_audio_toggle_text);
-        assertEquals("Hide 1 cards that don't have audio in this language", noAudioText.getText().toString());
-    }
 
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity

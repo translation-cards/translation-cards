@@ -12,13 +12,11 @@ public class TranslationService {
 
     private Repository repository;
     private DictionaryService dictionaryService;
-    private boolean displayCardsWithNoAudio;
     private List<Boolean> expanded;
 
     public TranslationService(Repository repository, DictionaryService dictionaryService) {
         this.repository = repository;
         this.dictionaryService = dictionaryService;
-        displayCardsWithNoAudio = true;
         initializeCardStates();
     }
 
@@ -32,27 +30,11 @@ public class TranslationService {
     }
 
     public List<Translation> getCurrentTranslations() {
-        List<Translation> translations = repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
-
-        return filterTranslationsWithNoAudio(translations);
-    }
-
-    private List<Translation> filterTranslationsWithNoAudio(List<Translation> translations) {
-        List<Translation> filteredTranslations = new ArrayList<>(translations.size());
-        for(int index = 0; index < translations.size(); index++) {
-            if(displayCardsWithNoAudio || translations.get(index).isAudioFilePresent()) {
-                filteredTranslations.add(translations.get(index));
-            }
-        }
-        return filteredTranslations;
+        return repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
     }
 
     public void deleteTranslation(String sourcePhrase) {
         repository.deleteTranslationBySourcePhrase(sourcePhrase, dictionaryService.getDictionariesForCurrentDeck());
-    }
-
-    public void setDisplayCardsWithNoAudio(boolean displayCardsWithNoAudio) {
-        this.displayCardsWithNoAudio = displayCardsWithNoAudio;
     }
 
     public void expandCard(int position) {

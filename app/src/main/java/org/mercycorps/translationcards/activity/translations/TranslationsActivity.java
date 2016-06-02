@@ -103,20 +103,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         Dictionary currentDictionary = dictionaryService.currentDictionary();
         int headerVisibility = (currentDictionary.getTranslationCount() == 0) ? View.GONE : View.VISIBLE;
         findViewById(R.id.translation_list_header).setVisibility(headerVisibility);
-        int numberofTranslations = currentDictionary.getNumberOfTranslationsWithNoRecording();
-        String message = String.format(getString(R.string.no_audio_toggle_text), numberofTranslations);
-        ((TextView)findViewById(R.id.no_audio_toggle_text)).setText(message);
-    }
-
-    private void setSwitchClickListener() {
-        SwitchCompat noAudioSwitch = (SwitchCompat) findViewById(R.id.no_audio_toggle);
-        noAudioSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                translationService.setDisplayCardsWithNoAudio(!isChecked);
-                updateView(dictionaryService.getCurrentDictionaryIndex());
-            }
-        });
     }
 
     private void updateAddTranslationButtonVisibility() {
@@ -174,7 +160,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         LayoutInflater layoutInflater = getLayoutInflater();
         list.addHeaderView(layoutInflater.inflate(R.layout.translation_list_header, list, false));
         findViewById(R.id.translation_list_header).setOnClickListener(null);
-        setSwitchClickListener();
         inflateListFooter();
 
         listAdapter = new CardListAdapter(this,

@@ -1,32 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginTop="28dp"
-android:paddingBottom="8dp"
-android:paddingTop="24dp"
-android:layout_below="@+id/tabScroll"
-android:id="@+id/translation_list_header"
-android:weightSum="1">
-
 <TextView
-    android:id="@+id/no_audio_toggle_text"
-    android:textColor="@color/textDisabled"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginStart="16dp"
-    android:lineSpacingExtra="3dp"
-    android:text="@string/no_audio_toggle_text"
-    android:textSize="16.5sp"
-    android:layout_weight=".80"/>
-<android.support.v7.widget.SwitchCompat
-    android:layout_width="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_weight=".20"
-    android:switchMinWidth="54dp"
-    android:id="@+id/no_audio_toggle"/>
-</LinearLayout>
+    android:gravity="center_horizontal"
+    android:paddingTop="28dp"
+    android:paddingBottom="8dp"
+    android:textSize="14sp"
+    android:lineSpacingExtra="3dp"
+    android:text="@string/main_instructions"
+    android:id="@+id/translation_list_header" />
