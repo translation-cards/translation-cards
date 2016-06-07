@@ -10,6 +10,7 @@ import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mockito.stubbing.Answer;
 import org.robolectric.TestLifecycleApplication;
@@ -35,6 +36,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private TranslationService translationService = mock(TranslationService.class);
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
+    private LanguageService languageService = mock(LanguageService.class);
 
     @Override
     public void onCreate() {
@@ -105,5 +107,10 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public DeckService getDeckService() {
         return deckService;
+    }
+
+    @Override
+    public LanguageService getLanguageService() {
+        return languageService;
     }
 }

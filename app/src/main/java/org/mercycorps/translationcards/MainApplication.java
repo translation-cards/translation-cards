@@ -13,6 +13,7 @@ import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public class MainApplication extends Application {
     private DeckService deckService;
     private Repository repository;
     protected boolean isTest = false;
+    private LanguageService languageService;
 
     @Override
     public void onCreate() {
@@ -59,6 +61,7 @@ public class MainApplication extends Application {
         deckService = new DeckService(dbManager);
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);
+        languageService = new LanguageService();
     }
 
     public DbManager getDbManager() {
@@ -112,5 +115,9 @@ public class MainApplication extends Application {
 
     public DeckService getDeckService() {
         return deckService;
+    }
+
+    public LanguageService getLanguageService() {
+        return languageService;
     }
 }
