@@ -32,17 +32,24 @@ public class LanguageDisplayUtil {
     public static String getLanguageDisplayName(String isoCode) {
         Context context = MainApplication.getContextFromMainApp();
         switch (isoCode) {
-            case "ar":
+            case "ara":
                 return context.getString(R.string.name_ar);
-            case "en":
+            case "eng":
                 return context.getString(R.string.name_en);
-            case "fa":
+            case "fas":
                 return context.getString(R.string.name_fa);
-            case "ps":
+            case "pus":
                 return context.getString(R.string.name_ps);
             default:
                 // Better than nothing.
                 return isoCode;
         }
     }
+
+//    public static String getIsoForLanguage(String label) {
+//        String isoCode = ;
+//
+//        return iso;
+//    }
+
 }

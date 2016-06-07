@@ -17,6 +17,7 @@
 package org.mercycorps.translationcards.data;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.Serializable;
 
@@ -52,7 +53,7 @@ public class Dictionary implements Serializable {
         this.translations = new Translation[0];
         this.dbId = -1;
         this.deckId = -1;
-        this.destLanguageIso = "";
+//        this.destLanguageIso = LanguageDisplayUtil.getIsoForLanguage(label);
     }
 
     public String getDestLanguageIso() {

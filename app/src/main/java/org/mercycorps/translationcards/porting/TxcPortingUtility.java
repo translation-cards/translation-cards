@@ -61,7 +61,7 @@ public class TxcPortingUtility {
         public static final String CARD_DEST_TEXT = "dest_txt";
     }
 
-    private static final String DEFAULT_SOURCE_LANGUAGE = "en";
+    private static final String DEFAULT_SOURCE_LANGUAGE = "eng";
 
     public void exportData(Deck deck, String exportedDeckName, Dictionary[] dictionaries, File file)
             throws ExportException {

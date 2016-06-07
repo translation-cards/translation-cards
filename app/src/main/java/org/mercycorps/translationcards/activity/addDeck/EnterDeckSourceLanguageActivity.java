@@ -43,7 +43,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private String getLocaleForLanguage(String sourceLanguage) {
-       return "en";
+       return "eng";
     }
 
 }

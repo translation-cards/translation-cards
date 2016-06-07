@@ -405,7 +405,7 @@ public class DbManager {
                 db.execSQL(ALTER_TABLE_ADD_DEST_LANGUAGE_ISO_COLUMN);
                 // We assume that the source language of all pre-existing decks is English.
                 ContentValues defaultSourceLanguageValues = new ContentValues();
-                defaultSourceLanguageValues.put(DecksTable.SOURCE_LANGUAGE_ISO, "en");
+                defaultSourceLanguageValues.put(DecksTable.SOURCE_LANGUAGE_ISO, "eng");
                 db.update(DecksTable.TABLE_NAME, defaultSourceLanguageValues, null, null);
                 // We use "xx" as the destination language ISO code for all pre-existing
                 // dictionaries. This will never be found in a language lookup table and will force
@@ -443,11 +443,11 @@ public class DbManager {
     }
 
     private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("ar", "Arabic", new Translation[] {},
+            new Dictionary("ara", "Arabic", new Translation[] {},
                     NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("fa", "Farsi", new Translation[] {},
+            new Dictionary("fas", "Farsi", new Translation[] {},
                     NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("ps", "Pashto", new Translation[] {},
+            new Dictionary("pus", "Pashto", new Translation[] {},
                     NO_VALUE_ID, NO_VALUE_ID),
     };
 }

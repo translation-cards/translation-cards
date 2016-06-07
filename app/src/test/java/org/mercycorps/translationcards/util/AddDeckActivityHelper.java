@@ -10,9 +10,9 @@ import org.mercycorps.translationcards.data.Deck;
 public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> extends ActivityHelper<T> {
 
     public final String DEFAULT_DECK_NAME = "MercyCorps Deck";
-    public final String DEFAULT_DECK_ISO_CODE = "en";
+    public final String DEFAULT_DECK_ISO_CODE = "eng";
     public final String DEFAULT_SOURCE_LANGUAGE ="English" ;
-    public final String DEFAULT_SOURCE_LANGUAGE_ISO = "en" ;
+    public final String DEFAULT_SOURCE_LANGUAGE_ISO = "eng" ;
     public final String DEFAULT_DECK_AUTHOR = "TW" ;
     public final String NEW_AUTHOR = "Some Author";
 
