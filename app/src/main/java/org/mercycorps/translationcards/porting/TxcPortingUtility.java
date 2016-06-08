@@ -168,6 +168,8 @@ public class TxcPortingUtility {
     private void addFileToZip(
             String filename, Translation translation, ZipOutputStream zos)
             throws ExportException {
+        if(filename == null || filename.isEmpty()) return;
+
         try {
             zos.putNextEntry(new ZipEntry(filename));
             FileInputStream translationInput = getFileInputStream(translation);

@@ -9,7 +9,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 
@@ -78,7 +81,7 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
             errorMessage = context.getString(
                     R.string.export_failure_too_many_duplicate_filenames_error_message);
         }
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(activity)
                 .setTitle(R.string.import_failure_alert_title)
                 .setMessage(errorMessage)
                 .show();
