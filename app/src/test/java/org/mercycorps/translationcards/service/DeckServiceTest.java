@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -24,6 +25,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by agarrard and natashaJimenez on 6/9/16.
  */
 
+@Config(constants = BuildConfig.class, sdk = 21)
+@RunWith(RobolectricGradleTestRunner.class)
 public class DeckServiceTest {
 
     private DeckService deckService;
@@ -42,9 +45,28 @@ public class DeckServiceTest {
 
     @Test
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
-        deckService.save(deck);
+        deckService.save(deck, "Arabic, Farsi");
 
         verify(dbManager).addDeck(deck.getLabel(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
+    }
+
+
+    @Ignore
+    @Test
+    public void shouldSaveDictionariesWhenContextObjectIsSaved() {
+        deckService.save(deck, "");
+
+//        verify(dictionary).save(0);
+    }
+
+    @Ignore
+    @Test
+    public void shouldAddDeckIdToDictionaryWhenContextObjectIsSaved() {
+        long deckId = 1;
+
+        deckService.save(deck, "");
+
+//        verify(dictionary).setDeckId(deckId);
     }
 
 }

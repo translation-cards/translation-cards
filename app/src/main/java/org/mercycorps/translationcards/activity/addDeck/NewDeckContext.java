@@ -33,24 +33,6 @@ public class NewDeckContext implements Serializable {
         deck.setLabel(deckTitle);
     }
 
-    public void save() {
-        DeckService deckService = ((MainApplication) MainApplication.getContextFromMainApp()).getDeckService();
-        Long deckId = deckService.save(deck);
-        saveDictionaries(deckId);
-    }
-
-    private void saveDictionaries(Long deckId) {
-        String[] languagesList = languagesInput.split(",");
-        Dictionary dictionary;
-        Integer itemIndex = 0;
-        for (String language : languagesList) {
-            dictionary = new Dictionary(language);
-            dictionary.setDeckId(deckId);
-            dictionary.save(itemIndex);
-            itemIndex ++;
-        }
-    }
-
     public String getDeckLabel() {
         return deck.getLabel();
     }

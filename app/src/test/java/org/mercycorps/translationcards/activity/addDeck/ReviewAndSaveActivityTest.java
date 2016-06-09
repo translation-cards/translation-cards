@@ -12,10 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
@@ -37,6 +40,7 @@ import static org.robolectric.Shadows.shadowOf;
 public class ReviewAndSaveActivityTest {
 
     AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
+    private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
 
     @After
     public void teardown() {
@@ -59,7 +63,6 @@ public class ReviewAndSaveActivityTest {
         assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
-
     @Test
     public void shouldInflateEnterSourceLanguageImageWhenActivityIsCreated() {
         Activity activity = helper.createActivityToTest();
@@ -70,9 +73,13 @@ public class ReviewAndSaveActivityTest {
     @Test
     public void shouldSaveNewDeckContextWhenUserClicksSave() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
+        Deck deck = mock(Deck.class);
+        when(newDeckContext.getDeck()).thenReturn(deck);
+        String languages = "languages, languag";
+        when(newDeckContext.getLanguagesInput()).thenReturn(languages);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
-        verify(newDeckContext).save();
+        verify(deckService).save(deck, languages);
     }
 
     @Test

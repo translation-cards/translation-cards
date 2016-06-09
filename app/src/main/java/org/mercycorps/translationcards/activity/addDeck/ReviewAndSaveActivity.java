@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.service.DeckService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +27,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @Bind(R.id.lock_icon)FrameLayout lockIcon;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
     @Bind(R.id.deck_menu)FrameLayout deckMenu;
-
+    private NewDeckContext context;
 
     @Override
     public void inflateView() {
@@ -33,11 +35,11 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     }
 
-
     @Override
     public void initStates() {
-        deckName.setText(getContextFromIntent().getDeckLabel());
-        deckInformation.setText(getContextFromIntent().getDeckInformation());
+        context = getContextFromIntent();
+        deckName.setText(context.getDeckLabel());
+        deckInformation.setText(context.getDeckInformation());
         disableDeckCopyingAndLockIconIfUnlocked();
         fillLanguagesListTextView();
         deckMenu.setVisibility(View.GONE);
@@ -45,7 +47,8 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
-        getContextFromIntent().save();
+        DeckService deckService = ((MainApplication)getApplication()).getDeckService();
+        deckService.save(context.getDeck(), context.getLanguagesInput());
         startNextActivity(this, MyDecksActivity.class);
     }
 
@@ -61,7 +64,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     private void disableDeckCopyingAndLockIconIfUnlocked() {
 
-        int deckVisible = (getContextFromIntent().isDeckLocked()) ? View.VISIBLE : View.GONE;
+        int deckVisible = (context.isDeckLocked()) ? View.VISIBLE : View.GONE;
         lockIcon.setVisibility(deckVisible);
         deckInformation.setPadding(getPaddingInPx(16), 0, getPaddingInPx(16), getPaddingInPx(20));
 
@@ -74,11 +77,10 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     }
 
     private void fillLanguagesListTextView() {
-        String languagesInput = getContextFromIntent().getLanguagesInput();
+        String languagesInput = context.getLanguagesInput();
         if (languagesInput != null) {
             String[] languagesList = languagesInput.split(",");
             List<Dictionary> dictionaries = new ArrayList<>();
-            Integer itemIndex = 0;
             for (String language : languagesList) {
                 dictionaries.add(new Dictionary(language.trim()));
             }
