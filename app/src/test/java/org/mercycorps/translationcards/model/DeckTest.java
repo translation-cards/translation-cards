@@ -36,13 +36,6 @@ public class DeckTest {
     }
 
     @Test
-    public void shouldSaveDeckToDBWhenSaveIsCalled() {
-        deck.save();
-
-        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).addDeck(deck.getLabel(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
-    }
-
-    @Test
     public void getDeckInformation_shouldFormatDeckInformation() {
         assertThat(deck.getDeckInformation(),is("author, 02/08/16"));
     }

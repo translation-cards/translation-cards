@@ -1,7 +1,9 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.service.DeckService;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,7 +34,8 @@ public class NewDeckContext implements Serializable {
     }
 
     public void save() {
-        Long deckId = deck.save();
+        DeckService deckService = ((MainApplication) MainApplication.getContextFromMainApp()).getDeckService();
+        Long deckId = deckService.save(deck);
         saveDictionaries(deckId);
     }
 
@@ -72,17 +75,13 @@ public class NewDeckContext implements Serializable {
         deck.setAuthor(author);
     }
 
-    public void update() {
-
-    }
-
     public String getDeckInformation(){ return deck.getDeckInformation(); }
 
     public boolean isDeckLocked(){
         return this.deck.isLocked();
     }
 
-    public Dictionary[] getDeckDictionaries() {
-        return this.deck.getDictionaries();
+    public Deck getDeck() {
+        return deck;
     }
 }

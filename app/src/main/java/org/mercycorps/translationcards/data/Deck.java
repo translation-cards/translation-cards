@@ -94,30 +94,13 @@ public class Deck implements Serializable {
         this.label = label;
     }
 
-    public Long save() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDeck(label, author, timestamp, externalId, "", locked, sourceLanguageIso);
-    }
-
     public void delete() {
         ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().deleteDeck(dbId);
-    }
-
-    public void update() {
-
     }
 
     public void setSourceLanguageIso(String sourceLanguageIso){
         this.sourceLanguageIso = sourceLanguageIso;
 
-    }
-
-    public String getDisplayLanguage() {
-        for (Locale locale : Locale.getAvailableLocales()) {
-            if (locale.getLanguage().equals(this.sourceLanguageIso)) {
-                return locale.getDisplayLanguage();
-            }
-        }
-        return "English";
     }
 
     public void setAuthor(String author) {

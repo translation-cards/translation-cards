@@ -17,6 +17,7 @@
 package org.mercycorps.translationcards.data;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.Serializable;
@@ -46,7 +47,6 @@ public class Dictionary implements Serializable {
         this.dbId = dbId;
         this.deckId = deckId;
     }
-
 
     public Dictionary(String label) {
         this.label = label;
@@ -83,17 +83,6 @@ public class Dictionary implements Serializable {
         translation.saveWithDictionary(dbId);
         return translation;
     }
-
-    public int getNumberOfTranslationsWithNoRecording() {
-        int count = 0;
-        for(Translation translation : translations) {
-            if(!translation.isAudioFilePresent()) {
-                count ++;
-            }
-        }
-        return count;
-    }
-
 
     public long getDbId() {
         return dbId;

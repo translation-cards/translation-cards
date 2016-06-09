@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 
