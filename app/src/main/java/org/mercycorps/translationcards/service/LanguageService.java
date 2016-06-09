@@ -17,28 +17,14 @@ public class LanguageService {
 
     public LanguageService() {
         languageMap = new HashMap<>();
-//        languageMap.put("ara", Collections.singletonList("Arabic"));
-//        languageMap.put("eng", Collections.singletonList("English"));
-//        languageMap.put("fas", Arrays.asList("Farsi", "Persian"));
-//        languageMap.put("pus", Arrays.asList("Pashto", "Pushto"));
-
-        Set<String> isoCodes = new TreeSet<>();
-        Set<String> displayLanguages = new TreeSet<>();
-
-//        for (Locale locale : Locale.getAvailableLocales()) {
-//            String isoCode = locale.getISO3Language();
-//            String displayLanguage = locale.getDisplayLanguage();
-//            if(languageMap.containsKey(isoCode)) {
-//                languageMap.get(isoCode).add(displayLanguage);
-//            } else {
-//                languageMap.put(isoCode, Arrays.asList(displayLanguage));
-//            }
-//        }
 
         for(String language : Locale.getISOLanguages()) {
             Locale locale = new Locale(language);
-            languageMap.put(locale.getISO3Language(), new ArrayList<String>(Collections.singletonList(locale.getDisplayLanguage())));
+            languageMap.put(locale.getISO3Language(), new ArrayList<>(Collections.singletonList(locale.getDisplayLanguage().toUpperCase())));
         }
+
+        languageMap.get("fas").add("FARSI");
+        languageMap.get("pus").add("PASHTO");
     }
 
     public String getLanguageDisplayName(String isoCode) {
@@ -51,11 +37,10 @@ public class LanguageService {
 
     public  String getIsoForLanguage(String label) {
         for(String isoCode : languageMap.keySet()) {
-            if(languageMap.get(isoCode).contains(label.trim())) {
+            if(languageMap.get(isoCode).contains(label.trim().toUpperCase())) {
                 return isoCode;
             }
         }
-
         return "";
     }
 

@@ -12,9 +12,11 @@ public class DeckService {
     private DbManager dbManager;
     private List<Deck> decks;
     private Deck currentDeck;
+    private LanguageService languageService;
 
-    public DeckService(DbManager dbManager) {
+    public DeckService(DbManager dbManager, LanguageService languageService) {
         this.dbManager = dbManager;
+        this.languageService = languageService;
         decks = Arrays.asList(this.dbManager.getAllDecks());
         currentDeck = decks.get(0);
     }
@@ -40,8 +42,8 @@ public class DeckService {
         Dictionary dictionary;
         Integer itemIndex = 0;
         for (String language : languagesList) {
-            dictionary = new Dictionary(language);
-            dictionary.setDeckId(deckId);
+            String isoCode = languageService.getIsoForLanguage(language);
+            dictionary = new Dictionary(isoCode, language, null, -1, deckId);
             dictionary.save(itemIndex);
             itemIndex ++;
         }

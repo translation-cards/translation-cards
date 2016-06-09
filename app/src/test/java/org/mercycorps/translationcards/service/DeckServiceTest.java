@@ -5,7 +5,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
@@ -14,9 +13,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
-
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -35,12 +31,14 @@ public class DeckServiceTest {
     @Mock
     private DbManager dbManager;
 
+    private LanguageService languageService = ((TestMainApplication) RuntimeEnvironment.application).getLanguageService();
+
     @Before
     public void setup() {
         initMocks(this);
         when(dbManager.getAllDecks()).thenReturn(new Deck[]{deck});
 
-        deckService = new DeckService(dbManager);
+        deckService = new DeckService(dbManager, languageService);
     }
 
     @Test

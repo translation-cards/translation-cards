@@ -58,10 +58,10 @@ public class MainApplication extends Application {
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
         repository = new Repository(dbManager);
-        deckService = new DeckService(dbManager);
+        languageService = new LanguageService();
+        deckService = new DeckService(dbManager, languageService);
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);
-        languageService = new LanguageService();
     }
 
     public DbManager getDbManager() {

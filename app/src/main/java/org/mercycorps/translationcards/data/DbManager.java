@@ -57,7 +57,7 @@ public class DbManager {
                 DictionariesTable.TABLE_NAME, null,
                 DictionariesTable.DECK_ID + " = ?",
                 new String[]{String.valueOf(deckId)}, null, null,
-                String.format("%s ASC", DictionariesTable.LANGUAGE_ISO));
+                String.format("%s ASC", DictionariesTable.LABEL));
 
         Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
         boolean hasNext = cursor.moveToFirst();
