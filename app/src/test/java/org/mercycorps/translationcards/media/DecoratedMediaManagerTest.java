@@ -57,15 +57,6 @@ public class DecoratedMediaManagerTest {
         verify(getAudioPlayerManager()).stop();
     }
 
-    @Ignore
-    @Test
-    public void shouldUpdateProgressBarWhenPlayIsCalled() throws Exception {
-        setupAudioPlayerManager();
-        decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
-        Thread.sleep(10000);
-        verify(progressBar).setProgress(DEFAULT_POSITION);
-    }
-
     @Test
     public void shouldSetMaxDurationOfProgressBarWhenPlayIsCalled() throws Exception {
         setupAudioPlayerManager();
