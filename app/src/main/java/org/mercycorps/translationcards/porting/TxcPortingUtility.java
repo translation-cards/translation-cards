@@ -120,8 +120,11 @@ public class TxcPortingUtility {
                 JSONArray cardsJson = new JSONArray();
                 for (int i = 0; i < dictionary.getTranslationCount(); i++) {
                     Translation translation = dictionary.getTranslation(i);
-                    String translationFilename = buildUniqueFilename(translation, translationFilenames);
-                    translationFilenames.put(translationFilename, translation);
+                    String translationFilename = "";
+                    if(translation.isAudioFilePresent()) {
+                        translationFilename = buildUniqueFilename(translation, translationFilenames);
+                        translationFilenames.put(translationFilename, translation);
+                    }
                     JSONObject cardJson = new JSONObject();
                     cardJson.put(JsonKeys.CARD_LABEL, translation.getLabel());
                     cardJson.put(JsonKeys.CARD_DEST_AUDIO, translationFilename);
@@ -168,8 +171,6 @@ public class TxcPortingUtility {
     private void addFileToZip(
             String filename, Translation translation, ZipOutputStream zos)
             throws ExportException {
-        if(filename == null || filename.isEmpty()) return;
-
         try {
             zos.putNextEntry(new ZipEntry(filename));
             FileInputStream translationInput = getFileInputStream(translation);
