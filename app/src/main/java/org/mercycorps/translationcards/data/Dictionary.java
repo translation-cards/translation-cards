@@ -53,7 +53,7 @@ public class Dictionary implements Serializable {
         this.translations = new Translation[0];
         this.dbId = -1;
         this.deckId = -1;
-//        this.destLanguageIso = LanguageDisplayUtil.getIsoForLanguage(label);
+        this.destLanguageIso = "";
     }
 
     public String getDestLanguageIso() {

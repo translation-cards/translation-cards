@@ -98,14 +98,6 @@ public class AudioRecorderManagerTest {
         verify(mediaRecorder).reset();
     }
 
-    @Ignore
-    @Test //// TODO: 3/28/16 figure a way out to test this bug. Currently fixed
-    public void threeClickBug() throws RecordAudioException {
-        audioRecorderManager.record(mediaConfig);
-        audioRecorderManager.stop();
-        audioRecorderManager.record(mediaConfig);
-    }
-
     public static MediaRecorder getMediaRecorder() {
         return getApplication().getMediaRecorder();
     }
