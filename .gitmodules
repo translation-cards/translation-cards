@@ -1,3 +1,0 @@
-[submodule "txcmaker/src/src-lib/appengine-gcs-client"]
-	path = txcmaker/src/src-lib/appengine-gcs-client
-	url = https://github.com/GoogleCloudPlatform/appengine-gcs-client.git
