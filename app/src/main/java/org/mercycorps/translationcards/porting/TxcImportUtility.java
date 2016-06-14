@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,9 +41,11 @@ public class TxcImportUtility {
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
     private static final String DEFAULT_SOURCE_LANGUAGE = "eng";
+    private LanguageService languageService;
 
-    public TxcImportUtility() {
+    public TxcImportUtility(LanguageService languageService) {
 
+        this.languageService = languageService;
     }
 
     public ImportSpec prepareImport(Context context, Uri source) throws ImportException {
@@ -63,12 +66,12 @@ public class TxcImportUtility {
     }
 
     public boolean isExistingDeck(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context);
+        DbManager dbm = new DbManager(context, languageService);
         return dbm.hasDeckWithHash(importSpec.hash);
     }
 
     public long otherVersionExists(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context);
+        DbManager dbm = new DbManager(context, languageService);
         return dbm.hasDeckWithExternalId(importSpec.externalId);
     }
 
@@ -210,7 +213,8 @@ public class TxcImportUtility {
             for (int i = 0; i < dictionaries.length(); i++) {
                 JSONObject dictionary = dictionaries.getJSONObject(i);
                 String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
-                ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode);
+                String language = languageService.getLanguageDisplayName(destIsoCode);
+                ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
                 spec.dictionaries.add(dictionarySpec);
                 JSONArray cards = dictionary.optJSONArray(JsonKeys.CARDS);
                 if (cards == null) {
@@ -270,13 +274,14 @@ public class TxcImportUtility {
                 s.close();
                 throw new  ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
-            String language = split[2];
+            String isoCode = split[2];
             ImportSpecDictionary dictionary;
-            if (dictionaryLookup.containsKey(language)) {
-                dictionary = dictionaryLookup.get(language);
+            if (dictionaryLookup.containsKey(isoCode)) {
+                dictionary = dictionaryLookup.get(isoCode);
             } else {
-                dictionary = new ImportSpecDictionary(language);
-                dictionaryLookup.put(language, dictionary);
+                String language = languageService.getLanguageDisplayName(isoCode);
+                dictionary = new ImportSpecDictionary(isoCode, language);
+                dictionaryLookup.put(isoCode, dictionary);
                 spec.dictionaries.add(dictionary);
             }
             dictionary.cards.add(
@@ -287,12 +292,12 @@ public class TxcImportUtility {
     }
 
     public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
-        DbManager dbm = new DbManager(context);
+        DbManager dbm = new DbManager(context, languageService);
         long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbm.addDictionary(dictionary.isoCode, null, i, deckId);
+            long dictionaryId = dbm.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
@@ -304,12 +309,12 @@ public class TxcImportUtility {
     }
 
     public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
-        DbManager dbManager = new DbManager(context);
+        DbManager dbManager = new DbManager(context, languageService);
         long deckId = dbManager.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.isoCode, null, i, deckId);
+            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
@@ -346,10 +351,12 @@ public class TxcImportUtility {
     private class ImportSpecDictionary {
 
         public final String isoCode;
+        public final String language;
         public final List<ImportSpecCard> cards;
 
-        public ImportSpecDictionary(String isoCode) {
+        public ImportSpecDictionary(String isoCode, String language) {
             this.isoCode = isoCode;
+            this.language = language;
             cards = new ArrayList<>();
         }
     }

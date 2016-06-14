@@ -1,6 +1,11 @@
 package org.mercycorps.translationcards.service;
 
 
+import android.content.Context;
+
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +36,7 @@ public class LanguageService {
         if(languageMap.containsKey(isoCode)) {
             return languageMap.get(isoCode).get(0);
         } else {
-            return isoCode;
+            return getLegacyLanguageDisplayName(isoCode) ;
         }
     }
 
@@ -41,7 +46,23 @@ public class LanguageService {
                 return isoCode;
             }
         }
-        return "";
+        return label;
     }
 
+
+    private String getLegacyLanguageDisplayName(String isoCode) {
+        Context context = MainApplication.getContextFromMainApp();
+        switch (isoCode) {
+            case "ar":
+                return context.getString(R.string.name_ar);
+            case "en":
+                return context.getString(R.string.name_en);
+            case "fa":
+                return context.getString(R.string.name_fa);
+            case "ps":
+                return context.getString(R.string.name_ps);
+            default:
+                return isoCode;
+        }
+    }
 }

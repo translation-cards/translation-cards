@@ -20,8 +20,6 @@ import org.mercycorps.translationcards.MainApplication;
 
 import java.io.Serializable;
 
-import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getLanguageDisplayName;
-
 /**
  * Contains information about a set of phrases for a particular language.
  *
@@ -59,7 +57,7 @@ public class Dictionary implements Serializable {
     }
 
     public String getLanguage() {
-        return isNullOrEmpty(language) ? getLanguageDisplayName(destLanguageIso) : language;
+        return isNullOrEmpty(language) ? this.destLanguageIso : language;
     }
 
     public int getTranslationCount() {

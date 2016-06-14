@@ -29,6 +29,7 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,8 +48,10 @@ public class DbManager {
     private static final long NO_VALUE_ID = -1;
 
     private final DbHelper dbh;
+    private final LanguageService languageService;
 
-    public DbManager(Context context) {
+    public DbManager(Context context, LanguageService languageService) {
+        this.languageService = languageService;
         this.dbh = new DbHelper(context);
     }
 
@@ -429,7 +432,7 @@ public class DbManager {
                 is.close();
                 jsonObject = new JSONObject(new String(buffer, "UTF-8"));
 
-                TxcImportUtility txcImportUtility = new TxcImportUtility();
+                TxcImportUtility txcImportUtility = new TxcImportUtility(languageService);
                 TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(new File(""), "", jsonObject);
                 txcImportUtility.loadAssetData(db, context, importSpec);
             } catch (IOException | JSONException | ImportException e) {
@@ -441,13 +444,4 @@ public class DbManager {
             // Do nothing.
         }
     }
-
-    private final Dictionary[] INCLUDED_DATA = new Dictionary[] {
-            new Dictionary("ara", "Arabic", new Translation[] {},
-                    NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("fas", "Farsi", new Translation[] {},
-                    NO_VALUE_ID, NO_VALUE_ID),
-            new Dictionary("pus", "Pashto", new Translation[] {},
-                    NO_VALUE_ID, NO_VALUE_ID),
-    };
 }

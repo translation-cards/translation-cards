@@ -49,7 +49,8 @@ public class MainApplication extends Application {
         super.onCreate();
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        dbManager = new DbManager(getApplicationContext());
+        languageService = new LanguageService();
+        dbManager = new DbManager(getApplicationContext(), languageService);
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
@@ -58,7 +59,6 @@ public class MainApplication extends Application {
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
         repository = new Repository(dbManager);
-        languageService = new LanguageService();
         deckService = new DeckService(dbManager, languageService);
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);

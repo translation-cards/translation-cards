@@ -16,10 +16,12 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
@@ -30,11 +32,13 @@ public class ImportActivity extends AppCompatActivity {
     private Uri source;
     private BroadcastReceiver onDownloadComplete;
     private AlertDialog downloadDialog;
+    private LanguageService languageService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        portingUtility = new TxcImportUtility();
+        languageService = ((MainApplication)getApplication()).getLanguageService();
+        portingUtility = new TxcImportUtility(languageService);
         source = getIntent().getData();
 
         onDownloadComplete = new BroadcastReceiver() {
@@ -177,7 +181,7 @@ public class ImportActivity extends AppCompatActivity {
                                     handleError(e);
                                     return;
                                 }
-                                DbManager dbm = new DbManager(ImportActivity.this);
+                                DbManager dbm = new DbManager(ImportActivity.this, languageService);
                                 dbm.deleteDeck(otherVersion);
                                 goToMainScreen();
                                 break;

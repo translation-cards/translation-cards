@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -13,7 +12,6 @@ import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -84,7 +82,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
             for (String language : languagesList) {
                 dictionaries.add(new Dictionary(language.trim()));
             }
-            translationLanguagesTextView.setText(getDestLanguageListDisplay(dictionaries, "  "));
+            translationLanguagesTextView.setText(getDestLanguageListDisplay(dictionaries));
         }
     }
 }
