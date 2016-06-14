@@ -9,10 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Translation;
 
 import java.io.File;
 
@@ -45,9 +42,9 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
         if (targetFile.exists()) {
             targetFile.delete();
         }
-        TxcPortingUtility portingUtility = new TxcPortingUtility();
+        TxcExportUtility exportingUtility = new TxcExportUtility();
         try {
-            portingUtility.exportData(deck, exportedDeckName, deck.getDictionaries(), targetFile);
+            exportingUtility.exportData(deck, exportedDeckName, deck.getDictionaries(), targetFile);
         } catch (final ExportException e) {
             activity.runOnUiThread(new Runnable() {
                 @Override

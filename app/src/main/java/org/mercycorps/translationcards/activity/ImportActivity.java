@@ -19,14 +19,14 @@ import android.support.v7.app.AppCompatActivity;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
-import org.mercycorps.translationcards.porting.TxcPortingUtility;
+import org.mercycorps.translationcards.porting.TxcImportUtility;
 
 import java.io.File;
 
 public class ImportActivity extends AppCompatActivity {
 
     public static final int PERMISSION_REQUEST_EXTERNAL_WRITE = 1;
-    private TxcPortingUtility portingUtility;
+    private TxcImportUtility portingUtility;
     private Uri source;
     private BroadcastReceiver onDownloadComplete;
     private AlertDialog downloadDialog;
@@ -34,7 +34,7 @@ public class ImportActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        portingUtility = new TxcPortingUtility();
+        portingUtility = new TxcImportUtility();
         source = getIntent().getData();
 
         onDownloadComplete = new BroadcastReceiver() {
@@ -127,11 +127,11 @@ public class ImportActivity extends AppCompatActivity {
 
     private void attemptImport() {
         try {
-            TxcPortingUtility.ImportSpec importSpec =
+            TxcImportUtility.ImportSpec importSpec =
                     portingUtility.prepareImport(ImportActivity.this, source);
             // Check if it's a deck we've already imported.
             if (false && portingUtility.isExistingDeck(this, importSpec)) {
-                portingUtility.abortImport(this, importSpec);
+                portingUtility.abortImport(importSpec);
                 alertUserOfFailure(getString(R.string.import_failure_existing_deck));
                 return;
             }
@@ -152,7 +152,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private void handleVersionOverride(
-            final TxcPortingUtility.ImportSpec importSpec, final long otherVersion) {
+            final TxcImportUtility.ImportSpec importSpec, final long otherVersion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.import_version_override_title)
                 .setItems(R.array.version_override_options, new DialogInterface.OnClickListener() {

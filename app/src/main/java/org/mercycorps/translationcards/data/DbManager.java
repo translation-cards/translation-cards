@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.porting.ImportException;
-import org.mercycorps.translationcards.porting.TxcPortingUtility;
+import org.mercycorps.translationcards.porting.TxcImportUtility;
 
 import java.io.File;
 import java.io.IOException;
@@ -429,9 +429,9 @@ public class DbManager {
                 is.close();
                 jsonObject = new JSONObject(new String(buffer, "UTF-8"));
 
-                TxcPortingUtility txcPortingUtility = new TxcPortingUtility();
-                TxcPortingUtility.ImportSpec importSpec = txcPortingUtility.buildImportSpec(new File(""), "", jsonObject);
-                txcPortingUtility.loadAssetData(db, context, importSpec);
+                TxcImportUtility txcImportUtility = new TxcImportUtility();
+                TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(new File(""), "", jsonObject);
+                txcImportUtility.loadAssetData(db, context, importSpec);
             } catch (IOException | JSONException | ImportException e) {
                 Log.d(TAG, e.getMessage());
             }
