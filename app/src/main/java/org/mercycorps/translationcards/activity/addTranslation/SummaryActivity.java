@@ -71,7 +71,7 @@ public class SummaryActivity extends AddTranslationActivity {
             }
         } catch (AudioFileException e) {
             String message = String.format(getString(R.string.could_not_play_audio_message),
-                    getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel());
+                    getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage());
             showToast(message);
             Log.d(TAG, e.getMessage());
         }
@@ -123,7 +123,7 @@ public class SummaryActivity extends AddTranslationActivity {
     private void updateTranslatedTextView() {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
+            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage()));
         }
 
         updateTextInTextView(translatedTextView, translatedText);

@@ -20,11 +20,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -142,7 +139,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         Dictionary dictionary = dictionaries.get(tabIndex);
         View textFrame = inflater.inflate(R.layout.language_tab, tabContainer, false);
         TextView textView = (TextView) textFrame.findViewById(R.id.tab_label_text);
-        textView.setText(dictionary.getLabel().toUpperCase());
+        textView.setText(dictionary.getLanguage().toUpperCase());
         final int index = tabIndex;
         textFrame.setOnClickListener(new View.OnClickListener() {
             @Override

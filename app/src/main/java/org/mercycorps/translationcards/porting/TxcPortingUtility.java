@@ -443,7 +443,7 @@ public class TxcPortingUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbm.addDictionary(dictionary.language, null, i, deckId);
+            long dictionaryId = dbm.addDictionary(dictionary.isoCode, null, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
@@ -460,7 +460,7 @@ public class TxcPortingUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.language, null, i, deckId);
+            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.isoCode, null, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
@@ -496,11 +496,11 @@ public class TxcPortingUtility {
 
     private class ImportSpecDictionary {
 
-        public final String language;
+        public final String isoCode;
         public final List<ImportSpecCard> cards;
 
-        public ImportSpecDictionary(String language) {
-            this.language = language;
+        public ImportSpecDictionary(String isoCode) {
+            this.isoCode = isoCode;
             cards = new ArrayList<>();
         }
     }

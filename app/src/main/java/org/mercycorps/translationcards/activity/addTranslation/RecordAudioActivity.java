@@ -152,7 +152,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         translatedTextView.setText(translatedText);
         if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel()));
+            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage()));
         }
     }
 

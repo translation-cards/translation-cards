@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.activity.addTranslation;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -67,7 +66,7 @@ public class EnterTranslatedPhraseActivity extends AddTranslationActivity  {
     }
 
     private void updateInputLanguageLabel() {
-        String inputLanguageLabel = getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLabel().toUpperCase();
+        String inputLanguageLabel = getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage().toUpperCase();
         translatedPhraseInputLanguageLabel.setText(String.format(getString(R.string.translated_phrase_input_language_label), inputLanguageLabel));
     }
 

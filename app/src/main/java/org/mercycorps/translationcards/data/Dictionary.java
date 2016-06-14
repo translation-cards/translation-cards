@@ -17,8 +17,6 @@
 package org.mercycorps.translationcards.data;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.io.Serializable;
 
@@ -35,21 +33,21 @@ public class Dictionary implements Serializable {
     private long dbId;
     private long deckId;
     private String destLanguageIso;
-    private String label;
+    private String language;
     private Translation[] translations;
 
 
-    public Dictionary(String destLanguageIso, String label, Translation[] translations, long dbId,
+    public Dictionary(String destLanguageIso, String language, Translation[] translations, long dbId,
                       long deckId) {
         this.destLanguageIso = destLanguageIso;
-        this.label = label;
+        this.language = language;
         this.translations = translations;
         this.dbId = dbId;
         this.deckId = deckId;
     }
 
-    public Dictionary(String label) {
-        this.label = label;
+    public Dictionary(String language) {
+        this.language = language;
         this.translations = new Translation[0];
         this.dbId = -1;
         this.deckId = -1;
@@ -60,8 +58,8 @@ public class Dictionary implements Serializable {
         return destLanguageIso;
     }
 
-    public String getLabel() {
-        return isNullOrEmpty(label) ? getLanguageDisplayName(destLanguageIso) : label;
+    public String getLanguage() {
+        return isNullOrEmpty(language) ? getLanguageDisplayName(destLanguageIso) : language;
     }
 
     public int getTranslationCount() {
@@ -93,7 +91,7 @@ public class Dictionary implements Serializable {
     }
 
     public void save(Integer itemIndex) {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDictionary(destLanguageIso, label, itemIndex, deckId);
+        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDictionary(destLanguageIso, language, itemIndex, deckId);
     }
 
     public void setDeckId(long deckId) {
@@ -102,6 +100,6 @@ public class Dictionary implements Serializable {
 
     @Override
     public String toString() {
-        return label;
+        return language;
     }
 }

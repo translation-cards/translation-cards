@@ -4,7 +4,6 @@ import android.content.Context;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 
 import java.util.List;
@@ -21,10 +20,10 @@ public class LanguageDisplayUtil {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(dictionaries.get(0).getLabel().toUpperCase());
+        sb.append(dictionaries.get(0).getLanguage().toUpperCase());
         for (int i = 1; i < dictionaries.size(); i++) {
             sb.append(delimiter);
-            sb.append(dictionaries.get(i).getLabel().toUpperCase());
+            sb.append(dictionaries.get(i).getLanguage().toUpperCase());
         }
         return sb.toString();
     }

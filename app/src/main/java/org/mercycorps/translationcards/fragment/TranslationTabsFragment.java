@@ -57,7 +57,7 @@ public class TranslationTabsFragment extends Fragment  {
 
     private void addContentToTab(NewTranslation newTranslation, View languageTab) {
         TextView languageTabText = (TextView) languageTab.findViewById(R.id.tab_label_text);
-        languageTabText.setText(newTranslation.getDictionary().getLabel().toUpperCase());
+        languageTabText.setText(newTranslation.getDictionary().getLanguage().toUpperCase());
 
         updateTranslationTabColor(newTranslation, languageTab);
     }

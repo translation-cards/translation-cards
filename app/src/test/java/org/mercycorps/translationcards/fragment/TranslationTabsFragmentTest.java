@@ -98,7 +98,7 @@ public class TranslationTabsFragmentTest {
     public void shouldReturnCurrentTranslationForTab() {
         NewTranslation newTranslation = translationTabsFragment.getCurrentTranslation();
 
-        assertEquals("arabic", newTranslation.getDictionary().getLabel());
+        assertEquals("arabic", newTranslation.getDictionary().getLanguage());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TranslationTabsFragmentTest {
 
         NewTranslation newTranslation = translationTabsFragment.getCurrentTranslation();
 
-        assertEquals("pashto", newTranslation.getDictionary().getLabel());
+        assertEquals("pashto", newTranslation.getDictionary().getLanguage());
     }
 
     @Test

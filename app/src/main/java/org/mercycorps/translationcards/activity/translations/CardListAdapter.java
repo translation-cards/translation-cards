@@ -72,7 +72,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, new AlertDialog.Builder(translationsActivity)));
         }
 
-        String currentDictionaryLabel = dictionaryService.currentDictionary().getLabel();
+        String currentDictionaryLabel = dictionaryService.currentDictionary().getLanguage();
 
         ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
                 R.id.list_item_progress_bar);
