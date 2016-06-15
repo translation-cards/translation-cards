@@ -157,5 +157,4 @@ public class TxcExportUtility {
         }
         return translationInput;
     }
-
 }
