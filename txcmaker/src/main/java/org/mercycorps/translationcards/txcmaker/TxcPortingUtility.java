@@ -6,12 +6,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 class TxcPortingUtility {
+
+  private static final Pattern FILE_URL_MATCHER = Pattern.compile(
+      "https?://docs.google.com/spreadsheets/d/(.*?)(/.*)?$");
+  private static final Pattern DIR_URL_MATCHER = Pattern.compile(
+      "https?://drive.google.com/corp/drive/folders/(.*)$");
 
   public static String buildTxcJson(ExportSpec exportSpec) {
     Gson gson = new Gson();
     return gson.toJson(exportSpec);
+  }
+
+  public static String getSpreadsheetId(HttpServletRequest req) {
+    String spreadsheetFileId = req.getParameter("docId");
+    Matcher spreadsheetFileIdMatcher = FILE_URL_MATCHER.matcher(spreadsheetFileId);
+    if (spreadsheetFileIdMatcher.matches()) {
+      spreadsheetFileId = spreadsheetFileIdMatcher.group(1);
+    }
+    return spreadsheetFileId;
+  }
+
+  public static String getAudioDirId(HttpServletRequest req) {
+    String audioDirId = req.getParameter("audioDirId");
+    Matcher audioDirIdMatcher = DIR_URL_MATCHER.matcher(audioDirId);
+    if (audioDirIdMatcher.matches()) {
+      audioDirId = audioDirIdMatcher.group(1);
+    }
+    return audioDirId;
   }
 
   public static class ExportSpec {
@@ -19,6 +46,7 @@ class TxcPortingUtility {
     private String deck_label;
     private String publisher;
     private String id;
+    private long timestamp;
     private String license_url;
     private boolean locked;
     private List<LanguageSpec> languages;
@@ -41,6 +69,11 @@ class TxcPortingUtility {
 
     public ExportSpec setDeckId(String deckId) {
       this.id = deckId;
+      return this;
+    }
+
+    public ExportSpec setTimestamp(long timestamp) {
+      this.timestamp = timestamp;
       return this;
     }
 
