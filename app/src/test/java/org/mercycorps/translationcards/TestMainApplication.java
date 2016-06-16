@@ -109,8 +109,8 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
         return deckService;
     }
 
-    @Override
-    public LanguageService getLanguageService() {
-        return languageService;
-    }
+//    @Override
+//    public LanguageService getLanguageService() {
+//        return languageService;
+//    }
 }

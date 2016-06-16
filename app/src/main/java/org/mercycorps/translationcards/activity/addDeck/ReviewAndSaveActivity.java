@@ -36,7 +36,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @Override
     public void initStates() {
         context = getContextFromIntent();
-        deckName.setText(context.getDeckLabel());
+        deckName.setText(context.getDeckTitle());
         deckInformation.setText(context.getDeckInformation());
         disableDeckCopyingAndLockIconIfUnlocked();
         fillLanguagesListTextView();

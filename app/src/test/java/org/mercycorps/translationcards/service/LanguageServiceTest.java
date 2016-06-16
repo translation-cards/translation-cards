@@ -29,4 +29,11 @@ public class LanguageServiceTest {
         LanguageService languageService = new LanguageService();
         assertEquals( "fas", languageService.getIsoForLanguage("farsi"));
     }
+
+    @Test
+    public void testName() throws Exception {
+        LanguageService languageService = new LanguageService();
+        assertEquals(LanguageService.INVALID_LANGUAGE, languageService.getIsoForLanguage(""));
+
+    }
 }

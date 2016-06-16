@@ -51,7 +51,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     }
 
     private void setDeckTitle() {
-        deckTitleInput.setText(getContextFromIntent().getDeckLabel());
+        deckTitleInput.setText(getContextFromIntent().getDeckTitle());
     }
 
     private void updateContextWithDeckTitle() {

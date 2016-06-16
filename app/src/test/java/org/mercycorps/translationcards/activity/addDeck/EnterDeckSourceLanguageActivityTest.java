@@ -1,22 +1,26 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Language;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -58,15 +62,21 @@ public class EnterDeckSourceLanguageActivityTest {
     public void shouldSaveSourceLanguageToContextWhenNextButtonIsClicked() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.deck_source_language_text, helper.DEFAULT_SOURCE_LANGUAGE);
+        setText(activity, R.id.deck_source_language_input, helper.SPANISH_SOURCE_LANGUAGE);
         click(activity, R.id.deck_source_language_next_label);
-        verify(newDeckContext).setSourceLanguageIso(helper.DEFAULT_SOURCE_LANGUAGE_ISO);
+        Language spanish = Language.withName(helper.SPANISH_SOURCE_LANGUAGE);
+
+        ArgumentCaptor<Language> argumentCaptor = ArgumentCaptor.forClass(Language.class);
+        verify(newDeckContext).setSourceLanguage(argumentCaptor.capture());
+
+        assertEquals(argumentCaptor.getValue().getName(), spanish.getName());
     }
 
     @Test
-    public void shouldSetSourceLanguagePickerAsClickable() {
+    public void shouldNotAllowNextButtonToBeClickedIfLanguageIsInvalid() {
         Activity activity = helper.createActivityToTest();
-        View sourceLanguagePicker = activity.findViewById(R.id.deck_source_language_picker);
-        assertTrue(sourceLanguagePicker.isClickable());
+        setText(activity, R.id.deck_source_language_input, "asdfasd");
+        assertFalse(findLinearLayout(activity, R.id.deck_source_language_next_label).isClickable());
     }
+
 }

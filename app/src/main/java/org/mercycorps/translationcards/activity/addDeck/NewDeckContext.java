@@ -1,9 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.data.Language;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,15 +24,15 @@ public class NewDeckContext implements Serializable {
         this.isEdit = isEdit;
     }
 
-    public void setSourceLanguageIso(String sourceLanguageIso) {
-        deck.setSourceLanguageIso(sourceLanguageIso);
+    public void setSourceLanguage(Language language) {
+        deck.setSourceLanguage(language);
     }
     public void setDeckTitle(String deckTitle) {
-        deck.setLabel(deckTitle);
+        deck.setTitle(deckTitle);
     }
 
-    public String getDeckLabel() {
-        return deck.getLabel();
+    public String getDeckTitle() {
+        return deck.getTitle();
     }
 
     public String getLanguagesInput() {
@@ -56,6 +54,8 @@ public class NewDeckContext implements Serializable {
     public void setAuthor(String author) {
         deck.setAuthor(author);
     }
+
+    public String getSourceLanguage(){ return deck.getSourceLanguageName(); }
 
     public String getDeckInformation(){ return deck.getDeckInformation(); }
 

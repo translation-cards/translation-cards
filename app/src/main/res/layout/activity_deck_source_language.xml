@@ -43,37 +43,20 @@
         android:text="@string/deck_source_language_description"
         android:textSize="16.5sp" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/deck_source_language_input"
+        android:textColor="@color/primaryTextColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:layout_below="@+id/deck_source_language_description"
-        android:id="@+id/deck_source_language_picker">
-
-    <FrameLayout
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="start"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/edit" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/deck_source_language_text"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="24dp"
         android:paddingTop="4dp"
         android:text="@string/english"
         android:textSize="16.5sp" />
-    </LinearLayout>
 
     <!--Nav Bar-->
     <RelativeLayout
@@ -157,14 +140,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/navigation_button_next"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/textDisabled"
                 android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/deck_source_language_next_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:background="@drawable/forward_arrow"
+                android:background="@drawable/forward_arrow_disabled"
                 android:contentDescription="@string/navigation_button_next" />
         </LinearLayout>
     </RelativeLayout>

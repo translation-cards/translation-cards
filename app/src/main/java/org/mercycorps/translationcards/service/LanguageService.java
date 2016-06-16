@@ -5,6 +5,7 @@ import android.content.Context;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.data.Language;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,8 @@ import java.util.TreeSet;
 
 public class LanguageService {
 
-    public final Map<String, List<String>> languageMap;
+    private final Map<String, List<String>> languageMap;
+    public static final String INVALID_LANGUAGE = "INVALID";
 
     public LanguageService() {
         languageMap = new HashMap<>();
@@ -40,13 +42,13 @@ public class LanguageService {
         }
     }
 
-    public  String getIsoForLanguage(String label) {
+    public String getIsoForLanguage(String label) {
         for(String isoCode : languageMap.keySet()) {
             if(languageMap.get(isoCode).contains(label.trim().toUpperCase())) {
                 return isoCode;
             }
         }
-        return label;
+        return INVALID_LANGUAGE;
     }
 
 

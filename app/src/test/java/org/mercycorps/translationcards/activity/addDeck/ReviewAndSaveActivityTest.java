@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.junit.After;
@@ -26,7 +25,6 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Mockito.mock;
@@ -85,7 +83,7 @@ public class ReviewAndSaveActivityTest {
     @Test
     public void shouldShowDeckTitleFromContextWhenActivityIsCreated() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getDeckLabel()).thenReturn("Deck Title");
+        when(newDeckContext.getDeckTitle()).thenReturn("Deck Title");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         TextView deckName = findTextView(activity,R.id.deck_name);
         assertEquals(deckName.getText().toString(),"Deck Title");

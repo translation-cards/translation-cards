@@ -28,7 +28,7 @@ public class DeckService {
 
     public void save(Deck deck, String languages) {
         Long deckID = dbManager.addDeck(
-                deck.getLabel(),
+                deck.getTitle(),
                 deck.getAuthor(),
                 deck.getTimestamp(),
                 deck.getExternalId(),

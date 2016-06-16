@@ -86,7 +86,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(deckService.currentDeck().getLabel());
+        actionBar.setTitle(deckService.currentDeck().getTitle());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setElevation(0);
     }

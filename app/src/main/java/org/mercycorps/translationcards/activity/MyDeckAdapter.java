@@ -90,7 +90,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
     private void initFields(Deck deck){
         if(deck == null) return;
-        deckNameTextView.setText(deck.getLabel());
+        deckNameTextView.setText(deck.getTitle());
         deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
         translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries())));
     }
@@ -122,7 +122,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
 
     private void shareDeck(final Deck deck) {
         final EditText nameField = new EditText(getContext());
-        nameField.setText(deck.getLabel());
+        nameField.setText(deck.getTitle());
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.deck_export_dialog_title)
                 .setView(nameField)

@@ -86,7 +86,7 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() {
-        when(deck.getLabel()).thenReturn(DEFAULT_DECK_NAME);
+        when(deck.getTitle()).thenReturn(DEFAULT_DECK_NAME);
         View view = getAdapterViewForDeck(deck);
 
         TextView deckNameTextView = (TextView) view.findViewById(R.id.deck_name);
@@ -250,7 +250,7 @@ public class MyDeckAdapterTest {
 
         clickMenuItemAtIndex(popupMenu, 0);
 
-        assertEquals(deck.getLabel(), ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getDeckLabel());
+        assertEquals(deck.getTitle(), ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getDeckTitle());
     }
 
     @Test

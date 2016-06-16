@@ -45,7 +45,7 @@ public class DeckServiceTest {
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
         deckService.save(deck, "Arabic, Farsi");
 
-        verify(dbManager).addDeck(deck.getLabel(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
+        verify(dbManager).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
     }
 
 
