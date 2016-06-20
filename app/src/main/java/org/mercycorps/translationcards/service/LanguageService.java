@@ -2,20 +2,17 @@ package org.mercycorps.translationcards.service;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Language;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class LanguageService {
 
@@ -55,10 +52,24 @@ public class LanguageService {
         List<String> languageNames = new ArrayList<>();
 
         for(List<String> list : languageMap.values()) {
-            languageNames.addAll(list);
+            for(String name : list) {
+                languageNames.add(getTitleCaseName(name));
+            }
         }
 
         return languageNames;
+    }
+
+    @NonNull
+    private String getTitleCaseName(String name) {
+        String titleCaseName = "";
+        String[] tokens = name.split(" ");
+        for(String token : tokens) {
+            String lowerCaseName = token.toLowerCase();
+            titleCaseName += lowerCaseName.substring(0, 1).toUpperCase() + lowerCaseName.substring(1) + " ";
+        }
+
+        return titleCaseName.trim();
     }
 
 
