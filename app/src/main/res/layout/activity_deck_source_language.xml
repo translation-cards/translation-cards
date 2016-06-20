@@ -43,7 +43,7 @@
         android:text="@string/deck_source_language_description"
         android:textSize="16.5sp" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/deck_source_language_input"
         android:textColor="@color/primaryTextColor"
         android:layout_width="match_parent"
@@ -56,7 +56,9 @@
         android:layout_marginTop="24dp"
         android:paddingTop="4dp"
         android:text="@string/english"
-        android:textSize="16.5sp" />
+        android:textSize="16.5sp"
+        android:singleLine="true"
+        android:imeOptions="actionDone"/>
 
     <!--Nav Bar-->
     <RelativeLayout

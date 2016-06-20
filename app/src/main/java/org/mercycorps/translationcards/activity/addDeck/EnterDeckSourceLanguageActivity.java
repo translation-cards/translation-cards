@@ -2,10 +2,13 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 
 import android.support.v4.content.ContextCompat;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Language;
 import org.mercycorps.translationcards.service.LanguageService;
@@ -15,7 +18,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
-    @Bind (R.id.deck_source_language_input) TextView sourceLanguageInput;
+    @Bind (R.id.deck_source_language_input) AutoCompleteTextView sourceLanguageInput;
     @Bind (R.id.deck_source_language_next_label) LinearLayout nextButton;
     @Bind(R.id.deck_source_language_next_text) TextView nextButtonText;
     @Bind(R.id.deck_source_language_next_image) ImageView nextButtonImage;
@@ -23,6 +26,17 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_deck_source_language);
+
+        LanguageService languageService = ((MainApplication)getApplication()).getLanguageService();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                languageService.getLanguageNames()
+        );
+
+        sourceLanguageInput = (AutoCompleteTextView) findViewById(R.id.deck_source_language_input);
+        sourceLanguageInput.setAdapter(adapter);
     }
 
     @Override

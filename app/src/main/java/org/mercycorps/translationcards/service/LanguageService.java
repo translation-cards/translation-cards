@@ -51,6 +51,16 @@ public class LanguageService {
         return INVALID_LANGUAGE;
     }
 
+    public List<String> getLanguageNames() {
+        List<String> languageNames = new ArrayList<>();
+
+        for(List<String> list : languageMap.values()) {
+            languageNames.addAll(list);
+        }
+
+        return languageNames;
+    }
+
 
     private String getLegacyLanguageDisplayName(String isoCode) {
         Context context = MainApplication.getContextFromMainApp();
