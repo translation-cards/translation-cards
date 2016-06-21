@@ -22,15 +22,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -38,12 +34,22 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class ReviewAndSaveActivityTest {
 
-    AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
+    private static final String DECK_TITLE = "Deck Title";
+    private static final String DECK_AUTHOR = "Author";
+    private static final String EXTERNAL_ID = "0";
+    private static final long DB_ID = 0L;
+    private static final long CREATION_TIMESTAMP = 753004800000L;
+    private static final String SOURCE_LANGUAGE_ISO = "eng";
+    private static final String DEFAULT_LANGUAGES = "Arabic, Chinese, Spanish";
+    private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
+    private NewDeckContext newDeckContext;
+    private Deck deck;
 
     @Before
     public void setup() {
-        NewDeckContext newDeckContext = new NewDeckContext();
+        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_ISO);
+        newDeckContext = new NewDeckContext(deck, DEFAULT_LANGUAGES, false);
     }
 
     @After
@@ -53,7 +59,6 @@ public class ReviewAndSaveActivityTest {
 
     @Test
     public void shouldGoToAuthorAndLockActivityWhenBackButtonClicked() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), "", false);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_back);
         assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
@@ -61,7 +66,6 @@ public class ReviewAndSaveActivityTest {
 
     @Test
     public void shouldGoToMyDecksActivityWhenSaveButtonClicked() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), "", false);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
         assertEquals(MyDecksActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
@@ -76,50 +80,36 @@ public class ReviewAndSaveActivityTest {
 
     @Test
     public void shouldSaveNewDeckContextWhenUserClicksSave() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Deck deck = mock(Deck.class);
-        when(newDeckContext.getDeck()).thenReturn(deck);
-        String languages = "languages, languag";
-        when(newDeckContext.getLanguagesInput()).thenReturn(languages);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
-        verify(deckService).save(deck, languages);
+        verify(deckService).save(deck, DEFAULT_LANGUAGES);
     }
 
     @Test
     public void shouldShowDeckTitleFromContextWhenActivityIsCreated() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getDeckTitle()).thenReturn("Deck Title");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView deckName = findTextView(activity,R.id.deck_name);
-        assertEquals(deckName.getText().toString(),"Deck Title");
+        TextView deckName = findTextView(activity, R.id.deck_name);
+        assertEquals(DECK_TITLE, deckName.getText().toString());
     }
 
     @Test
     public void shouldShowDeckInformationFromContextWhenActivityIsCreated() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getDeckInformation()).thenReturn("Author, 11/11/1993");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView deckInformation = findTextView(activity,R.id.deck_information);
-        assertEquals(deckInformation.getText().toString(),"Author, 11/11/1993");
+        TextView deckInformation = findTextView(activity, R.id.deck_information);
+        assertEquals("Author, 11/11/93", deckInformation.getText().toString());
     }
 
     @Test
-    public void shouldLockIconVisibilityWhenActivityIsCreated(){
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.isDeckLocked()).thenReturn(false);
+    public void shouldLockIconVisibilityWhenActivityIsCreated() {
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        FrameLayout lockIcon =(FrameLayout) findView(activity, R.id.lock_icon);
-        assertEquals(lockIcon.getVisibility(),View.GONE);
+        FrameLayout lockIcon = (FrameLayout) findView(activity, R.id.lock_icon);
+        assertEquals(View.GONE, lockIcon.getVisibility());
     }
 
     @Test
     public void shouldShowLanguagesListFromContextWhenActivityIsCreated() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        when(newDeckContext.getLanguagesInput()).thenReturn("Arabic, Chinese, Spanish");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView translationLanguages = findTextView(activity,R.id.translation_languages);
-        assertEquals("ARABIC  CHINESE  SPANISH",translationLanguages.getText().toString());
-
+        TextView translationLanguages = findTextView(activity, R.id.translation_languages);
+        assertEquals("ARABIC  CHINESE  SPANISH", translationLanguages.getText().toString());
     }
 }
