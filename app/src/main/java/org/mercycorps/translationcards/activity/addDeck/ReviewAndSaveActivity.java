@@ -25,6 +25,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @Bind(R.id.lock_icon)FrameLayout lockIcon;
     @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
     @Bind(R.id.deck_menu)FrameLayout deckMenu;
+    @Bind(R.id.origin_language) TextView originLanguage;
     private NewDeckContext context;
 
     @Override
@@ -38,6 +39,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
         context = getContextFromIntent();
         deckName.setText(context.getDeckTitle());
         deckInformation.setText(context.getDeckInformation());
+        originLanguage.setText(context.getSourceLanguage().toUpperCase());
         disableDeckCopyingAndLockIconIfUnlocked();
         fillLanguagesListTextView();
         deckMenu.setVisibility(View.GONE);

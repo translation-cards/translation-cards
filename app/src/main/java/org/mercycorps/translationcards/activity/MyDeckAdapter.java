@@ -48,6 +48,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     @Bind(R.id.deck_menu) FrameLayout deckMenu;
     @Bind(R.id.lock_icon) FrameLayout lockIcon;
     @Bind(R.id.deck_item) View deckItem;
+    @Bind(R.id.origin_language) TextView originLanguageTextView;
     DeckService deckService;
     private DictionaryService dictionaryService;
 
@@ -93,6 +94,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         deckNameTextView.setText(deck.getTitle());
         deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
         translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries())));
+        originLanguageTextView.setText(deck.getSourceLanguageName().toUpperCase());
     }
 
     private DbManager getDbManager(){

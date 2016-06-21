@@ -90,7 +90,6 @@
             android:layout_height="54dp"
             android:gravity="center"
             android:paddingLeft="16dp"
-            android:text="@string/default_origin_language"
             android:textColor="@color/colorSecondaryLight"
             android:textSize="14sp"
             android:textStyle="bold" />
