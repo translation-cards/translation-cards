@@ -57,6 +57,7 @@ public class MyDeckAdapterTest {
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
     public static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
+    private final String DEFAULT_SOURCE_LANGUAGE = "some source language";
     private Deck deck;
     private View view;
     private MyDecksActivity activity;
@@ -67,6 +68,7 @@ public class MyDeckAdapterTest {
     @Before
     public void setUp() throws Exception {
         deck = mock(Deck.class);
+        when(deck.getSourceLanguageName()).thenReturn(DEFAULT_SOURCE_LANGUAGE);
         view = getAdapterViewForDeck(deck);
     }
 

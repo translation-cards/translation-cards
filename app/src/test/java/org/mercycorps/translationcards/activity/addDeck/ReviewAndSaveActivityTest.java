@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -39,6 +40,11 @@ public class ReviewAndSaveActivityTest {
 
     AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
+
+    @Before
+    public void setup() {
+        NewDeckContext newDeckContext = new NewDeckContext();
+    }
 
     @After
     public void teardown() {
