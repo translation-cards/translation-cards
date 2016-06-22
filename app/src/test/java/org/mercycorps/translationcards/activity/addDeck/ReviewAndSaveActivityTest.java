@@ -14,7 +14,9 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -26,7 +28,9 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -48,6 +52,8 @@ public class ReviewAndSaveActivityTest {
 
     @Before
     public void setup() {
+        DbManager mockDbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
+        when(mockDbManager.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{});
         deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_ISO);
         newDeckContext = new NewDeckContext(deck, DEFAULT_LANGUAGES, false);
     }

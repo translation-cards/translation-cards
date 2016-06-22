@@ -48,22 +48,12 @@
         android:id="@+id/deck_review_and_save_detail" />
 
 
-
-    <RelativeLayout
+    <org.mercycorps.translationcards.view.DeckItem
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/deck_review_and_save_detail"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:id="@+id/relativeLayout">
+        android:id="@+id/deck_item"/>
 
-
-
-        <include layout="@layout/deck_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/deck_review_and_save_deck_card"/>
-    </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the rest (on small screens, the soft keyboard can reduce the available height such that
          not everything fits). This frame layout (which must be at least as tall as the navigation
