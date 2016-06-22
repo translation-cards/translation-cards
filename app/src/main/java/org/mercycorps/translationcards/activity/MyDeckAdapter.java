@@ -3,51 +3,23 @@ package org.mercycorps.translationcards.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
-import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
-import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.view.DeckItem;
 
-import java.util.Arrays;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
-import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLanguageListDisplay;
-
-public class MyDeckAdapter extends ArrayAdapter<Deck> {
-    public static final String DELETE_DECK = "Delete";
-    public static final String SHARE_DECK = "Share";
-    public static final String EDIT_DECK = "Edit";
+public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMenuListener {
     private final MyDecksActivity activity;
-    private LayoutInflater layoutInflater;
-    @Bind(R.id.deck_name)TextView deckNameTextView;
-    @Bind(R.id.deck_information)TextView deckInformationTextView;
-    @Bind(R.id.translation_languages)TextView translationLanguagesTextView;
-    @Bind(R.id.translation_card)LinearLayout deckItemLayout;
-    @Bind(R.id.deck_menu) FrameLayout deckMenu;
-    @Bind(R.id.lock_icon) FrameLayout lockIcon;
-    @Bind(R.id.deck_item) View deckItem;
     DeckService deckService;
     private DictionaryService dictionaryService;
 
@@ -55,7 +27,6 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
         super(context, deckItemResource, deckNameResource, decks);
         this.deckService = deckService;
         this.dictionaryService = dictionaryService;
-        this.layoutInflater = context.getLayoutInflater();
         this.activity = context;
     }
 
@@ -63,40 +34,26 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
     public View getView(int position, View view, ViewGroup parent) {
         Deck deck = getItem(position);
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.deck_item, parent, false);
+            DeckItem deckItem = new DeckItem(this.activity);
+            deckItem.setDeck(deck);
+            deckItem.setMenuListener(this);
+            view = deckItem;
+            view.setOnClickListener(getDeckItemClickListener(deck));
         }
-        ButterKnife.bind(this, view);
-        initFields(deck);
-        setClickListeners(deck);
-        disableDeckCopyingAndLockIconIfUnlocked(deck);
+
         return view;
     }
 
-    private void disableDeckCopyingAndLockIconIfUnlocked(Deck deck) {
-        if(!deck.isLocked()){
-            lockIcon.setVisibility(View.GONE);
-            deckInformationTextView.setPadding(getPaddingInPx(16), 0, getPaddingInPx(16), getPaddingInPx(20));
-        }
-        else{
-            lockIcon.setVisibility(View.VISIBLE);
-            deckInformationTextView.setPadding(getPaddingInPx(5), 0, getPaddingInPx(16), getPaddingInPx(20));
-        }
-    }
-
-    private int getPaddingInPx(int padding) {
-        final float scale = translationLanguagesTextView.getResources().getDisplayMetrics().density;
-        return (int) (padding* scale + 0.5f);
-    }
-
-    private void initFields(Deck deck){
-        if(deck == null) return;
-        deckNameTextView.setText(deck.getTitle());
-        deckInformationTextView.setText(String.format("%s, %s", deck.getAuthor(), deck.getCreationDateString()));
-        translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries())));
-    }
-
-    private DbManager getDbManager(){
-        return ((MainApplication) activity.getApplication()).getDbManager();
+    private View.OnClickListener getDeckItemClickListener(final Deck deck) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent decksIntent = new Intent(activity, TranslationsActivity.class);
+                deckService.setCurrentDeck(deck);
+                dictionaryService.setCurrentDictionary(0);
+                activity.startActivity(decksIntent);
+            }
+        };
     }
 
     private void optionallyDelete(final Deck deck) {
@@ -141,54 +98,13 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> {
                 .show();
     }
 
-    public void setClickListeners(final Deck deck) {
-        deckItem.setOnClickListener(null);
-
-        deckItemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent decksIntent = new Intent(activity, TranslationsActivity.class);
-                deckService.setCurrentDeck(deck);
-                dictionaryService.setCurrentDictionary(0);
-                activity.startActivity(decksIntent);
-            }
-        });
-        deckMenu.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                PopupMenu deckMenu = new PopupMenu(getContext(), view);
-                deckMenu.getMenuInflater().inflate(R.menu.popup_menu, deckMenu.getMenu());
-
-                deckMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getTitle().toString()) {
-                            case DELETE_DECK:
-                                optionallyDelete(deck);
-                                break;
-                            case SHARE_DECK:
-                                shareDeck(deck);
-                                break;
-                            case EDIT_DECK:
-                                Intent intent = new Intent(activity, EnterDeckTitleActivity.class);
-                                String languagesForDeck = getLanguagesStringForDeck(deck);
-                                intent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext(deck, languagesForDeck, true));
-                                activity.startActivity(intent);
-                                break;
-                            default:
-                                break;
-                        }
-                        return true;
-                    }
-                });
-                deckMenu.show();
-            }
-        });
+    @Override
+    public void onShareClicked(Deck deck) {
+        shareDeck(deck);
     }
 
-    private String getLanguagesStringForDeck(Deck deck) {
-        return TextUtils.join(", ", deck.getDictionaries());
+    @Override
+    public void onDeleteClicked(Deck deck) {
+        optionallyDelete(deck);
     }
 }

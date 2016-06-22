@@ -16,9 +16,8 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
-import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
+import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
@@ -36,10 +35,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -50,23 +48,26 @@ public class MyDeckAdapterTest {
 
     private static final String DEFAULT_DECK_NAME = "DefaultDeckName";
     private static final String DEFAULT_PUBLISHER = "DefaultPublisher";
-    private static final String DEFAULT_FORMATTED_DATE = "12/31/69";
+    private static final String DEFAULT_FORMATTED_DATE = "12/25/05";
     private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER+ ", "+DEFAULT_FORMATTED_DATE;
     private static final String DEFAULT_TRANSLATION_LANGUAGE = "DefaultTranslationLanguages";
-    public static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
+    private static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
-    public static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
+    private static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
+    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "eng";
     private Deck deck;
     private View view;
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
+    private final DbManager dbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
 
     @Before
     public void setUp() throws Exception {
-        deck = mock(Deck.class);
+        when(dbManager.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
+        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, DEFAULT_SOURCE_LANGUAGE_ISO);
         view = getAdapterViewForDeck(deck);
     }
 
@@ -79,14 +80,12 @@ public class MyDeckAdapterTest {
         Intent intent = new Intent();
         controller = Robolectric.buildActivity(MyDecksActivity.class);
         activity = controller.withIntent(intent).create().get();
-        when(deck.getDictionaries()).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
         return adapter.getView(0, null, null);
     }
 
     @Test
     public void shouldHaveValidDeckNameWhenDeckIsPresent() {
-        when(deck.getTitle()).thenReturn(DEFAULT_DECK_NAME);
         View view = getAdapterViewForDeck(deck);
 
         TextView deckNameTextView = (TextView) view.findViewById(R.id.deck_name);
@@ -96,8 +95,6 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldHaveDeckInformationWhenDeckIsPresent() {
-        when(deck.getAuthor()).thenReturn("DefaultPublisher");
-        when(deck.getCreationDateString()).thenReturn("12/31/69");
         View view = getAdapterViewForDeck(deck);
 
         TextView deckInformationTextView = findAnyView(view, R.id.deck_information);
@@ -115,8 +112,7 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldOpenDeckWhenTitleClicked(){
-        click(view, R.id.translation_card);
-
+        view.findViewById(R.id.deck_card).performClick();
         assertEquals(TranslationsActivity.class.getName(), shadowOf((MyDecksActivity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
         verify(deckService).setCurrentDeck(deck);
         verify(dictionaryService).setCurrentDictionary(0);
@@ -140,14 +136,14 @@ public class MyDeckAdapterTest {
      public void shouldShowDeleteButtonWhenMenuIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        assertEquals("Delete", popupMenu.getMenu().getItem(2).toString());
+        assertEquals("Delete", popupMenu.getMenu().findItem(R.id.delete_deck).toString());
     }
 
     @Test
     public void shouldShowShareButtonWhenMenuIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        assertEquals("Share", popupMenu.getMenu().getItem(1).toString());
+        assertEquals("Share", popupMenu.getMenu().findItem(R.id.share_deck).toString());
     }
 
     @Test
@@ -161,7 +157,7 @@ public class MyDeckAdapterTest {
     public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 2);
+        clickMenuItemWithId(popupMenu, R.id.delete_deck);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
@@ -172,17 +168,15 @@ public class MyDeckAdapterTest {
     public void shouldDeleteDeckWhenDeleteDeckMenuItemIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 2);
+        clickMenuItemWithId(popupMenu, R.id.delete_deck);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(deck).delete();
+        verify(dbManager).deleteDeck(deck.getDbId());
     }
 
     @Test
     public void shouldNotDisplayLockIconWhenDeckIsUnlocked() {
-        when(deck.isLocked()).thenReturn(false);
-
         View view = getAdapterViewForDeck(deck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.GONE, frameLayout.getVisibility());
@@ -190,9 +184,9 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldDisplayLockIconWhenDeckIsLocked() {
-        when(deck.isLocked()).thenReturn(true);
+        Deck lockedDeck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, true, DEFAULT_SOURCE_LANGUAGE_ISO);
 
-        View view = getAdapterViewForDeck(deck);
+        View view = getAdapterViewForDeck(lockedDeck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.VISIBLE, frameLayout.getVisibility());
     }
@@ -201,7 +195,7 @@ public class MyDeckAdapterTest {
     public void shouldShowPopupAlertDialogWhenShareMenuItemIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 1);
+        clickMenuItemWithId(popupMenu, R.id.share_deck);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
@@ -212,58 +206,15 @@ public class MyDeckAdapterTest {
     public void shouldStartExportTaskWhenShareMenuItemIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
-        clickMenuItemAtIndex(popupMenu, 1);
+        clickMenuItemWithId(popupMenu, R.id.share_deck);
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
 
         assertEquals(Intent.ACTION_SEND, shadowOf(activity).getNextStartedActivity().getAction());
     }
 
-    @Test
-    public void shouldShowEditButtonWhenMenuIsClicked() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        assertEquals("Edit", popupMenu.getMenu().getItem(0).toString());
-    }
-
-    @Test
-    public void shouldOpenEnterDeckTitleUserFlowWhenEditMenuOptionIsSelected() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        clickMenuItemAtIndex(popupMenu, 0);
-
-        assertEquals(EnterDeckTitleActivity.class.getCanonicalName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
-    }
-
-    @Test
-    public void shouldBuildCorrectLanguagesInputForNewDeckContextWhenEditMenuOptionIsClicked() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        clickMenuItemAtIndex(popupMenu, 0);
-
-        assertEquals(ALPHABETICALLY_HIGH_LANGUAGE + ", " + DEFAULT_TRANSLATION_LANGUAGE, ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getLanguagesInput());
-    }
-
-    @Test
-    public void shouldPassCorrectDeckForNewDeckContextWhenEditMenuOptionIsClicked() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        clickMenuItemAtIndex(popupMenu, 0);
-
-        assertEquals(deck.getTitle(), ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getDeckTitle());
-    }
-
-    @Test
-    public void shouldPassEditFlagWhenEditMenuOptionIsClicked() {
-        PopupMenu popupMenu = openDeckPopupMenu();
-
-        clickMenuItemAtIndex(popupMenu, 0);
-
-        assertEquals(true, ((NewDeckContext) shadowOf(activity).getNextStartedActivity().getSerializableExtra("Deck")).getIsEditFlag());
-    }
-
-    private void clickMenuItemAtIndex(PopupMenu popupMenu, int index) {
-        shadowOf(popupMenu).getOnMenuItemClickListener().onMenuItemClick(popupMenu.getMenu().getItem(index));
+    private void clickMenuItemWithId(PopupMenu popupMenu, int id) {
+        shadowOf(popupMenu).getOnMenuItemClickListener().onMenuItemClick(popupMenu.getMenu().findItem(id));
     }
 
     private PopupMenu openDeckPopupMenu() {
