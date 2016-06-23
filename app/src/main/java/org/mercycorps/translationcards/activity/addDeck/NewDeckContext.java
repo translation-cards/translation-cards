@@ -27,6 +27,7 @@ public class NewDeckContext implements Serializable {
     public void setSourceLanguage(Language language) {
         deck.setSourceLanguage(language);
     }
+
     public void setDeckTitle(String deckTitle) {
         deck.setTitle(deckTitle);
     }
@@ -43,10 +44,6 @@ public class NewDeckContext implements Serializable {
         languagesInput = input;
     }
 
-    public boolean getIsEditFlag() {
-        return isEdit;
-    }
-
     public String getAuthor() {
         return deck.getAuthor();
     }
@@ -56,12 +53,6 @@ public class NewDeckContext implements Serializable {
     }
 
     public String getSourceLanguage(){ return deck.getSourceLanguageName(); }
-
-    public String getDeckInformation(){ return deck.getDeckInformation(); }
-
-    public boolean isDeckLocked(){
-        return this.deck.isLocked();
-    }
 
     public Deck getDeck() {
         return deck;

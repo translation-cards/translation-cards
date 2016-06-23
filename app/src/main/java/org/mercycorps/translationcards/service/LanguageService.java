@@ -61,7 +61,10 @@ public class LanguageService {
     }
 
     @NonNull
-    private String getTitleCaseName(String name) {
+    public String getTitleCaseName(String name) {
+        if(name == null){
+            return "";
+        }
         String titleCaseName = "";
         String[] tokens = name.split(" ");
         for(String token : tokens) {

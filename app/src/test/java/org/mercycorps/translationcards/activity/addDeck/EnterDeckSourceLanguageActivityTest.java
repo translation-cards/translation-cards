@@ -1,6 +1,9 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.opengl.Visibility;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Language;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.mockito.ArgumentCaptor;
@@ -77,6 +82,40 @@ public class EnterDeckSourceLanguageActivityTest {
         Activity activity = helper.createActivityToTest();
         setText(activity, R.id.deck_source_language_input, "asdfasd");
         assertFalse(findLinearLayout(activity, R.id.deck_source_language_next_label).isClickable());
+    }
+
+    @Test
+    public void shouldShowErrorMessageWhenAnInvalidLanguageIsEntered() {
+        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTest();
+
+        setText(activity, R.id.deck_source_language_input, "NonExistentLanguage");
+        activity.checkLanguageForError();
+
+        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
+    }
+
+    @Test
+    public void shouldHideErrorMessageWhenValidLanguageIsEnteredAfterInvalidLanguage() {
+        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTest();
+
+        setText(activity, R.id.deck_source_language_input, "NonExistentLanguage");
+        activity.checkLanguageForError();
+
+        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
+
+        setText(activity, R.id.deck_source_language_input, "English");
+        activity.checkLanguageForError();
+
+        assertEquals(View.GONE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
+    }
+
+    @Test
+    public void shouldShowErrorMessageWhenActivityLoadedWithInvalidLanguage() {
+        NewDeckContext invalidIsoDeckContext = new NewDeckContext(new Deck("Some name", "Some Author", "", -1, true, "invalid"), "", false);
+
+        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTestWithContext(invalidIsoDeckContext);
+
+        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
     }
 
 }

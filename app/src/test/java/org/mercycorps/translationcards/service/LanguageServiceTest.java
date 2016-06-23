@@ -47,4 +47,15 @@ public class LanguageServiceTest {
         assertEquals(true, languageNames.contains("Persian"));
         assertEquals(true, languageNames.contains("Southern Sotho"));
     }
+
+    @Test
+    public void shouldReturnATitleCasedString() {
+        String titleCasedString = languageService.getTitleCaseName("A title cased string");
+        assertEquals("A Title Cased String", titleCasedString);
+    }
+
+    @Test
+    public void shouldReturnEmptyStringIfNullPassedToGetTitleCaseName() {
+        assertEquals("", languageService.getTitleCaseName(null));
+    }
 }

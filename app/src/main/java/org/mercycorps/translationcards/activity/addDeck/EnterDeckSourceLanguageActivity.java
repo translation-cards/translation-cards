@@ -1,9 +1,15 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.AutoCompleteTextView.OnDismissListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,13 +28,17 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     @Bind (R.id.deck_source_language_next_label) LinearLayout nextButton;
     @Bind(R.id.deck_source_language_next_text) TextView nextButtonText;
     @Bind(R.id.deck_source_language_next_image) ImageView nextButtonImage;
+    @Bind(R.id.invalid_source_language_message) TextView invalidLanguageErrorView;
+    private LanguageService languageService;
 
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_deck_source_language);
+    }
 
-        LanguageService languageService = ((MainApplication)getApplication()).getLanguageService();
-
+    @Override
+    public void initStates() {
+        languageService = ((MainApplication)getApplication()).getLanguageService();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
@@ -37,15 +47,54 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
         sourceLanguageInput = (AutoCompleteTextView) findViewById(R.id.deck_source_language_input);
         sourceLanguageInput.setAdapter(adapter);
+        fillSourceLanguageField();
+        checkLanguageForError();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setOnDismissListener();
+        } else {
+            setTextWatcher();
+        }
     }
 
-    @Override
-    public void initStates() {
-        fillSourceLanguageField();
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void setOnDismissListener() {
+        OnDismissListener onDismissListener = new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                checkLanguageForError();
+            }
+        };
+
+        sourceLanguageInput.setOnDismissListener(onDismissListener);
+    }
+
+    private void setTextWatcher() {
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkLanguageForError();
+            }
+        };
+
+        sourceLanguageInput.addTextChangedListener(textWatcher);
+    }
+
+    public void checkLanguageForError() {
+        Integer viewVisibility = isSourceLanguageValid() ? View.GONE : View.VISIBLE;
+        invalidLanguageErrorView.setVisibility(viewVisibility);
     }
 
     private void fillSourceLanguageField() {
-        sourceLanguageInput.setText(getContextFromIntent().getSourceLanguage());
+        sourceLanguageInput.setText(languageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
     }
 
     @Override
@@ -60,7 +109,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     @OnClick(R.id.deck_source_language_back_arrow)
-    public void backButtonClicked(){
+    public void backButtonClicked() {
         updateContextWithSourceLanguage();
         startNextActivity(this, EnterDeckTitleActivity.class);
     }
@@ -72,7 +121,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
 
     @OnTextChanged(R.id.deck_source_language_input)
-    protected void deckSourceLanguageInputTextChanged(){
+    protected void deckSourceLanguageInputTextChanged() {
         nextButton.setClickable(isSourceLanguageValid());
         updateNextButtonColor();
     }
@@ -89,5 +138,6 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         nextButtonText.setTextColor(ContextCompat.getColor(this, textColor));
         nextButtonImage.setBackgroundResource(nextArrow);
     }
+
 }
 
