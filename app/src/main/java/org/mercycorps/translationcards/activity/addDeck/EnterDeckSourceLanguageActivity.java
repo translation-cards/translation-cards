@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 
 import android.annotation.TargetApi;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -89,8 +90,13 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     public void checkLanguageForError() {
-        Integer viewVisibility = isSourceLanguageValid() ? View.GONE : View.VISIBLE;
-        invalidLanguageErrorView.setVisibility(viewVisibility);
+        if(isSourceLanguageValid()) {
+            invalidLanguageErrorView.setVisibility(View.GONE);
+            sourceLanguageInput.getBackground().clearColorFilter();
+        } else {
+            invalidLanguageErrorView.setVisibility(View.VISIBLE);
+            sourceLanguageInput.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     private void fillSourceLanguageField() {
