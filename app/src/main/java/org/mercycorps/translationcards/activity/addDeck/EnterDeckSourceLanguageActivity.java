@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 
 import android.annotation.TargetApi;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
+    private static final String DEFAULT_LIST_ITEM_HEIGHT = "64.0";
     @Bind (R.id.deck_source_language_input) AutoCompleteTextView sourceLanguageInput;
     @Bind (R.id.deck_source_language_next_label) LinearLayout nextButton;
     @Bind(R.id.deck_source_language_next_text) TextView nextButtonText;
@@ -39,7 +41,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
-        languageService = ((MainApplication)getApplication()).getLanguageService();
+        languageService = ((MainApplication) getApplication()).getLanguageService();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
@@ -47,6 +49,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         );
 
         sourceLanguageInput = (AutoCompleteTextView) findViewById(R.id.deck_source_language_input);
+        setCompletionDropdownHeight();
         sourceLanguageInput.setAdapter(adapter);
         fillSourceLanguageField();
         checkLanguageForError();
@@ -56,6 +59,18 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         } else {
             setTextWatcher();
         }
+    }
+
+    private void setCompletionDropdownHeight() {
+        TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.listPreferredItemHeight});
+        if (typedArray.hasValue(0)) {
+            String heightAttr = typedArray.getString(0);
+            String[] split = heightAttr != null ? heightAttr.split("dip") : new String[]{DEFAULT_LIST_ITEM_HEIGHT};
+            Float heightInDips = Float.parseFloat(split[0]);
+            int heightInPx = densityPixelsToPixels(heightInDips);
+            sourceLanguageInput.setDropDownHeight(Math.round(3.5f * heightInPx));
+        }
+        typedArray.recycle();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -90,7 +105,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     public void checkLanguageForError() {
-        if(isSourceLanguageValid()) {
+        if (isSourceLanguageValid()) {
             invalidLanguageErrorView.setVisibility(View.GONE);
             sourceLanguageInput.getBackground().clearColorFilter();
         } else {

@@ -57,6 +57,8 @@ public class LanguageService {
             }
         }
 
+        Collections.sort(languageNames);
+
         return languageNames;
     }
 

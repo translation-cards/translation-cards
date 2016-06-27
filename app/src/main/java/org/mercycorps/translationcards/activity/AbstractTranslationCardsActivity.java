@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,6 +38,12 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
             currentBitmap = null;
             System.gc();
         }
+    }
+
+    //Convert a density pixel value to a pixel value
+    protected int densityPixelsToPixels(float dp) {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        return Math.round(dp * metrics.density);
     }
 
     @Override
