@@ -15,6 +15,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Language;
+import org.mercycorps.translationcards.data.LanguageRepository;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -69,7 +70,7 @@ public class EnterDeckSourceLanguageActivityTest {
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         setText(activity, R.id.deck_source_language_input, helper.SPANISH_SOURCE_LANGUAGE);
         click(activity, R.id.deck_source_language_next_label);
-        Language spanish = Language.withName(helper.SPANISH_SOURCE_LANGUAGE);
+        Language spanish = new LanguageRepository().withName(helper.SPANISH_SOURCE_LANGUAGE);
 
         ArgumentCaptor<Language> argumentCaptor = ArgumentCaptor.forClass(Language.class);
         verify(newDeckContext).setSourceLanguage(argumentCaptor.capture());

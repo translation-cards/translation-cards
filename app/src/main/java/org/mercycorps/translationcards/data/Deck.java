@@ -33,7 +33,7 @@ public class Deck implements Serializable {
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.sourceLanguage = Language.withISO(sourceLanguageIso);
+        this.sourceLanguage = new LanguageRepository().withISO(sourceLanguageIso);
         dictionaries = null;
     }
 

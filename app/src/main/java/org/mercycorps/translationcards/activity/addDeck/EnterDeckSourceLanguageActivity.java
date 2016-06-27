@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.data.Language;
+import org.mercycorps.translationcards.data.LanguageRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
@@ -136,7 +137,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private void updateContextWithSourceLanguage() {
-        Language language = Language.withName(sourceLanguageInput.getText().toString());
+        Language language = new LanguageRepository().withName(sourceLanguageInput.getText().toString());
         getContextFromIntent().setSourceLanguage(language);
     }
 
@@ -149,7 +150,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     private boolean isSourceLanguageValid() {
         String name = sourceLanguageInput.getText().toString();
-        Language language = Language.withName(name);
+        Language language = new LanguageRepository().withName(name);
         return !language.getIso().equals(LanguageService.INVALID_LANGUAGE);
     }
 

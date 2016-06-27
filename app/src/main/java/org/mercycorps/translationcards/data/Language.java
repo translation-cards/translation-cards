@@ -14,16 +14,6 @@ public class Language implements Serializable {
         this.name = name;
     }
 
-    public static Language withISO(String languageISO) {
-        String languageName = ((MainApplication) MainApplication.getContextFromMainApp()).getLanguageService().getLanguageDisplayName(languageISO);
-        return new Language(languageISO, languageName);
-    }
-
-    public static Language withName(String languageName) {
-        String languageISO = ((MainApplication) MainApplication.getContextFromMainApp()).getLanguageService().getIsoForLanguage(languageName);
-        return new Language(languageISO, languageName);
-    }
-
     public String getName() {
         return name;
     }
