@@ -15,6 +15,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,16 +41,14 @@ public class DeckServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        when(deckRepository.getAllDecks()).thenReturn(new Deck[]{deck});
-
-        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()));
+        deckService = new DeckService(dbManager, languageService, Arrays.asList(deck), deckRepository);
     }
 
     @Test
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
         deckService.save(deck, "Arabic, Farsi");
 
-        verify(dbManager).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
+        verify(deckRepository).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
     }
 
 

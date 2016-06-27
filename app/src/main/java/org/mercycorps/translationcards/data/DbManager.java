@@ -80,26 +80,6 @@ public class DbManager {
         return dictionaries;
     }
 
-    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
-                        long creationTimestamp, String externalId, String hash, boolean locked,
-                        String srcLanguageIso) {
-        ContentValues values = new ContentValues();
-        values.put(DecksTable.LABEL, label);
-        values.put(DecksTable.PUBLISHER, publisher);
-        values.put(DecksTable.CREATION_TIMESTAMP, creationTimestamp);
-        values.put(DecksTable.EXTERNAL_ID, externalId);
-        values.put(DecksTable.HASH, hash);
-        values.put(DecksTable.LOCKED, locked ? 1 : 0);
-        values.put(DecksTable.SOURCE_LANGUAGE_ISO, srcLanguageIso);
-        return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
-    }
-
-    public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash, boolean locked, String srcLanguageIso) {
-        return addDeck(dbh.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash, locked, srcLanguageIso);
-    }
-
     public void deleteDeck(long deckId) {
         Dictionary[] dictionaries = getAllDictionariesForDeck(deckId);
         for (Dictionary dictionary : dictionaries) {

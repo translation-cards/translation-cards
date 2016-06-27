@@ -63,7 +63,7 @@ public class MainApplication extends Application {
         if(isTest) return;
         repository = new Repository(dbManager);
         deckRepository = new DeckRepository(dbManager.getDbh());
-        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()));
+        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()), new DeckRepository(dbManager.getDbh()));
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);
     }

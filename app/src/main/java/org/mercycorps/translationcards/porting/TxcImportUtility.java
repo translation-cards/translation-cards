@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.DeckRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
@@ -293,7 +294,7 @@ public class TxcImportUtility {
 
     public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
         DbManager dbm = new DbManager(context, languageService);
-        long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
+        long deckId = new DeckRepository(dbm.getDbh()).addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
@@ -310,7 +311,7 @@ public class TxcImportUtility {
 
     public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
         DbManager dbManager = new DbManager(context, languageService);
-        long deckId = dbManager.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+        long deckId = new DeckRepository(dbManager.getDbh()).addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
