@@ -293,16 +293,16 @@ public class TxcImportUtility {
     }
 
     public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
-        DbManager dbm = new DbManager(context, languageService);
-        long deckId = new DeckRepository(dbm.getDbh()).addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
+        DbManager dbManager = new DbManager(context, languageService);
+        long deckId = new DeckRepository(dbManager.getDbh(), dbManager).addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbm.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dbManager.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
-                dbm.addTranslation(
+                dbManager.addTranslation(
                         dictionaryId, card.label, false, cardFile.getAbsolutePath(), dictionary.cards.size() - j,
                         card.translatedText);
             }
@@ -311,7 +311,7 @@ public class TxcImportUtility {
 
     public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
         DbManager dbManager = new DbManager(context, languageService);
-        long deckId = new DeckRepository(dbManager.getDbh()).addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+        long deckId = new DeckRepository(dbManager.getDbh(), dbManager).addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);

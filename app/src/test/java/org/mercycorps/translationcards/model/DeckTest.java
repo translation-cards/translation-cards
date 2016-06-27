@@ -32,7 +32,7 @@ public class DeckTest {
     public void shouldDeleteDeckFromDBWhenDeleteIsCalled() {
         deck.delete();
 
-        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).deleteDeck(deck.getDbId());
+        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDeckRepository()).deleteDeck(deck.getDbId());
     }
 
     @Test

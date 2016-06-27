@@ -193,7 +193,7 @@ public class MyDeckAdapterTest {
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(dbManager).deleteDeck(deck.getDbId());
+        verify(deckRepository).deleteDeck(deck.getDbId());
     }
 
     @Test

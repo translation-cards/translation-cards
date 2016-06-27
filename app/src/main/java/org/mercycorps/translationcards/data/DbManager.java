@@ -80,36 +80,6 @@ public class DbManager {
         return dictionaries;
     }
 
-    public void deleteDeck(long deckId) {
-        Dictionary[] dictionaries = getAllDictionariesForDeck(deckId);
-        for (Dictionary dictionary : dictionaries) {
-            // Delete all the files.
-            for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                Translation translation = dictionary.getTranslation(i);
-                if (translation.getIsAsset()) {
-                    // Don't delete the built-in assets.
-                    continue;
-                }
-                File file = new File(translation.getFilename());
-                if (file.exists()) {
-                    // It should always exist, but check to be safe.
-                    file.delete();
-                }
-            }
-            // Delete the rows in the translations table.
-            String whereClause = TranslationsTable.DICTIONARY_ID + " = ?";
-            String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
-            dbh.getWritableDatabase().delete(TranslationsTable.TABLE_NAME, whereClause, whereArgs);
-        }
-        // Delete the rows in the dictionaries table.
-        String whereClause = DictionariesTable.DECK_ID + " = ?";
-        String[] whereArgs = new String[] {String.valueOf(deckId)};
-        dbh.getWritableDatabase().delete(DictionariesTable.TABLE_NAME, whereClause, whereArgs);
-        // Delete the row from the deck table.
-        whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
-        dbh.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
-    }
-
     public long addDictionary(SQLiteDatabase writableDatabase, String destIsoCode, String label,
                               int itemIndex, long deckId) {
         ContentValues values = new ContentValues();
@@ -260,7 +230,7 @@ public class DbManager {
         public static final String SOURCE_LANGUAGE_ISO = "srcLanguageIso";
     }
 
-    private class DictionariesTable {
+    public class DictionariesTable {
         public static final String TABLE_NAME = "dictionaries";
         public static final String ID = "id";
         public static final String DECK_ID = "deckId";
@@ -269,7 +239,7 @@ public class DbManager {
         public static final String ITEM_INDEX = "itemIndex";
     }
 
-    private class TranslationsTable {
+    public class TranslationsTable {
         public static final String TABLE_NAME = "translations";
         public static final String ID = "id";
         public static final String DICTIONARY_ID = "dictionaryId";

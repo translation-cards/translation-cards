@@ -62,8 +62,8 @@ public class MainApplication extends Application {
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
         repository = new Repository(dbManager);
-        deckRepository = new DeckRepository(dbManager.getDbh());
-        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()), new DeckRepository(dbManager.getDbh()));
+        deckRepository = new DeckRepository(dbManager.getDbh(), dbManager);
+        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);
     }

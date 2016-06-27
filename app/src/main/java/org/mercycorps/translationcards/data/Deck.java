@@ -99,7 +99,7 @@ public class Deck implements Serializable {
     }
 
     public void delete() {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().deleteDeck(dbId);
+        ((MainApplication) MainApplication.getContextFromMainApp()).getDeckRepository().deleteDeck(dbId);
     }
 
     public void setSourceLanguage(Language language){

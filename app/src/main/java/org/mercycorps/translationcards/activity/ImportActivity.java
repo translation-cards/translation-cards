@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.service.LanguageService;
@@ -181,8 +180,7 @@ public class ImportActivity extends AppCompatActivity {
                                     handleError(e);
                                     return;
                                 }
-                                DbManager dbm = new DbManager(ImportActivity.this, languageService);
-                                dbm.deleteDeck(otherVersion);
+                                ((MainApplication)getApplication()).getDeckRepository().deleteDeck(otherVersion);
                                 goToMainScreen();
                                 break;
                         }

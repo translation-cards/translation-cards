@@ -6,15 +6,21 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.mercycorps.translationcards.data.DbManager.DecksTable;
 
+import java.io.File;
+
+import static org.mercycorps.translationcards.data.DbManager.TranslationsTable.*;
+
 /**
  * Created by njimenez on 6/27/16.
  */
 public class DeckRepository {
 
     private DbManager.DbHelper databaseHelper;
+    private DbManager dbManager;
 
-    public DeckRepository(DbManager.DbHelper databaseHelper) {
+    public DeckRepository(DbManager.DbHelper databaseHelper, DbManager dbManager) {
         this.databaseHelper = databaseHelper;
+        this.dbManager = dbManager;
     }
 
     public Deck[] getAllDecks() {
@@ -62,5 +68,35 @@ public class DeckRepository {
                         String hash, boolean locked, String srcLanguageIso) {
         return addDeck(databaseHelper.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
                 hash, locked, srcLanguageIso);
+    }
+
+    public void deleteDeck(long deckId) {
+        Dictionary[] dictionaries = dbManager.getAllDictionariesForDeck(deckId);
+        for (Dictionary dictionary : dictionaries) {
+            // Delete all the files.
+            for (int i = 0; i < dictionary.getTranslationCount(); i++) {
+                Translation translation = dictionary.getTranslation(i);
+                if (translation.getIsAsset()) {
+                    // Don't delete the built-in assets.
+                    continue;
+                }
+                File file = new File(translation.getFilename());
+                if (file.exists()) {
+                    // It should always exist, but check to be safe.
+                    file.delete();
+                }
+            }
+            // Delete the rows in the translations table.
+            String whereClause = DICTIONARY_ID + " = ?";
+            String[] whereArgs = new String[] {String.valueOf(dictionary.getDbId())};
+            databaseHelper.getWritableDatabase().delete(TABLE_NAME, whereClause, whereArgs);
+        }
+        // Delete the rows in the dictionaries table.
+        String whereClause = DbManager.DictionariesTable.DECK_ID + " = ?";
+        String[] whereArgs = new String[] {String.valueOf(deckId)};
+        databaseHelper.getWritableDatabase().delete(DbManager.DictionariesTable.TABLE_NAME, whereClause, whereArgs);
+        // Delete the row from the deck table.
+        whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
+        databaseHelper.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 }
