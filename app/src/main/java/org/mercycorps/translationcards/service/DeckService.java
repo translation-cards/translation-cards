@@ -4,7 +4,6 @@ import org.mercycorps.translationcards.data.DbManager;
 import org.mercycorps.translationcards.data.Deck;
 import org.mercycorps.translationcards.data.Dictionary;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DeckService {
@@ -14,11 +13,11 @@ public class DeckService {
     private Deck currentDeck;
     private LanguageService languageService;
 
-    public DeckService(DbManager dbManager, LanguageService languageService) {
+    public DeckService(DbManager dbManager, LanguageService languageService, List<Deck> decks) {
         this.dbManager = dbManager;
         this.languageService = languageService;
-        decks = Arrays.asList(this.dbManager.getAllDecks());
-        currentDeck = decks.get(0);
+        this.decks = decks;
+        currentDeck = this.decks.get(0);
     }
 
 

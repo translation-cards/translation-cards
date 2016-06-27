@@ -204,32 +204,6 @@ public class DbManager {
         dbh.close();
     }
 
-    public Deck[] getAllDecks() {
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DecksTable.TABLE_NAME, null,
-                null, null, null, null,
-                String.format("%s DESC", DecksTable.ID));
-        Deck[] decks = new Deck[cursor.getCount()];
-        boolean hasNext = cursor.moveToFirst();
-        int i = 0;
-        while(hasNext){
-            Deck deck = new Deck(
-                    cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
-                    cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
-                    cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
-                    cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO)));
-
-            decks[i] = deck;
-            hasNext = cursor.moveToNext();
-            i++;
-        }
-        cursor.close();
-        dbh.close();
-        return decks;
-    }
 
     public boolean hasDeckWithHash(String hash) {
         String[] columns = new String[] {DecksTable.ID};
@@ -294,7 +268,7 @@ public class DbManager {
         }
     }
 
-    private class DecksTable {
+    public class DecksTable {
         public static final String TABLE_NAME = "decks";
         public static final String ID = "id";
         public static final String LABEL = "label";
@@ -326,7 +300,11 @@ public class DbManager {
         public static final String TRANSLATED_TEXT = "translationText";
     }
 
-    private class DbHelper extends SQLiteOpenHelper {
+    public DbHelper getDbh(){
+        return dbh;
+    }
+
+    public class DbHelper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "TranslationCards.db";
         private static final int DATABASE_VERSION = 3;

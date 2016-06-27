@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.data.DeckRepository;
 import org.mercycorps.translationcards.data.Repository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -43,6 +45,7 @@ public class MainApplication extends Application {
     private Repository repository;
     protected boolean isTest = false;
     private LanguageService languageService;
+    private DeckRepository deckRepository;
 
     @Override
     public void onCreate() {
@@ -59,7 +62,8 @@ public class MainApplication extends Application {
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
         repository = new Repository(dbManager);
-        deckService = new DeckService(dbManager, languageService);
+        deckRepository = new DeckRepository(dbManager.getDbh());
+        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()));
         dictionaryService = new DictionaryService(dbManager, deckService);
         translationService = new TranslationService(repository, dictionaryService);
     }
@@ -119,5 +123,9 @@ public class MainApplication extends Application {
 
     public LanguageService getLanguageService() {
         return languageService;
+    }
+
+    public DeckRepository getDeckRepository() {
+        return deckRepository;
     }
 }
