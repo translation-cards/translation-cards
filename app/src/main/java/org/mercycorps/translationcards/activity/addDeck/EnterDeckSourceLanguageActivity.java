@@ -3,6 +3,7 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
+import android.database.DataSetObserver;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -28,12 +29,14 @@ import butterknife.OnTextChanged;
 
 public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     private static final String DEFAULT_LIST_ITEM_HEIGHT = "64.0";
+    private static final int MAX_ROW_COUNT = 3;
     @Bind (R.id.deck_source_language_input) AutoCompleteTextView sourceLanguageInput;
     @Bind (R.id.deck_source_language_next_label) LinearLayout nextButton;
     @Bind(R.id.deck_source_language_next_text) TextView nextButtonText;
     @Bind(R.id.deck_source_language_next_image) ImageView nextButtonImage;
     @Bind(R.id.invalid_source_language_message) TextView invalidLanguageErrorView;
     private LanguageService languageService;
+    private ArrayAdapter<String> languagesAdapter;
 
     @Override
     public void inflateView() {
@@ -43,15 +46,16 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     @Override
     public void initStates() {
         languageService = ((MainApplication) getApplication()).getLanguageService();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        languagesAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
                 languageService.getLanguageNames()
         );
 
         sourceLanguageInput = (AutoCompleteTextView) findViewById(R.id.deck_source_language_input);
-        setCompletionDropdownHeight();
-        sourceLanguageInput.setAdapter(adapter);
+        sourceLanguageInput.setAdapter(languagesAdapter);
+
+        languagesAdapter.registerDataSetObserver(getDatasetObserver());
         fillSourceLanguageField();
         checkLanguageForError();
 
@@ -62,14 +66,25 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         }
     }
 
-    private void setCompletionDropdownHeight() {
+    private DataSetObserver getDatasetObserver(){
+        return new android.database.DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                int resultCount = languagesAdapter.getCount();
+                setCompletionDropdownHeight(resultCount);
+            }
+        };
+    }
+    private void setCompletionDropdownHeight(int resultCount) {
         TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.listPreferredItemHeight});
         if (typedArray.hasValue(0)) {
             String heightAttr = typedArray.getString(0);
             String[] split = heightAttr != null ? heightAttr.split("dip") : new String[]{DEFAULT_LIST_ITEM_HEIGHT};
             Float heightInDips = Float.parseFloat(split[0]);
             int heightInPx = densityPixelsToPixels(heightInDips);
-            sourceLanguageInput.setDropDownHeight(Math.round(3.5f * heightInPx));
+            int maxRows= resultCount > MAX_ROW_COUNT ? MAX_ROW_COUNT : resultCount;
+            sourceLanguageInput.setDropDownHeight(Math.round(maxRows * heightInPx));
         }
         typedArray.recycle();
     }
