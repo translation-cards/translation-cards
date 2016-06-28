@@ -1,11 +1,9 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.DbManager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddNewTranslationContext implements Serializable {

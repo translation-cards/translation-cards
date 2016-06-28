@@ -1,14 +1,18 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.data.DbManager.DecksTable;
+import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DbManager.DecksTable;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 
 import java.io.File;
 
-import static org.mercycorps.translationcards.data.DbManager.TranslationsTable.*;
+import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.*;
 
 /**
  * Created by njimenez on 6/27/16.

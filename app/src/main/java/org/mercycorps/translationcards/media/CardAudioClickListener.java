@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
 

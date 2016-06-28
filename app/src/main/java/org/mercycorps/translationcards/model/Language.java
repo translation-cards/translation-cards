@@ -1,7 +1,4 @@
-package org.mercycorps.translationcards.data;
-
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.service.LanguageService;
+package org.mercycorps.translationcards.model;
 
 import java.io.Serializable;
 

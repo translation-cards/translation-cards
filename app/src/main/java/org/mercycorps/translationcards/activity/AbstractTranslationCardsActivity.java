@@ -13,10 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-
-import java.util.List;
+import org.mercycorps.translationcards.model.DbManager;
 
 import butterknife.ButterKnife;
 

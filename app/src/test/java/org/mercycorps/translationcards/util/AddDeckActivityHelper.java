@@ -3,16 +3,11 @@ package org.mercycorps.translationcards.util;
 import android.app.Activity;
 import android.content.Intent;
 
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Language;
-import org.mockito.Mock;
-import org.robolectric.RuntimeEnvironment;
+import org.mercycorps.translationcards.model.Deck;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> extends ActivityHelper<T> {
 

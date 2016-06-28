@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.model;
 
 import org.mercycorps.translationcards.MainApplication;
 

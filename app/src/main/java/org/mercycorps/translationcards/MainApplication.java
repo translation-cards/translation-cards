@@ -6,9 +6,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.DeckRepository;
-import org.mercycorps.translationcards.data.Repository;
+import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
@@ -42,7 +42,7 @@ public class MainApplication extends Application {
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
-    private Repository repository;
+    private TranslationRepository translationRepository;
     protected boolean isTest = false;
     private LanguageService languageService;
     private DeckRepository deckRepository;
@@ -61,11 +61,11 @@ public class MainApplication extends Application {
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
-        repository = new Repository(dbManager);
+        translationRepository = new TranslationRepository(dbManager);
         deckRepository = new DeckRepository(dbManager.getDbh(), dbManager);
         deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dbManager, deckService);
-        translationService = new TranslationService(repository, dictionaryService);
+        translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
     public DbManager getDbManager() {

@@ -1,21 +1,17 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
-import android.opengl.Visibility;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Language;
-import org.mercycorps.translationcards.data.LanguageRepository;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Language;
+import org.mercycorps.translationcards.repository.LanguageRepository;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;

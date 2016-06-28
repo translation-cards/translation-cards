@@ -1,7 +1,7 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.data.Repository;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.repository.TranslationRepository;
+import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,12 +10,12 @@ import java.util.List;
 
 public class TranslationService {
 
-    private Repository repository;
+    private TranslationRepository translationRepository;
     private DictionaryService dictionaryService;
     private List<Boolean> expanded;
 
-    public TranslationService(Repository repository, DictionaryService dictionaryService) {
-        this.repository = repository;
+    public TranslationService(TranslationRepository translationRepository, DictionaryService dictionaryService) {
+        this.translationRepository = translationRepository;
         this.dictionaryService = dictionaryService;
         initializeCardStates();
     }
@@ -30,11 +30,11 @@ public class TranslationService {
     }
 
     public List<Translation> getCurrentTranslations() {
-        return repository.getTranslationsForDictionary(dictionaryService.currentDictionary());
+        return translationRepository.getTranslationsForDictionary(dictionaryService.currentDictionary());
     }
 
     public void deleteTranslation(String sourcePhrase) {
-        repository.deleteTranslationBySourcePhrase(sourcePhrase, dictionaryService.getDictionariesForCurrentDeck());
+        translationRepository.deleteTranslationBySourcePhrase(sourcePhrase, dictionaryService.getDictionariesForCurrentDeck());
     }
 
     public void expandCard(int position) {

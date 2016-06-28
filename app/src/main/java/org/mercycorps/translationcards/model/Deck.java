@@ -1,7 +1,7 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.model;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.repository.LanguageRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

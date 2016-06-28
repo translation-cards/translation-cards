@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;

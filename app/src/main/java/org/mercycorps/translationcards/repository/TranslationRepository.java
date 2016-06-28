@@ -1,12 +1,16 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.repository;
+
+import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repository {
+public class TranslationRepository {
     private DbManager dbManager;
 
-    public Repository(DbManager dbManager) {
+    public TranslationRepository(DbManager dbManager) {
         this.dbManager = dbManager;
     }
 

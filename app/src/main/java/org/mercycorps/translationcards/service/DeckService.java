@@ -1,9 +1,9 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.DeckRepository;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.model.Dictionary;
 
 import java.util.List;
 

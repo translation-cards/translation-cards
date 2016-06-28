@@ -2,9 +2,9 @@ package org.mercycorps.translationcards.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Repository;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.repository.TranslationRepository;
+import org.mercycorps.translationcards.model.Translation;
 import org.mockito.Mock;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class TranslationServiceTest {
 
     @Mock
-    Repository repository;
+    TranslationRepository translationRepository;
     @Mock
     DictionaryService dictionaryService;
 
@@ -38,9 +38,9 @@ public class TranslationServiceTest {
         noAudioTranslation = new Translation("no audio label", true, "", 2l, "no audio translated text");
         translationsFromRepository = Arrays.asList(defaultTranslation, noAudioTranslation);
 
-        when(repository.getTranslationsForDictionary(any(Dictionary.class))).thenReturn(translationsFromRepository);
+        when(translationRepository.getTranslationsForDictionary(any(Dictionary.class))).thenReturn(translationsFromRepository);
 
-        translationService = new TranslationService(repository, dictionaryService);
+        translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TranslationServiceTest {
 
         translationService.deleteTranslation("source phrase");
 
-        verify(repository).deleteTranslationBySourcePhrase("source phrase", dictionaries);
+        verify(translationRepository).deleteTranslationBySourcePhrase("source phrase", dictionaries);
     }
 
     @Test

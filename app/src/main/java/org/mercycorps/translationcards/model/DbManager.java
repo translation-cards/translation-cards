@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,7 +45,6 @@ public class DbManager {
     private static final String TAG = "DbManager";
 
     // The value used in place of database IDs for items not yet in the database.
-    private static final long NO_VALUE_ID = -1;
 
     private final DbHelper dbh;
     private final LanguageService languageService;

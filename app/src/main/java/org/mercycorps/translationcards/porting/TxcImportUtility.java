@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.DeckRepository;
+import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;

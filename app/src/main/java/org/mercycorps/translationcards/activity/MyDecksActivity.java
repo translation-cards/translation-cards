@@ -11,8 +11,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.DeckRepository;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 

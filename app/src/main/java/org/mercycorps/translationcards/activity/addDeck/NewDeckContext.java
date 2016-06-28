@@ -1,7 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Language;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Language;
 
 import java.io.Serializable;
 import java.util.Date;
