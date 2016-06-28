@@ -153,37 +153,6 @@ public class DbManager {
         dbh.close();
     }
 
-
-    public boolean hasDeckWithHash(String hash) {
-        String[] columns = new String[] {DecksTable.ID};
-        String selection = DecksTable.HASH + " = ?";
-        String[] selectionArgs = new String[] {hash};
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-        boolean result = cursor.getCount() > 0;
-        cursor.close();
-        return result;
-    }
-
-    public long hasDeckWithExternalId(String externalId) {
-        // TODO(nworden): consider handling this better when there's multiple existing decks with
-        // this external ID
-        String[] columns = new String[] {DecksTable.ID};
-        String selection = DecksTable.EXTERNAL_ID + " = ?";
-        String[] selectionArgs = new String[] {externalId};
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DecksTable.TABLE_NAME, columns, selection, selectionArgs, null, null,
-                String.format("%s DESC", DecksTable.CREATION_TIMESTAMP), "1");
-        if (cursor.getCount() == 0) {
-            cursor.close();
-            return -1;
-        }
-        cursor.moveToFirst();
-        long result = cursor.getLong(cursor.getColumnIndexOrThrow(DecksTable.ID));
-        cursor.close();
-        return result;
-    }
-
     private Translation[] getTranslationsByDictionaryId(long dictionaryId) {
         Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
                 TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},

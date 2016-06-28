@@ -67,13 +67,13 @@ public class TxcImportUtility {
     }
 
     public boolean isExistingDeck(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context, languageService);
-        return dbm.hasDeckWithHash(importSpec.hash);
+        DbManager dbManager = new DbManager(context, languageService);
+        return new DeckRepository(dbManager.getDbh(), dbManager).hasDeckWithHash(importSpec.hash);
     }
 
     public long otherVersionExists(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context, languageService);
-        return dbm.hasDeckWithExternalId(importSpec.externalId);
+        DbManager dbManager = new DbManager(context, languageService);
+        return new DeckRepository(dbManager.getDbh(), dbManager).hasDeckWithExternalId(importSpec.externalId);
     }
 
     private String getFileHash(Context context, Uri source) throws ImportException {
