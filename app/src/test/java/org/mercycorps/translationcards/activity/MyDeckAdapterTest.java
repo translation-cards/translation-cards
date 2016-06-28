@@ -23,6 +23,7 @@ import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.robolectric.Robolectric;
@@ -68,6 +69,7 @@ public class MyDeckAdapterTest {
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
     private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
+    private DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
     private final DbManager dbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
     private DbManager.DbHelper databaseHelper;
     private SQLiteDatabase sqlLiteDatabase;
@@ -87,7 +89,7 @@ public class MyDeckAdapterTest {
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
         when(dbManager.getDbh()).thenReturn(databaseHelper);
 
-        when(dbManager.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
+        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, DEFAULT_SOURCE_LANGUAGE_ISO);
         view = getAdapterViewForDeck(deck);
     }

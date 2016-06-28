@@ -20,11 +20,11 @@ import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.
 public class DeckRepository {
 
     private DbManager.DbHelper databaseHelper;
-    private DbManager dbManager;
+    private DictionaryRepository dictionaryRepository;
 
-    public DeckRepository(DbManager.DbHelper databaseHelper, DbManager dbManager) {
+    public DeckRepository(DictionaryRepository dictionaryRepository, DbManager.DbHelper databaseHelper) {
+        this.dictionaryRepository = dictionaryRepository;
         this.databaseHelper = databaseHelper;
-        this.dbManager = dbManager;
     }
 
     public Deck[] getAllDecks() {
@@ -75,7 +75,7 @@ public class DeckRepository {
     }
 
     public void deleteDeck(long deckId) {
-        Dictionary[] dictionaries = dbManager.getAllDictionariesForDeck(deckId);
+        Dictionary[] dictionaries = dictionaryRepository.getAllDictionariesForDeck(deckId);
         for (Dictionary dictionary : dictionaries) {
             // Delete all the files.
             for (int i = 0; i < dictionary.getTranslationCount(); i++) {

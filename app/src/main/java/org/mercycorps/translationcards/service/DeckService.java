@@ -9,14 +9,12 @@ import java.util.List;
 
 public class DeckService {
 
-    private DbManager dbManager;
     private DeckRepository deckRepository;
     private List<Deck> decks;
     private Deck currentDeck;
     private LanguageService languageService;
 
-    public DeckService(DbManager dbManager, LanguageService languageService, List<Deck> decks, DeckRepository deckRepository) {
-        this.dbManager = dbManager;
+    public DeckService(LanguageService languageService, List<Deck> decks, DeckRepository deckRepository) {
         this.deckRepository = deckRepository;
         this.languageService = languageService;
         this.decks = decks;

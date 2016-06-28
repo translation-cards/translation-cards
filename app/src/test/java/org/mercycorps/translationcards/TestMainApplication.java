@@ -3,10 +3,12 @@ package org.mercycorps.translationcards;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -31,6 +33,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
     private DeckRepository deckRepository = mock(DeckRepository.class);
+    private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
 
     @Override
     public void onCreate() {
@@ -103,11 +106,17 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
         return deckService;
     }
 
+    @Override
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }
 
-//    @Override
+    @Override
+    public DictionaryRepository getDictionaryRepository() {
+        return dictionaryRepository;
+    }
+
+    //    @Override
 //    public LanguageService getLanguageService() {
 //        return languageService;
 //    }

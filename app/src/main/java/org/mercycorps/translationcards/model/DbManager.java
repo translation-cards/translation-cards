@@ -54,31 +54,6 @@ public class DbManager {
         this.dbh = new DbHelper(context);
     }
 
-    public Dictionary[] getAllDictionariesForDeck(long deckId) {
-        Cursor cursor = dbh.getReadableDatabase().query(
-                DictionariesTable.TABLE_NAME, null,
-                DictionariesTable.DECK_ID + " = ?",
-                new String[]{String.valueOf(deckId)}, null, null,
-                String.format("%s ASC", DictionariesTable.LABEL));
-
-        Dictionary[] dictionaries = new Dictionary[cursor.getCount()];
-        boolean hasNext = cursor.moveToFirst();
-        int i = 0;
-        while (hasNext) {
-            String destLanguageIso = cursor.getString(cursor.getColumnIndex(
-                    DictionariesTable.LANGUAGE_ISO));
-            String label = cursor.getString(cursor.getColumnIndex(DictionariesTable.LABEL));
-            long dictionaryId = cursor.getLong(cursor.getColumnIndex(DictionariesTable.ID));
-            Dictionary dictionary = new Dictionary(destLanguageIso, label,
-                    getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
-            dictionaries[i] = dictionary;
-            i++;
-            hasNext = cursor.moveToNext();
-        }
-        cursor.close();
-        return dictionaries;
-    }
-
     public long addDictionary(SQLiteDatabase writableDatabase, String destIsoCode, String label,
                               int itemIndex, long deckId) {
         ContentValues values = new ContentValues();
@@ -153,7 +128,7 @@ public class DbManager {
         dbh.close();
     }
 
-    private Translation[] getTranslationsByDictionaryId(long dictionaryId) {
+    public Translation[] getTranslationsByDictionaryId(long dictionaryId) {
         Cursor cursor = dbh.getReadableDatabase().query(TranslationsTable.TABLE_NAME, null,
                 TranslationsTable.DICTIONARY_ID + " = ?", new String[]{String.valueOf(dictionaryId)},
                 null, null, String.format("%s DESC", TranslationsTable.ITEM_INDEX));

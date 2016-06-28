@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
@@ -45,7 +46,6 @@ public class TxcImportUtility {
     private LanguageService languageService;
 
     public TxcImportUtility(LanguageService languageService) {
-
         this.languageService = languageService;
     }
 
@@ -68,12 +68,14 @@ public class TxcImportUtility {
 
     public boolean isExistingDeck(Context context, ImportSpec importSpec) {
         DbManager dbManager = new DbManager(context, languageService);
-        return new DeckRepository(dbManager.getDbh(), dbManager).hasDeckWithHash(importSpec.hash);
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(dbManager);
+        return new DeckRepository(dictionaryRepository, dbManager.getDbh()).hasDeckWithHash(importSpec.hash);
     }
 
     public long otherVersionExists(Context context, ImportSpec importSpec) {
         DbManager dbManager = new DbManager(context, languageService);
-        return new DeckRepository(dbManager.getDbh(), dbManager).hasDeckWithExternalId(importSpec.externalId);
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(dbManager);
+        return new DeckRepository(dictionaryRepository, dbManager.getDbh()).hasDeckWithExternalId(importSpec.externalId);
     }
 
     private String getFileHash(Context context, Uri source) throws ImportException {
@@ -294,7 +296,8 @@ public class TxcImportUtility {
 
     public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
         DbManager dbManager = new DbManager(context, languageService);
-        long deckId = new DeckRepository(dbManager.getDbh(), dbManager).addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(dbManager);
+        long deckId = new DeckRepository(dictionaryRepository, dbManager.getDbh()).addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
@@ -311,7 +314,8 @@ public class TxcImportUtility {
 
     public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
         DbManager dbManager = new DbManager(context, languageService);
-        long deckId = new DeckRepository(dbManager.getDbh(), dbManager).addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(dbManager);
+        long deckId = new DeckRepository(dictionaryRepository, dbManager.getDbh()).addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);

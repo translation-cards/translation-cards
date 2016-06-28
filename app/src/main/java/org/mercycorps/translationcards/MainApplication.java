@@ -8,6 +8,7 @@ import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
@@ -46,6 +47,7 @@ public class MainApplication extends Application {
     protected boolean isTest = false;
     private LanguageService languageService;
     private DeckRepository deckRepository;
+    private DictionaryRepository dictionaryRepository;
 
     @Override
     public void onCreate() {
@@ -62,9 +64,10 @@ public class MainApplication extends Application {
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
         translationRepository = new TranslationRepository(dbManager);
-        deckRepository = new DeckRepository(dbManager.getDbh(), dbManager);
-        deckService = new DeckService(dbManager, languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
-        dictionaryService = new DictionaryService(dbManager, deckService);
+        deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
+        dictionaryRepository = new DictionaryRepository(dbManager);
+        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
+        dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
@@ -127,5 +130,9 @@ public class MainApplication extends Application {
 
     public DeckRepository getDeckRepository() {
         return deckRepository;
+    }
+
+    public DictionaryRepository getDictionaryRepository() {
+        return dictionaryRepository;
     }
 }

@@ -30,8 +30,6 @@ public class DeckServiceTest {
     private DeckService deckService;
     @Mock
     private Deck deck;
-    @Mock
-    private DbManager dbManager;
 
     private LanguageService languageService = ((TestMainApplication) RuntimeEnvironment.application).getLanguageService();
     private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
@@ -39,7 +37,7 @@ public class DeckServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        deckService = new DeckService(dbManager, languageService, Arrays.asList(deck), deckRepository);
+        deckService = new DeckService(languageService, Arrays.asList(deck), deckRepository);
     }
 
     @Test
