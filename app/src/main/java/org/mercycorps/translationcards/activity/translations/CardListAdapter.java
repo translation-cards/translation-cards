@@ -3,12 +3,15 @@ package org.mercycorps.translationcards.activity.translations;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -78,7 +81,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
                 R.id.list_item_progress_bar);
 
         setCardTextView(item, translationItemView, currentDictionaryLabel, progressBar);
-
+        setTranslationCardView(item, translationItemView);
         setTranslatedTextView(item, translationItemView, currentDictionaryLabel);
 
         translationItemView.findViewById(R.id.translated_text_layout)
@@ -99,13 +102,32 @@ class CardListAdapter extends ArrayAdapter<Translation> {
 
     private void setCardTextView(Translation item, View convertView, String currentDictionaryLabel,
                                  ProgressBar progressBar) {
-        TextView cardTextView = (TextView) convertView.findViewById(
+        TextView originTranslatedText = (TextView) convertView.findViewById(
                 R.id.origin_translation_text);
-        cardTextView.setText(item.getLabel());
+        TextView translatedText = (TextView) convertView.findViewById(
+                R.id.translated_text);
+        originTranslatedText.setText(item.getLabel());
         int cardTextColor = item.isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
-        cardTextView.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
-        cardTextView.setOnClickListener(new CardAudioClickListener(item, progressBar,
+        originTranslatedText.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
+        translatedText.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
+        originTranslatedText.setOnClickListener(new CardAudioClickListener(item, progressBar,
                 translationsActivity.decoratedMediaManager, currentDictionaryLabel));
+    }
+
+    private void setTranslationCardView(Translation item, View convertView) {
+        LinearLayout translationCard = (LinearLayout) convertView.findViewById(R.id.translation_card);
+
+        ImageView audioIcon = (ImageView) convertView.findViewById(R.id.audio_icon);
+        Drawable bg=audioIcon.getDrawable();
+
+        if(!item.isAudioFilePresent()){
+            translationCard.setAlpha(.4f);
+            bg.setAlpha(100);
+        }
+        else{
+            translationCard.setAlpha(1);
+            bg.setAlpha(255);
+        }
     }
 
     private void setTranslatedTextView(Translation item, View convertView, String currentDictionaryLabel) {
@@ -117,8 +139,9 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         } else {
             translatedText.setText(item.getTranslatedText());
+            int cardTextColor = item.isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
             translatedText.setTextColor(ContextCompat.getColor(getContext(),
-                    R.color.primaryTextColor));
+                    cardTextColor));
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         }
     }

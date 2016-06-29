@@ -98,7 +98,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/audio"/>
+                    android:src="@drawable/audio"
+                    android:id="@+id/audio_icon"/>
             </FrameLayout>
 
         </LinearLayout>

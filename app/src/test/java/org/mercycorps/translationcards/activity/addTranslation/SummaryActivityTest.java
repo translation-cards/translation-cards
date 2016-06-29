@@ -1,9 +1,11 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -269,11 +271,35 @@ public class SummaryActivityTest {
     }
 
     @Test
-    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
+    public void shouldGreyOutTranslationSourceTextWhenItContainsNoAudio() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
 
         TextView translationText = findTextView(activity, R.id.origin_translation_text);
         assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldGreyOutTranslationDestinationTextWhenItContainsNoAudio() {
+        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
+
+        TextView translationText = findTextView(activity, R.id.translated_text);
+        assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
+        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
+
+        LinearLayout translationCard = findLinearLayout(activity, R.id.summary_translation_card);
+        assertEquals(translationCard.getAlpha(), SummaryActivity.DISABLED_OPACITY);
+    }
+
+    @Test
+    @TargetApi(19)
+    public void shouldGreyOutAudioIconWhenTranslationContainsNoAudio() {
+        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
+        ImageView audioIcon = findImageView(activity, R.id.audio_icon);
+        assertEquals(SummaryActivity.DISABLED_BITMAP_OPACITY, audioIcon.getDrawable().getAlpha());
     }
 
     public void setupAudioPlayerManager() throws AudioFileNotSetException {

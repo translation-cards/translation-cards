@@ -397,10 +397,24 @@ public class TranslationsActivityTest {
     }
 
     @Test
-    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
+    public void shouldDisplayGrayedOutSourceTranslationWhenNoAudioHasBeenRecorded(){
         View translationsListItem = firstTranslationCardInListView();
         TextView translationText = (TextView)translationsListItem.findViewById(R.id.origin_translation_text);
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayGrayedOutDestinationTranslationWhenNoAudioHasBeenRecorded(){
+        View translationsListItem = firstTranslationCardInListView();
+        TextView translationText = (TextView)translationsListItem.findViewById(R.id.translated_text);
+        assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
+    }
+
+    @Test
+    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
+        View translationsListItem = firstTranslationCardInListView();
+        LinearLayout translationCard = (LinearLayout)translationsListItem.findViewById(R.id.translation_card);
+        assertEquals(translationCard.getAlpha(), .4f);
     }
 
 

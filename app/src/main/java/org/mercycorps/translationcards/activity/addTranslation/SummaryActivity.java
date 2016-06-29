@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,10 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
+    public static final float DISABLED_OPACITY = .4f;
+    public static final int DEFAULT_OPACITY = 1;
+    public static final int DEFAULT_BITMAP_OPACITY = 255;
+    public static final int DISABLED_BITMAP_OPACITY = 100;
     @Bind(R.id.origin_translation_text)TextView sourceTextView;
     @Bind(R.id.translated_text)TextView translatedTextView;
     @Bind(R.id.translation_child)LinearLayout translationChildLayout;
@@ -29,6 +34,8 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.summary_detail)TextView summaryDetail;
     @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
     @Bind(R.id.indicator_icon)ImageView indicatorIcon;
+    @Bind(R.id.audio_icon)ImageView audioIcon;
+    @Bind(R.id.summary_translation_card)LinearLayout translationCard;
 
     @Override
     public void inflateView() {
@@ -45,8 +52,8 @@ public class SummaryActivity extends AddTranslationActivity {
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
         setTranslationCardChildrenVisibility();
-        updateSourceTextView();
         updateTranslatedTextView();
+        greyOutCardIfNoAudioTranslation();
         updateSummaryTextView();
         indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
     }
@@ -92,7 +99,6 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     private void updateSummaryTextView() {
-        updateSourceTextView();
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
         summaryDetail.setText(detailText);
@@ -104,6 +110,7 @@ public class SummaryActivity extends AddTranslationActivity {
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updateTranslatedTextView();
                 updateSummaryTextView();
+                greyOutCardIfNoAudioTranslation();
                 stopMediaManager();
             }
         });
@@ -128,13 +135,24 @@ public class SummaryActivity extends AddTranslationActivity {
 
         updateTextInTextView(translatedTextView, translatedText);
     }
-    private void updateSourceTextView() {
-        sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
+    private void greyOutCardIfNoAudioTranslation() {
+        Drawable bg=audioIcon.getDrawable();
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
+            translationCard.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
+            translatedTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
+            bg.setAlpha(DISABLED_BITMAP_OPACITY);
+        }
+        else{
+            translationCard.setAlpha(DEFAULT_OPACITY);
+            sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
+            translatedTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
+            bg.setAlpha(DEFAULT_BITMAP_OPACITY);
         }
         updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
     }
+
+
 
     private void updateTextInTextView(TextView textView, String textToBeUpdated){
         textView.setText(textToBeUpdated);
