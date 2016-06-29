@@ -54,20 +54,6 @@ public class DbManager {
         this.dbh = new DbHelper(context);
     }
 
-    public long addDictionary(SQLiteDatabase writableDatabase, String destIsoCode, String label,
-                              int itemIndex, long deckId) {
-        ContentValues values = new ContentValues();
-        values.put(DictionariesTable.LANGUAGE_ISO, destIsoCode);
-        values.put(DictionariesTable.LABEL, label);
-        values.put(DictionariesTable.ITEM_INDEX, itemIndex);
-        values.put(DictionariesTable.DECK_ID, deckId);
-        return writableDatabase.insert(DictionariesTable.TABLE_NAME, null, values);
-    }
-
-    public long addDictionary(String destIsoCode, String label, int itemIndex, long deckId) {
-        return addDictionary(dbh.getWritableDatabase(), destIsoCode, label, itemIndex, deckId);
-    }
-
     public long addTranslation(SQLiteDatabase writableDatabase,
             long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
         Log.d(TAG, "Inserting translation...");

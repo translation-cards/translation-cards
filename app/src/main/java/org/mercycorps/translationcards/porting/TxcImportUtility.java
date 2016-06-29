@@ -301,7 +301,7 @@ public class TxcImportUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbManager.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
@@ -319,7 +319,7 @@ public class TxcImportUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);

@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.repository;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -44,6 +46,20 @@ public class DictionaryRepository {
         }
         cursor.close();
         return dictionaries;
+    }
+
+    public long addDictionary(SQLiteDatabase writableDatabase, String destIsoCode, String label,
+                              int itemIndex, long deckId) {
+        ContentValues values = new ContentValues();
+        values.put(LANGUAGE_ISO, destIsoCode);
+        values.put(LABEL, label);
+        values.put(ITEM_INDEX, itemIndex);
+        values.put(DECK_ID, deckId);
+        return writableDatabase.insert(TABLE_NAME, null, values);
+    }
+
+    public long addDictionary(String destIsoCode, String label, int itemIndex, long deckId) {
+        return addDictionary(databaseHelper.getWritableDatabase(), destIsoCode, label, itemIndex, deckId);
     }
 
 }

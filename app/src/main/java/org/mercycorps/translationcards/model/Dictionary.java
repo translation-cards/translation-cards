@@ -89,7 +89,7 @@ public class Dictionary implements Serializable {
     }
 
     public void save(Integer itemIndex) {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addDictionary(destLanguageIso, language, itemIndex, deckId);
+        ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().addDictionary(destLanguageIso, language, itemIndex, deckId);
     }
 
     public void setDeckId(long deckId) {
