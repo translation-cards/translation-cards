@@ -2,6 +2,7 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,12 +28,12 @@ public class AddNewTranslationContext implements Serializable {
 
    public void save() {
        for (NewTranslation newTranslation : newTranslations) {
-           getDbManager().saveTranslationContext(newTranslation);
+           getTranslationService().saveTranslationContext(newTranslation);
        }
    }
 
-    private DbManager getDbManager() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager();
+    private TranslationService getTranslationService() {
+        return ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationService();
     }
 
     public String getSourcePhrase() {

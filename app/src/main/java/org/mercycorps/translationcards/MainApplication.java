@@ -65,7 +65,7 @@ public class MainApplication extends Application {
         if(isTest) return;
         translationRepository = new TranslationRepository(dbManager);
         deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
-        dictionaryRepository = new DictionaryRepository(dbManager);
+        dictionaryRepository = new DictionaryRepository(dbManager.getDbh(), translationRepository);
         deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
@@ -134,5 +134,9 @@ public class MainApplication extends Application {
 
     public DictionaryRepository getDictionaryRepository() {
         return dictionaryRepository;
+    }
+
+    public TranslationRepository getTranslationRepository() {
+        return translationRepository;
     }
 }

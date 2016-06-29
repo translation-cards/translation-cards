@@ -97,6 +97,6 @@ public class Translation implements Serializable {
     }
 
     public void saveWithDictionary(Long dictionaryId) {
-        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
+        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
     }
 }

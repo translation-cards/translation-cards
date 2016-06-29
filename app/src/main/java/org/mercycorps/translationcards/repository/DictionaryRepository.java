@@ -16,11 +16,11 @@ import static org.mercycorps.translationcards.model.DbManager.DictionariesTable.
 public class DictionaryRepository {
 
     private DbManager.DbHelper databaseHelper;
-    private DbManager dbManager;
+    private TranslationRepository translationRepository;
 
-    public DictionaryRepository(DbManager dbManager) {
-        this.databaseHelper = dbManager.getDbh();
-        this.dbManager = dbManager;
+    public DictionaryRepository(DbManager.DbHelper databaseHelper, TranslationRepository translationRepository) {
+        this.translationRepository = translationRepository;
+        this.databaseHelper = databaseHelper;
     }
 
     public Dictionary[] getAllDictionariesForDeck(long deckId) {
@@ -39,7 +39,7 @@ public class DictionaryRepository {
             String label = cursor.getString(cursor.getColumnIndex(LABEL));
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(ID));
             Dictionary dictionary = new Dictionary(destLanguageIso, label,
-                    dbManager.getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
+                    translationRepository.getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
             dictionaries[i] = dictionary;
             i++;
             hasNext = cursor.moveToNext();

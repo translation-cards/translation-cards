@@ -143,7 +143,7 @@ public class SummaryActivityTest {
     public void shouldSaveTranslationContextWhenUserClicksSave() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.save_translation_button);
-        verify(getDbManager()).saveTranslationContext(any(NewTranslation.class));
+        verify(getTranslationService()).saveTranslationContext(any(NewTranslation.class));
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -34,6 +35,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DeckService deckService = mock(DeckService.class);
     private DeckRepository deckRepository = mock(DeckRepository.class);
     private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
+    private TranslationRepository translationRepository = mock(TranslationRepository.class);
 
     @Override
     public void onCreate() {
@@ -114,6 +116,11 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public DictionaryRepository getDictionaryRepository() {
         return dictionaryRepository;
+    }
+
+    @Override
+    public TranslationRepository getTranslationRepository() {
+        return translationRepository;
     }
 
     //    @Override

@@ -1,11 +1,13 @@
 package org.mercycorps.translationcards.service;
 
+import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.List;
 
 public class TranslationService {
@@ -34,7 +36,10 @@ public class TranslationService {
     }
 
     public void deleteTranslation(String sourcePhrase) {
-        translationRepository.deleteTranslationBySourcePhrase(sourcePhrase, dictionaryService.getDictionariesForCurrentDeck());
+        for(org.mercycorps.translationcards.model.Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
+            Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
+            translationRepository.deleteTranslation(translation.getDbId());
+        }
     }
 
     public void expandCard(int position) {
@@ -47,5 +52,14 @@ public class TranslationService {
 
     public boolean cardIsExpanded(int position) {
         return expanded.size() > 0 && expanded.get(position);
+    }
+
+    public void saveTranslationContext(NewTranslation context) {
+        Translation translation = context.getTranslation();
+        if (context.isEdit()) {
+            translationRepository.updateTranslation(translation.getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+        } else {
+            translationRepository.addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+        }
     }
 }
