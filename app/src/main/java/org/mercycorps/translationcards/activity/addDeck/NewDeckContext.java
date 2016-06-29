@@ -5,6 +5,7 @@ import org.mercycorps.translationcards.model.Language;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 
 public class NewDeckContext implements Serializable {
     private static final String NO_VALUE = "";
@@ -13,6 +14,7 @@ public class NewDeckContext implements Serializable {
     private Deck deck;
     private String languagesInput;
     private boolean isEdit;
+    private final HashSet<String> destinationLanguages;
 
     public NewDeckContext(){
         this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), NO_VALUE, false);
@@ -22,6 +24,7 @@ public class NewDeckContext implements Serializable {
         this.deck = deck;
         this.languagesInput = languagesInput;
         this.isEdit = isEdit;
+        destinationLanguages = new HashSet<>();
     }
 
     public void setSourceLanguage(Language language) {
@@ -56,5 +59,13 @@ public class NewDeckContext implements Serializable {
 
     public Deck getDeck() {
         return deck;
+    }
+
+    public void addDestinationLanguage(String language) {
+        destinationLanguages.add(language);
+    }
+
+    public HashSet<String> getDestinationLanguages() {
+        return destinationLanguages;
     }
 }

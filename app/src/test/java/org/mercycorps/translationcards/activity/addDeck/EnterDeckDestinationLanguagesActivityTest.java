@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,12 +16,16 @@ import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.HashSet;
+
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -148,5 +154,32 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
+    }
+
+    @Test
+    public void shouldAddLanguageFromTextFieldToSelectedLanguageList() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
+        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+        AutoCompleteTextView destinationLanguageInput = (AutoCompleteTextView) findView(activity, R.id.enter_deck_destination_input);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic");
+        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+        assertEquals(1, newDeckContext.getDestinationLanguages().size());
+        assertTrue(newDeckContext.getDestinationLanguages().contains("Arabic"));
+    }
+
+    @Test
+    public void shouldNotAddLanguageIfAlreadyPresent() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
+        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+        AutoCompleteTextView destinationLanguageInput = (AutoCompleteTextView) findView(activity, R.id.enter_deck_destination_input);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic");
+        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
+        setText(activity, R.id.enter_deck_destination_input, "Arabic");
+        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+        HashSet<String> destinationLanguages = newDeckContext.getDestinationLanguages();
+        assertEquals(1, destinationLanguages.size());
+        assertTrue(destinationLanguages.contains("Arabic"));
     }
 }

@@ -1,12 +1,17 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.support.v4.content.ContextCompat;
-import android.widget.EditText;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -15,8 +20,9 @@ import butterknife.OnTextChanged;
 public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     private static final String LANGUAGE_DELIMITER = ",";
     private static final String INPUT_DELIMITER = ", ";
+    private NewDeckContext newDeckContext;
     @Bind(R.id.enter_deck_destination_input)
-    EditText input;
+    AutoCompleteTextView destinationLanguageInput;
     @Bind(R.id.enter_destination_next_label)
     LinearLayout nextButton;
     @Bind(R.id.enter_destination_next_text)
@@ -36,11 +42,39 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
+        newDeckContext = getContextFromIntent();
+        LanguageService languageService = ((MainApplication) getApplication()).getLanguageService();
+        ArrayAdapter<String> languagesAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                languageService.getLanguageNames()
+        );
+
+        destinationLanguageInput.setAdapter(languagesAdapter);
+        addEditorListener();
         fillDestinationLanguageField();
     }
 
+    private void addEditorListener() {
+        TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(EditorInfo.IME_ACTION_DONE == actionId){
+                    addDestinationLanguage();
+                }
+                return false;
+            }
+        };
+        destinationLanguageInput.setOnEditorActionListener(onEditorActionListener);
+    }
+
+    private void addDestinationLanguage() {
+        String destinationLanguage = destinationLanguageInput.getText().toString();
+        newDeckContext.addDestinationLanguage(destinationLanguage);
+    }
+
     private void fillDestinationLanguageField() {
-        input.setText(getContextFromIntent().getLanguagesInput());
+        destinationLanguageInput.setText(newDeckContext.getLanguagesInput());
     }
 
     @OnClick(R.id.enter_destination_next_label)
@@ -60,12 +94,12 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     }
 
     private void updateContextWithLanguagesInput() {
-        getContextFromIntent().updateLanguagesInput(input.getText().toString());
+        getContextFromIntent().updateLanguagesInput(destinationLanguageInput.getText().toString());
     }
 
     @OnTextChanged(R.id.enter_deck_destination_input)
     public void destinationInputTextChanged() {
-        String destinationLanguages = input.getText().toString();
+        String destinationLanguages = destinationLanguageInput.getText().toString();
         nextButton.setClickable(!destinationLanguages.isEmpty());
         updateNextButtonState(destinationLanguages);
     }
