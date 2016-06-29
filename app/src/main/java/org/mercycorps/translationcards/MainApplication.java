@@ -14,6 +14,7 @@ import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
@@ -43,6 +44,7 @@ public class MainApplication extends Application {
     private Repository repository;
     protected boolean isTest = false;
     private LanguageService languageService;
+    private PermissionService permissionService;
 
     @Override
     public void onCreate() {
@@ -50,6 +52,7 @@ public class MainApplication extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         languageService = new LanguageService();
+        permissionService = new PermissionService();
         dbManager = new DbManager(getApplicationContext(), languageService);
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
@@ -119,5 +122,9 @@ public class MainApplication extends Application {
 
     public LanguageService getLanguageService() {
         return languageService;
+    }
+
+    public PermissionService getPermissionService() {
+        return permissionService;
     }
 }

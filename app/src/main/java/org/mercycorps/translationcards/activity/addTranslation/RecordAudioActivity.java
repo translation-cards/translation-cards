@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -17,6 +18,7 @@ import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.MediaConfig;
+import org.mercycorps.translationcards.service.PermissionService;
 
 import java.util.List;
 
@@ -27,7 +29,6 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.O
 
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
-    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 0;
 
     @Bind(R.id.play_audio_button)
     RelativeLayout playAudioButton;
@@ -57,6 +58,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     TextView translatedTextView;
     @Bind(R.id.audio_icon_layout)
     FrameLayout audioIconLayout;
+    private PermissionService permissionService;
 
     @Override
     public void inflateView() {
@@ -66,8 +68,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!checkRecordingPermission()) {
-            requestRecordPermissions();
+        permissionService = getMainApplication().getPermissionService();
+
+        if (!permissionService.checkPermission(this, Manifest.permission.RECORD_AUDIO )) {
+            permissionService.requestPermissions(this,Manifest.permission.RECORD_AUDIO , permissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
         }
     }
     @Override
@@ -257,7 +261,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (!permissionGranted(grantResults)) {
+        if (!permissionService.permissionGranted(grantResults)) {
             startNextActivity(this, TranslationsActivity.class);
         }
     }

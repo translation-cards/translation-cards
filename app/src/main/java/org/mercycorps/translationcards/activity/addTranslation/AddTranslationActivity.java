@@ -22,7 +22,6 @@ import org.mercycorps.translationcards.uiHelper.ToastHelper;
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
     public static final String CONTEXT_INTENT_KEY = "AddNewTranslationContext";
     public static final String INTENT_KEY_DECK_ID = "Deck";
-    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 0;
     private TranslationTabsFragment translationTabsFragment;
 
     @Override
@@ -91,18 +90,5 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         return translationTabsFragment;
     }
 
-    protected boolean checkRecordingPermission() {
-        if (Build.VERSION.SDK_INT < 23) {
-            return true;
-        }
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-    }
 
-    protected boolean permissionGranted(int[] grantResults) {
-        return grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-    }
-
-    protected void requestRecordPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
-    }
 }

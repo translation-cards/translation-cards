@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,23 +13,38 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Collections;
 
 import static android.support.v4.content.ContextCompat.getColor;
-import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_AUDIO_FILE;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_DICTIONARY_LABEL;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_SOURCE_PHRASE;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_TRANSLATED_TEXT;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.clickLanguageTabAtPosition;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.createTranslation;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAudioPlayerManager;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAudioRecorderManager;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getFirstNewTranslationFromContext;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setupAudioPlayerManager;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -39,6 +56,7 @@ public class RecordAudioActivityTest {
     private static final boolean IS_NOT_ASSET = false;
 
     AddTranslationActivityHelper<RecordAudioActivity> helper = new AddTranslationActivityHelper<>(RecordAudioActivity.class);
+    private PermissionService permissionService = ((TestMainApplication)RuntimeEnvironment.application).getPermissionService();
 
     @After
     public void teardown() {
@@ -551,5 +569,35 @@ public class RecordAudioActivityTest {
         clickLanguageTabAtPosition(activity, 1);
 
         verify(getAudioRecorderManager()).stop();
+    }
+
+    @Test
+    public void shouldCheckRecordingPermissionWhenActivityIsCreated() {
+        Activity activity = helper.createActivityToTest();
+
+        verify(permissionService).checkPermission(activity, Manifest.permission.RECORD_AUDIO);
+    }
+
+    @Test
+    public void shouldRequestRecordingPermissionWhenActivityIsCreatedAndPermissionDoesNotExist() {
+        Activity activity = helper.createActivityToTest();
+
+        when(permissionService.checkPermission(activity, Manifest.permission.RECORD_AUDIO))
+                .thenReturn(false);
+
+        verify(permissionService).requestPermissions(activity, Manifest.permission.RECORD_AUDIO, PermissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
+    }
+
+    @Test
+    @TargetApi(23)
+    public void shouldGoToTranslationsActivityIfPermissionNotGranted() {
+        RecordAudioActivity activity = (RecordAudioActivity)helper.createActivityToTest();
+
+        when(permissionService.permissionGranted(any(int[].class)))
+                .thenReturn(false);
+
+        activity.onRequestPermissionsResult(1, new String[]{}, new int[]{} );
+
+        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 }
