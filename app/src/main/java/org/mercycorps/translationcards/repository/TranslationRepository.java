@@ -17,7 +17,7 @@ import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.
 
 public class TranslationRepository {
 
-    private static final String TAG = "DbManager";
+    public static final String TAG = "DbManager";
 
     private DbManager dbManager;
     private DbManager.DbHelper databaseHelper;
@@ -34,13 +34,6 @@ public class TranslationRepository {
         }
 
         return translations;
-    }
-
-    public void deleteTranslationBySourcePhrase(String sourcePhrase, List<Dictionary> deleteFrom) {
-        for(Dictionary dictionary : deleteFrom) {
-            Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
-            deleteTranslation(translation.getDbId());
-        }
     }
 
     public void deleteTranslation(long translationId) {

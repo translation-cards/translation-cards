@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
@@ -34,6 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class MainApplication extends Application {
 
+    public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private DbManager dbManager;
     private AudioRecorderManager audioRecorderManager;
     private AudioPlayerManager audioPlayerManager;
@@ -48,6 +50,7 @@ public class MainApplication extends Application {
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private DictionaryRepository dictionaryRepository;
+    private TxcImportUtility txcImportUtility;
 
     @Override
     public void onCreate() {
@@ -55,7 +58,6 @@ public class MainApplication extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         languageService = new LanguageService();
-        dbManager = new DbManager(getApplicationContext(), languageService);
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
@@ -63,12 +65,21 @@ public class MainApplication extends Application {
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
+        dbManager = new DbManager(getApplicationContext());
         translationRepository = new TranslationRepository(dbManager);
-        deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
         dictionaryRepository = new DictionaryRepository(dbManager.getDbh(), translationRepository);
+        deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
         deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
+        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
+        checkForBundledDeckAndLoad(dbManager.getDbh());
+    }
+
+    private void checkForBundledDeckAndLoad(DbManager.DbHelper dbHelper) {
+        if(deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID){
+            txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
+        }
     }
 
     public DbManager getDbManager() {

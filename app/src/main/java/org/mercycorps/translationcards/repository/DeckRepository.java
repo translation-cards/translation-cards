@@ -19,6 +19,7 @@ import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.
  */
 public class DeckRepository {
 
+    public static final int NONEXISTENT_ID = -1;
     private DbManager.DbHelper databaseHelper;
     private DictionaryRepository dictionaryRepository;
 
@@ -104,7 +105,7 @@ public class DeckRepository {
         databaseHelper.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public long hasDeckWithExternalId(String externalId) {
+    public long retrieveDeckWithExternalId(String externalId) {
         // TODO(nworden): consider handling this better when there's multiple existing decks with
         // this external ID
         String[] columns = new String[] {DecksTable.ID};
@@ -115,7 +116,7 @@ public class DeckRepository {
                 String.format("%s DESC", DecksTable.CREATION_TIMESTAMP), "1");
         if (cursor.getCount() == 0) {
             cursor.close();
-            return -1;
+            return NONEXISTENT_ID;
         }
         cursor.moveToFirst();
         long result = cursor.getLong(cursor.getColumnIndexOrThrow(DecksTable.ID));

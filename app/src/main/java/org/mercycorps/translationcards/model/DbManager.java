@@ -18,22 +18,10 @@ package org.mercycorps.translationcards.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
-import org.mercycorps.translationcards.service.LanguageService;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Manages database operations.
@@ -42,15 +30,9 @@ import java.io.InputStream;
  */
 public class DbManager {
 
-    private static final String TAG = "DbManager";
-
-    // The value used in place of database IDs for items not yet in the database.
-
     private final DbHelper dbh;
-    private final LanguageService languageService;
 
-    public DbManager(Context context, LanguageService languageService) {
-        this.languageService = languageService;
+    public DbManager(Context context) {
         this.dbh = new DbHelper(context);
     }
 
@@ -151,7 +133,6 @@ public class DbManager {
             db.execSQL(INIT_DECKS_SQL);
             db.execSQL(INIT_DICTIONARIES_SQL);
             db.execSQL(INIT_TRANSLATIONS_SQL);
-            importBundledDeck(db);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -182,25 +163,6 @@ public class DbManager {
                 ContentValues defaultDestLanguageValues = new ContentValues();
                 defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, "xx");
                 db.update(DictionariesTable.TABLE_NAME, defaultDestLanguageValues, null, null);
-                importBundledDeck(db);
-            }
-        }
-
-        private void importBundledDeck(SQLiteDatabase db) {
-            JSONObject jsonObject;
-            try {
-                Context context = MainApplication.getContextFromMainApp();
-                InputStream is = context.getAssets().open("card_deck.json");
-                byte[] buffer = new byte[is.available()];
-                is.read(buffer);
-                is.close();
-                jsonObject = new JSONObject(new String(buffer, "UTF-8"));
-
-                TxcImportUtility txcImportUtility = new TxcImportUtility(languageService);
-                TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(new File(""), "", jsonObject);
-                txcImportUtility.loadAssetData(db, context, importSpec);
-            } catch (IOException | JSONException | ImportException e) {
-                Log.d(TAG, e.getMessage());
             }
         }
 
