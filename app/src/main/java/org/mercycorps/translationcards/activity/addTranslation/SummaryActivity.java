@@ -99,8 +99,8 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     private void updateSummaryTextView() {
-        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
-        int detailText = translatedText.isEmpty() ? R.string.summary_detail_no_audio : R.string.activity_summary_instructions;
+        boolean audioRecorded = getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent();
+        int detailText = audioRecorded ? R.string.activity_summary_instructions : R.string.summary_detail_no_audio;
         summaryDetail.setText(detailText);
     }
 

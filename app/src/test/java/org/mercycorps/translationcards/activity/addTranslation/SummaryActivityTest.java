@@ -175,7 +175,7 @@ public class SummaryActivityTest {
     public void shouldSetSummaryDetailWhenActivityIsCreated() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
 
-        clickLanguageTabAtPosition(activity, 1);
+        clickLanguageTabAtPosition(activity, 0);
 
         TextView summaryDetail = findTextView(activity, R.id.summary_detail);
         assertEquals("Here's your new card. Before you save, be sure to review the phrase, translation, and recording.", summaryDetail.getText().toString());
@@ -264,6 +264,8 @@ public class SummaryActivityTest {
     @Test
     public void shouldUpdateSummaryDetailWhenALanguageTabIsSelectedWithNoAudioRecording() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
+
+        clickLanguageTabAtPosition(activity, 1);
 
         assertEquals("It looks like you didn't record the phrase audio for this language. You can record the audio now but it's okay to come back later when you're ready."
                 , findTextView(activity, R.id.summary_detail).getText().toString());
