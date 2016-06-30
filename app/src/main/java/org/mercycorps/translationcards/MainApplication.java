@@ -6,7 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
@@ -36,7 +36,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class MainApplication extends Application {
 
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
-    private DbManager dbManager;
+    private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
     private AudioPlayerManager audioPlayerManager;
     private static Context context;
@@ -65,25 +65,25 @@ public class MainApplication extends Application {
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
-        dbManager = new DbManager(getApplicationContext());
-        translationRepository = new TranslationRepository(dbManager);
-        dictionaryRepository = new DictionaryRepository(dbManager.getDbh(), translationRepository);
-        deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
+        databaseHelper = new DatabaseHelper(context);
+        translationRepository = new TranslationRepository(databaseHelper);
+        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository);
+        deckRepository = new DeckRepository(dictionaryRepository, databaseHelper);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
-        checkForBundledDeckAndLoad(dbManager.getDbh());
+        checkForBundledDeckAndLoad(databaseHelper);
         deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
-    private void checkForBundledDeckAndLoad(DbManager.DbHelper dbHelper) {
+    private void checkForBundledDeckAndLoad(DatabaseHelper dbHelper) {
         if(deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID){
             txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
         }
     }
 
-    public DbManager getDbManager() {
-        return dbManager;
+    public DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
     }
 
     public AudioRecorderManager getAudioRecorderManager() {

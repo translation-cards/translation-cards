@@ -2,8 +2,7 @@ package org.mercycorps.translationcards;
 
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.model.DbManager;
-import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.mock;
 
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
-    private DbManager dbManager = mock(DbManager.class);
+    private DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
     private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
     private AudioPlayerManager audioPlayerManager = mock(AudioPlayerManager.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
@@ -58,8 +57,8 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public DbManager getDbManager() {
-        return dbManager;
+    public DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
     }
 
     @Override

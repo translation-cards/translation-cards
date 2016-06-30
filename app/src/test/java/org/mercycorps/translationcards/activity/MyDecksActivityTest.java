@@ -15,7 +15,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
-import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.MyDecksActivityHelper;
@@ -41,8 +41,7 @@ public class MyDecksActivityTest {
             "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.4";
     private static final String DEFAULT_ISO_CODE = "eng";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
-    private final DbManager dbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
-    private DbManager.DbHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqlLiteDatabase;
     private Cursor cursor;
 
@@ -55,10 +54,9 @@ public class MyDecksActivityTest {
         when(cursor.getLong(anyInt())).thenReturn(12345l);
         when(cursor.getInt(anyInt())).thenReturn(1234);
         sqlLiteDatabase = mock(SQLiteDatabase.class);
-        when(sqlLiteDatabase.query(DbManager.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DbManager.DecksTable.ID))).thenReturn(cursor);
-        databaseHelper = mock(DbManager.DbHelper.class);
+        when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
+        databaseHelper = mock(DatabaseHelper.class);
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
-        when(dbManager.getDbh()).thenReturn(databaseHelper);
     }
     
     @After 

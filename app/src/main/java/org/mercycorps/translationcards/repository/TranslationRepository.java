@@ -5,26 +5,23 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mercycorps.translationcards.model.DbManager.*;
-import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.*;
+import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.*;
 
 public class TranslationRepository {
 
-    public static final String TAG = "DbManager";
+    public static final String TAG = TranslationRepository.class.getName();
 
-    private DbManager dbManager;
-    private DbManager.DbHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
 
-    public TranslationRepository(DbManager dbManager) {
-        this.dbManager = dbManager;
-        databaseHelper = dbManager.getDbh();
+    public TranslationRepository(DatabaseHelper databaseHelper) {
+        this.databaseHelper = databaseHelper;
     }
 
     public List<Translation> getTranslationsForDictionary(Dictionary dictionary) {
@@ -37,7 +34,6 @@ public class TranslationRepository {
     }
 
     public void deleteTranslation(long translationId) {
-
         String whereClause = String.format("%s = ?", ID);
         String[] whereArgs = new String[] {String.format("%d", translationId)};
         databaseHelper.getWritableDatabase().delete(TABLE_NAME, whereClause, whereArgs);

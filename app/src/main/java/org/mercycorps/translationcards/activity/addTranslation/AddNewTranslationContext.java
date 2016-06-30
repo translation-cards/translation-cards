@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.Serializable;

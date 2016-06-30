@@ -4,10 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Dictionary;
 
-import static org.mercycorps.translationcards.model.DbManager.DictionariesTable.*;
+import static org.mercycorps.translationcards.model.DatabaseHelper.DictionariesTable.*;
 
 /**
  * Created by njimenez on 6/28/16.
@@ -15,10 +15,10 @@ import static org.mercycorps.translationcards.model.DbManager.DictionariesTable.
 
 public class DictionaryRepository {
 
-    private DbManager.DbHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
     private TranslationRepository translationRepository;
 
-    public DictionaryRepository(DbManager.DbHelper databaseHelper, TranslationRepository translationRepository) {
+    public DictionaryRepository(DatabaseHelper databaseHelper, TranslationRepository translationRepository) {
         this.translationRepository = translationRepository;
         this.databaseHelper = databaseHelper;
     }

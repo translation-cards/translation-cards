@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.model.DbManager;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 

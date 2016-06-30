@@ -19,7 +19,7 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.model.DbManager;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -70,8 +70,7 @@ public class MyDeckAdapterTest {
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
     private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
     private DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
-    private final DbManager dbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
-    private DbManager.DbHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqlLiteDatabase;
     private Cursor cursor;
 
@@ -84,10 +83,9 @@ public class MyDeckAdapterTest {
         when(cursor.getLong(anyInt())).thenReturn(12345l);
         when(cursor.getInt(anyInt())).thenReturn(1234);
         sqlLiteDatabase = mock(SQLiteDatabase.class);
-        when(sqlLiteDatabase.query(DbManager.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DbManager.DecksTable.ID))).thenReturn(cursor);
-        databaseHelper = mock(DbManager.DbHelper.class);
+        when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
+        databaseHelper = mock(DatabaseHelper.class);
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
-        when(dbManager.getDbh()).thenReturn(databaseHelper);
 
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, DEFAULT_SOURCE_LANGUAGE_ISO);

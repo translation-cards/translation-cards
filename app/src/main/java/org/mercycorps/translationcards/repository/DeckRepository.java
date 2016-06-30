@@ -4,15 +4,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.model.DbManager;
-import org.mercycorps.translationcards.model.DbManager.DecksTable;
+import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.model.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
 
 import java.io.File;
 
-import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.*;
+import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.*;
 
 /**
  * Created by njimenez on 6/27/16.
@@ -20,10 +20,10 @@ import static org.mercycorps.translationcards.model.DbManager.TranslationsTable.
 public class DeckRepository {
 
     public static final int NONEXISTENT_ID = -1;
-    private DbManager.DbHelper databaseHelper;
+    private DatabaseHelper databaseHelper;
     private DictionaryRepository dictionaryRepository;
 
-    public DeckRepository(DictionaryRepository dictionaryRepository, DbManager.DbHelper databaseHelper) {
+    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper) {
         this.dictionaryRepository = dictionaryRepository;
         this.databaseHelper = databaseHelper;
     }
@@ -97,9 +97,9 @@ public class DeckRepository {
             databaseHelper.getWritableDatabase().delete(TABLE_NAME, whereClause, whereArgs);
         }
         // Delete the rows in the dictionaries table.
-        String whereClause = DbManager.DictionariesTable.DECK_ID + " = ?";
+        String whereClause = DatabaseHelper.DictionariesTable.DECK_ID + " = ?";
         String[] whereArgs = new String[] {String.valueOf(deckId)};
-        databaseHelper.getWritableDatabase().delete(DbManager.DictionariesTable.TABLE_NAME, whereClause, whereArgs);
+        databaseHelper.getWritableDatabase().delete(DatabaseHelper.DictionariesTable.TABLE_NAME, whereClause, whereArgs);
         // Delete the row from the deck table.
         whereClause = DecksTable.ID + " = ?"; // whereArgs remain the same
         databaseHelper.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
