@@ -1,8 +1,11 @@
 package org.mercycorps.translationcards.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,7 +14,6 @@ import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -33,7 +35,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.util.ActivityController;
 
 import java.util.Arrays;
@@ -48,11 +49,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -403,18 +402,17 @@ public class TranslationsActivityTest {
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
 
-    @Test
-    public void shouldDisplayGrayedOutDestinationTranslationWhenNoAudioHasBeenRecorded(){
-        View translationsListItem = firstTranslationCardInListView();
-        TextView translationText = (TextView)translationsListItem.findViewById(R.id.translated_text);
-        assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
-    }
 
     @Test
     public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
         View translationsListItem = firstTranslationCardInListView();
-        LinearLayout translationCard = (LinearLayout)translationsListItem.findViewById(R.id.translation_card);
-        assertEquals(translationCard.getAlpha(), .4f);
+        LinearLayout translationCard = (LinearLayout)translationsListItem.findViewById(R.id.translation_card_parent);
+        int backgroundColor = Color.TRANSPARENT;
+        Drawable background = translationCard.getBackground();
+        if (background instanceof ColorDrawable)
+            backgroundColor = ((ColorDrawable) background).getColor();
+        assertEquals(backgroundColor, ContextCompat.getColor(translationsActivity, R.color.lightGrey));
+
     }
 
 

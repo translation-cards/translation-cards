@@ -109,23 +109,22 @@ class CardListAdapter extends ArrayAdapter<Translation> {
         originTranslatedText.setText(item.getLabel());
         int cardTextColor = item.isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
         originTranslatedText.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
-        translatedText.setTextColor(ContextCompat.getColor(translationsActivity, cardTextColor));
         originTranslatedText.setOnClickListener(new CardAudioClickListener(item, progressBar,
                 translationsActivity.decoratedMediaManager, currentDictionaryLabel));
     }
 
     private void setTranslationCardView(Translation item, View convertView) {
-        LinearLayout translationCard = (LinearLayout) convertView.findViewById(R.id.translation_card);
+        LinearLayout translationCardParent = (LinearLayout) convertView.findViewById(R.id.translation_card_parent);
 
         ImageView audioIcon = (ImageView) convertView.findViewById(R.id.audio_icon);
         Drawable bg=audioIcon.getDrawable();
 
         if(!item.isAudioFilePresent()){
-            translationCard.setAlpha(.4f);
+            translationCardParent.setBackgroundColor(ContextCompat.getColor(translationsActivity, R.color.lightGrey));
             bg.setAlpha(100);
         }
         else{
-            translationCard.setAlpha(1);
+            translationCardParent.setBackgroundColor(ContextCompat.getColor(translationsActivity, R.color.backgroundColor));
             bg.setAlpha(255);
         }
     }
@@ -139,9 +138,7 @@ class CardListAdapter extends ArrayAdapter<Translation> {
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         } else {
             translatedText.setText(item.getTranslatedText());
-            int cardTextColor = item.isAudioFilePresent() ? R.color.primaryTextColor : R.color.textDisabled;
-            translatedText.setTextColor(ContextCompat.getColor(getContext(),
-                    cardTextColor));
+            translatedText.setTextColor(ContextCompat.getColor(translationsActivity, R.color.primaryTextColor));
             translatedText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         }
     }

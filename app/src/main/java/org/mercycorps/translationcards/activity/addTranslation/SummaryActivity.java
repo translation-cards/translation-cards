@@ -35,7 +35,7 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
     @Bind(R.id.indicator_icon)ImageView indicatorIcon;
     @Bind(R.id.audio_icon)ImageView audioIcon;
-    @Bind(R.id.summary_translation_card)LinearLayout translationCard;
+    @Bind(R.id.translation_card_parent)LinearLayout translationCardParent;
 
     @Override
     public void inflateView() {
@@ -138,15 +138,13 @@ public class SummaryActivity extends AddTranslationActivity {
     private void greyOutCardIfNoAudioTranslation() {
         Drawable bg=audioIcon.getDrawable();
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
-            translationCard.setAlpha(DISABLED_OPACITY);
+            translationCardParent.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey)); //.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
-            translatedTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
             bg.setAlpha(DISABLED_BITMAP_OPACITY);
         }
         else{
-            translationCard.setAlpha(DEFAULT_OPACITY);
+            translationCardParent.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundColor)); //.setAlpha(DEFAULT_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
-            translatedTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
             bg.setAlpha(DEFAULT_BITMAP_OPACITY);
         }
         updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());

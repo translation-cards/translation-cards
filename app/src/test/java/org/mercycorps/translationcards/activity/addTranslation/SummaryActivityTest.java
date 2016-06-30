@@ -2,6 +2,10 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,13 +31,18 @@ import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.*;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.clickLanguageTabAtPosition;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDecoratedMediaManager;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -278,20 +287,17 @@ public class SummaryActivityTest {
         assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
 
-    @Test
-    public void shouldGreyOutTranslationDestinationTextWhenItContainsNoAudio() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-
-        TextView translationText = findTextView(activity, R.id.translated_text);
-        assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
-    }
 
     @Test
     public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
 
-        LinearLayout translationCard = findLinearLayout(activity, R.id.summary_translation_card);
-        assertEquals(translationCard.getAlpha(), SummaryActivity.DISABLED_OPACITY);
+        LinearLayout translationCardParent = findLinearLayout(activity, R.id.translation_card_parent);
+        int backgroundColor = Color.TRANSPARENT;
+        Drawable background = translationCardParent.getBackground();
+        if (background instanceof ColorDrawable)
+            backgroundColor = ((ColorDrawable) background).getColor();
+        assertEquals(backgroundColor, ContextCompat.getColor(activity, R.color.lightGrey));
     }
 
     @Test
