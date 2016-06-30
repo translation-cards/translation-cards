@@ -1,26 +1,30 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import junit.framework.Assert;
+
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowDialog;
+import org.robolectric.shadows.ShadowToast;
 
 import java.util.Collections;
 
@@ -45,6 +49,7 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getFirstNewTranslationFromContext;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setupAudioPlayerManager;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -58,11 +63,15 @@ public class RecordAudioActivityTest {
     AddTranslationActivityHelper<RecordAudioActivity> helper = new AddTranslationActivityHelper<>(RecordAudioActivity.class);
     private PermissionService permissionService = ((TestMainApplication)RuntimeEnvironment.application).getPermissionService();
 
+    @Before
+    public void setup() {
+        when(permissionService.checkPermission(any(Activity.class), anyString())).thenReturn(true);
+    }
+
     @After
     public void teardown() {
         helper.teardown();
     }
-
 
     @Test
     public void playButtonShouldBeGreyWhenActivityStarts() {
@@ -572,32 +581,59 @@ public class RecordAudioActivityTest {
     }
 
     @Test
-    public void shouldCheckRecordingPermissionWhenActivityIsCreated() {
+    public void shouldCheckRecordingPermissionWhenRecordButtonIsPressed() {
         Activity activity = helper.createActivityToTest();
+
+        click(activity, R.id.record_audio_button);
 
         verify(permissionService).checkPermission(activity, Manifest.permission.RECORD_AUDIO);
     }
 
-    @Test
-    public void shouldRequestRecordingPermissionWhenActivityIsCreatedAndPermissionDoesNotExist() {
-        Activity activity = helper.createActivityToTest();
 
-        when(permissionService.checkPermission(activity, Manifest.permission.RECORD_AUDIO))
-                .thenReturn(false);
+
+    @Test
+    public void shouldShowPermissionDialogWhenRecordButtonIsPressedAndPermissionDoesNotExist() {
+        Activity activity = helper.createActivityToTest();
+        when(permissionService.checkPermission(activity, Manifest.permission.RECORD_AUDIO)).thenReturn(false);
+
+        click(activity, R.id.record_audio_button);
+
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        View dialog = alertDialog.findViewById(R.id.microphone_permission_dialog);
+        Assert.assertNotNull(dialog);
+    }
+
+    @Test
+    public void shouldRequestRecordingPermissionWhenPermissionDialogButtonIsPressed() {
+        Activity activity = helper.createActivityToTest();
+        when(permissionService.checkPermission(activity, Manifest.permission.RECORD_AUDIO)).thenReturn(false);
+
+        click(activity, R.id.record_audio_button);
+        AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
+        alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
 
         verify(permissionService).requestPermissions(activity, Manifest.permission.RECORD_AUDIO, PermissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 
     @Test
-    @TargetApi(23)
-    public void shouldGoToTranslationsActivityIfPermissionNotGranted() {
+    public void shouldShowNegativeToastMessageIfPermissionNotGranted() {
         RecordAudioActivity activity = (RecordAudioActivity)helper.createActivityToTest();
+        int grantResults[] = {};
+        when(permissionService.permissionGranted(grantResults)).thenReturn(false);
 
-        when(permissionService.permissionGranted(any(int[].class)))
-                .thenReturn(false);
+        activity.onRequestPermissionsResult(0, new String[]{}, grantResults);
 
-        activity.onRequestPermissionsResult(1, new String[]{}, new int[]{} );
+        assertEquals("Permission not granted.", ShadowToast.getTextOfLatestToast());
+    }
 
-        assertEquals(TranslationsActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    @Test
+    public void shouldShowPositiveToastMessageIfPermissionNotGranted() {
+        RecordAudioActivity activity = (RecordAudioActivity)helper.createActivityToTest();
+        int grantResults[] = {};
+        when(permissionService.permissionGranted(grantResults)).thenReturn(true);
+
+        activity.onRequestPermissionsResult(0, new String[]{}, grantResults);
+
+        assertEquals("Permission granted! Press the record button again.", ShadowToast.getTextOfLatestToast());
     }
 }

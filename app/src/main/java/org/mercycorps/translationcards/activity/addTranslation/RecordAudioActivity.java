@@ -1,8 +1,10 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -12,13 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.service.PermissionService;
+import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.util.List;
 
@@ -69,11 +71,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         permissionService = getMainApplication().getPermissionService();
-
-        if (!permissionService.checkPermission(this, Manifest.permission.RECORD_AUDIO )) {
-            permissionService.requestPermissions(this,Manifest.permission.RECORD_AUDIO , permissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
-        }
     }
+
     @Override
     public void initStates() {
         inflateLanguageTabsFragment();
@@ -114,13 +113,29 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @OnClick(R.id.record_audio_button)
     public void recordAudioButtonClick() {
-        stopAudioIfPlaying();
-        tryToRecord();
-        boolean isRecording = getAudioRecorderManager().isRecording();
-        updateRecordButtonState(isRecording);
-        updateBackButtonState(isRecording);
-        updateNextButtonState(isRecording);
-        updatePlayButtonState();
+        if (!permissionService.checkPermission(this, Manifest.permission.RECORD_AUDIO )) {
+            showPermissionDialog();
+        } else {
+            stopAudioIfPlaying();
+            tryToRecord();
+            boolean isRecording = getAudioRecorderManager().isRecording();
+            updateRecordButtonState(isRecording);
+            updateBackButtonState(isRecording);
+            updateNextButtonState(isRecording);
+            updatePlayButtonState();
+        }
+    }
+
+    private void showPermissionDialog() {
+        new AlertDialog.Builder(this)
+                .setPositiveButton("Got it", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        permissionService.requestPermissions(RecordAudioActivity.this, Manifest.permission.RECORD_AUDIO , permissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
+                    }
+                })
+                .setView(R.layout.dialog_microphone_permission)
+                .show();
     }
 
     @OnClick(R.id.play_audio_button)
@@ -262,7 +277,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (!permissionService.permissionGranted(grantResults)) {
-            startNextActivity(this, TranslationsActivity.class);
+            ToastHelper.showToast(this, getString(R.string.permission_not_granted));
+        } else {
+            ToastHelper.showToast(this, getString(R.string.permission_granted));
         }
     }
 }

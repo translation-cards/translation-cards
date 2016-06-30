@@ -112,6 +112,9 @@
     <string name="activity_deck_review_and_save_description">Here\'s your new deck. Before you save, be sure to review the title, author, and languages</string>
     <string name="english">English</string>
     <string name="invalid_source_language_message">Language not supported. Type then tap a valid language</string>
+    <string name="microphone_permission_message">Translation Cards uses your microphone to record phrases.\n\nSince it\'s the first time you\'re making a card, you need to allow Translation Cards to use your microphone.</string>
+    <string name="permission_not_granted">Permission not granted.</string>
+    <string name="permission_granted">Permission granted! Press the record button again.</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>
