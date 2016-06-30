@@ -69,11 +69,11 @@ public class MainApplication extends Application {
         translationRepository = new TranslationRepository(dbManager);
         dictionaryRepository = new DictionaryRepository(dbManager.getDbh(), translationRepository);
         deckRepository = new DeckRepository(dictionaryRepository, dbManager.getDbh());
+        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
+        checkForBundledDeckAndLoad(dbManager.getDbh());
         deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
-        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
-        checkForBundledDeckAndLoad(dbManager.getDbh());
     }
 
     private void checkForBundledDeckAndLoad(DbManager.DbHelper dbHelper) {
