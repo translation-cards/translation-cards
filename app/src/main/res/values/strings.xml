@@ -115,6 +115,7 @@
     <string name="microphone_permission_message">Translation Cards uses your microphone to record phrases.\n\nSince it\'s the first time you\'re making a card, you need to allow Translation Cards to use your microphone.</string>
     <string name="permission_not_granted">Permission not granted.</string>
     <string name="record_audio_permission_granted">You can now record audio. Tap record again to start recording.</string>
+    <string name="select_language_prompt">Please select a language</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

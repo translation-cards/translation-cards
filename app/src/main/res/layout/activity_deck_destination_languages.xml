@@ -61,6 +61,13 @@
         android:textColorHighlight="@color/colorPrimary"
         android:textColorHint="@color/borderColor" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/select_language_button"
+        android:layout_below="@id/enter_deck_destination_input"
+        android:text="Select Language"/>
+
     <!--Nav Bar-->
     <RelativeLayout
         android:layout_width="match_parent"

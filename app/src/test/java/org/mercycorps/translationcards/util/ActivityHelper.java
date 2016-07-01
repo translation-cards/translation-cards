@@ -20,7 +20,7 @@ public class ActivityHelper<T extends AbstractTranslationCardsActivity> {
         this.instanceOfClass = instanceOfClass;
     }
 
-    protected Activity getActivityWithIntent(Intent intent) {
+    public Activity getActivityWithIntent(Intent intent) {
         controller = Robolectric.buildActivity(instanceOfClass);
         activity = controller.withIntent(intent).create().get();
         return activity;

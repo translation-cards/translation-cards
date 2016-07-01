@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -156,6 +157,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
         assertNull(shadowOf(activity).getNextStartedActivity());
     }
 
+    //TODO: Delete test
     @Test
     public void shouldAddLanguageFromTextFieldToSelectedLanguageList() {
         NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
@@ -168,6 +170,22 @@ public class EnterDeckDestinationLanguagesActivityTest {
         assertTrue(newDeckContext.getDestinationLanguages().contains("Arabic"));
     }
 
+    @Test
+    public void shouldAddLanguageOnActivityResult() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity)helper.createActivityToTestWithContext(newDeckContext);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "Some Language");
+
+        activity.showLanguageSelector();
+        Intent launchSelectorIntent = shadowOf(activity).getNextStartedActivity();
+        shadowOf(activity).receiveResult(launchSelectorIntent, Activity.RESULT_OK, resultIntent);
+
+        assertTrue(newDeckContext.getDestinationLanguages().contains("Some Language"));
+    }
+
+    //TODO: refactor test
     @Test
     public void shouldNotAddLanguageIfAlreadyPresent() {
         NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
