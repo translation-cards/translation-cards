@@ -62,7 +62,7 @@ public class DestinationLanguagesAdapter extends BaseAdapter {
         chip.setPadding(padding, padding, padding, padding);
         chip.setBackgroundResource(R.drawable.language_chip_background);
 
-        BitmapDrawable img = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_highlight_off_white_24dp);
+        BitmapDrawable img = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_cancel_white_24dp);
         if(img != null) {
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(img.getBitmap(), densityPixelsToPixels(20), densityPixelsToPixels(20), false);
             BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), scaledBitmap);
