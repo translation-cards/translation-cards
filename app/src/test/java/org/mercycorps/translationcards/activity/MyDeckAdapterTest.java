@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
@@ -17,9 +19,11 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.robolectric.Robolectric;
@@ -37,7 +41,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -62,11 +68,26 @@ public class MyDeckAdapterTest {
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
-    private final DbManager dbManager = ((TestMainApplication) RuntimeEnvironment.application).getDbManager();
+    private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
+    private DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
+    private DatabaseHelper databaseHelper;
+    private SQLiteDatabase sqlLiteDatabase;
+    private Cursor cursor;
 
     @Before
     public void setUp() throws Exception {
-        when(dbManager.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
+        cursor = mock(Cursor.class);
+        when(cursor.getCount()).thenReturn(1);
+        when(cursor.moveToFirst()).thenReturn(true);
+        when(cursor.getString(anyInt())).thenReturn("cursor string");
+        when(cursor.getLong(anyInt())).thenReturn(12345l);
+        when(cursor.getInt(anyInt())).thenReturn(1234);
+        sqlLiteDatabase = mock(SQLiteDatabase.class);
+        when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
+        databaseHelper = mock(DatabaseHelper.class);
+        when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
+
+        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
         deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, DEFAULT_SOURCE_LANGUAGE_ISO);
         view = getAdapterViewForDeck(deck);
     }
@@ -172,7 +193,7 @@ public class MyDeckAdapterTest {
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(dbManager).deleteDeck(deck.getDbId());
+        verify(deckRepository).deleteDeck(deck.getDbId());
     }
 
     @Test

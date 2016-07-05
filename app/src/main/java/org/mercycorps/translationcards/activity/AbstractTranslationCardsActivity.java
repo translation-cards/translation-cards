@@ -13,10 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-
-import java.util.List;
+import org.mercycorps.translationcards.model.DatabaseHelper;
 
 import butterknife.ButterKnife;
 
@@ -77,8 +74,8 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
         }
     };
 
-    protected DbManager getDbManager(){
-        return ((MainApplication) getApplication()).getDbManager();
+    protected DatabaseHelper getDbManager(){
+        return ((MainApplication) getApplication()).getDatabaseHelper();
     }
 
     protected void updateListViewCentered(ListView view, Boolean isEmpty) {

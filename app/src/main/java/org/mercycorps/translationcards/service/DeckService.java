@@ -1,24 +1,23 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.model.Dictionary;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DeckService {
 
-    private DbManager dbManager;
+    private DeckRepository deckRepository;
     private List<Deck> decks;
     private Deck currentDeck;
     private LanguageService languageService;
 
-    public DeckService(DbManager dbManager, LanguageService languageService) {
-        this.dbManager = dbManager;
+    public DeckService(LanguageService languageService, List<Deck> decks, DeckRepository deckRepository) {
+        this.deckRepository = deckRepository;
         this.languageService = languageService;
-        decks = Arrays.asList(this.dbManager.getAllDecks());
-        currentDeck = decks.get(0);
+        this.decks = decks;
+        currentDeck = this.decks.get(0);
     }
 
 
@@ -27,7 +26,7 @@ public class DeckService {
     }
 
     public void save(Deck deck, String languages) {
-        Long deckID = dbManager.addDeck(
+        Long deckID = deckRepository.addDeck(
                 deck.getTitle(),
                 deck.getAuthor(),
                 deck.getTimestamp(),
@@ -50,7 +49,7 @@ public class DeckService {
     }
 
     public void delete(Deck deck) {
-        dbManager.deleteDeck(deck.getDbId());
+        deckRepository.deleteDeck(deck.getDbId());
     }
 
     public void setCurrentDeck(Deck deck) {

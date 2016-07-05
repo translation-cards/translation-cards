@@ -13,13 +13,13 @@ import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 
@@ -143,9 +143,9 @@ public class TestAddTranslationCardActivityHelper {
         return getContextFromIntent(activity).getNewTranslations().get(0);
     }
 
-    public static DbManager getDbManager() {
+    public static TranslationService getTranslationService() {
 
-        return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getDbManager();
+        return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getTranslationService();
     }
 
     public static void setupAudioPlayerManager() throws AudioFileNotSetException {

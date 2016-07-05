@@ -2,33 +2,29 @@ package org.mercycorps.translationcards;
 
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
-import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.service.TranslationService;
-import org.mockito.stubbing.Answer;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
-    private DbManager dbManager = mock(DbManager.class);
+    private DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
     private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
     private AudioPlayerManager audioPlayerManager = mock(AudioPlayerManager.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
@@ -38,10 +34,13 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
     private PermissionService permissionService = mock(PermissionService.class);
+    private DeckRepository deckRepository = mock(DeckRepository.class);
+    private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
+    private TranslationRepository translationRepository = mock(TranslationRepository.class);
 
     @Override
     public void onCreate() {
-        isTest = false;
+        isTest = true;
         super.onCreate();
     }
     @Override
@@ -60,8 +59,8 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public DbManager getDbManager() {
-        return dbManager;
+    public DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
     }
 
     @Override
@@ -113,6 +112,20 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public PermissionService getPermissionService() {
         return permissionService;
+    }
+
+    public DeckRepository getDeckRepository() {
+        return deckRepository;
+    }
+
+    @Override
+    public DictionaryRepository getDictionaryRepository() {
+        return dictionaryRepository;
+    }
+
+    @Override
+    public TranslationRepository getTranslationRepository() {
+        return translationRepository;
     }
 
 }

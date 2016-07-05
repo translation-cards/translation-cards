@@ -6,8 +6,8 @@ import android.content.Intent;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 
 import java.util.Arrays;
 import java.util.Collections;

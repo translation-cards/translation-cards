@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.model;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -6,10 +6,8 @@ import android.media.MediaPlayer;
 
 import org.mercycorps.translationcards.MainApplication;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -99,6 +97,6 @@ public class Translation implements Serializable {
     }
 
     public void saveWithDictionary(Long dictionaryId) {
-        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
+        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
     }
 }

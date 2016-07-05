@@ -1,10 +1,6 @@
 package org.mercycorps.translationcards.ui;
 
-import android.content.Context;
-
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.Dictionary;
 
 import java.util.List;
 

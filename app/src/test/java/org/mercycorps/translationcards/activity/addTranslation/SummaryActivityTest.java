@@ -2,12 +2,8 @@ package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,8 +35,8 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDbManager;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDecoratedMediaManager;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getTranslationService;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
@@ -156,7 +152,7 @@ public class SummaryActivityTest {
     public void shouldSaveTranslationContextWhenUserClicksSave() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.save_translation_button);
-        verify(getDbManager()).saveTranslationContext(any(NewTranslation.class));
+        verify(getTranslationService()).saveTranslationContext(any(NewTranslation.class));
     }
 
     @Test

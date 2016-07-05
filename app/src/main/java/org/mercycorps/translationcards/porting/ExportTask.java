@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.model.Deck;
 
 import java.io.File;
 

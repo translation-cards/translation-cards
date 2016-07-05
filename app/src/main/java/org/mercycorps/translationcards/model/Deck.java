@@ -1,7 +1,7 @@
-package org.mercycorps.translationcards.data;
+package org.mercycorps.translationcards.model;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.repository.LanguageRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -33,7 +33,7 @@ public class Deck implements Serializable {
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.sourceLanguage = Language.withISO(sourceLanguageIso);
+        this.sourceLanguage = new LanguageRepository().withISO(sourceLanguageIso);
         dictionaries = null;
     }
 
@@ -89,7 +89,7 @@ public class Deck implements Serializable {
 
     public Dictionary[] getDictionaries() {
         if (dictionaries == null) {
-            dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().getAllDictionariesForDeck(dbId);
+            dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().getAllDictionariesForDeck(dbId);
         }
         return dictionaries;
     }
@@ -99,7 +99,7 @@ public class Deck implements Serializable {
     }
 
     public void delete() {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDbManager().deleteDeck(dbId);
+        ((MainApplication) MainApplication.getContextFromMainApp()).getDeckRepository().deleteDeck(dbId);
     }
 
     public void setSourceLanguage(Language language){

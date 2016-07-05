@@ -6,8 +6,8 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.view.DeckItem;
 

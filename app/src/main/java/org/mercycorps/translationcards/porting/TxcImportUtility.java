@@ -4,11 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
@@ -42,10 +46,15 @@ public class TxcImportUtility {
     private static final int BUFFER_SIZE = 2048;
     private static final String DEFAULT_SOURCE_LANGUAGE = "eng";
     private LanguageService languageService;
+    private DeckRepository deckRepository;
+    private TranslationRepository translationRepository;
+    private DictionaryRepository dictionaryRepository;
 
-    public TxcImportUtility(LanguageService languageService) {
-
+    public TxcImportUtility(LanguageService languageService, DeckRepository deckRepository, TranslationRepository translationRepository, DictionaryRepository dictionaryRepository) {
         this.languageService = languageService;
+        this.deckRepository = deckRepository;
+        this.translationRepository = translationRepository;
+        this.dictionaryRepository = dictionaryRepository;
     }
 
     public ImportSpec prepareImport(Context context, Uri source) throws ImportException {
@@ -57,22 +66,37 @@ public class TxcImportUtility {
         return getIndex(targetDir, indexFilename, filename, hash);
     }
 
-    public void executeImport(Context context, ImportSpec importSpec) throws ImportException {
-        loadData(context, importSpec, false);
+    public void executeImport(ImportSpec importSpec) throws ImportException {
+        loadData(importSpec);
     }
 
     public void abortImport(ImportSpec importSpec) {
         importSpec.dir.delete();
     }
 
-    public boolean isExistingDeck(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context, languageService);
-        return dbm.hasDeckWithHash(importSpec.hash);
+    public boolean isExistingDeck(ImportSpec importSpec) {
+        return deckRepository.hasDeckWithHash(importSpec.hash);
     }
 
-    public long otherVersionExists(Context context, ImportSpec importSpec) {
-        DbManager dbm = new DbManager(context, languageService);
-        return dbm.hasDeckWithExternalId(importSpec.externalId);
+    public long otherVersionExists(ImportSpec importSpec) {
+        return deckRepository.retrieveDeckWithExternalId(importSpec.externalId);
+    }
+
+    public void loadBundledDeck(SQLiteDatabase db) {
+        JSONObject jsonObject;
+        try {
+            Context context = MainApplication.getContextFromMainApp();
+            InputStream is = context.getAssets().open("card_deck.json");
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+            jsonObject = new JSONObject(new String(buffer, "UTF-8"));
+
+            ImportSpec importSpec = buildImportSpec(new File(""), "", jsonObject);
+            loadAssetData(db, context, importSpec);
+        } catch (IOException | JSONException | ImportException e) {
+            Log.d(TranslationRepository.TAG, e.getMessage());
+        }
     }
 
     private String getFileHash(Context context, Uri source) throws ImportException {
@@ -291,17 +315,16 @@ public class TxcImportUtility {
         return spec;
     }
 
-    public void loadData(Context context, ImportSpec importSpec, boolean isAsset) {
-        DbManager dbm = new DbManager(context, languageService);
-        long deckId = dbm.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
+    public void loadData(ImportSpec importSpec) {
+        long deckId = deckRepository.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbm.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 File cardFile = new File(importSpec.dir, card.filename);
-                dbm.addTranslation(
+                translationRepository.addTranslation(
                         dictionaryId, card.label, false, cardFile.getAbsolutePath(), dictionary.cards.size() - j,
                         card.translatedText);
             }
@@ -309,15 +332,14 @@ public class TxcImportUtility {
     }
 
     public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
-        DbManager dbManager = new DbManager(context, languageService);
-        long deckId = dbManager.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+        long deckId = deckRepository.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dbManager.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
-                dbManager.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
+                translationRepository.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
             }
         }
     }

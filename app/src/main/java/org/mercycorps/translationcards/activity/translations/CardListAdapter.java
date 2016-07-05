@@ -20,7 +20,7 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;

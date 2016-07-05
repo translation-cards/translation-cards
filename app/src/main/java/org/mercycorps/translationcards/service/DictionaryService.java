@@ -1,22 +1,20 @@
 package org.mercycorps.translationcards.service;
 
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DictionaryService {
 
-    private DbManager dbManager;
+    private DictionaryRepository dictionaryRepository;
     Dictionary currentDictionary;
     DeckService deckService;
     int currentDictionaryIndex;
 
-    public DictionaryService(DbManager dbManager, DeckService deckService) {
-        this.dbManager = dbManager;
+    public DictionaryService(DictionaryRepository dictionaryRepository, DeckService deckService) {
+        this.dictionaryRepository = dictionaryRepository;
         this.deckService = deckService;
         currentDictionaryIndex = 0;
         currentDictionary = getDictionariesForCurrentDeck().get(currentDictionaryIndex);
@@ -24,7 +22,7 @@ public class DictionaryService {
 
     public List<Dictionary> getDictionariesForCurrentDeck() {
         return Arrays.asList(
-                dbManager.getAllDictionariesForDeck(
+                dictionaryRepository.getAllDictionariesForDeck(
                         deckService.currentDeck().getDbId()));
     }
 

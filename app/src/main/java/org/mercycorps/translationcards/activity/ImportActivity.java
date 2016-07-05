@@ -18,9 +18,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.DbManager;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
@@ -32,13 +36,13 @@ public class ImportActivity extends AppCompatActivity {
     private Uri source;
     private BroadcastReceiver onDownloadComplete;
     private AlertDialog downloadDialog;
-    private LanguageService languageService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        languageService = ((MainApplication)getApplication()).getLanguageService();
-        portingUtility = new TxcImportUtility(languageService);
+
+        portingUtility = createImportUtility();
+
         source = getIntent().getData();
 
         onDownloadComplete = new BroadcastReceiver() {
@@ -51,6 +55,14 @@ public class ImportActivity extends AppCompatActivity {
         registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         requestPermissionsAndLoadData();
+    }
+
+    private TxcImportUtility createImportUtility() {
+        LanguageService languageService = ((MainApplication)getApplication()).getLanguageService();
+        DeckRepository deckRepository = ((MainApplication)getApplication()).getDeckRepository();
+        DictionaryRepository dictionaryRepository = ((MainApplication)getApplication()).getDictionaryRepository();
+        TranslationRepository translationRepository = ((MainApplication)getApplication()).getTranslationRepository();
+        return new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
     }
 
     protected void requestPermissionsAndLoadData() {
@@ -134,20 +146,20 @@ public class ImportActivity extends AppCompatActivity {
             TxcImportUtility.ImportSpec importSpec =
                     portingUtility.prepareImport(ImportActivity.this, source);
             // Check if it's a deck we've already imported.
-            if (false && portingUtility.isExistingDeck(this, importSpec)) {
+            if (false && portingUtility.isExistingDeck(importSpec)) {
                 portingUtility.abortImport(importSpec);
                 alertUserOfFailure(getString(R.string.import_failure_existing_deck));
                 return;
             }
             // Check if it's a different version of a deck we've already imported.
             if (importSpec.externalId != null && !importSpec.externalId.isEmpty()) {
-                long otherVersion = portingUtility.otherVersionExists(this, importSpec);
+                long otherVersion = portingUtility.otherVersionExists(importSpec);
                 if (otherVersion != -1) {
                     handleVersionOverride(importSpec, otherVersion);
                     return;
                 }
             }
-            portingUtility.executeImport(this, importSpec);
+            portingUtility.executeImport(importSpec);
         } catch (ImportException e) {
             handleError(e);
             return;
@@ -167,7 +179,7 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importSpec);
+                                    portingUtility.executeImport(importSpec);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
@@ -176,13 +188,12 @@ public class ImportActivity extends AppCompatActivity {
                                 break;
                             case 2:
                                 try {
-                                    portingUtility.executeImport(ImportActivity.this, importSpec);
+                                    portingUtility.executeImport(importSpec);
                                 } catch (ImportException e) {
                                     handleError(e);
                                     return;
                                 }
-                                DbManager dbm = new DbManager(ImportActivity.this, languageService);
-                                dbm.deleteDeck(otherVersion);
+                                ((MainApplication)getApplication()).getDeckRepository().deleteDeck(otherVersion);
                                 goToMainScreen();
                                 break;
                         }

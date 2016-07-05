@@ -5,9 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.Deck;
-import org.mercycorps.translationcards.data.Dictionary;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 
 import java.io.File;
 import java.io.FileInputStream;

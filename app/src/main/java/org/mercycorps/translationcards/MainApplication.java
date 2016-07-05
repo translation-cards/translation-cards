@@ -6,8 +6,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Repository;
+import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.porting.TxcImportUtility;
+import org.mercycorps.translationcards.repository.DeckRepository;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
@@ -21,6 +24,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -32,7 +36,8 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class MainApplication extends Application {
 
-    private DbManager dbManager;
+    public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
+    private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
     private AudioPlayerManager audioPlayerManager;
     private static Context context;
@@ -41,10 +46,13 @@ public class MainApplication extends Application {
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
-    private Repository repository;
+    private TranslationRepository translationRepository;
     protected boolean isTest = false;
     private LanguageService languageService;
     private PermissionService permissionService;
+    private DeckRepository deckRepository;
+    private DictionaryRepository dictionaryRepository;
+    private TxcImportUtility txcImportUtility;
 
     @Override
     public void onCreate() {
@@ -53,7 +61,6 @@ public class MainApplication extends Application {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         languageService = new LanguageService();
         permissionService = new PermissionService();
-        dbManager = new DbManager(getApplicationContext(), languageService);
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
@@ -61,14 +68,25 @@ public class MainApplication extends Application {
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         if(isTest) return;
-        repository = new Repository(dbManager);
-        deckService = new DeckService(dbManager, languageService);
-        dictionaryService = new DictionaryService(dbManager, deckService);
-        translationService = new TranslationService(repository, dictionaryService);
+        databaseHelper = new DatabaseHelper(context);
+        translationRepository = new TranslationRepository(databaseHelper);
+        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository);
+        deckRepository = new DeckRepository(dictionaryRepository, databaseHelper);
+        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
+        checkForBundledDeckAndLoad(databaseHelper);
+        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
+        dictionaryService = new DictionaryService(dictionaryRepository, deckService);
+        translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
-    public DbManager getDbManager() {
-        return dbManager;
+    private void checkForBundledDeckAndLoad(DatabaseHelper dbHelper) {
+        if(deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID){
+            txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
+        }
+    }
+
+    public DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
     }
 
     public AudioRecorderManager getAudioRecorderManager() {
@@ -126,5 +144,17 @@ public class MainApplication extends Application {
 
     public PermissionService getPermissionService() {
         return permissionService;
+    }
+
+    public DeckRepository getDeckRepository() {
+        return deckRepository;
+    }
+
+    public DictionaryRepository getDictionaryRepository() {
+        return dictionaryRepository;
+    }
+
+    public TranslationRepository getTranslationRepository() {
+        return translationRepository;
     }
 }

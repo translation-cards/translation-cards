@@ -6,15 +6,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.data.DbManager;
-import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mockito.Mock;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
+
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
@@ -28,24 +29,21 @@ public class DeckServiceTest {
     private DeckService deckService;
     @Mock
     private Deck deck;
-    @Mock
-    private DbManager dbManager;
 
     private LanguageService languageService = ((TestMainApplication) RuntimeEnvironment.application).getLanguageService();
+    private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
 
     @Before
     public void setup() {
         initMocks(this);
-        when(dbManager.getAllDecks()).thenReturn(new Deck[]{deck});
-
-        deckService = new DeckService(dbManager, languageService);
+        deckService = new DeckService(languageService, Arrays.asList(deck), deckRepository);
     }
 
     @Test
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
         deckService.save(deck, "Arabic, Farsi");
 
-        verify(dbManager).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
+        verify(deckRepository).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
     }
 
 

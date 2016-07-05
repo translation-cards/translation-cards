@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.data.Deck;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -32,7 +31,7 @@ public class DeckTest {
     public void shouldDeleteDeckFromDBWhenDeleteIsCalled() {
         deck.delete();
 
-        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDbManager()).deleteDeck(deck.getDbId());
+        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDeckRepository()).deleteDeck(deck.getDbId());
     }
 
     @Test

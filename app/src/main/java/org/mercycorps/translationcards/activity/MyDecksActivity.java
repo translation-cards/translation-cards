@@ -11,7 +11,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.data.Deck;
+import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 
@@ -29,6 +30,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
+    private DeckRepository deckRepository;
 
     @Bind(R.id.my_decks_list)
     ListView myDeckListView;
@@ -44,6 +46,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         setContentView(R.layout.activity_my_decks);
         deckService = ((MainApplication)getApplication()).getDeckService();
         dictionaryService = ((MainApplication)getApplication()).getDictionaryService();
+        deckRepository = ((MainApplication)getApplication()).getDeckRepository();
+
     }
 
     @Override
@@ -143,7 +147,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private List<Deck> getDecks() {
-        Deck[] decks = getDbManager().getAllDecks();
+        Deck[] decks = deckRepository.getAllDecks();
         if (decks == null) return new ArrayList<>();
         return Arrays.asList(decks);
     }

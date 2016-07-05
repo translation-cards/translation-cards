@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.data.Translation;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
