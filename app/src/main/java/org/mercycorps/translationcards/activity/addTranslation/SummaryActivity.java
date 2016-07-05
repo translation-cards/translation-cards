@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.data.Translation;
@@ -23,8 +26,8 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
-    public static final float DISABLED_OPACITY = .4f;
-    public static final int DEFAULT_OPACITY = 1;
+    public static final int DISABLED_OPACITY = 235;
+    public static final int DEFAULT_OPACITY = 255;
     public static final int DEFAULT_BITMAP_OPACITY = 255;
     public static final int DISABLED_BITMAP_OPACITY = 100;
     @Bind(R.id.origin_translation_text)TextView sourceTextView;
@@ -137,13 +140,16 @@ public class SummaryActivity extends AddTranslationActivity {
     }
     private void greyOutCardIfNoAudioTranslation() {
         Drawable bg=audioIcon.getDrawable();
+        View v = findViewById(R.id.translation_card_parent);
+        LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
+        final GradientDrawable shape = (GradientDrawable)   bgDrawable.findDrawableByLayerId(R.id.card_top_background);
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
-            translationCardParent.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey)); //.setAlpha(DISABLED_OPACITY);
+            shape.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
             bg.setAlpha(DISABLED_BITMAP_OPACITY);
         }
         else{
-            translationCardParent.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundColor)); //.setAlpha(DEFAULT_OPACITY);
+            shape.setAlpha(DEFAULT_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
             bg.setAlpha(DEFAULT_BITMAP_OPACITY);
         }

@@ -9,6 +9,7 @@
 
     <LinearLayout
         android:id="@+id/translation_card_parent"
+        android:background="@drawable/card_top_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

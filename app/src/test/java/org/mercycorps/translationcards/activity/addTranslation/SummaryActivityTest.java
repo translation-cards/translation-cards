@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -289,15 +291,15 @@ public class SummaryActivityTest {
 
 
     @Test
+    @TargetApi(19)
     public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
 
         LinearLayout translationCardParent = findLinearLayout(activity, R.id.translation_card_parent);
-        int backgroundColor = Color.TRANSPARENT;
-        Drawable background = translationCardParent.getBackground();
-        if (background instanceof ColorDrawable)
-            backgroundColor = ((ColorDrawable) background).getColor();
-        assertEquals(backgroundColor, ContextCompat.getColor(activity, R.color.lightGrey));
+        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
+        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+
+        assertEquals(SummaryActivity.DISABLED_OPACITY, background.getAlpha());
     }
 
     @Test
