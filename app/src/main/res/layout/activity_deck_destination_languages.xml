@@ -43,30 +43,29 @@
         android:text="@string/enter_deck_destination_language_description"
         android:textSize="16.5sp" />
 
-    <AutoCompleteTextView
-        android:id="@+id/enter_deck_destination_input"
+    <TextView
+        android:id="@+id/add_language_chip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/enter_deck_destination_description"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="24dp"
-        android:hint="@string/enter_deck_destination_input"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textColorHighlight="@color/colorPrimary"
-        android:textColorHint="@color/borderColor" />
+        android:layout_below="@id/enter_deck_destination_description"
+        android:background="@drawable/language_chip_background"
+        android:padding="8dp"
+        android:text="@string/add_language_chip_label"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/language_chip_grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/select_language_button"
-        android:layout_below="@id/enter_deck_destination_input"
-        android:text="Select Language"/>
+        android:layout_below="@id/add_language_chip"
+        android:focusable="true"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
+
 
     <!--Nav Bar-->
     <RelativeLayout
@@ -108,24 +107,28 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_selected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

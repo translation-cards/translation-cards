@@ -2,10 +2,11 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Test;
@@ -16,8 +17,7 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.HashSet;
+import org.robolectric.shadows.ShadowAbsListView;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -26,10 +26,6 @@ import static org.junit.Assert.assertNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -38,7 +34,6 @@ import static org.robolectric.Shadows.shadowOf;
 public class EnterDeckDestinationLanguagesActivityTest {
 
     private static final String A_LANGUAGE = "Arabic";
-    private static final String EMPTY_LANGUAGE = "";
     private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
 
     @After
@@ -47,11 +42,28 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldGoToAuthorAndLockActivityWhenNextButtonClicked() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE, false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+    public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndAdapterHasLanguages() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        languagesAdapter.add(A_LANGUAGE);
+        activity.updateNextButtonState();
         click(activity, R.id.enter_destination_next_label);
         assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    public void shouldAddLanguageSelectorResultToAdapter() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        Intent data = new Intent();
+        data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);
+
+        assertEquals("English", languagesAdapter.getItem(0));
     }
 
     @Test
@@ -83,71 +95,103 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldDisplayCorrectHintTextWhenDestinationLanguageInputFieldIsEmpty() {
+    public void shouldDisplayLanguageChips() {
         Activity activity = helper.createActivityToTest();
-        TextView input = findTextView(activity, R.id.enter_deck_destination_input);
-        assertEquals("e.g. Arabic, Farsi, Pashto", input.getHint().toString());
+        GridView chipGrid = (GridView) activity.findViewById(R.id.language_chip_grid);
+        ShadowAbsListView gridShadow = shadowOf(chipGrid);
+        DestinationLanguagesAdapter chipAdapter = (DestinationLanguagesAdapter) chipGrid.getAdapter();
+        chipAdapter.add("French");
+        chipAdapter.add("English");
+        chipAdapter.add("Spanish");
+        gridShadow.populateItems();
+        int chipCount = chipGrid.getCount();
+        if (chipCount > 0) {
+            assertEquals(3, chipCount);
+            TextView frenchChip = (TextView) chipGrid.getChildAt(0);
+            assertEquals("French", frenchChip.getText().toString());
+            TextView englishChip = (TextView) chipGrid.getChildAt(1);
+            assertEquals("English", englishChip.getText().toString());
+            TextView spanishChip = (TextView) chipGrid.getChildAt(2);
+            assertEquals("Spanish", spanishChip.getText().toString());
+        } else {
+            Assert.fail("No language chips found in GridView");
+        }
+    }
+
+
+    @Test
+    public void shouldGoToDestinationLanguageSelectorActivity() {
+        Activity activity = helper.createActivityToTest();
+        click(activity, R.id.add_language_chip);
+        assertEquals(DestinationLanguageSelectorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldUpdateNewDeckContextWhenUserClicksSaveWithLanguages() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        String languagesInput = "Arabic, Farsi";
-        setText(activity, R.id.enter_deck_destination_input, languagesInput);
+    public void shouldAddSelectedLanguagesToDeckContextWhenNextButtonClicked() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        languagesAdapter.add(A_LANGUAGE);
+        activity.updateNextButtonState();
         click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext).updateLanguagesInput(languagesInput);
+        assertEquals(1, newDeckContext.getDestinationLanguages().size());
+        assertTrue(newDeckContext.getDestinationLanguages().contains(A_LANGUAGE));
     }
 
     @Test
     public void shouldUpdateNewDeckContextWhenUserClicksBack() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic, Farsi");
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        languagesAdapter.add(A_LANGUAGE);
         click(activity, R.id.enter_destination_back_arrow);
-        verify(newDeckContext).updateLanguagesInput("Arabic, Farsi");
+        assertTrue(newDeckContext.getDestinationLanguages().contains(A_LANGUAGE));
     }
 
     @Test
     public void shouldChangeNextButtonColorWhenDestinationLanguageIsNotEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        languagesAdapter.add(A_LANGUAGE);
+        activity.updateNextButtonState();
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
     }
 
     @Test
     public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        languagesAdapter.add(A_LANGUAGE);
+        activity.updateNextButtonState();
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldChangeNextButtonColorWhenDestinationLanguageIsSetEmpty() {
+    public void shouldChangeNextButtonTextColorAndImageWhenDestinationLanguageIsSetEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
-        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
-        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
-    }
-
-    @Test
-    public void shouldChangeNextButtonArrowColorToDisabledWhenDestinationLanguageIsSetEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
-        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
         assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldFillDestinationLanguageFieldWhenActivityIsCreatedWithLanguages() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "Arabic", false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView destinationLanguageField = findTextView(activity, R.id.enter_deck_destination_input);
-        assertEquals("Arabic", destinationLanguageField.getText().toString());
+    public void shouldCreateLanguageChipsWhenActivityIsCreatedWithLanguages() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        assertEquals(1, languagesAdapter.getCount());
+        assertEquals(A_LANGUAGE, languagesAdapter.getItem(0));
     }
 
     @Test
@@ -155,49 +199,5 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
-    }
-
-    //TODO: Delete test
-    @Test
-    public void shouldAddLanguageFromTextFieldToSelectedLanguageList() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        AutoCompleteTextView destinationLanguageInput = (AutoCompleteTextView) findView(activity, R.id.enter_deck_destination_input);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic");
-        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
-
-        assertEquals(1, newDeckContext.getDestinationLanguages().size());
-        assertTrue(newDeckContext.getDestinationLanguages().contains("Arabic"));
-    }
-
-    @Test
-    public void shouldAddLanguageOnActivityResult() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity)helper.createActivityToTestWithContext(newDeckContext);
-
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "Some Language");
-
-        activity.showLanguageSelector();
-        Intent launchSelectorIntent = shadowOf(activity).getNextStartedActivity();
-        shadowOf(activity).receiveResult(launchSelectorIntent, Activity.RESULT_OK, resultIntent);
-
-        assertTrue(newDeckContext.getDestinationLanguages().contains("Some Language"));
-    }
-
-    //TODO: refactor test
-    @Test
-    public void shouldNotAddLanguageIfAlreadyPresent() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "", false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        AutoCompleteTextView destinationLanguageInput = (AutoCompleteTextView) findView(activity, R.id.enter_deck_destination_input);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic");
-        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic");
-        destinationLanguageInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
-
-        HashSet<String> destinationLanguages = newDeckContext.getDestinationLanguages();
-        assertEquals(1, destinationLanguages.size());
-        assertTrue(destinationLanguages.contains("Arabic"));
     }
 }

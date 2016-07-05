@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class LanguageDisplayUtil {
 
-    public static String getDestLanguageListDisplay(List<Dictionary> dictionaries) {
+    public static String getDestLanguageFromDictionariesForDisplay(List<Dictionary> dictionaries) {
         if (dictionaries.size() == 0) {
             return "";
         }
@@ -20,6 +20,19 @@ public class LanguageDisplayUtil {
         for (int i = 1; i < dictionaries.size(); i++) {
             sb.append("  ");
             sb.append(dictionaries.get(i).getLanguage().toUpperCase());
+        }
+        return sb.toString();
+    }
+
+    public static String getDestLanguagesFromStringsForDisplay(List<String> languages) {
+        if (languages.size() == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(languages.get(0).toUpperCase());
+        for (int i = 1; i < languages.size(); i++) {
+            sb.append("  ");
+            sb.append(languages.get(i).toUpperCase());
         }
         return sb.toString();
     }

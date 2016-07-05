@@ -9,15 +9,14 @@ import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 import org.mercycorps.translationcards.view.DeckItem;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-
-import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLanguageListDisplay;
 
 public class ReviewAndSaveActivity extends AddDeckActivity {
     @Bind(R.id.translation_languages) TextView translationLanguagesTextView;
@@ -58,14 +57,10 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
      * So we must fill this field from the NewDeckContext's languagesInput String
      */
     private void fillLanguagesListTextView() {
-        String languagesInput = newDeckContext.getLanguagesInput();
-        if (languagesInput != null) {
-            String[] languagesList = languagesInput.split(",");
-            List<Dictionary> dictionaries = new ArrayList<>();
-            for (String language : languagesList) {
-                dictionaries.add(new Dictionary(language.trim()));
-            }
-            translationLanguagesTextView.setText(getDestLanguageListDisplay(dictionaries));
+        Set<String> destinationLanguages = newDeckContext.getDestinationLanguages();
+        if(destinationLanguages != null) {
+            String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(new ArrayList<>(destinationLanguages));
+            translationLanguagesTextView.setText(formattedLanguages);
         }
     }
 }

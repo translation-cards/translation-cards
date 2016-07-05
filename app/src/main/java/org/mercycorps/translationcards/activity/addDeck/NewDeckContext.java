@@ -6,25 +6,26 @@ import org.mercycorps.translationcards.model.Language;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 public class NewDeckContext implements Serializable {
     private static final String NO_VALUE = "";
     private static final String ENGLISH_ISO = "en";
 
     private Deck deck;
-    private String languagesInput;
     private boolean isEdit;
-    private final HashSet<String> destinationLanguages;
+    private final LinkedHashSet<String> destinationLanguages;
 
-    public NewDeckContext(){
-        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), NO_VALUE, false);
+    public NewDeckContext() {
+        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), false);
     }
 
-    public NewDeckContext(Deck deck, String languagesInput, boolean isEdit) {
+    public NewDeckContext(Deck deck, boolean isEdit) {
         this.deck = deck;
-        this.languagesInput = languagesInput;
         this.isEdit = isEdit;
-        destinationLanguages = new HashSet<>();
+        destinationLanguages = new LinkedHashSet<>();
     }
 
     public void setSourceLanguage(Language language) {
@@ -40,11 +41,17 @@ public class NewDeckContext implements Serializable {
     }
 
     public String getLanguagesInput() {
-        return languagesInput;
-    }
-
-    public void updateLanguagesInput(String input) {
-        languagesInput = input;
+        if (destinationLanguages.size() == 0) {
+            return "";
+        }
+        Iterator<String> iterator = destinationLanguages.iterator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(iterator.next());
+        while (iterator.hasNext()) {
+            sb.append(", ");
+            sb.append(iterator.next());
+        }
+        return sb.toString();
     }
 
     public String getAuthor() {
@@ -55,7 +62,9 @@ public class NewDeckContext implements Serializable {
         deck.setAuthor(author);
     }
 
-    public String getSourceLanguage(){ return deck.getSourceLanguageName(); }
+    public String getSourceLanguage() {
+        return deck.getSourceLanguageName();
+    }
 
     public Deck getDeck() {
         return deck;
@@ -67,5 +76,9 @@ public class NewDeckContext implements Serializable {
 
     public HashSet<String> getDestinationLanguages() {
         return destinationLanguages;
+    }
+
+    public void addDestinationLanguages(List<String> languages) {
+        destinationLanguages.addAll(languages);
     }
 }

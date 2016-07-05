@@ -11,13 +11,12 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 
 import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import static org.mercycorps.translationcards.ui.LanguageDisplayUtil.getDestLanguageListDisplay;
 
 public class DeckItem extends LinearLayout {
     public static final String DELETE_DECK = "Delete";
@@ -72,7 +71,7 @@ public class DeckItem extends LinearLayout {
         deckInformationTextView.setText(deck.getDeckInformation());
         originLanguageTextView.setText(deck.getSourceLanguageName().toUpperCase());
         showLockIconIfDeckIsLocked(deck);
-        translationLanguagesTextView.setText(getDestLanguageListDisplay(Arrays.asList(deck.getDictionaries())));
+        translationLanguagesTextView.setText(LanguageDisplayUtil.getDestLanguageFromDictionariesForDisplay(Arrays.asList(deck.getDictionaries())));
         deckMenu.setVisibility(View.GONE);
     }
 

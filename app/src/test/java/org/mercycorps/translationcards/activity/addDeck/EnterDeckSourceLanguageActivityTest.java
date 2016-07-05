@@ -18,7 +18,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
@@ -108,7 +107,7 @@ public class EnterDeckSourceLanguageActivityTest {
 
     @Test
     public void shouldShowErrorMessageWhenActivityLoadedWithInvalidLanguage() {
-        NewDeckContext invalidIsoDeckContext = new NewDeckContext(new Deck("Some name", "Some Author", "", -1, true, "invalid"), "", false);
+        NewDeckContext invalidIsoDeckContext = new NewDeckContext(new Deck("Some name", "Some Author", "", -1, true, "invalid"), false);
 
         EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTestWithContext(invalidIsoDeckContext);
 
