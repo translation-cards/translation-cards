@@ -67,6 +67,31 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
+    public void shouldNotAddLanguageSelectorResultIfNull() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        Intent emptyIntent = new Intent();
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, emptyIntent);
+
+        assertEquals(0, languagesAdapter.getCount());
+    }
+
+    @Test
+    public void shouldNotAddLanguageSelectorResultIfInvalidResultCode() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
+        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        Intent data = new Intent();
+        data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_CANCELED, data);
+
+        assertEquals(0, languagesAdapter.getCount());
+    }
+
+    @Test
     public void shouldGoToEnterDeckSourceLanguageActivityWhenBackButtonIsClicked() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_back_arrow);

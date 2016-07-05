@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.widget.GridView;
@@ -63,9 +64,13 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String selectedLanguage = data.getStringExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
-        languageChipAdapter.add(selectedLanguage);
-        updateNextButtonState();
+        if(resultCode == Activity.RESULT_OK) {
+            String selectedLanguage = data.getStringExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
+            if (selectedLanguage != null) {
+                languageChipAdapter.add(selectedLanguage);
+            }
+            updateNextButtonState();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 

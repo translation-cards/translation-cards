@@ -3,6 +3,8 @@ package org.mercycorps.translationcards.activity.addDeck;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,7 @@ import butterknife.Bind;
 
 public class DestinationLanguageSelectorActivity extends AbstractTranslationCardsActivity {
     public static final String SELECTED_LANGUAGE_KEY = "selectedLanguage";
+    private static final int CANCEL_BUTTON_ID = 0;
     @Bind(R.id.languages_list)
     ListView languagesList;
     @Bind(R.id.language_filter_field)
@@ -38,6 +41,36 @@ public class DestinationLanguageSelectorActivity extends AbstractTranslationCard
         initListView();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case CANCEL_BUTTON_ID:
+                selectedLanguage = null;
+                finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, CANCEL_BUTTON_ID, Menu.NONE, R.string.misc_cancel);
+        MenuItem item = menu.findItem(CANCEL_BUTTON_ID);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void finish() {
+        Intent data = new Intent();
+        data.putExtra(SELECTED_LANGUAGE_KEY, selectedLanguage);
+        int result = selectedLanguage == null ? RESULT_CANCELED : RESULT_OK;
+        setResult(result, data);
+        super.finish();
+    }
+
     private void initListView() {
         languagesList.setAdapter(languagesAdapter);
         languagesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,15 +87,6 @@ public class DestinationLanguageSelectorActivity extends AbstractTranslationCard
         languagesAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
                 languageService.getLanguageNames());
-    }
-
-    @Override
-    public void finish() {
-        Intent data = new Intent();
-        data.putExtra(SELECTED_LANGUAGE_KEY, selectedLanguage);
-        int result = selectedLanguage == null? RESULT_CANCELED : RESULT_OK;
-        setResult(result, data);
-        super.finish();
     }
 
     private void initLanguagesFilter() {
@@ -86,6 +110,4 @@ public class DestinationLanguageSelectorActivity extends AbstractTranslationCard
     @Override
     public void setBitmapsForActivity() {
     }
-
-
 }
