@@ -5,6 +5,8 @@
     android:id="@+id/microphone_permission_dialog">
 
     <ImageView
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/record"

@@ -1,10 +1,13 @@
 package org.mercycorps.translationcards.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +52,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.CONTEXT_INTENT_KEY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
+import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mockito.Matchers.anyInt;
@@ -404,14 +408,15 @@ public class TranslationsActivityTest {
 
 
     @Test
+    @TargetApi(19)
     public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
         View translationsListItem = firstTranslationCardInListView();
-        LinearLayout translationCard = (LinearLayout)translationsListItem.findViewById(R.id.translation_card_parent);
-        int backgroundColor = Color.TRANSPARENT;
-        Drawable background = translationCard.getBackground();
-        if (background instanceof ColorDrawable)
-            backgroundColor = ((ColorDrawable) background).getColor();
-        assertEquals(backgroundColor, ContextCompat.getColor(translationsActivity, R.color.lightGrey));
+        LinearLayout translationCardParent = (LinearLayout)translationsListItem.findViewById(R.id.translation_card_parent);
+
+        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
+        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+
+        assertEquals(235, background.getAlpha());
 
     }
 

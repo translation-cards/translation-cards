@@ -615,16 +615,6 @@ public class RecordAudioActivityTest {
         verify(permissionService).requestPermissions(activity, Manifest.permission.RECORD_AUDIO, PermissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 
-    @Test
-    public void shouldShowNegativeToastMessageIfPermissionNotGranted() {
-        RecordAudioActivity activity = (RecordAudioActivity)helper.createActivityToTest();
-        int grantResults[] = {};
-        when(permissionService.permissionGranted(grantResults)).thenReturn(false);
-
-        activity.onRequestPermissionsResult(0, new String[]{}, grantResults);
-
-        assertEquals("Permission not granted.", ShadowToast.getTextOfLatestToast());
-    }
 
     @Test
     public void shouldShowPositiveToastMessageIfPermissionNotGranted() {
