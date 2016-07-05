@@ -26,7 +26,7 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
-    public static final int DISABLED_OPACITY = 235;
+    public static final int DISABLED_OPACITY = 250;
     public static final int DEFAULT_OPACITY = 255;
     public static final int DEFAULT_BITMAP_OPACITY = 255;
     public static final int DISABLED_BITMAP_OPACITY = 100;
@@ -139,19 +139,19 @@ public class SummaryActivity extends AddTranslationActivity {
         updateTextInTextView(translatedTextView, translatedText);
     }
     private void greyOutCardIfNoAudioTranslation() {
-        Drawable bg=audioIcon.getDrawable();
+        Drawable audioIconDrawable=audioIcon.getDrawable();
         View v = findViewById(R.id.translation_card_parent);
         LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
-        final GradientDrawable shape = (GradientDrawable)   bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+        GradientDrawable cardTopBackgroundDrawable = (GradientDrawable)   bgDrawable.findDrawableByLayerId(R.id.card_top_background);
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
-            shape.setAlpha(DISABLED_OPACITY);
+            cardTopBackgroundDrawable.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
-            bg.setAlpha(DISABLED_BITMAP_OPACITY);
+            audioIconDrawable.setAlpha(DISABLED_BITMAP_OPACITY);
         }
         else{
-            shape.setAlpha(DEFAULT_OPACITY);
+            cardTopBackgroundDrawable.setAlpha(DEFAULT_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
-            bg.setAlpha(DEFAULT_BITMAP_OPACITY);
+            audioIconDrawable.setAlpha(DEFAULT_BITMAP_OPACITY);
         }
         updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
     }

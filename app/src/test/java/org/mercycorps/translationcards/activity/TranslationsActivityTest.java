@@ -25,6 +25,7 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
+import org.mercycorps.translationcards.activity.translations.CardListAdapter;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -415,7 +416,7 @@ public class TranslationsActivityTest {
         LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
         GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
 
-        assertEquals(235, background.getAlpha());
+        assertEquals(CardListAdapter.DISABLED_OPACITY, background.getAlpha());
 
     }
 

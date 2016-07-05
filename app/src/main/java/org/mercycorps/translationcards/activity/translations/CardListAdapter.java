@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.model.Translation;
@@ -28,7 +27,7 @@ import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.List;
 
-class CardListAdapter extends ArrayAdapter<Translation> {
+public class CardListAdapter extends ArrayAdapter<Translation> {
 
     public static final int DISABLED_OPACITY = 235;
     public static final int DEFAULT_OPACITY = 255;
