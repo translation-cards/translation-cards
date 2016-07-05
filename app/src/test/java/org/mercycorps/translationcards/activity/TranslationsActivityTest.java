@@ -71,7 +71,7 @@ public class TranslationsActivityTest {
     public static final int DEFAULT_DECK_ID = 1;
     public static final String NO_VALUE = "";
     public static final long DEFAULT_LONG = -1;
-    public static final String DICTIONARY_TEST_LABEL = "TestLabel";
+    public static final String DICTIONARY_TEST_LABEL = "Testlabel";
     public static final String DICTIONARY_ARABIC_LABEL = "ARABIC";
     public static final String DICTIONARY_FARSI_LABEL = "FARSI";
     public static final String TRANSLATED_TEXT = "TranslatedText";

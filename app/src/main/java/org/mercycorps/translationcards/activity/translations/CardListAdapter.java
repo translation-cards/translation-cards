@@ -23,6 +23,7 @@ import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.media.CardAudioClickListener;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
             deleteView.setOnClickListener(new CardDeleteClickListener(translationsActivity, item, translationService, new AlertDialog.Builder(translationsActivity)));
         }
 
-        String currentDictionaryLabel = dictionaryService.currentDictionary().getLanguage();
+        String currentDictionaryLabel = LanguageService.getTitleCaseName(dictionaryService.currentDictionary().getLanguage());
 
         ProgressBar progressBar = (ProgressBar) translationItemView.findViewById(
                 R.id.list_item_progress_bar);

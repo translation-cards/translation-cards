@@ -131,7 +131,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private void fillSourceLanguageField() {
-        sourceLanguageInput.setText(languageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
+        sourceLanguageInput.setText(LanguageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
     }
 
     @Override

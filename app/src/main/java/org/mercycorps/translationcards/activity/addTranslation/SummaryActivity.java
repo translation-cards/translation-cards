@@ -11,12 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -133,7 +133,9 @@ public class SummaryActivity extends AddTranslationActivity {
     private void updateTranslatedTextView() {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage()));
+            String dictionaryLanguage = getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage();
+            String formattedLanguageName = LanguageService.getTitleCaseName(dictionaryLanguage);
+            translatedTextView.setHint(String.format("Add %s translation", formattedLanguageName));
         }
 
         updateTextInTextView(translatedTextView, translatedText);

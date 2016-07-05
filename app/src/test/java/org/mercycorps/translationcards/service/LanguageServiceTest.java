@@ -50,12 +50,12 @@ public class LanguageServiceTest {
 
     @Test
     public void shouldReturnATitleCasedString() {
-        String titleCasedString = languageService.getTitleCaseName("A title cased string");
+        String titleCasedString = LanguageService.getTitleCaseName("A title cased string");
         assertEquals("A Title Cased String", titleCasedString);
     }
 
     @Test
     public void shouldReturnEmptyStringIfNullPassedToGetTitleCaseName() {
-        assertEquals("", languageService.getTitleCaseName(null));
+        assertEquals("", LanguageService.getTitleCaseName(null));
     }
 }

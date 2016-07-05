@@ -63,7 +63,7 @@ public class LanguageService {
     }
 
     @NonNull
-    public String getTitleCaseName(String name) {
+    public static String getTitleCaseName(String name) {
         if(name == null){
             return "";
         }
