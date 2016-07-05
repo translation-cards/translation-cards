@@ -19,6 +19,7 @@ import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.MediaConfig;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
@@ -171,7 +172,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
         String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
         translatedTextView.setText(translatedText);
         if (translatedText.isEmpty()) {
-            translatedTextView.setHint(String.format("Add %s translation", getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage()));
+            String dictionaryLanguage = getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage();
+            String formattedLanguage = LanguageService.getTitleCaseName(dictionaryLanguage);
+            translatedTextView.setHint(String.format("Add %s translation", formattedLanguage));
         }
     }
 
