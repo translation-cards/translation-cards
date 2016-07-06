@@ -624,6 +624,6 @@ public class RecordAudioActivityTest {
 
         activity.onRequestPermissionsResult(0, new String[]{}, grantResults);
 
-        assertEquals("Permission granted! Press the record button again.", ShadowToast.getTextOfLatestToast());
+        assertEquals(activity.getString(R.string.record_audio_permission_granted), ShadowToast.getTextOfLatestToast());
     }
 }

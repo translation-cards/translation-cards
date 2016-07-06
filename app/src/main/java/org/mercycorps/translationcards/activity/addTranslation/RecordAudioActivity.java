@@ -286,7 +286,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (permissionService.permissionGranted(grantResults)) {
-            ToastHelper.showToast(this, getString(R.string.permission_granted));
+            ToastHelper.showToast(this, getString(R.string.record_audio_permission_granted));
         }
     }
 }
