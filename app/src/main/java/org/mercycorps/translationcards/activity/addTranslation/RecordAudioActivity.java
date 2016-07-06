@@ -32,7 +32,7 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.O
 
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
-
+    private boolean isCardExpanded=true;
     @Bind(R.id.play_audio_button)
     RelativeLayout playAudioButton;
     @Bind(R.id.record_audio_button)
@@ -66,6 +66,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_record_audio);
+        View v = findViewById(R.id.translation_card_parent);
+        v.setBackgroundResource(R.drawable.card_top_background_expanded);
     }
 
     @Override
@@ -152,10 +154,18 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @OnClick(R.id.translation_indicator_layout)
     protected void translationIndicatorLayoutClick() {
-        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
-        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        int visibility = isCardExpanded ? View.GONE : View.VISIBLE;
+        View v = findViewById(R.id.translation_card_parent);
+        if(isCardExpanded){
+            v.setBackgroundResource(R.drawable.card_top_background);
+        }else{
+            v.setBackgroundResource(R.drawable.card_top_background_expanded);
+        }
+
+        int backgroundResource = isCardExpanded ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
         translationChild.setVisibility(visibility);
         translationCardIndicatorIcon.setBackgroundResource(backgroundResource);
+        isCardExpanded = !isCardExpanded;
     }
 
     protected void expandTranslationCard() {
@@ -231,10 +241,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
             recordAudioButton.setBackgroundResource(R.color.red);
             recordAudioIcon.setBackgroundResource(R.drawable.record);
         }
-    }
-
-    private boolean isTranslationChildVisible() {
-        return translationChild.getVisibility() == View.VISIBLE;
     }
 
     protected void stopAudioIfPlaying() {

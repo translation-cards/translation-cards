@@ -58,7 +58,8 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
 
         View translationChild = translationItemView.findViewById(R.id.translation_child);
         View indicatorIcon = translationItemView.findViewById(R.id.indicator_icon);
-        if (translationService.cardIsExpanded(position)) {
+        boolean cardIsExpanded = translationService.cardIsExpanded(position);
+        if (cardIsExpanded) {
             translationChild.setVisibility(View.VISIBLE);
             indicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
         } else {
@@ -69,7 +70,8 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
         translationItemView.setOnClickListener(null);
 
         translationItemView.findViewById(R.id.translation_indicator_layout)
-                .setOnClickListener(new CardIndicatorClickListener(translationItemView, position, translationService));
+                .setOnClickListener(new CardIndicatorClickListener(translationItemView, position,
+                        translationService, item));
 
         View editView = translationItemView.findViewById(R.id.translation_card_edit);
         View deleteView = translationItemView.findViewById(R.id.translation_card_delete);
@@ -88,7 +90,7 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
                 R.id.list_item_progress_bar);
 
         setCardTextView(item, translationItemView, currentDictionaryLabel, progressBar);
-        setTranslationCardView(item, translationItemView);
+        setTranslationCardView(item, translationItemView, cardIsExpanded);
         setTranslatedTextView(item, translationItemView, currentDictionaryLabel);
 
         translationItemView.findViewById(R.id.translated_text_layout)
@@ -120,15 +122,14 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
                 translationsActivity.decoratedMediaManager, currentDictionaryLabel));
     }
 
-    private void setTranslationCardView(Translation item, View convertView) {
-        LinearLayout translationCardParent = (LinearLayout) convertView.findViewById(R.id.translation_card_parent);
-
+    protected void setTranslationCardView(Translation item, View convertView, Boolean isCardExpanded) {
         ImageView audioIcon = (ImageView) convertView.findViewById(R.id.audio_icon);
         Drawable bg=audioIcon.getDrawable();
 
         View v = convertView.findViewById(R.id.translation_card_parent);
         LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
-        final GradientDrawable shape = (GradientDrawable)   bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+        int cardTopBackgroundId = isCardExpanded ? R.id.card_top_background_expanded : R.id.card_top_background;
+        GradientDrawable shape = (GradientDrawable)   bgDrawable.findDrawableByLayerId(cardTopBackgroundId);
 
         if(!item.isAudioFilePresent()){
             shape.setAlpha(DISABLED_OPACITY);

@@ -26,7 +26,8 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
-    public static final int DISABLED_OPACITY = 250;
+    private boolean isCardExpanded = true;
+    public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
     public static final int DEFAULT_BITMAP_OPACITY = 255;
     public static final int DISABLED_BITMAP_OPACITY = 100;
@@ -43,6 +44,8 @@ public class SummaryActivity extends AddTranslationActivity {
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_summary);
+        View v = findViewById(R.id.translation_card_parent);
+        v.setBackgroundResource(R.drawable.card_top_background_expanded);
     }
 
     @Override
@@ -95,10 +98,18 @@ public class SummaryActivity extends AddTranslationActivity {
 
     @OnClick(R.id.translation_indicator_layout)
     protected void indicatorLayoutClicked() {
-        int visibility = isTranslationChildVisible() ? View.GONE : View.VISIBLE;
-        int backgroundResource = isTranslationChildVisible() ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
-        translationChildLayout.setVisibility(visibility);
+        int translationChildVisibility = isCardExpanded ? View.GONE : View.VISIBLE;
+        View v = findViewById(R.id.translation_card_parent);
+        if(isCardExpanded){
+            v.setBackgroundResource(R.drawable.card_top_background);
+        }else{
+            v.setBackgroundResource(R.drawable.card_top_background_expanded);
+        }
+        int backgroundResource = isCardExpanded ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
+        translationChildLayout.setVisibility(translationChildVisibility);
         indicatorIcon.setBackgroundResource(backgroundResource);
+        isCardExpanded=!isCardExpanded;
+        greyOutCardIfNoAudioTranslation();
     }
 
     private void updateSummaryTextView() {
@@ -144,7 +155,8 @@ public class SummaryActivity extends AddTranslationActivity {
         Drawable audioIconDrawable=audioIcon.getDrawable();
         View v = findViewById(R.id.translation_card_parent);
         LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
-        GradientDrawable cardTopBackgroundDrawable = (GradientDrawable)   bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+        int backgroundId = isCardExpanded?R.id.card_top_background_expanded:R.id.card_top_background;
+        GradientDrawable cardTopBackgroundDrawable = (GradientDrawable) bgDrawable.findDrawableByLayerId(backgroundId);
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
             cardTopBackgroundDrawable.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
@@ -169,10 +181,6 @@ public class SummaryActivity extends AddTranslationActivity {
         if (mediaManager.isPlaying()) {
             mediaManager.stop();
         }
-    }
-
-    private boolean isTranslationChildVisible() {
-        return translationChildLayout.getVisibility() == View.VISIBLE;
     }
 
     private DecoratedMediaManager getDecoratedMediaManager(){

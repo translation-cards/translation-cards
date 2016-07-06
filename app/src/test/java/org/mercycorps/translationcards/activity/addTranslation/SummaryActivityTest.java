@@ -295,7 +295,7 @@ public class SummaryActivityTest {
 
         LinearLayout translationCardParent = findLinearLayout(activity, R.id.translation_card_parent);
         LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
-        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
+        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
 
         assertEquals(SummaryActivity.DISABLED_OPACITY, background.getAlpha());
     }
