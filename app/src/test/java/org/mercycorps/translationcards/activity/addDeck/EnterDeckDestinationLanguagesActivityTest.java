@@ -116,7 +116,8 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldSetActivityDescriptionWhenCreated() {
         Activity activity = helper.createActivityToTest();
         TextView description = findTextView(activity, R.id.enter_deck_destination_description);
-        assertEquals("A deck has one or more destination languages, these are the languages you would like to translate to. Separate each language by using a comma.", description.getText().toString());
+        String descriptionString = activity.getString(R.string.enter_deck_destination_language_description);
+        assertEquals(descriptionString, description.getText().toString());
     }
 
     @Test
