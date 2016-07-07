@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:orientation="vertical">
 
@@ -47,25 +48,27 @@
         android:id="@+id/add_language_chip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/enter_deck_destination_description"
-        android:background="@drawable/language_chip_background"
+        android:layout_below="@+id/language_chip_flexbox"
         android:padding="8dp"
+        android:layout_margin="10dp"
         android:text="@string/add_language_chip_label"
-        android:textColor="@color/textColor"
-        android:textStyle="bold" />
+        android:textSize="16.5sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"/>
 
-    <GridView
-        android:id="@+id/language_chip_grid"
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/add_language_chip"
-        android:focusable="true"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
-
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:layout_below="@id/enter_deck_destination_description"
+        android:id="@+id/language_chip_flexbox"/>
 
     <!--Nav Bar-->
     <RelativeLayout

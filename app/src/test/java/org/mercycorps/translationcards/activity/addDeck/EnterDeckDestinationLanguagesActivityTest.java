@@ -2,11 +2,10 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import junit.framework.Assert;
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.junit.After;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAbsListView;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -42,53 +40,52 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndAdapterHasLanguages() {
+    public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndNewDeckContextHasADestinationLanguage() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        languagesAdapter.add(A_LANGUAGE);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
         click(activity, R.id.enter_destination_next_label);
         assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldAddLanguageSelectorResultToAdapter() {
+    public void shouldAddLanguageSelectorResultToViewAndNewDeckContext() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
         Intent data = new Intent();
         data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);
 
-        assertEquals("English", languagesAdapter.getItem(0));
+        assertTrue(newDeckContext.getDestinationLanguages().contains("English"));
+        assertEquals("English", ((TextView) flexBox.getChildAt(0)).getText().toString());
     }
 
     @Test
     public void shouldNotAddLanguageSelectorResultIfNull() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
         Intent emptyIntent = new Intent();
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, emptyIntent);
 
-        assertEquals(0, languagesAdapter.getCount());
+        assertEquals(0, flexBox.getChildCount());
+        assertEquals(0, newDeckContext.getDestinationLanguages().size());
     }
 
     @Test
     public void shouldNotAddLanguageSelectorResultIfInvalidResultCode() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+
         Intent data = new Intent();
         data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_CANCELED, data);
 
-        assertEquals(0, languagesAdapter.getCount());
+        assertEquals(0, flexBox.getChildCount());
+        assertEquals(0, newDeckContext.getDestinationLanguages().size());
     }
 
     @Test
@@ -120,31 +117,6 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldDisplayLanguageChips() {
-        Activity activity = helper.createActivityToTest();
-        GridView chipGrid = (GridView) activity.findViewById(R.id.language_chip_grid);
-        ShadowAbsListView gridShadow = shadowOf(chipGrid);
-        DestinationLanguagesAdapter chipAdapter = (DestinationLanguagesAdapter) chipGrid.getAdapter();
-        chipAdapter.add("French");
-        chipAdapter.add("English");
-        chipAdapter.add("Spanish");
-        gridShadow.populateItems();
-        int chipCount = chipGrid.getCount();
-        if (chipCount > 0) {
-            assertEquals(3, chipCount);
-            TextView frenchChip = (TextView) chipGrid.getChildAt(0);
-            assertEquals("French", frenchChip.getText().toString());
-            TextView englishChip = (TextView) chipGrid.getChildAt(1);
-            assertEquals("English", englishChip.getText().toString());
-            TextView spanishChip = (TextView) chipGrid.getChildAt(2);
-            assertEquals("Spanish", spanishChip.getText().toString());
-        } else {
-            Assert.fail("No language chips found in GridView");
-        }
-    }
-
-
-    @Test
     public void shouldGoToDestinationLanguageSelectorActivity() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.add_language_chip);
@@ -152,36 +124,10 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldAddSelectedLanguagesToDeckContextWhenNextButtonClicked() {
+    public void shouldChangeNextButtonColorWhenDestinationLanguageSetIsNotEmpty() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        languagesAdapter.add(A_LANGUAGE);
-        activity.updateNextButtonState();
-        click(activity, R.id.enter_destination_next_label);
-        assertEquals(1, newDeckContext.getDestinationLanguages().size());
-        assertTrue(newDeckContext.getDestinationLanguages().contains(A_LANGUAGE));
-    }
-
-    @Test
-    public void shouldUpdateNewDeckContextWhenUserClicksBack() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        languagesAdapter.add(A_LANGUAGE);
-        click(activity, R.id.enter_destination_back_arrow);
-        assertTrue(newDeckContext.getDestinationLanguages().contains(A_LANGUAGE));
-    }
-
-    @Test
-    public void shouldChangeNextButtonColorWhenDestinationLanguageIsNotEmpty() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        languagesAdapter.add(A_LANGUAGE);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
@@ -191,9 +137,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        languagesAdapter.add(A_LANGUAGE);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
@@ -209,18 +153,17 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldCreateLanguageChipsWhenActivityIsCreatedWithLanguages() {
+    public void shouldCreateLanguageChipsWhenActivityIsCreatedWithALanguage() {
         NewDeckContext newDeckContext = new NewDeckContext(null, false);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-        GridView chipGridView = (GridView) activity.findViewById(R.id.language_chip_grid);
-        DestinationLanguagesAdapter languagesAdapter = (DestinationLanguagesAdapter) chipGridView.getAdapter();
-        assertEquals(1, languagesAdapter.getCount());
-        assertEquals(A_LANGUAGE, languagesAdapter.getItem(0));
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        assertEquals(1, flexboxLayout.getChildCount());
+        assertEquals(A_LANGUAGE, ((TextView) flexboxLayout.getChildAt(0)).getText().toString());
     }
 
     @Test
-    public void shouldNotBeAbleToClickSaveWhenNoDestinationLanguagesHaveBeenEntered() {
+    public void shouldNotBeAbleToClickNextWhenNoDestinationLanguagesHaveBeenEntered() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());

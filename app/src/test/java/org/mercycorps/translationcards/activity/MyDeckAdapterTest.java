@@ -1,10 +1,9 @@
 package org.mercycorps.translationcards.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.internal.widget.DialogTitle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -30,6 +29,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowPopupMenu;
 import org.robolectric.util.ActivityController;
@@ -40,7 +40,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAlertDialogTitleId;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -181,8 +180,8 @@ public class MyDeckAdapterTest {
         clickMenuItemWithId(popupMenu, R.id.delete_deck);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
-        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
-        assertThat(alertDialogTitle, is(DEFAULT_ALERT_DIALOG_TITLE));
+        ShadowDialog shadowDialog = shadowOf(alertDialog);
+        assertThat(shadowDialog.getTitle().toString(), is(DEFAULT_ALERT_DIALOG_TITLE));
     }
 
     @Test
@@ -219,7 +218,8 @@ public class MyDeckAdapterTest {
         clickMenuItemWithId(popupMenu, R.id.share_deck);
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
-        String alertDialogTitle = ((DialogTitle) alertDialog.findViewById(getAlertDialogTitleId())).getText().toString();
+        ShadowAlertDialog shadowAlertDialog = shadowOf(alertDialog);
+        String alertDialogTitle = shadowAlertDialog.getTitle().toString();
         assertEquals(NAME_FOR_SHARED_DECK, alertDialogTitle);
     }
 
