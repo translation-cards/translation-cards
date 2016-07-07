@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,7 +51,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
 
     private void populateFlexBox() {
         flexboxLayout.removeAllViews();
-        for(String language: newDeckContext.getDestinationLanguages()){
+        for (String language : newDeckContext.getDestinationLanguages()) {
             flexboxLayout.addView(createLanguageChip(language));
         }
     }
@@ -67,14 +70,56 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
         chip.setPadding(tenDp, fiveDp, tenDp, fiveDp);
         chip.setBackgroundResource(R.drawable.language_chip_background);
 
-        BitmapDrawable img = (BitmapDrawable)ContextCompat.getDrawable(this, R.drawable.ic_cancel_white_24dp);
-        if(img != null) {
+        BitmapDrawable img = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_cancel_white_24dp);
+        if (img != null) {
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(img.getBitmap(), densityPixelsToPixels(20), densityPixelsToPixels(20), false);
             BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), scaledBitmap);
             chip.setCompoundDrawablesWithIntrinsicBounds(null, null, bitmapDrawable, null);
             chip.setCompoundDrawablePadding(tenDp);
         }
+
+        chip.setOnTouchListener(createChipTouchListener());
         return chip;
+    }
+
+    @NonNull
+    private View.OnTouchListener createChipTouchListener() {
+        return new View.OnTouchListener() {
+            boolean validEvent = true;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                TextView textView = (TextView) v;
+                float yPos = event.getY();
+                float xPos = event.getX();
+                boolean validY = (yPos >= 0) && (yPos <= textView.getHeight());
+                boolean validX = (xPos >= (textView.getWidth() - textView.getTotalPaddingRight())) && (xPos <= textView.getWidth());
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        validEvent = validX;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (validEvent) {
+                            removeLanguage(textView.getText().toString());
+                        }
+                        validEvent = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        validEvent = validY && validX;
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        };
+    }
+
+    private void removeLanguage(String language) {
+        newDeckContext.getDestinationLanguages().remove(language);
+        populateFlexBox();
+        updateNextButtonState();
     }
 
     @OnClick(R.id.enter_destination_next_label)
@@ -93,7 +138,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             String selectedLanguage = data.getStringExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
             if (selectedLanguage != null) {
                 newDeckContext.addDestinationLanguage(selectedLanguage);

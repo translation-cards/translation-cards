@@ -2,6 +2,8 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowView;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -167,5 +170,45 @@ public class EnterDeckDestinationLanguagesActivityTest {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
+    }
+
+    @Test
+    public void shouldRemoveLanguageWhenChipIconTapped() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        View languageChip = flexboxLayout.getChildAt(0);
+        ShadowView shadowView = shadowOf(languageChip);
+        View.OnTouchListener onTouchListener = shadowView.getOnTouchListener();
+        int xTouchPos = languageChip.getRight() - (languageChip.getPaddingRight() / 2);
+        int yTouchPos = (languageChip.getTop() - languageChip.getBottom()) / 2;
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_DOWN, xTouchPos, yTouchPos, 0));
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_UP, xTouchPos, yTouchPos, 0));
+
+        assertTrue(newDeckContext.getDestinationLanguages().isEmpty());
+        assertEquals(0, flexboxLayout.getChildCount());
+    }
+
+    @Test
+    public void shouldDisableNextButtonWhenLastLanguageRemoved() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        View languageChip = flexboxLayout.getChildAt(0);
+        View.OnTouchListener onTouchListener = shadowOf(languageChip).getOnTouchListener();
+        TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
+        ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+
+        int xTouchPos = languageChip.getRight() - (languageChip.getPaddingRight() / 2);
+        int yTouchPos = (languageChip.getTop() - languageChip.getBottom()) / 2;
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_DOWN, xTouchPos, yTouchPos, 0));
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_UP, xTouchPos, yTouchPos, 0));
+        click(activity, R.id.enter_destination_next_label);
+
+        assertNull(shadowOf(activity).getNextStartedActivity());
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 }
