@@ -172,7 +172,7 @@
     },
     {
       "alpha2": "fa",
-      "names": ["Persian", "Farsi"]
+      "names": ["Farsi", "Persian"]
     },
     {
       "alpha2": "ff",
@@ -520,7 +520,7 @@
     },
     {
       "alpha2": "ps",
-      "names": ["Pushto", "Pashto"]
+      "names": ["Pashto", "Pushto"]
     },
     {
       "alpha2": "pt",
