@@ -79,7 +79,7 @@ public class TranslationsActivityTest {
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
     private static final int EMPTY_DECK_ID = 2;
-    private static final String DEFUALT_ISO_CODE = "eng";
+    private static final String DEFUALT_ISO_CODE = "en";
     private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
     private Translation translation;

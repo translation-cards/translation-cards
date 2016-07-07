@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(DictionariesTable.ALTER_TABLE_ADD_DEST_LANGUAGE_ISO_COLUMN);
             // We assume that the source language of all pre-existing decks is English.
             ContentValues defaultSourceLanguageValues = new ContentValues();
-            defaultSourceLanguageValues.put(DecksTable.SOURCE_LANGUAGE_ISO, "eng");
+            defaultSourceLanguageValues.put(DecksTable.SOURCE_LANGUAGE_ISO, "en");
             db.update(DecksTable.TABLE_NAME, defaultSourceLanguageValues, null, null);
             // We use "xx" as the destination language ISO code for all pre-existing
             // dictionaries. This will never be found in a language lookup table and will force

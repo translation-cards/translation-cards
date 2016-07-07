@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> extends ActivityHelper<T> {
 
     public final String DEFAULT_DECK_NAME = "MercyCorps Deck";
-    public final String DEFAULT_DECK_ISO_CODE = "eng";
+    public final String DEFAULT_DECK_ISO_CODE = "en";
     public final String DEFAULT_SOURCE_LANGUAGE ="English" ;
     public final String SPANISH_SOURCE_LANGUAGE ="Spanish" ;
     public final String DEFAULT_DECK_AUTHOR = "TW" ;

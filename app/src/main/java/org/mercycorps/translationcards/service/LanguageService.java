@@ -26,7 +26,7 @@ public class LanguageService {
         if(languageMap.containsKey(isoCode)) {
             return languageMap.get(isoCode).get(0);
         } else {
-            return getLegacyLanguageDisplayName(isoCode) ;
+            return INVALID_LANGUAGE;
         }
     }
 
@@ -66,22 +66,5 @@ public class LanguageService {
         }
 
         return titleCaseName.trim();
-    }
-
-
-    private String getLegacyLanguageDisplayName(String isoCode) {
-        Context context = MainApplication.getContextFromMainApp();
-        switch (isoCode) {
-            case "ar":
-                return context.getString(R.string.name_ar);
-            case "en":
-                return context.getString(R.string.name_en);
-            case "fa":
-                return context.getString(R.string.name_fa);
-            case "ps":
-                return context.getString(R.string.name_ps);
-            default:
-                return isoCode;
-        }
     }
 }

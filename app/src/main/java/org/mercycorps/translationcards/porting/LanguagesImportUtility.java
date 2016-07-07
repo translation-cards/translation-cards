@@ -59,7 +59,7 @@ public class LanguagesImportUtility {
         Map<String, List<String>> languageMap= new HashMap<>();
         for (int i = 0; i < importSpec.languages.size(); i++) {
             ImportSpecLanguage language = importSpec.languages.get(i);
-            languageMap.put(language.isoCode,language.languageNames);
+            languageMap.put(language.isoCode.substring(0,2),language.languageNames);
         }
         return languageMap;
     }

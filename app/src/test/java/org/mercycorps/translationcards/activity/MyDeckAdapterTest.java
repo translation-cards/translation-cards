@@ -61,7 +61,7 @@ public class MyDeckAdapterTest {
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
     private static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
-    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "eng";
+    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     private Deck deck;
     private View view;
     private MyDecksActivity activity;

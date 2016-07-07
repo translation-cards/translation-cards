@@ -6,10 +6,10 @@
   "deck_label" : "Humanitarian Responder - Transit Centre",
   "publisher" : "UNHCR Innovation",
   "id": "org.innovation.unhcr.txc-default-deck",
-  "source_language": "eng",
+  "source_language": "en",
   "languages": [
     {
-      "iso_code": "ara",
+      "iso_code": "ar",
       "cards": [
         {
           "dest_txt": "هل تفهم هذه اللغة؟",
@@ -134,7 +134,7 @@
       ]
     },
     {
-      "iso_code": "pus",
+      "iso_code": "ps",
       "cards": [
         {
           "dest_txt": "تاسي په دغه ژبه پوهيږئ؟",
@@ -259,7 +259,7 @@
       ]
     },
     {
-      "iso_code": "fas",
+      "iso_code": "fa",
       "cards": [
         {
           "dest_txt": "آیا این زبان را متوجه می شوید؟",

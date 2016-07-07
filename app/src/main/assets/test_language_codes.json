@@ -9,6 +9,10 @@
     {
       "alpha2": "ab",
       "names": ["Abkhazian", "Three"]
+    },
+    {
+      "alpha2": "es-sp",
+      "names": ["Spanish"]
     }
   ]
 }

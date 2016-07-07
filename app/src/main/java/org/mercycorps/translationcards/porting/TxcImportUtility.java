@@ -44,7 +44,7 @@ public class TxcImportUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
-    private static final String DEFAULT_SOURCE_LANGUAGE = "eng";
+    private static final String DEFAULT_SOURCE_LANGUAGE = "en";
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private TranslationRepository translationRepository;
@@ -236,7 +236,7 @@ public class TxcImportUtility {
             }
             for (int i = 0; i < dictionaries.length(); i++) {
                 JSONObject dictionary = dictionaries.getJSONObject(i);
-                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
+                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE).substring(0,2);
                 String language = languageService.getLanguageDisplayName(destIsoCode);
                 ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
                 spec.dictionaries.add(dictionarySpec);
@@ -298,7 +298,7 @@ public class TxcImportUtility {
                 s.close();
                 throw new  ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, null);
             }
-            String isoCode = split[2];
+            String isoCode = split[2].substring(0,2);
             ImportSpecDictionary dictionary;
             if (dictionaryLookup.containsKey(isoCode)) {
                 dictionary = dictionaryLookup.get(isoCode);
