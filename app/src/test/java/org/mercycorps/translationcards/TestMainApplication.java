@@ -3,6 +3,7 @@ package org.mercycorps.translationcards;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
@@ -18,9 +19,14 @@ import org.robolectric.TestLifecycleApplication;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
@@ -37,10 +43,14 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DeckRepository deckRepository = mock(DeckRepository.class);
     private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
     private TranslationRepository translationRepository = mock(TranslationRepository.class);
+//    private LanguagesImportUtility languagesImportUtility = mock(LanguagesImportUtility.class);
 
     @Override
     public void onCreate() {
         isTest = true;
+//        Map<String, List<String>> languageMap = new HashMap<>();
+//        languageMap.put("en", Arrays.asList("English", "British English"));
+//        when(languagesImportUtility.loadLanguageMapFromFile()).thenReturn(languageMap);
         super.onCreate();
     }
     @Override

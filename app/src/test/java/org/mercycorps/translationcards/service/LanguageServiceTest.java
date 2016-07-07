@@ -2,34 +2,46 @@ package org.mercycorps.translationcards.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.porting.LanguagesImportUtility;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-
+@Config(constants = BuildConfig.class, sdk = 21)
+@RunWith(RobolectricGradleTestRunner.class)
 public class LanguageServiceTest {
 
     private LanguageService languageService;
+    private LanguagesImportUtility languagesImportUtility;
 
     @Before
-    public void setup() {
-        languageService = new LanguageService();
+    public void setup() throws IOException {
+        InputStream inputStream = RuntimeEnvironment.application.getAssets().open("language_codes.json");
+        languagesImportUtility = new LanguagesImportUtility(inputStream);
+        languageService = new LanguageService(languagesImportUtility);
     }
 
     @Test
     public void shouldReturnCorrectIsoCodeForArabic() throws Exception {
-        assertEquals("fas", languageService.getIsoForLanguage("Persian"));
+        assertEquals("fa", languageService.getIsoForLanguage("Persian"));
     }
 
     @Test
     public void shouldReturnCorrectIsoCodeForFarsi() throws Exception {
-        assertEquals("fas", languageService.getIsoForLanguage("Farsi"));
+        assertEquals("fa", languageService.getIsoForLanguage("Farsi"));
     }
 
     @Test
     public void shouldReturnCorrectIsoCodeForUncapitalizedLanguageName() throws Exception {
-        assertEquals( "fas", languageService.getIsoForLanguage("farsi"));
+        assertEquals( "fa", languageService.getIsoForLanguage("farsi"));
     }
 
     @Test
@@ -45,7 +57,6 @@ public class LanguageServiceTest {
         assertEquals(true, languageNames.contains("Arabic"));
         assertEquals(true, languageNames.contains("English"));
         assertEquals(true, languageNames.contains("Persian"));
-        assertEquals(true, languageNames.contains("Southern Sotho"));
     }
 
     @Test

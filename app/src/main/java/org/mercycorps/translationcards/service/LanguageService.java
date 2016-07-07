@@ -6,12 +6,11 @@ import android.support.annotation.NonNull;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class LanguageService {
@@ -19,16 +18,8 @@ public class LanguageService {
     private final Map<String, List<String>> languageMap;
     public static final String INVALID_LANGUAGE = "INVALID";
 
-    public LanguageService() {
-        languageMap = new HashMap<>();
-
-        for(String language : Locale.getISOLanguages()) {
-            Locale locale = new Locale(language);
-            languageMap.put(locale.getISO3Language(), new ArrayList<>(Collections.singletonList(locale.getDisplayLanguage().toUpperCase())));
-        }
-
-        languageMap.get("fas").add("FARSI");
-        languageMap.get("pus").add("PASHTO");
+    public LanguageService(LanguagesImportUtility langImportUtility) {
+        languageMap = langImportUtility.loadLanguageMapFromFile();
     }
 
     public String getLanguageDisplayName(String isoCode) {
@@ -41,7 +32,7 @@ public class LanguageService {
 
     public String getIsoForLanguage(String label) {
         for(String isoCode : languageMap.keySet()) {
-            if(languageMap.get(isoCode).contains(label.trim().toUpperCase())) {
+            if(languageMap.get(isoCode).contains(getTitleCaseName(label.trim()))) {
                 return isoCode;
             }
         }
@@ -64,7 +55,7 @@ public class LanguageService {
 
     @NonNull
     public static String getTitleCaseName(String name) {
-        if(name == null){
+        if(name == null|| name.isEmpty()){
             return "";
         }
         String titleCaseName = "";

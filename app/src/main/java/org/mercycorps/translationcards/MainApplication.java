@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,7 +61,6 @@ public class MainApplication extends Application {
         super.onCreate();
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        languageService = new LanguageService();
         permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService =  Executors.newScheduledThreadPool(1);
@@ -67,6 +68,15 @@ public class MainApplication extends Application {
         decoratedMediaManager = new DecoratedMediaManager();
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
+        InputStream inputStream;
+        try {
+            inputStream = context.getAssets().open("language_codes.json");
+        } catch(IOException e) {
+            //do something here
+            inputStream = null;
+        }
+        LanguagesImportUtility languagesImportUtility = new LanguagesImportUtility(inputStream);
+        languageService = new LanguageService(languagesImportUtility);
         if(isTest) return;
         databaseHelper = new DatabaseHelper(context);
         translationRepository = new TranslationRepository(databaseHelper);
