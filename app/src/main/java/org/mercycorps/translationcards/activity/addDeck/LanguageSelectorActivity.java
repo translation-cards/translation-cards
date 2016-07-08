@@ -18,7 +18,7 @@ import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
 
-public class DestinationLanguageSelectorActivity extends AbstractTranslationCardsActivity {
+public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
     public static final String SELECTED_LANGUAGE_KEY = "selectedLanguage";
     private static final int CANCEL_BUTTON_ID = 0;
     @Bind(R.id.languages_list)
@@ -30,7 +30,7 @@ public class DestinationLanguageSelectorActivity extends AbstractTranslationCard
 
     @Override
     public void inflateView() {
-        setContentView(R.layout.activity_destination_language_selector);
+        setContentView(R.layout.activity_language_selector);
     }
 
     @Override

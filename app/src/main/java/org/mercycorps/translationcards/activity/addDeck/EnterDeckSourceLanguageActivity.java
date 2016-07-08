@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -12,8 +14,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
-    private static final String DEFAULT_LIST_ITEM_HEIGHT = "64.0";
-    private static final int MAX_ROW_COUNT = 3;
+    public static final int REQUEST_CODE = 0;
     @Bind(R.id.deck_source_language_view)
     TextView sourceLanguageView;
 
@@ -50,8 +51,19 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_source_language_view)
     public void sourceLanguageClicked() {
-        updateContextWithSourceLanguage();
-        startNextActivity(this, EnterDeckTitleActivity.class);
+        startActivityForResult(new Intent(this, LanguageSelectorActivity.class), REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            String selectedLanguage = data.getStringExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
+            if (selectedLanguage != null) {
+                sourceLanguageView.setText(selectedLanguage);
+                updateContextWithSourceLanguage();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateContextWithSourceLanguage() {

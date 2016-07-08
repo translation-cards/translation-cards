@@ -58,7 +58,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
         Intent data = new Intent();
-        data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);
 
         assertTrue(newDeckContext.getDestinationLanguages().contains("English"));
@@ -84,7 +84,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
         FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
 
         Intent data = new Intent();
-        data.putExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_CANCELED, data);
 
         assertEquals(0, flexBox.getChildCount());
@@ -124,7 +124,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldGoToDestinationLanguageSelectorActivity() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.add_language_button);
-        assertEquals(DestinationLanguageSelectorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(LanguageSelectorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test

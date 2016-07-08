@@ -133,7 +133,7 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".activity.addDeck.DestinationLanguageSelectorActivity"
+        <activity android:name=".activity.addDeck.LanguageSelectorActivity"
             android:label="@string/select_language_prompt">
         </activity>
     </application>

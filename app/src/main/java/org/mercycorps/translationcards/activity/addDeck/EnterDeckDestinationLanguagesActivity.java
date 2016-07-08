@@ -154,7 +154,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            String selectedLanguage = data.getStringExtra(DestinationLanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
+            String selectedLanguage = data.getStringExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
             if (selectedLanguage != null) {
                 newDeckContext.addDestinationLanguage(selectedLanguage);
                 populateFlexBox();
@@ -166,7 +166,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
 
     @OnClick(R.id.add_language_button)
     public void showLanguageSelector() {
-        startActivityForResult(new Intent(this, DestinationLanguageSelectorActivity.class), REQUEST_CODE);
+        startActivityForResult(new Intent(this, LanguageSelectorActivity.class), REQUEST_CODE);
     }
 
     protected void updateNextButtonState() {

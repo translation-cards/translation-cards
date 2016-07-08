@@ -20,15 +20,15 @@ import static junit.framework.Assert.assertEquals;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-public class DestinationLanguageSelectorActivityTest {
+public class LanguageSelectorActivityTest {
 
-    private ActivityHelper<DestinationLanguageSelectorActivity> helper;
+    private ActivityHelper<LanguageSelectorActivity> helper;
     private Activity activity;
     private MainApplication mainApplication;
 
     @Before
     public void setup() {
-        helper = new ActivityHelper<>(DestinationLanguageSelectorActivity.class);
+        helper = new ActivityHelper<>(LanguageSelectorActivity.class);
         activity = helper.getActivityWithIntent(new Intent());
         mainApplication = (MainApplication) activity.getApplication();
     }
