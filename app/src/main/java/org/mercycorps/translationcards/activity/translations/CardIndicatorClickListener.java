@@ -1,11 +1,9 @@
 package org.mercycorps.translationcards.activity.translations;
 
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.TranslationService;
 
@@ -28,6 +26,9 @@ class CardIndicatorClickListener implements View.OnClickListener {
     public void onClick(View view) {
         View translationChild = this.view.findViewById(R.id.translation_child);
         View v = this.view.findViewById(R.id.translation_card_parent);
+        int rightPadding= v.getPaddingRight();
+        int leftPadding= v.getPaddingLeft();
+
         if (translationChild.getVisibility() == View.GONE) {
             translationChild.setVisibility(View.VISIBLE);
             this.view.findViewById(R.id.indicator_icon).setBackgroundResource(
@@ -41,6 +42,7 @@ class CardIndicatorClickListener implements View.OnClickListener {
             translationService.minimizeCard(position);
             v.setBackgroundResource(R.drawable.card_top_background);
         }
+        v.setPadding(leftPadding, 0, rightPadding, 0);
 
         LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
         if(!translation.isAudioFilePresent()){

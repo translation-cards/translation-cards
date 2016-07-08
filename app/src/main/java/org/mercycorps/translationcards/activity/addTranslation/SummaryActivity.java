@@ -39,13 +39,15 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
     @Bind(R.id.indicator_icon)ImageView indicatorIcon;
     @Bind(R.id.audio_icon)ImageView audioIcon;
-    @Bind(R.id.translation_card_parent)LinearLayout translationCardParent;
 
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_summary);
-        View v = findViewById(R.id.translation_card_parent);
-        v.setBackgroundResource(R.drawable.card_top_background_expanded);
+        View translationCardParent = findViewById(R.id.translation_card_parent);
+        int rightPadding= translationCardParent.getPaddingRight();
+        int leftPadding= translationCardParent.getPaddingLeft();
+        translationCardParent.setBackgroundResource(R.drawable.card_top_background_expanded);
+        translationCardParent.setPadding(leftPadding, 0, rightPadding, 0);
     }
 
     @Override
@@ -100,11 +102,15 @@ public class SummaryActivity extends AddTranslationActivity {
     protected void indicatorLayoutClicked() {
         int translationChildVisibility = isCardExpanded ? View.GONE : View.VISIBLE;
         View v = findViewById(R.id.translation_card_parent);
+        int rightPadding= v.getPaddingRight();
+        int leftPadding= v.getPaddingLeft();
         if(isCardExpanded){
             v.setBackgroundResource(R.drawable.card_top_background);
         }else{
             v.setBackgroundResource(R.drawable.card_top_background_expanded);
         }
+
+        v.setPadding(leftPadding, 0, rightPadding, 0);
         int backgroundResource = isCardExpanded ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
         translationChildLayout.setVisibility(translationChildVisibility);
         indicatorIcon.setBackgroundResource(backgroundResource);

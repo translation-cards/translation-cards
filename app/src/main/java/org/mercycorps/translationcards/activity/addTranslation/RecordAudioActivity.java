@@ -32,7 +32,7 @@ import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.O
 
 public class RecordAudioActivity extends AddTranslationActivity {
     private static final String TAG = "RecordAudioActivity";
-    private boolean isCardExpanded=true;
+    private boolean isCardExpanded = true;
     @Bind(R.id.play_audio_button)
     RelativeLayout playAudioButton;
     @Bind(R.id.record_audio_button)
@@ -67,7 +67,11 @@ public class RecordAudioActivity extends AddTranslationActivity {
     public void inflateView() {
         setContentView(R.layout.activity_record_audio);
         View v = findViewById(R.id.translation_card_parent);
+
+        int rightPadding = v.getPaddingRight();
+        int leftPadding = v.getPaddingLeft();
         v.setBackgroundResource(R.drawable.card_top_background_expanded);
+        v.setPadding(leftPadding, 0, rightPadding, 0);
     }
 
     @Override
@@ -116,7 +120,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     @OnClick(R.id.record_audio_button)
     public void recordAudioButtonClick() {
-        if (!permissionService.checkPermission(this, Manifest.permission.RECORD_AUDIO )) {
+        if (!permissionService.checkPermission(this, Manifest.permission.RECORD_AUDIO)) {
             showPermissionDialog();
         } else {
             stopAudioIfPlaying();
@@ -134,7 +138,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
                 .setPositiveButton("Got it", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        permissionService.requestPermissions(RecordAudioActivity.this, Manifest.permission.RECORD_AUDIO , permissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
+                        permissionService.requestPermissions(RecordAudioActivity.this, Manifest.permission.RECORD_AUDIO, permissionService.PERMISSIONS_REQUEST_RECORD_AUDIO);
                     }
                 })
                 .setView(R.layout.dialog_microphone_permission)
@@ -156,11 +160,15 @@ public class RecordAudioActivity extends AddTranslationActivity {
     protected void translationIndicatorLayoutClick() {
         int visibility = isCardExpanded ? View.GONE : View.VISIBLE;
         View v = findViewById(R.id.translation_card_parent);
-        if(isCardExpanded){
+
+        int rightPadding = v.getPaddingRight();
+        int leftPadding = v.getPaddingLeft();
+        if (isCardExpanded) {
             v.setBackgroundResource(R.drawable.card_top_background);
-        }else{
+        } else {
             v.setBackgroundResource(R.drawable.card_top_background_expanded);
         }
+        v.setPadding(leftPadding, 0, rightPadding, 0);
 
         int backgroundResource = isCardExpanded ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
         translationChild.setVisibility(visibility);
