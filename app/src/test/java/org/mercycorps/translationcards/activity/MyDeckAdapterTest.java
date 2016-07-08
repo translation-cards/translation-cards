@@ -26,6 +26,7 @@ import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.view.DeckItem;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -55,9 +56,9 @@ public class MyDeckAdapterTest {
     private static final String DEFAULT_DECK_NAME = "DefaultDeckName";
     private static final String DEFAULT_PUBLISHER = "DefaultPublisher";
     private static final String DEFAULT_FORMATTED_DATE = "12/25/05";
-    private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER+ ", "+DEFAULT_FORMATTED_DATE;
+    private static final String DEFAULT_DECK_INFORMATION = DEFAULT_PUBLISHER + ", " + DEFAULT_FORMATTED_DATE;
     private static final String DEFAULT_TRANSLATION_LANGUAGE = "DefaultTranslationLanguages";
-    private static final String DEFAULT_ALERT_DIALOG_TITLE= "Are you sure you want to delete this deck?";
+    private static final String DEFAULT_ALERT_DIALOG_TITLE = "Are you sure you want to delete this deck?";
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
     private static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
@@ -70,21 +71,18 @@ public class MyDeckAdapterTest {
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
     private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
     private DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
-    private DatabaseHelper databaseHelper;
-    private SQLiteDatabase sqlLiteDatabase;
-    private Cursor cursor;
 
     @Before
     public void setUp() throws Exception {
-        cursor = mock(Cursor.class);
+        Cursor cursor = mock(Cursor.class);
         when(cursor.getCount()).thenReturn(1);
         when(cursor.moveToFirst()).thenReturn(true);
         when(cursor.getString(anyInt())).thenReturn("cursor string");
-        when(cursor.getLong(anyInt())).thenReturn(12345l);
+        when(cursor.getLong(anyInt())).thenReturn(12345L);
         when(cursor.getInt(anyInt())).thenReturn(1234);
-        sqlLiteDatabase = mock(SQLiteDatabase.class);
+        SQLiteDatabase sqlLiteDatabase = mock(SQLiteDatabase.class);
         when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
-        databaseHelper = mock(DatabaseHelper.class);
+        DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
 
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
@@ -124,15 +122,15 @@ public class MyDeckAdapterTest {
     }
 
     @Test
-    public void shouldHaveTranslationLanguagesTextWhenDeckIsPresent(){
-        TextView translationLanguagesTextView  = findAnyView(view, R.id.translation_languages);
+    public void shouldHaveTranslationLanguagesTextWhenDeckIsPresent() {
+        TextView translationLanguagesTextView = findAnyView(view, R.id.translation_languages);
 
         String expectedLanguages = ALPHABETICALLY_HIGH_LANGUAGE.toUpperCase() + DELIMITER + DEFAULT_TRANSLATION_LANGUAGE.toUpperCase();
         assertEquals(expectedLanguages, translationLanguagesTextView.getText().toString());
     }
 
     @Test
-    public void shouldOpenDeckWhenTitleClicked(){
+    public void shouldOpenDeckWhenTitleClicked() {
         view.findViewById(R.id.deck_card).performClick();
         assertEquals(TranslationsActivity.class.getName(), shadowOf((MyDecksActivity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
         verify(deckService).setCurrentDeck(deck);
@@ -147,14 +145,14 @@ public class MyDeckAdapterTest {
     }
 
     @Test
-    public void shouldShowPopupMenuWhenMenuIsClicked(){
+    public void shouldShowPopupMenuWhenMenuIsClicked() {
         PopupMenu deckMenu = openDeckPopupMenu();
 
         assertNotNull(deckMenu);
     }
 
     @Test
-     public void shouldShowDeleteButtonWhenMenuIsClicked() {
+    public void shouldShowDeleteButtonWhenMenuIsClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
         assertEquals("Delete", popupMenu.getMenu().findItem(R.id.delete_deck).toString());
@@ -175,7 +173,7 @@ public class MyDeckAdapterTest {
     }
 
     @Test
-    public void shouldLaunchAlertDialogWhenDeleteButtonClicked(){
+    public void shouldLaunchAlertDialogWhenDeleteButtonClicked() {
         PopupMenu popupMenu = openDeckPopupMenu();
 
         clickMenuItemWithId(popupMenu, R.id.delete_deck);
@@ -232,6 +230,32 @@ public class MyDeckAdapterTest {
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
 
         assertEquals(Intent.ACTION_SEND, shadowOf(activity).getNextStartedActivity().getAction());
+    }
+
+    @Test
+    public void shouldCreateNewViewWhenExistingViewIsNull() {
+        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        activity = controller.withIntent(new Intent()).create().get();
+        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
+
+        View view = adapter.getView(0, null, null);
+        TextView deckName = (TextView) view.findViewById(R.id.deck_name);
+
+        assertEquals(DeckItem.class.getName(), view.getClass().getName());
+        assertEquals(deck.getTitle(), deckName.getText().toString());
+    }
+
+    @Test
+    public void shouldModifyExistingViewIfViewNotNull() {
+        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        activity = controller.withIntent(new Intent()).create().get();
+        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
+
+        DeckItem view = new DeckItem(activity.getApplicationContext());
+        adapter.getView(0, view, null);
+
+        TextView deckName = (TextView) view.findViewById(R.id.deck_name);
+        assertEquals(deck.getTitle(), deckName.getText().toString());
     }
 
     private void clickMenuItemWithId(PopupMenu popupMenu, int id) {

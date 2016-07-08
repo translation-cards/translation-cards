@@ -32,16 +32,18 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMe
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
+        DeckItem deckItem;
         Deck deck = getItem(position);
         if (view == null) {
-            DeckItem deckItem = new DeckItem(this.activity);
-            deckItem.setDeck(deck);
-            deckItem.setMenuListener(this);
-            view = deckItem;
-            view.setOnClickListener(getDeckItemClickListener(deck));
+            deckItem = new DeckItem(this.activity);
+        } else {
+            deckItem = (DeckItem) view;
         }
+        deckItem.setDeck(deck);
+        deckItem.setMenuListener(this);
+        deckItem.setOnClickListener(getDeckItemClickListener(deck));
 
-        return view;
+        return deckItem;
     }
 
     private View.OnClickListener getDeckItemClickListener(final Deck deck) {
