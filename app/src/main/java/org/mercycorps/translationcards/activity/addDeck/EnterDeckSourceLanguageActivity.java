@@ -1,23 +1,8 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
-import android.annotation.TargetApi;
-import android.content.res.TypedArray;
-import android.database.DataSetObserver;
-import android.graphics.PorterDuff;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.AutoCompleteTextView.OnDismissListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.LanguageRepository;
@@ -25,18 +10,12 @@ import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 
 public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     private static final String DEFAULT_LIST_ITEM_HEIGHT = "64.0";
     private static final int MAX_ROW_COUNT = 3;
-    @Bind (R.id.deck_source_language_input) AutoCompleteTextView sourceLanguageInput;
-    @Bind (R.id.deck_source_language_next_label) LinearLayout nextButton;
-    @Bind(R.id.deck_source_language_next_text) TextView nextButtonText;
-    @Bind(R.id.deck_source_language_next_image) ImageView nextButtonImage;
-    @Bind(R.id.invalid_source_language_message) TextView invalidLanguageErrorView;
-    private LanguageService languageService;
-    private ArrayAdapter<String> languagesAdapter;
+    @Bind(R.id.deck_source_language_view)
+    TextView sourceLanguageView;
 
     @Override
     public void inflateView() {
@@ -45,93 +24,11 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
-        languageService = ((MainApplication) getApplication()).getLanguageService();
-        languagesAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                languageService.getLanguageNames()
-        );
-
-        sourceLanguageInput = (AutoCompleteTextView) findViewById(R.id.deck_source_language_input);
-        sourceLanguageInput.setAdapter(languagesAdapter);
-
-        languagesAdapter.registerDataSetObserver(getDatasetObserver());
         fillSourceLanguageField();
-        checkLanguageForError();
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            setOnDismissListener();
-        } else {
-            setTextWatcher();
-        }
-    }
-
-    private DataSetObserver getDatasetObserver(){
-        return new android.database.DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                int resultCount = languagesAdapter.getCount();
-                setCompletionDropdownHeight(resultCount);
-            }
-        };
-    }
-    private void setCompletionDropdownHeight(int resultCount) {
-        TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.listPreferredItemHeight});
-        if (typedArray.hasValue(0)) {
-            String heightAttr = typedArray.getString(0);
-            String[] split = heightAttr != null ? heightAttr.split("dip") : new String[]{DEFAULT_LIST_ITEM_HEIGHT};
-            Float heightInDips = Float.parseFloat(split[0]);
-            int heightInPx = densityPixelsToPixels(heightInDips);
-            int maxRows= resultCount > MAX_ROW_COUNT ? MAX_ROW_COUNT : resultCount;
-            sourceLanguageInput.setDropDownHeight(Math.round(maxRows * heightInPx));
-        }
-        typedArray.recycle();
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void setOnDismissListener() {
-        OnDismissListener onDismissListener = new OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                checkLanguageForError();
-            }
-        };
-
-        sourceLanguageInput.setOnDismissListener(onDismissListener);
-    }
-
-    private void setTextWatcher() {
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                checkLanguageForError();
-            }
-        };
-
-        sourceLanguageInput.addTextChangedListener(textWatcher);
-    }
-
-    public void checkLanguageForError() {
-        if (isSourceLanguageValid()) {
-            invalidLanguageErrorView.setVisibility(View.GONE);
-            sourceLanguageInput.getBackground().clearColorFilter();
-        } else {
-            invalidLanguageErrorView.setVisibility(View.VISIBLE);
-            sourceLanguageInput.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
-        }
     }
 
     private void fillSourceLanguageField() {
-        sourceLanguageInput.setText(LanguageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
+        sourceLanguageView.setText(LanguageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
     }
 
     @Override
@@ -151,30 +48,15 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         startNextActivity(this, EnterDeckTitleActivity.class);
     }
 
+    @OnClick(R.id.deck_source_language_view)
+    public void sourceLanguageClicked() {
+        updateContextWithSourceLanguage();
+        startNextActivity(this, EnterDeckTitleActivity.class);
+    }
+
     private void updateContextWithSourceLanguage() {
-        Language language = new LanguageRepository().withName(sourceLanguageInput.getText().toString());
+        Language language = new LanguageRepository().withName(sourceLanguageView.getText().toString());
         getContextFromIntent().setSourceLanguage(language);
     }
-
-
-    @OnTextChanged(R.id.deck_source_language_input)
-    protected void deckSourceLanguageInputTextChanged() {
-        nextButton.setClickable(isSourceLanguageValid());
-        updateNextButtonColor();
-    }
-
-    private boolean isSourceLanguageValid() {
-        String name = sourceLanguageInput.getText().toString();
-        Language language = new LanguageRepository().withName(name);
-        return !language.getIso().equals(LanguageService.INVALID_LANGUAGE);
-    }
-
-    private void updateNextButtonColor() {
-        Integer textColor = isSourceLanguageValid() ? R.color.primaryTextColor : R.color.textDisabled;
-        Integer nextArrow = isSourceLanguageValid() ? R.drawable.forward_arrow : R.drawable.forward_arrow_disabled;
-        nextButtonText.setTextColor(ContextCompat.getColor(this, textColor));
-        nextButtonImage.setBackgroundResource(nextArrow);
-    }
-
 }
 

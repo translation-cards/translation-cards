@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -16,6 +17,7 @@ import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -60,7 +62,20 @@ public class EnterDeckSourceLanguageActivityTest {
     }
 
     @Test
-    public void shouldSaveSourceLanguageToContextWhenNextButtonIsClicked() {
+    @Ignore
+    public void shouldLaunchLanguageSelectorWhenLanguageNameIsTapped() {
+        Activity activity = helper.createActivityToTest();
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        click(activity, R.id.deck_source_language_view);
+
+        assertEquals(DestinationLanguageSelectorActivity.class.getName(), shadowActivity.getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    @Ignore
+    //TODO assert that language is saved on return from selector activity
+    public void shouldSaveSourceLanguageToContextWhenLanguageSelectorReturns() {
         NewDeckContext newDeckContext = mock(NewDeckContext.class);
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         setText(activity, R.id.deck_source_language_input, helper.SPANISH_SOURCE_LANGUAGE);
@@ -74,44 +89,12 @@ public class EnterDeckSourceLanguageActivityTest {
     }
 
     @Test
-    public void shouldNotAllowNextButtonToBeClickedIfLanguageIsInvalid() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.deck_source_language_input, "asdfasd");
-        assertFalse(findLinearLayout(activity, R.id.deck_source_language_next_label).isClickable());
+    public void shouldNotChangeSourceLanguageIfLanguageSelectorIsCancelled() {
+
     }
 
     @Test
-    public void shouldShowErrorMessageWhenAnInvalidLanguageIsEntered() {
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTest();
+    public void shouldDefaultLanguageToEnglishIfNotSetInNewDeckContext() {
 
-        setText(activity, R.id.deck_source_language_input, "NonExistentLanguage");
-        activity.checkLanguageForError();
-
-        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
     }
-
-    @Test
-    public void shouldHideErrorMessageWhenValidLanguageIsEnteredAfterInvalidLanguage() {
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTest();
-
-        setText(activity, R.id.deck_source_language_input, "NonExistentLanguage");
-        activity.checkLanguageForError();
-
-        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
-
-        setText(activity, R.id.deck_source_language_input, "English");
-        activity.checkLanguageForError();
-
-        assertEquals(View.GONE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
-    }
-
-    @Test
-    public void shouldShowErrorMessageWhenActivityLoadedWithInvalidLanguage() {
-        NewDeckContext invalidIsoDeckContext = new NewDeckContext(new Deck("Some name", "Some Author", "", -1, true, "invalid"), false);
-
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity)helper.createActivityToTestWithContext(invalidIsoDeckContext);
-
-        assertEquals(View.VISIBLE, activity.findViewById(R.id.invalid_source_language_message).getVisibility());
-    }
-
 }

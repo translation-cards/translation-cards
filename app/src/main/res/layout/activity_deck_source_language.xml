@@ -45,35 +45,22 @@
         android:text="@string/deck_source_language_description"
         android:textSize="16.5sp" />
 
-    <AutoCompleteTextView
-        android:id="@+id/deck_source_language_input"
-        android:textColor="@color/primaryTextColor"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/deck_source_language_view"
         android:layout_below="@+id/deck_source_language_description"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="24dp"
-        android:paddingTop="4dp"
-        android:text="@string/english"
-        android:textSize="16.5sp"
-        android:singleLine="true"
-        android:imeOptions="actionDone"/>
-
-    <TextView
-        android:id="@+id/invalid_source_language_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:layout_below="@+id/deck_source_language_input"
-        android:lineSpacingExtra="3dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:textSize="12sp"
-        android:visibility="gone"
-        android:text= "@string/invalid_source_language_message"/>
+        android:paddingTop="24dp"
+        android:text="@string/english"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16.5sp"
+        android:textStyle="bold"
+        />
+
     <!--Nav Bar-->
     <RelativeLayout
         android:layout_width="match_parent"
