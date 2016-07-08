@@ -3,6 +3,10 @@ package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
@@ -26,6 +30,18 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     @Override
     public void initStates() {
         fillSourceLanguageField();
+        formatLanguageButton();
+    }
+
+    private void formatLanguageButton() {
+        BitmapDrawable img = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_mode_edit_white_24dp);
+        if (img != null) {
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(img.getBitmap(), densityPixelsToPixels(20), densityPixelsToPixels(20), false);
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), scaledBitmap);
+            bitmapDrawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+            sourceLanguageView.setCompoundDrawablesWithIntrinsicBounds(bitmapDrawable, null, null, null);
+            sourceLanguageView.setCompoundDrawablePadding(densityPixelsToPixels(5));
+        }
     }
 
     private void fillSourceLanguageField() {
