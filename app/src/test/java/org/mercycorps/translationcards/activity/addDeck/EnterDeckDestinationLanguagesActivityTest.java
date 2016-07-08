@@ -123,7 +123,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldGoToDestinationLanguageSelectorActivity() {
         Activity activity = helper.createActivityToTest();
-        click(activity, R.id.add_language_chip);
+        click(activity, R.id.add_language_button);
         assertEquals(DestinationLanguageSelectorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 

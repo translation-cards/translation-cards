@@ -45,7 +45,7 @@
         android:textSize="16.5sp" />
 
     <TextView
-        android:id="@+id/add_language_chip"
+        android:id="@+id/add_language_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/language_chip_flexbox"

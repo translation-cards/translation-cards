@@ -3,6 +3,7 @@ package org.mercycorps.translationcards.activity.addDeck;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
@@ -31,6 +32,8 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     ImageView nextButtonImage;
     @Bind(R.id.language_chip_flexbox)
     FlexboxLayout flexboxLayout;
+    @Bind(R.id.add_language_button)
+    TextView addLanguageButton;
 
     @Override
     public void inflateView() {
@@ -45,8 +48,20 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     @Override
     public void initStates() {
         newDeckContext = getContextFromIntent();
+        formatAddLanguageButton();
         updateNextButtonState();
         populateFlexBox();
+    }
+
+    private void formatAddLanguageButton() {
+        BitmapDrawable img = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_control_point_white_24dp);
+        if (img != null) {
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(img.getBitmap(), densityPixelsToPixels(20), densityPixelsToPixels(20), false);
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(this.getResources(), scaledBitmap);
+            bitmapDrawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+            addLanguageButton.setCompoundDrawablesWithIntrinsicBounds(bitmapDrawable, null, null, null);
+            addLanguageButton.setCompoundDrawablePadding(densityPixelsToPixels(5));
+        }
     }
 
     private void populateFlexBox() {
@@ -149,7 +164,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick(R.id.add_language_chip)
+    @OnClick(R.id.add_language_button)
     public void showLanguageSelector() {
         startActivityForResult(new Intent(this, DestinationLanguageSelectorActivity.class), REQUEST_CODE);
     }
