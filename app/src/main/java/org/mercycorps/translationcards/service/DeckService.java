@@ -1,10 +1,11 @@
 package org.mercycorps.translationcards.service;
 
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.repository.DeckRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public class DeckService {
 
@@ -25,7 +26,7 @@ public class DeckService {
         return currentDeck;
     }
 
-    public void save(Deck deck, String languages) {
+    public void save(Deck deck, Set<String> languages) {
         Long deckID = deckRepository.addDeck(
                 deck.getTitle(),
                 deck.getAuthor(),
@@ -36,15 +37,14 @@ public class DeckService {
         saveDictionaries(deckID, languages);
     }
 
-    private void saveDictionaries(Long deckId, String languages) {
-        String[] languagesList = languages.split(",");
+    private void saveDictionaries(Long deckId, Set<String> languages) {
         Dictionary dictionary;
         Integer itemIndex = 0;
-        for (String language : languagesList) {
+        for (String language : languages) {
             String isoCode = languageService.getIsoForLanguage(language);
             dictionary = new Dictionary(isoCode, language, null, -1, deckId);
             dictionary.save(itemIndex);
-            itemIndex ++;
+            itemIndex++;
         }
     }
 

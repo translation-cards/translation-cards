@@ -6,9 +6,7 @@ import org.mercycorps.translationcards.model.Language;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public class NewDeckContext implements Serializable {
     private static final String NO_VALUE = "";
@@ -40,20 +38,6 @@ public class NewDeckContext implements Serializable {
         return deck.getTitle();
     }
 
-    public String getLanguagesInput() {
-        if (destinationLanguages.size() == 0) {
-            return "";
-        }
-        Iterator<String> iterator = destinationLanguages.iterator();
-        StringBuilder sb = new StringBuilder();
-        sb.append(iterator.next());
-        while (iterator.hasNext()) {
-            sb.append(", ");
-            sb.append(iterator.next());
-        }
-        return sb.toString();
-    }
-
     public String getAuthor() {
         return deck.getAuthor();
     }
@@ -76,9 +60,5 @@ public class NewDeckContext implements Serializable {
 
     public HashSet<String> getDestinationLanguages() {
         return destinationLanguages;
-    }
-
-    public void addDestinationLanguages(List<String> languages) {
-        destinationLanguages.addAll(languages);
     }
 }

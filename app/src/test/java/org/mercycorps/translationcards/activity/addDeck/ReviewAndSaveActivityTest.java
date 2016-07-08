@@ -44,7 +44,6 @@ public class ReviewAndSaveActivityTest {
     private static final long DB_ID = 0L;
     private static final long CREATION_TIMESTAMP = 753004800000L;
     private static final String SOURCE_LANGUAGE_ISO = "en";
-    private static final String DEFAULT_LANGUAGES = "Arabic, Chinese, Spanish";
     private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private NewDeckContext newDeckContext;
@@ -91,7 +90,7 @@ public class ReviewAndSaveActivityTest {
         newDeckContext.addDestinationLanguage("Spanish");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
-        verify(deckService).save(deck, DEFAULT_LANGUAGES);
+        verify(deckService).save(deck, newDeckContext.getDestinationLanguages());
     }
 
     @Test

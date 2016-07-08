@@ -7,7 +7,6 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 import org.mercycorps.translationcards.view.DeckItem;
@@ -19,8 +18,10 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class ReviewAndSaveActivity extends AddDeckActivity {
-    @Bind(R.id.translation_languages) TextView translationLanguagesTextView;
-    @Bind(R.id.deck_item) DeckItem deckItem;
+    @Bind(R.id.translation_languages)
+    TextView translationLanguagesTextView;
+    @Bind(R.id.deck_item)
+    DeckItem deckItem;
     private NewDeckContext newDeckContext;
 
     @Override
@@ -39,7 +40,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
         DeckService deckService = ((MainApplication) getApplication()).getDeckService();
-        deckService.save(newDeckContext.getDeck(), newDeckContext.getLanguagesInput());
+        deckService.save(newDeckContext.getDeck(), newDeckContext.getDestinationLanguages());
         startNextActivity(this, MyDecksActivity.class);
     }
 
@@ -58,7 +59,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
      */
     private void fillLanguagesListTextView() {
         Set<String> destinationLanguages = newDeckContext.getDestinationLanguages();
-        if(destinationLanguages != null) {
+        if (destinationLanguages != null) {
             String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(new ArrayList<>(destinationLanguages));
             translationLanguagesTextView.setText(formattedLanguages);
         }
