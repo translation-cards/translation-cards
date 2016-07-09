@@ -93,7 +93,7 @@
     <string name="deck_get_started_detail">Creating a new deck allows you to add custom translation cards.</string>
     <string name="enter_deck_title_description">Let\'s begin by entering the deck title. A good translation card deck helps with translations in a specific scenario. The title should be short and descriptive.</string>
     <string name="enter_deck_destination_title">Set the destination language</string>
-    <string name="enter_deck_destination_language_description">A deck has one or more destination languages, these are the languages you would like to translate to. Separate each language by using a comma.</string>
+    <string name="enter_deck_destination_language_description">A deck has one or more destination languages, these are the languages you would like to translate to. Tap \'Add Language\' to get started.</string>
     <string name="enter_deck_destination_input">e.g. Arabic, Farsi, Pashto</string>
     <string name="delete_deck">Delete</string>
     <string name="share_deck">Share</string>
@@ -115,6 +115,8 @@
     <string name="microphone_permission_message">Translation Cards uses your microphone to record phrases.\n\nSince it\'s the first time you\'re making a card, you need to allow Translation Cards to use your microphone.</string>
     <string name="permission_not_granted">Permission not granted.</string>
     <string name="record_audio_permission_granted">You can now record audio. Tap record again to start recording.</string>
+    <string name="select_language_prompt">Please select a language</string>
+    <string name="add_language_chip_label">Add Language</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

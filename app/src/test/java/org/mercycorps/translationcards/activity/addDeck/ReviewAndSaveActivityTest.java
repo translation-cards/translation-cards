@@ -44,7 +44,6 @@ public class ReviewAndSaveActivityTest {
     private static final long DB_ID = 0L;
     private static final long CREATION_TIMESTAMP = 753004800000L;
     private static final String SOURCE_LANGUAGE_ISO = "en";
-    private static final String DEFAULT_LANGUAGES = "Arabic, Chinese, Spanish";
     private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private NewDeckContext newDeckContext;
@@ -55,7 +54,7 @@ public class ReviewAndSaveActivityTest {
         DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{});
         deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_ISO);
-        newDeckContext = new NewDeckContext(deck, DEFAULT_LANGUAGES, false);
+        newDeckContext = new NewDeckContext(deck, false);
     }
 
     @After
@@ -86,9 +85,12 @@ public class ReviewAndSaveActivityTest {
 
     @Test
     public void shouldSaveNewDeckContextWhenUserClicksSave() {
+        newDeckContext.addDestinationLanguage("Arabic");
+        newDeckContext.addDestinationLanguage("Chinese");
+        newDeckContext.addDestinationLanguage("Spanish");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
-        verify(deckService).save(deck, DEFAULT_LANGUAGES);
+        verify(deckService).save(deck, newDeckContext.getDestinationLanguages());
     }
 
     @Test
@@ -114,8 +116,11 @@ public class ReviewAndSaveActivityTest {
 
     @Test
     public void shouldShowLanguagesListFromContextWhenActivityIsCreated() {
+        newDeckContext.addDestinationLanguage("French");
+        newDeckContext.addDestinationLanguage("German");
+        newDeckContext.addDestinationLanguage("Chinese");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         TextView translationLanguages = findTextView(activity, R.id.translation_languages);
-        assertEquals("ARABIC  CHINESE  SPANISH", translationLanguages.getText().toString());
+        assertEquals("FRENCH  GERMAN  CHINESE", translationLanguages.getText().toString());
     }
 }

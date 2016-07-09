@@ -1,8 +1,13 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.junit.After;
 import org.junit.Test;
@@ -13,16 +18,15 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowView;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 
@@ -31,7 +35,6 @@ import static org.robolectric.Shadows.shadowOf;
 public class EnterDeckDestinationLanguagesActivityTest {
 
     private static final String A_LANGUAGE = "Arabic";
-    private static final String EMPTY_LANGUAGE = "";
     private AddDeckActivityHelper<EnterDeckDestinationLanguagesActivity> helper = new AddDeckActivityHelper<>(EnterDeckDestinationLanguagesActivity.class);
 
     @After
@@ -40,11 +43,52 @@ public class EnterDeckDestinationLanguagesActivityTest {
     }
 
     @Test
-    public void shouldGoToAuthorAndLockActivityWhenNextButtonClicked() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), A_LANGUAGE, false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
+    public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndNewDeckContextHasADestinationLanguage() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        activity.updateNextButtonState();
         click(activity, R.id.enter_destination_next_label);
         assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
+    }
+
+    @Test
+    public void shouldAddLanguageSelectorResultToViewAndNewDeckContext() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        Intent data = new Intent();
+        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);
+
+        assertTrue(newDeckContext.getDestinationLanguages().contains("English"));
+        assertEquals("English", ((TextView) flexBox.getChildAt(0)).getText().toString());
+    }
+
+    @Test
+    public void shouldNotAddLanguageSelectorResultIfNull() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        Intent emptyIntent = new Intent();
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, emptyIntent);
+
+        assertEquals(0, flexBox.getChildCount());
+        assertEquals(0, newDeckContext.getDestinationLanguages().size());
+    }
+
+    @Test
+    public void shouldNotAddLanguageSelectorResultIfInvalidResultCode() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+
+        Intent data = new Intent();
+        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "English");
+        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_CANCELED, data);
+
+        assertEquals(0, flexBox.getChildCount());
+        assertEquals(0, newDeckContext.getDestinationLanguages().size());
     }
 
     @Test
@@ -72,81 +116,100 @@ public class EnterDeckDestinationLanguagesActivityTest {
     public void shouldSetActivityDescriptionWhenCreated() {
         Activity activity = helper.createActivityToTest();
         TextView description = findTextView(activity, R.id.enter_deck_destination_description);
-        assertEquals("A deck has one or more destination languages, these are the languages you would like to translate to. Separate each language by using a comma.", description.getText().toString());
+        String descriptionString = activity.getString(R.string.enter_deck_destination_language_description);
+        assertEquals(descriptionString, description.getText().toString());
     }
 
     @Test
-    public void shouldDisplayCorrectHintTextWhenDestinationLanguageInputFieldIsEmpty() {
+    public void shouldGoToDestinationLanguageSelectorActivity() {
         Activity activity = helper.createActivityToTest();
-        TextView input = findTextView(activity, R.id.enter_deck_destination_input);
-        assertEquals("e.g. Arabic, Farsi, Pashto", input.getHint().toString());
+        click(activity, R.id.add_language_button);
+        assertEquals(LanguageSelectorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
-    public void shouldUpdateNewDeckContextWhenUserClicksSaveWithLanguages() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        String languagesInput = "Arabic, Farsi";
-        setText(activity, R.id.enter_deck_destination_input, languagesInput);
-        click(activity, R.id.enter_destination_next_label);
-        verify(newDeckContext).updateLanguagesInput(languagesInput);
-    }
-
-    @Test
-    public void shouldUpdateNewDeckContextWhenUserClicksBack() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.enter_deck_destination_input, "Arabic, Farsi");
-        click(activity, R.id.enter_destination_back_arrow);
-        verify(newDeckContext).updateLanguagesInput("Arabic, Farsi");
-    }
-
-    @Test
-    public void shouldChangeNextButtonColorWhenDestinationLanguageIsNotEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+    public void shouldChangeNextButtonColorWhenDestinationLanguageSetIsNotEmpty() {
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        activity.updateNextButtonState();
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
     }
 
     @Test
     public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        activity.updateNextButtonState();
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldChangeNextButtonColorWhenDestinationLanguageIsSetEmpty() {
+    public void shouldChangeNextButtonTextColorAndImageWhenDestinationLanguageIsSetEmpty() {
         Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
-        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
-        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
-    }
-
-    @Test
-    public void shouldChangeNextButtonArrowColorToDisabledWhenDestinationLanguageIsSetEmpty() {
-        Activity activity = helper.createActivityToTest();
-        setText(activity, R.id.enter_deck_destination_input, A_LANGUAGE);
-        setText(activity, R.id.enter_deck_destination_input, EMPTY_LANGUAGE);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
         assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test
-    public void shouldFillDestinationLanguageFieldWhenActivityIsCreatedWithLanguages() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, "Arabic", false);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        TextView destinationLanguageField = findTextView(activity, R.id.enter_deck_destination_input);
-        assertEquals("Arabic", destinationLanguageField.getText().toString());
+    public void shouldCreateLanguageChipsWhenActivityIsCreatedWithALanguage() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        assertEquals(1, flexboxLayout.getChildCount());
+        assertEquals(A_LANGUAGE, ((TextView) flexboxLayout.getChildAt(0)).getText().toString());
     }
 
     @Test
-    public void shouldNotBeAbleToClickSaveWhenNoDestinationLanguagesHaveBeenEntered() {
+    public void shouldNotBeAbleToClickNextWhenNoDestinationLanguagesHaveBeenEntered() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.enter_destination_next_label);
         assertNull(shadowOf(activity).getNextStartedActivity());
+    }
+
+    @Test
+    public void shouldRemoveLanguageWhenChipIconTapped() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        View languageChip = flexboxLayout.getChildAt(0);
+        ShadowView shadowView = shadowOf(languageChip);
+        View.OnTouchListener onTouchListener = shadowView.getOnTouchListener();
+        int xTouchPos = languageChip.getRight() - (languageChip.getPaddingRight() / 2);
+        int yTouchPos = (languageChip.getTop() - languageChip.getBottom()) / 2;
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_DOWN, xTouchPos, yTouchPos, 0));
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_UP, xTouchPos, yTouchPos, 0));
+
+        assertTrue(newDeckContext.getDestinationLanguages().isEmpty());
+        assertEquals(0, flexboxLayout.getChildCount());
+    }
+
+    @Test
+    public void shouldDisableNextButtonWhenLastLanguageRemoved() {
+        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        newDeckContext.addDestinationLanguage(A_LANGUAGE);
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
+        FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
+        View languageChip = flexboxLayout.getChildAt(0);
+        View.OnTouchListener onTouchListener = shadowOf(languageChip).getOnTouchListener();
+        TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
+        ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
+
+        int xTouchPos = languageChip.getRight() - (languageChip.getPaddingRight() / 2);
+        int yTouchPos = (languageChip.getTop() - languageChip.getBottom()) / 2;
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_DOWN, xTouchPos, yTouchPos, 0));
+        onTouchListener.onTouch(languageChip, MotionEvent.obtain(500L, 500L, MotionEvent.ACTION_UP, xTouchPos, yTouchPos, 0));
+        click(activity, R.id.enter_destination_next_label);
+
+        assertNull(shadowOf(activity).getNextStartedActivity());
+        assertEquals(getColor(activity, R.color.textDisabled), nextButtonText.getCurrentTextColor());
+        assertEquals(R.drawable.forward_arrow_disabled, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 }

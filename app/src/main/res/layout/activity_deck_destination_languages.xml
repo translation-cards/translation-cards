@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:orientation="vertical">
 
@@ -43,23 +44,31 @@
         android:text="@string/enter_deck_destination_language_description"
         android:textSize="16.5sp" />
 
-    <EditText
-        android:id="@+id/enter_deck_destination_input"
+    <TextView
+        android:id="@+id/add_language_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/enter_deck_destination_description"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="24dp"
-        android:hint="@string/enter_deck_destination_input"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textColorHighlight="@color/colorPrimary"
-        android:textColorHint="@color/borderColor" />
+        android:layout_below="@+id/language_chip_flexbox"
+        android:padding="8dp"
+        android:layout_margin="10dp"
+        android:text="@string/add_language_chip_label"
+        android:textSize="16.5sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"/>
+
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:layout_below="@id/enter_deck_destination_description"
+        android:id="@+id/language_chip_flexbox"/>
 
     <!--Nav Bar-->
     <RelativeLayout
@@ -101,24 +110,28 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_selected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

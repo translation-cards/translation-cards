@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.mercycorps.translationcards" >
+    package="org.mercycorps.translationcards">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -8,17 +8,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".MainApplication">
-
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MyDecksActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,103 +28,114 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MyDecksActivity" />
-       </activity>
+        </activity>
         <activity
             android:name=".activity.addDeck.EnterDeckTitleActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.addDeck.EnterDeckSourceLanguageActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDeck.EnterAuthorActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDeck.ReviewAndSaveActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.GetStartedActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDeck.GetStartedDeckActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.EnterSourcePhraseActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.addTranslation.RecordAudioActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.EnterTranslatedPhraseActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.addTranslation.SummaryActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ImportActivity"
             android:screenOrientation="portrait">
+
             <!-- To support opening from a file manager. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="http"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="http" />
                 <data
-                    android:scheme="https"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="https" />
                 <data
-                    android:scheme="ftp"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="ftp" />
                 <data
-                    android:scheme="sftp"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="sftp" />
                 <data
-                    android:scheme="file"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="file" />
                 <data
-                    android:scheme="content"
                     android:host="*"
+                    android:mimeType="*/*"
                     android:pathPattern=".*\\.txc"
-                    android:mimeType="*/*" />
+                    android:scheme="content" />
             </intent-filter>
-            <!-- To support opening downloaded files.
+            <!--
+                 To support opening downloaded files.
                  It appears that downloaded files are re-assigned numeric filenames, so we can't
                  filter by path pattern here. Also, mimetypes sometimes get lost somewhere along the
-                 way, so I include application/octet-stream in addition to zip files. -->
+                 way, so I include application/octet-stream in addition to zip files.
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
-                    android:scheme="content"
                     android:host="*"
-                    android:mimeType="application/octet-stream" />
+                    android:mimeType="application/octet-stream"
+                    android:scheme="content" />
                 <data
-                    android:scheme="content"
                     android:host="*"
-                    android:mimeType="application/zip" />
+                    android:mimeType="application/zip"
+                    android:scheme="content" />
                 <data
-                    android:scheme="content"
                     android:host="*"
-                    android:mimeType="application/x-zip" />
-            </intent-filter> -->
+                    android:mimeType="application/x-zip"
+                    android:scheme="content" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity android:name=".activity.addDeck.LanguageSelectorActivity"
+            android:label="@string/select_language_prompt">
         </activity>
     </application>
+
 </manifest>

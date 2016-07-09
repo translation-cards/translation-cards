@@ -5,23 +5,25 @@ import org.mercycorps.translationcards.model.Language;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class NewDeckContext implements Serializable {
     private static final String NO_VALUE = "";
     private static final String ENGLISH_ISO = "en";
 
     private Deck deck;
-    private String languagesInput;
     private boolean isEdit;
+    private final LinkedHashSet<String> destinationLanguages;
 
-    public NewDeckContext(){
-        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), NO_VALUE, false);
+    public NewDeckContext() {
+        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), false);
     }
 
-    public NewDeckContext(Deck deck, String languagesInput, boolean isEdit) {
+    public NewDeckContext(Deck deck, boolean isEdit) {
         this.deck = deck;
-        this.languagesInput = languagesInput;
         this.isEdit = isEdit;
+        destinationLanguages = new LinkedHashSet<>();
     }
 
     public void setSourceLanguage(Language language) {
@@ -36,14 +38,6 @@ public class NewDeckContext implements Serializable {
         return deck.getTitle();
     }
 
-    public String getLanguagesInput() {
-        return languagesInput;
-    }
-
-    public void updateLanguagesInput(String input) {
-        languagesInput = input;
-    }
-
     public String getAuthor() {
         return deck.getAuthor();
     }
@@ -52,9 +46,19 @@ public class NewDeckContext implements Serializable {
         deck.setAuthor(author);
     }
 
-    public String getSourceLanguage(){ return deck.getSourceLanguageName(); }
+    public String getSourceLanguage() {
+        return deck.getSourceLanguageName();
+    }
 
     public Deck getDeck() {
         return deck;
+    }
+
+    public void addDestinationLanguage(String language) {
+        destinationLanguages.add(language);
+    }
+
+    public HashSet<String> getDestinationLanguages() {
+        return destinationLanguages;
     }
 }

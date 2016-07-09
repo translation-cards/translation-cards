@@ -14,6 +14,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -41,7 +43,10 @@ public class DeckServiceTest {
 
     @Test
     public void shouldSaveDeckToDBWhenSaveIsCalled() {
-        deckService.save(deck, "Arabic, Farsi");
+        HashSet<String> destinationLanguages = new HashSet<>();
+        destinationLanguages.add("Arabic");
+        destinationLanguages.add("Farsi");
+        deckService.save(deck, destinationLanguages);
 
         verify(deckRepository).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());
     }
@@ -50,7 +55,7 @@ public class DeckServiceTest {
     @Ignore
     @Test
     public void shouldSaveDictionariesWhenContextObjectIsSaved() {
-        deckService.save(deck, "");
+        deckService.save(deck, Collections.EMPTY_SET);
 
 //        verify(dictionary).save(0);
     }
@@ -60,7 +65,7 @@ public class DeckServiceTest {
     public void shouldAddDeckIdToDictionaryWhenContextObjectIsSaved() {
         long deckId = 1;
 
-        deckService.save(deck, "");
+        deckService.save(deck, Collections.EMPTY_SET);
 
 //        verify(dictionary).setDeckId(deckId);
     }
