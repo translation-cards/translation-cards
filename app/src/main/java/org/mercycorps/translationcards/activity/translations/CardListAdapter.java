@@ -90,7 +90,7 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
                 R.id.list_item_progress_bar);
 
         setCardTextView(item, translationItemView, currentDictionaryLabel, progressBar);
-        setTranslationCardView(item, translationItemView, cardIsExpanded);
+        setTranslationCardView(item, translationItemView, cardIsExpanded, position);
         setTranslatedTextView(item, translationItemView, currentDictionaryLabel);
 
         translationItemView.findViewById(R.id.translated_text_layout)
@@ -122,23 +122,46 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
                 translationsActivity.decoratedMediaManager, currentDictionaryLabel));
     }
 
-    protected void setTranslationCardView(Translation item, View convertView, Boolean isCardExpanded) {
+    protected void setTranslationCardView(Translation item, View convertView, Boolean isCardExpanded, int position) {
         ImageView audioIcon = (ImageView) convertView.findViewById(R.id.audio_icon);
-        Drawable bg=audioIcon.getDrawable();
+        Drawable audioIconBackground=audioIcon.getDrawable();
+        View translationParent = convertView.findViewById(R.id.translation_card_parent);
+        initializeTranslationViewExpansion(convertView, isCardExpanded, position, translationParent);
 
-        View v = convertView.findViewById(R.id.translation_card_parent);
-        LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
-        int cardTopBackgroundId = isCardExpanded ? R.id.card_top_background_expanded : R.id.card_top_background;
-        GradientDrawable shape = (GradientDrawable)   bgDrawable.findDrawableByLayerId(cardTopBackgroundId);
+        LayerDrawable cardLabelBackground = (LayerDrawable)translationParent.getBackground();
+        int cardLabelBackgroundId = isCardExpanded ? R.id.card_top_background_expanded : R.id.card_top_background;
+        GradientDrawable cardLabelBackgroundDrawable = (GradientDrawable)   cardLabelBackground.findDrawableByLayerId(cardLabelBackgroundId);
 
         if(!item.isAudioFilePresent()){
-            shape.setAlpha(DISABLED_OPACITY);
-            bg.setAlpha(DISABLED_BITMAP_OPACITY);
+            cardLabelBackgroundDrawable.setAlpha(DISABLED_OPACITY);
+            audioIconBackground.setAlpha(DISABLED_BITMAP_OPACITY);
         }
         else{
-            shape.setAlpha(DEFAULT_OPACITY);
-            bg.setAlpha(DEFAULT_BITMAP_OPACITY);
+            cardLabelBackgroundDrawable.setAlpha(DEFAULT_OPACITY);
+            audioIconBackground.setAlpha(DEFAULT_BITMAP_OPACITY);
         }
+    }
+
+    private void initializeTranslationViewExpansion(View convertView, Boolean isCardExpanded, int position, View translationParent) {
+        View translationChild=convertView.findViewById(R.id.translation_child);
+        int rightPadding= translationParent.getPaddingRight();
+        int leftPadding= translationParent.getPaddingLeft();
+        if(isCardExpanded){
+            translationChild.setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                    R.drawable.collapse_arrow);
+            translationService.expandCard(position);
+            translationParent.setBackgroundResource(R.drawable.card_top_background_expanded);
+        }
+        else{
+            translationChild.setVisibility(View.GONE);
+            convertView.findViewById(R.id.indicator_icon).setBackgroundResource(
+                    R.drawable.expand_arrow);
+            translationService.minimizeCard(position);
+            translationParent.setBackgroundResource(R.drawable.card_top_background);
+        }
+
+        translationParent.setPadding(leftPadding, 0, rightPadding, 0);
     }
 
     private void setTranslatedTextView(Translation item, View convertView, String currentDictionaryLabel) {
