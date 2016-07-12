@@ -5,6 +5,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
@@ -38,12 +40,13 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class MainApplication extends Application {
 
+    private static String TAG = MainApplication.class.getName();
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
     private AudioPlayerManager audioPlayerManager;
     private static Context context;
-    private  ScheduledExecutorService scheduledExecutorService;
+    private ScheduledExecutorService scheduledExecutorService;
     private DecoratedMediaManager decoratedMediaManager;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
@@ -63,21 +66,14 @@ public class MainApplication extends Application {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
-        scheduledExecutorService =  Executors.newScheduledThreadPool(1);
+        scheduledExecutorService = Executors.newScheduledThreadPool(1);
         audioPlayerManager = new AudioPlayerManager(mediaPlayer);
         decoratedMediaManager = new DecoratedMediaManager();
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
-        InputStream inputStream;
-        try {
-            inputStream = context.getAssets().open("language_codes.json");
-        } catch(IOException e) {
-            //do something here
-            inputStream = null;
-        }
-        LanguagesImportUtility languagesImportUtility = new LanguagesImportUtility(inputStream);
+        LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
         languageService = new LanguageService(languagesImportUtility);
-        if(isTest) return;
+        if (isTest) return;
         databaseHelper = new DatabaseHelper(context);
         translationRepository = new TranslationRepository(databaseHelper);
         dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository);
@@ -89,8 +85,28 @@ public class MainApplication extends Application {
         translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
+    @NonNull
+    private LanguagesImportUtility createLanguagesImportUtility() {
+        InputStream inputStream;
+        try {
+            inputStream = context.getAssets().open("language_codes.json");
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+            inputStream = null;
+        }
+        LanguagesImportUtility languagesImportUtility = new LanguagesImportUtility(inputStream);
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        }
+        return languagesImportUtility;
+    }
+
     private void checkForBundledDeckAndLoad(DatabaseHelper dbHelper) {
-        if(deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID){
+        if (deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
             txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
         }
     }
@@ -107,7 +123,7 @@ public class MainApplication extends Application {
         return audioPlayerManager;
     }
 
-    public static Context getContextFromMainApp(){
+    public static Context getContextFromMainApp() {
         return context;
     }
 
@@ -115,20 +131,20 @@ public class MainApplication extends Application {
         return new FileInputStream(new File(fileName)).getFD();
     }
 
-    private void createAudioRecordingDirs(){
+    private void createAudioRecordingDirs() {
         File recordingsDir = new File(getFilesDir(), "recordings");
         recordingsDir.mkdirs();
     }
 
-    public String getFilePathPrefix(){
-        return getFilesDir().getAbsolutePath()+"/recordings/";
+    public String getFilePathPrefix() {
+        return getFilesDir().getAbsolutePath() + "/recordings/";
     }
 
-    public MediaRecorder getMediaRecorder(){
+    public MediaRecorder getMediaRecorder() {
         return new MediaRecorder();
     }
 
-    public ScheduledExecutorService getScheduledExecutorService(){
+    public ScheduledExecutorService getScheduledExecutorService() {
         return scheduledExecutorService;
     }
 

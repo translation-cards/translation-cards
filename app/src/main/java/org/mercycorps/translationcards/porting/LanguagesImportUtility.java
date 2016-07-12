@@ -21,48 +21,50 @@ import java.util.Map;
  * @author atamrat@thoughtworks.com (Abel Tamrat)
  */
 public class LanguagesImportUtility {
-
-    private static final String FILENAME = "language_codes.json";
-    private static final int BUFFER_SIZE = 2048;
-    private InputStream inputStream;
-
-    private static final String DEFAULT_LANGUAGE_NAME = "English";
+    private Map<String, List<String>> languageMap;
 
     public LanguagesImportUtility(InputStream inputStream) {
-        this.inputStream = inputStream;
+        loadLanguageMap(inputStream);
     }
 
-    public Map<String, List<String>> loadLanguageMapFromFile() {
+    public Map<String, List<String>> getLanguageMap() {
+        return languageMap;
+    }
+
+    private void loadLanguageMap(InputStream inputStream) {
+
         JSONObject jsonObject;
         Map<String, List<String>> langMap = new HashMap<>();
-        try {
-            jsonObject = readJSONFile();
-            ImportSpec importSpec = buildImportSpec(jsonObject);
-            langMap = loadAssetData(importSpec);
-        } catch (IOException | JSONException | ImportException e) {
-            Log.d(TranslationRepository.TAG, e.getMessage());
+        if (inputStream != null) {
+            try {
+                jsonObject = readJSONFileFrom(inputStream);
+                ImportSpec importSpec = buildImportSpec(jsonObject);
+                langMap = loadAssetData(importSpec);
+            } catch (IOException | JSONException | ImportException e) {
+                Log.d(TranslationRepository.TAG, e.getMessage());
+            }
         }
-        return langMap;
+        languageMap = langMap;
     }
 
     @NonNull
-    private JSONObject readJSONFile() throws IOException, JSONException {
+    private JSONObject readJSONFileFrom(InputStream inputStream) throws IOException, JSONException {
         JSONObject jsonObject;
         byte[] buffer = new byte[inputStream.available()];
         inputStream.read(buffer);
-        inputStream.close();
         jsonObject = new JSONObject(new String(buffer, "UTF-8"));
         return jsonObject;
     }
 
-    private Map<String, List<String>> loadAssetData( ImportSpec importSpec) {
-        Map<String, List<String>> languageMap= new HashMap<>();
+    private Map<String, List<String>> loadAssetData(ImportSpec importSpec) {
+        Map<String, List<String>> languageMap = new HashMap<>();
         for (int i = 0; i < importSpec.languages.size(); i++) {
             ImportSpecLanguage language = importSpec.languages.get(i);
-            languageMap.put(language.isoCode.substring(0,2),language.languageNames);
+            languageMap.put(language.isoCode.substring(0, 2), language.languageNames);
         }
         return languageMap;
     }
+
     @NonNull
     public ImportSpec buildImportSpec(JSONObject json) throws ImportException {
         ImportSpec spec;
@@ -89,7 +91,7 @@ public class LanguagesImportUtility {
             JSONArray languageDisplayNames = language.optJSONArray(JsonKeys.LANGUAGE_NAMES);
 
             ImportSpecLanguage languageSpec = new ImportSpecLanguage(IsoCode);
-            for(int j=0;j<languageDisplayNames.length();j++){
+            for (int j = 0; j < languageDisplayNames.length(); j++) {
                 languageSpec.languageNames.add(languageDisplayNames.getString(j));
             }
             spec.languages.add(languageSpec);
