@@ -158,7 +158,6 @@ public class SummaryActivity extends AddTranslationActivity {
         updateTextInTextView(translatedTextView, translatedText);
     }
     private void greyOutCardIfNoAudioTranslation() {
-        Drawable audioIconDrawable=audioIcon.getDrawable();
         View v = findViewById(R.id.translation_card_parent);
         LayerDrawable bgDrawable = (LayerDrawable)v.getBackground();
         int backgroundId = isCardExpanded?R.id.card_top_background_expanded:R.id.card_top_background;
@@ -166,12 +165,12 @@ public class SummaryActivity extends AddTranslationActivity {
         if(!getLanguageTabsFragment().getCurrentTranslation().getTranslation().isAudioFilePresent()){
             cardTopBackgroundDrawable.setAlpha(DISABLED_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.textDisabled));
-            audioIconDrawable.setAlpha(DISABLED_BITMAP_OPACITY);
+            audioIcon.setBackgroundResource(R.drawable.no_audio_40);
         }
         else{
             cardTopBackgroundDrawable.setAlpha(DEFAULT_OPACITY);
             sourceTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
-            audioIconDrawable.setAlpha(DEFAULT_BITMAP_OPACITY);
+            audioIcon.setBackgroundResource(R.drawable.audio);
         }
         updateTextInTextView(sourceTextView, getContextFromIntent().getSourcePhrase());
     }

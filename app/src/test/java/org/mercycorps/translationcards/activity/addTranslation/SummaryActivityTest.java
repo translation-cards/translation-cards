@@ -28,7 +28,9 @@ import org.robolectric.shadows.ShadowToast;
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.clickLanguageTabAtPosition;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
@@ -301,11 +303,10 @@ public class SummaryActivityTest {
     }
 
     @Test
-    @TargetApi(19)
     public void shouldGreyOutAudioIconWhenTranslationContainsNoAudio() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
         ImageView audioIcon = findImageView(activity, R.id.audio_icon);
-        assertEquals(SummaryActivity.DISABLED_BITMAP_OPACITY, audioIcon.getDrawable().getAlpha());
+        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio_40));
     }
 
     public void setupAudioPlayerManager() throws AudioFileNotSetException {
