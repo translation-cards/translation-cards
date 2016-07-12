@@ -408,7 +408,7 @@ public class TranslationsActivityTest {
 
         ImageView audioIcon = (ImageView)translationsListItem.findViewById(R.id.audio_icon);
 
-        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio));
+        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio_40));
     }
 
     @Test

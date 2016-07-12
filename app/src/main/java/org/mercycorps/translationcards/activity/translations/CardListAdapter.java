@@ -131,7 +131,7 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
 
         if(!item.isAudioFilePresent()){
             cardLabelBackgroundDrawable.setAlpha(DISABLED_OPACITY);
-            audioIcon.setBackgroundResource(R.drawable.no_audio);
+            audioIcon.setBackgroundResource(R.drawable.no_audio_40);
         }
         else{
             cardLabelBackgroundDrawable.setAlpha(DEFAULT_OPACITY);
