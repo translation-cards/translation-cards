@@ -1,13 +1,13 @@
 package org.mercycorps.translationcards.service;
 
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
+import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Dictionary;
 import java.util.List;
 
 public class TranslationService {
@@ -36,7 +36,7 @@ public class TranslationService {
     }
 
     public void deleteTranslation(String sourcePhrase) {
-        for(org.mercycorps.translationcards.model.Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
+        for(Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
             translationRepository.deleteTranslation(translation.getDbId());
         }

@@ -106,7 +106,7 @@ public class MainApplication extends Application {
     }
 
     private void checkForBundledDeckAndLoad(DatabaseHelper dbHelper) {
-        if (deckRepository.retrieveDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
+        if (deckRepository.retrieveKeyForDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
             txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
         }
     }

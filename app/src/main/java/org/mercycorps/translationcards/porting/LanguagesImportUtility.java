@@ -21,6 +21,7 @@ import java.util.Map;
  * @author atamrat@thoughtworks.com (Abel Tamrat)
  */
 public class LanguagesImportUtility {
+    private static final String TAG = LanguagesImportUtility.class.getName();
     private Map<String, List<String>> languageMap;
 
     public LanguagesImportUtility(InputStream inputStream) {
@@ -41,7 +42,7 @@ public class LanguagesImportUtility {
                 ImportSpec importSpec = buildImportSpec(jsonObject);
                 langMap = loadAssetData(importSpec);
             } catch (IOException | JSONException | ImportException e) {
-                Log.d(TranslationRepository.TAG, e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
         languageMap = langMap;

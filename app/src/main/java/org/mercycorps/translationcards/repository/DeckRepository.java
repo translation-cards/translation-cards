@@ -105,7 +105,7 @@ public class DeckRepository {
         databaseHelper.getWritableDatabase().delete(DecksTable.TABLE_NAME, whereClause, whereArgs);
     }
 
-    public long retrieveDeckWithExternalId(String externalId) {
+    public long retrieveKeyForDeckWithExternalId(String externalId) {
         // TODO(nworden): consider handling this better when there's multiple existing decks with
         // this external ID
         String[] columns = new String[] {DecksTable.ID};

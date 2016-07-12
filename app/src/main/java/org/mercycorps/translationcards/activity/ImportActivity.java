@@ -18,8 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.porting.ImportException;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
@@ -153,7 +151,7 @@ public class ImportActivity extends AppCompatActivity {
             }
             // Check if it's a different version of a deck we've already imported.
             if (importSpec.externalId != null && !importSpec.externalId.isEmpty()) {
-                long otherVersion = portingUtility.otherVersionExists(importSpec);
+                long otherVersion = portingUtility.getExistingDeckId(importSpec);
                 if (otherVersion != -1) {
                     handleVersionOverride(importSpec, otherVersion);
                     return;
