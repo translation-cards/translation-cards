@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.activity.translations;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -124,7 +122,6 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
 
     protected void setTranslationCardView(Translation item, View convertView, Boolean isCardExpanded, int position) {
         ImageView audioIcon = (ImageView) convertView.findViewById(R.id.audio_icon);
-        Drawable audioIconBackground=audioIcon.getDrawable();
         View translationParent = convertView.findViewById(R.id.translation_card_parent);
         initializeTranslationViewExpansion(convertView, isCardExpanded, position, translationParent);
 
@@ -134,11 +131,11 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
 
         if(!item.isAudioFilePresent()){
             cardLabelBackgroundDrawable.setAlpha(DISABLED_OPACITY);
-            audioIconBackground.setAlpha(DISABLED_BITMAP_OPACITY);
+            audioIcon.setBackgroundResource(R.drawable.no_audio);
         }
         else{
             cardLabelBackgroundDrawable.setAlpha(DEFAULT_OPACITY);
-            audioIconBackground.setAlpha(DEFAULT_BITMAP_OPACITY);
+            audioIcon.setBackgroundResource(R.drawable.audio);
         }
     }
 

@@ -3,12 +3,8 @@ package org.mercycorps.translationcards.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -265,7 +261,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldHaveCorrectHintMessageWhenTranslatedTextIsEmpty() {
-        View translationsListItem = listItemWithNoTranslatedText();
+        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -275,7 +271,7 @@ public class TranslationsActivityTest {
     @Test
     public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
         int disabledTextColor = -7960954;
-        View translationsListItem = listItemWithNoTranslatedText();
+        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
@@ -406,6 +402,23 @@ public class TranslationsActivityTest {
         assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
 
+    @Test
+    public void shouldDisplayNoAudioIconWhenNoAudioHasBeenRecorded() {
+        View translationsListItem = firstTranslationCardInListView();
+
+        ImageView audioIcon = (ImageView)translationsListItem.findViewById(R.id.audio_icon);
+
+        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio));
+    }
+
+    @Test
+    public void shouldDisplayAudioIconWhenAudioHasBeenRecorded() {
+        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
+
+        ImageView audioIcon = (ImageView)translationsListItem.findViewById(R.id.audio_icon);
+
+        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.audio));
+    }
 
     @Test
     @TargetApi(19)
@@ -427,7 +440,7 @@ public class TranslationsActivityTest {
         return translationsList.getAdapter().getView(1, null, translationsList);
     }
 
-    private View listItemWithNoTranslatedText() {
+    private View listItemWithNoTranslatedTextAndWithAudio() {
         ListView translationsList = (ListView) translationsActivity.findViewById(
                 R.id.translations_list);
         return translationsList.getAdapter().getView(2, null, translationsList);
