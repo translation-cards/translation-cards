@@ -6,14 +6,18 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -24,8 +28,12 @@ public class LanguageServiceTest {
 
     @Before
     public void setup() throws IOException {
-        InputStream inputStream = RuntimeEnvironment.application.getAssets().open("language_codes.json");
-        languagesImportUtility = new LanguagesImportUtility(inputStream);
+        languagesImportUtility = mock(LanguagesImportUtility.class);
+        Map<String, List<String>> languageMap = new HashMap<>();
+        languageMap.put("fa", Arrays.asList("Persian", "Farsi"));
+        languageMap.put("en", Collections.singletonList("English"));
+        languageMap.put("ar", Collections.singletonList("Arabic"));
+        when(languagesImportUtility.getLanguageMap()).thenReturn(languageMap);
         languageService = new LanguageService(languagesImportUtility);
     }
 

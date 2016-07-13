@@ -1,11 +1,8 @@
 package org.mercycorps.translationcards.service;
 
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ public class LanguageService {
     public static final String INVALID_LANGUAGE = "INVALID";
 
     public LanguageService(LanguagesImportUtility langImportUtility) {
-        languageMap = langImportUtility.loadLanguageMapFromFile();
+        languageMap = langImportUtility.getLanguageMap();
     }
 
     public String getLanguageDisplayName(String isoCode) {

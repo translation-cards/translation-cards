@@ -16,7 +16,7 @@ import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsT
 
 public class TranslationRepository {
 
-    public static final String TAG = TranslationRepository.class.getName();
+    private static final String TAG = TranslationRepository.class.getName();
 
     private DatabaseHelper databaseHelper;
 

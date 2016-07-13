@@ -46,6 +46,7 @@ public class TxcImportUtility {
     private static final int BUFFER_SIZE = 2048;
     private static final String DEFAULT_SOURCE_LANGUAGE = "en";
     public static final String NO_AUDIO = "";
+    private static final String TAG = TxcImportUtility.class.getName();
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private TranslationRepository translationRepository;
@@ -79,8 +80,8 @@ public class TxcImportUtility {
         return deckRepository.hasDeckWithHash(importSpec.hash);
     }
 
-    public long otherVersionExists(ImportSpec importSpec) {
-        return deckRepository.retrieveDeckWithExternalId(importSpec.externalId);
+    public long getExistingDeckId(ImportSpec importSpec) {
+        return deckRepository.retrieveKeyForDeckWithExternalId(importSpec.externalId);
     }
 
     public void loadBundledDeck(SQLiteDatabase db) {
@@ -96,7 +97,7 @@ public class TxcImportUtility {
             ImportSpec importSpec = buildImportSpec(new File(""), "", jsonObject);
             loadAssetData(db, context, importSpec);
         } catch (IOException | JSONException | ImportException e) {
-            Log.d(TranslationRepository.TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -376,7 +377,7 @@ public class TxcImportUtility {
         }
     }
 
-    private class ImportSpecDictionary {
+    protected class ImportSpecDictionary {
 
         public final String isoCode;
         public final String language;
