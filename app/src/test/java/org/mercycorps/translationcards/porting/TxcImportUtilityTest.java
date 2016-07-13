@@ -46,7 +46,7 @@ public class TxcImportUtilityTest {
         when(mockLanguageService.getLanguageDisplayName("ps")).thenReturn("Pashto");
         when(mockLanguageService.getLanguageDisplayName("fa")).thenReturn("Farsi");
         when(mockLanguageService.getLanguageDisplayName(LanguageService.INVALID_ISO_CODE))
-                .thenReturn(LanguageService.INVALID_LANGUAGE);
+                .thenReturn(LanguageService.INVALID_LANGUAGE_NAME);
         when(mockLanguageService.getIsoForLanguage("Arabic")).thenReturn("ar");
         when(mockLanguageService.getIsoForLanguage("Pashto")).thenReturn("ps");
         when(mockLanguageService.getIsoForLanguage("Farsi")).thenReturn("fa");
@@ -193,7 +193,7 @@ public class TxcImportUtilityTest {
         assertFalse(importSpec.locked);
         assertEquals(3, importSpec.dictionaries.size());
         assertEquals(LanguageService.INVALID_ISO_CODE, importSpec.dictionaries.get(0).isoCode);
-        assertEquals(LanguageService.INVALID_LANGUAGE, importSpec.dictionaries.get(0).language);
+        assertEquals(LanguageService.INVALID_LANGUAGE_NAME, importSpec.dictionaries.get(0).language);
         assertEquals(mockFile, importSpec.dir);
         assertEquals(HASH, importSpec.hash);
 

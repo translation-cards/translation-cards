@@ -53,8 +53,18 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldReturnInvalidLanguageFlagForEmptyString() throws Exception {
-        assertEquals(LanguageService.INVALID_LANGUAGE, languageService.getIsoForLanguage(""));
+    public void shouldReturnInvalidIsoCodeForEmptyLanguageName() throws Exception {
+        assertEquals(LanguageService.INVALID_ISO_CODE, languageService.getIsoForLanguage(""));
+    }
+
+    @Test
+    public void shouldReturnInvalidIsoCodeForNullLanguageName() throws Exception {
+        assertEquals(LanguageService.INVALID_ISO_CODE, languageService.getIsoForLanguage(null));
+    }
+
+    @Test
+    public void shouldReturnInvalidLanguageNameForNullIsoCode() throws Exception {
+        assertEquals(LanguageService.INVALID_LANGUAGE_NAME, languageService.getLanguageDisplayName(null));
     }
 
     @Test

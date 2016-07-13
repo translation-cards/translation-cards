@@ -8,6 +8,7 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +26,11 @@ public class TxcExportUtility {
 
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
+    private LanguageService languageService;
+
+    public TxcExportUtility(LanguageService languageService) {
+        this.languageService = languageService;
+    }
 
     public void exportData(Deck deck, String exportedDeckName, Dictionary[] dictionaries, File file)
             throws ExportException {
@@ -60,46 +66,19 @@ public class TxcExportUtility {
         }
     }
 
-    private Map<String, Translation> buildSpec(
+    protected Map<String, Translation> buildSpec(
             Deck deck, String exportedDeckName, Dictionary[] dictionaries, ZipOutputStream zos)
             throws ExportException {
+
         Map<String, Translation> translationFilenames = new HashMap<>();
         JSONObject json = new JSONObject();
         try {
-            json.put(JsonKeys.DECK_LABEL, exportedDeckName);
-            json.put(JsonKeys.PUBLISHER, deck.getAuthor());
-            if (deck.getExternalId() != null) {
-                json.put(JsonKeys.EXTERNAL_ID, deck.getExternalId());
-            }
-            json.put(JsonKeys.TIMESTAMP, deck.getTimestamp());
-            json.put(JsonKeys.SOURCE_LANGUAGE, deck.getSourceLanguageIso());
-            json.put(JsonKeys.LOCKED, deck.isLocked());
-            JSONArray dictionariesJson = new JSONArray();
-            for (Dictionary dictionary : dictionaries) {
-                JSONObject dictionaryJson = new JSONObject();
-                dictionaryJson.put(
-                        JsonKeys.DICTIONARY_DEST_ISO_CODE, dictionary.getDestLanguageIso());
-                JSONArray cardsJson = new JSONArray();
-                for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-                    Translation translation = dictionary.getTranslation(i);
-                    String translationFilename = "";
-                    if(translation.isAudioFilePresent()) {
-                        translationFilename = buildUniqueFilename(translation, translationFilenames);
-                        translationFilenames.put(translationFilename, translation);
-                    }
-                    JSONObject cardJson = new JSONObject();
-                    cardJson.put(JsonKeys.CARD_LABEL, translation.getLabel());
-                    cardJson.put(JsonKeys.CARD_DEST_AUDIO, translationFilename);
-                    cardJson.put(JsonKeys.CARD_DEST_TEXT, translation.getTranslatedText());
-                    cardsJson.put(cardJson);
-                }
-                dictionaryJson.put(JsonKeys.CARDS, cardsJson);
-                dictionariesJson.put(dictionaryJson);
-            }
-            json.put(JsonKeys.DICTIONARIES, dictionariesJson);
+            writeDeckMetadataToJson(deck, exportedDeckName, json);
+            writeDictionariesToJson(dictionaries, translationFilenames, json);
         } catch (JSONException e) {
             throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
         }
+
         try {
             zos.putNextEntry(new ZipEntry(SPEC_FILENAME));
             zos.write(json.toString().getBytes());
@@ -107,7 +86,53 @@ public class TxcExportUtility {
         } catch (IOException e) {
             throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
         }
+
         return translationFilenames;
+    }
+
+    protected void writeDictionariesToJson(Dictionary[] dictionaries, Map<String, Translation> translationFilenames, JSONObject json) throws JSONException, ExportException {
+        JSONArray dictionariesJson = new JSONArray();
+        for (Dictionary dictionary : dictionaries) {
+            JSONObject dictionaryJson = new JSONObject();
+            String destLanguageIso = dictionary.getDestLanguageIso();
+            if ((null == destLanguageIso) || "".equals(destLanguageIso)) {
+                destLanguageIso = languageService.getIsoForLanguage(dictionary.getLanguage());
+            }
+            dictionaryJson.put(
+                    JsonKeys.DICTIONARY_DEST_ISO_CODE, destLanguageIso);
+            writeTranslationsToJson(translationFilenames, dictionary, dictionaryJson);
+            dictionariesJson.put(dictionaryJson);
+        }
+        json.put(JsonKeys.DICTIONARIES, dictionariesJson);
+    }
+
+    protected void writeTranslationsToJson(Map<String, Translation> translationFilenames, Dictionary dictionary, JSONObject dictionaryJson) throws ExportException, JSONException {
+        JSONArray cardsJson = new JSONArray();
+        for (int i = 0; i < dictionary.getTranslationCount(); i++) {
+            Translation translation = dictionary.getTranslation(i);
+            String translationFilename = "";
+            if (translation.isAudioFilePresent()) {
+                translationFilename = buildUniqueFilename(translation, translationFilenames);
+                translationFilenames.put(translationFilename, translation);
+            }
+            JSONObject cardJson = new JSONObject();
+            cardJson.put(JsonKeys.CARD_LABEL, translation.getLabel());
+            cardJson.put(JsonKeys.CARD_DEST_AUDIO, translationFilename);
+            cardJson.put(JsonKeys.CARD_DEST_TEXT, translation.getTranslatedText());
+            cardsJson.put(cardJson);
+        }
+        dictionaryJson.put(JsonKeys.CARDS, cardsJson);
+    }
+
+    protected void writeDeckMetadataToJson(Deck deck, String exportedDeckName, JSONObject json) throws JSONException {
+        json.put(JsonKeys.DECK_LABEL, exportedDeckName);
+        json.put(JsonKeys.PUBLISHER, deck.getAuthor());
+        if (deck.getExternalId() != null) {
+            json.put(JsonKeys.EXTERNAL_ID, deck.getExternalId());
+        }
+        json.put(JsonKeys.TIMESTAMP, deck.getTimestamp());
+        json.put(JsonKeys.SOURCE_LANGUAGE, deck.getSourceLanguageIso());
+        json.put(JsonKeys.LOCKED, deck.isLocked());
     }
 
     private String buildUniqueFilename(

@@ -15,34 +15,35 @@ public class LanguageService {
 
     private final Map<String, List<String>> languageMap;
     public static final String INVALID_ISO_CODE = "xx";
-    public static final String INVALID_LANGUAGE = "INVALID";
+    public static final String INVALID_LANGUAGE_NAME = "INVALID";
 
     public LanguageService(LanguagesImportUtility langImportUtility) {
         languageMap = langImportUtility.getLanguageMap();
     }
 
     public String getLanguageDisplayName(String isoCode) {
-        if(languageMap.containsKey(isoCode)) {
+        if (languageMap.containsKey(isoCode)) {
             return languageMap.get(isoCode).get(0);
-        } else {
-            return INVALID_LANGUAGE;
         }
+        return INVALID_LANGUAGE_NAME;
     }
 
     public String getIsoForLanguage(String label) {
-        for(String isoCode : languageMap.keySet()) {
-            if(languageMap.get(isoCode).contains(getTitleCaseName(label.trim()))) {
-                return isoCode;
+        if (label != null) {
+            for (String isoCode : languageMap.keySet()) {
+                if (languageMap.get(isoCode).contains(getTitleCaseName(label.trim()))) {
+                    return isoCode;
+                }
             }
         }
-        return INVALID_LANGUAGE;
+        return INVALID_ISO_CODE;
     }
 
     public List<String> getLanguageNames() {
         List<String> languageNames = new ArrayList<>();
 
-        for(List<String> list : languageMap.values()) {
-            for(String name : list) {
+        for (List<String> list : languageMap.values()) {
+            for (String name : list) {
                 languageNames.add(getTitleCaseName(name));
             }
         }
@@ -54,12 +55,12 @@ public class LanguageService {
 
     @NonNull
     public static String getTitleCaseName(String name) {
-        if(name == null|| name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             return "";
         }
         String titleCaseName = "";
         String[] tokens = name.split(" ");
-        for(String token : tokens) {
+        for (String token : tokens) {
             String lowerCaseName = token.toLowerCase();
             titleCaseName += lowerCaseName.substring(0, 1).toUpperCase() + lowerCaseName.substring(1) + " ";
         }
