@@ -43,14 +43,13 @@
             android:text="@string/activity_record_audio_instructions"
             android:textSize="16.5sp" />
 
-        <include
-            android:id="@+id/recording_audio_card"
-            layout="@layout/translation_card"
+        <org.mercycorps.translationcards.view.TranslationCardItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recording_audio_instructions"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:id="@+id/translation_card_item"/>
 
         <LinearLayout
             android:id="@+id/record_or_play_action"
