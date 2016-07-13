@@ -13,6 +13,7 @@ import java.util.Map;
 public class LanguageService {
 
     private final Map<String, List<String>> languageMap;
+    public static final String INVALID_ISO_CODE = "xx";
     public static final String INVALID_LANGUAGE = "INVALID";
 
     public LanguageService(LanguagesImportUtility langImportUtility) {

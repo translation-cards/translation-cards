@@ -45,6 +45,11 @@ public class TxcImportUtilityTest {
         when(mockLanguageService.getLanguageDisplayName("ar")).thenReturn("Arabic");
         when(mockLanguageService.getLanguageDisplayName("ps")).thenReturn("Pashto");
         when(mockLanguageService.getLanguageDisplayName("fa")).thenReturn("Farsi");
+        when(mockLanguageService.getLanguageDisplayName(LanguageService.INVALID_ISO_CODE))
+                .thenReturn(LanguageService.INVALID_LANGUAGE);
+        when(mockLanguageService.getIsoForLanguage("Arabic")).thenReturn("ar");
+        when(mockLanguageService.getIsoForLanguage("Pashto")).thenReturn("ps");
+        when(mockLanguageService.getIsoForLanguage("Farsi")).thenReturn("fa");
         mockFile = mock(File.class);
     }
 
@@ -153,6 +158,54 @@ public class TxcImportUtilityTest {
     public void shouldBuildImportSpecWithDictionariesWhenPresent() throws ImportException, JSONException {
         jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
         JSONArray currentDictionaries = new JSONArray("[{\"iso_code\":\"ar\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]},{\"iso_code\":\"ps\",\"cards\":[{\"dest_txt\":\"ps translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"ps_file7.mp3\"},{\"dest_txt\":\"ps translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"ps_file4.mp3\"}]},{\"iso_code\":\"fa\",\"cards\":[{\"dest_txt\":\"fa translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-fa.mp3\"},{\"dest_txt\":\"fa translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-fa.mp3\"}]}]");
+        jsonObjectToLoad.put(JsonKeys.DICTIONARIES, currentDictionaries);
+        TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
+
+        assertEquals(DECK_LABEL, importSpec.label);
+        assertEquals("", importSpec.publisher);
+        assertEquals("", importSpec.externalId);
+        assertEquals(-1L, importSpec.timestamp);
+        assertEquals("en", importSpec.srcLanguage);
+        assertFalse(importSpec.locked);
+        assertEquals(3, importSpec.dictionaries.size());
+        assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
+        assertEquals("Arabic", importSpec.dictionaries.get(0).language);
+        assertEquals(mockFile, importSpec.dir);
+        assertEquals(HASH, importSpec.hash);
+
+        for (TxcImportUtility.ImportSpecDictionary specDictionary : importSpec.dictionaries) {
+            assertEquals(2, specDictionary.cards.size());
+        }
+    }
+
+    @Test
+    public void shouldBuildImportSpecWithDictionariesWithNoDestinationIsoCode() throws ImportException, JSONException {
+        jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
+        JSONArray currentDictionaries = new JSONArray("[{\"iso_code\":\"\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]},{\"iso_code\":\"\",\"cards\":[{\"dest_txt\":\"ps translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"ps_file7.mp3\"},{\"dest_txt\":\"ps translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"ps_file4.mp3\"}]},{\"iso_code\":\"\",\"cards\":[{\"dest_txt\":\"fa translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-fa.mp3\"},{\"dest_txt\":\"fa translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-fa.mp3\"}]}]");
+        jsonObjectToLoad.put(JsonKeys.DICTIONARIES, currentDictionaries);
+        TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
+
+        assertEquals(DECK_LABEL, importSpec.label);
+        assertEquals("", importSpec.publisher);
+        assertEquals("", importSpec.externalId);
+        assertEquals(-1L, importSpec.timestamp);
+        assertEquals("en", importSpec.srcLanguage);
+        assertFalse(importSpec.locked);
+        assertEquals(3, importSpec.dictionaries.size());
+        assertEquals(LanguageService.INVALID_ISO_CODE, importSpec.dictionaries.get(0).isoCode);
+        assertEquals(LanguageService.INVALID_LANGUAGE, importSpec.dictionaries.get(0).language);
+        assertEquals(mockFile, importSpec.dir);
+        assertEquals(HASH, importSpec.hash);
+
+        for (TxcImportUtility.ImportSpecDictionary specDictionary : importSpec.dictionaries) {
+            assertEquals(2, specDictionary.cards.size());
+        }
+    }
+
+    @Test
+    public void shouldBuildImportSpecForDictionariesWithExtendedIsoCodes() throws ImportException, JSONException {
+        jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
+        JSONArray currentDictionaries = new JSONArray("[{\"iso_code\":\"ar_Arabic\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]},{\"iso_code\":\"ps_Persian\",\"cards\":[{\"dest_txt\":\"ps translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"ps_file7.mp3\"},{\"dest_txt\":\"ps translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"ps_file4.mp3\"}]},{\"iso_code\":\"fa\",\"cards\":[{\"dest_txt\":\"fa translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-fa.mp3\"},{\"dest_txt\":\"fa translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-fa.mp3\"}]}]");
         jsonObjectToLoad.put(JsonKeys.DICTIONARIES, currentDictionaries);
         TxcImportUtility.ImportSpec importSpec = txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
 

@@ -236,29 +236,48 @@ public class TxcImportUtility {
             if (dictionaries == null) {
                 return spec;
             }
-            for (int i = 0; i < dictionaries.length(); i++) {
-                JSONObject dictionary = dictionaries.getJSONObject(i);
-                String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE).substring(0,2);
-                String language = languageService.getLanguageDisplayName(destIsoCode);
-                ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
-                spec.dictionaries.add(dictionarySpec);
-                JSONArray cards = dictionary.optJSONArray(JsonKeys.CARDS);
-                if (cards == null) {
-                    continue;
-                }
-                for (int j = 0; j < cards.length(); j++) {
-                    JSONObject card = cards.getJSONObject(j);
-                    String cardLabel = card.getString(JsonKeys.CARD_LABEL);
-                    String cardFilename = card.getString(JsonKeys.CARD_DEST_AUDIO);
-                    String cardTranslatedText = card.getString(JsonKeys.CARD_DEST_TEXT);
-                    dictionarySpec.cards.add(new ImportSpecCard(
-                            cardLabel, cardFilename, cardTranslatedText));
-                }
-            }
+            addDictionariesToImportSpec(spec, dictionaries);
         } catch (JSONException e) {
             throw new ImportException(ImportException.ImportProblem.INVALID_INDEX_FILE, e);
         }
         return spec;
+    }
+
+    private void addDictionariesToImportSpec(ImportSpec spec, JSONArray dictionaries) throws JSONException {
+        for (int i = 0; i < dictionaries.length(); i++) {
+            JSONObject dictionary = dictionaries.getJSONObject(i);
+            String destIsoCode = parseIsoCodeFromJsonDictionary(dictionary);
+            String language = languageService.getLanguageDisplayName(destIsoCode);
+            ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
+            addCardsToDictionarySpec(dictionary, dictionarySpec);
+            spec.dictionaries.add(dictionarySpec);
+        }
+    }
+
+    private void addCardsToDictionarySpec(JSONObject dictionary, ImportSpecDictionary dictionarySpec) throws JSONException {
+        JSONArray cards = dictionary.optJSONArray(JsonKeys.CARDS);
+        if (cards == null) {
+            return;
+        }
+        for (int j = 0; j < cards.length(); j++) {
+            JSONObject card = cards.getJSONObject(j);
+            String cardLabel = card.getString(JsonKeys.CARD_LABEL);
+            String cardFilename = card.getString(JsonKeys.CARD_DEST_AUDIO);
+            String cardTranslatedText = card.getString(JsonKeys.CARD_DEST_TEXT);
+            dictionarySpec.cards.add(new ImportSpecCard(
+                    cardLabel, cardFilename, cardTranslatedText));
+        }
+    }
+
+    @NonNull
+    private String parseIsoCodeFromJsonDictionary(JSONObject dictionary) throws JSONException {
+        String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
+        if(destIsoCode.length() >= 2) {
+            destIsoCode = destIsoCode.substring(0,2);
+        } else {
+            destIsoCode = LanguageService.INVALID_ISO_CODE;
+        }
+        return destIsoCode;
     }
 
     private ImportSpec getIndexFromPsv(File dir, String indexFilename, String defaultLabel,

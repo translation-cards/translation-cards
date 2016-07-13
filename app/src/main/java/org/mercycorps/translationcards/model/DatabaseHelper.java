@@ -21,7 +21,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.mercycorps.translationcards.porting.TxcImportUtility;
+import org.mercycorps.translationcards.service.LanguageService;
 
 /**
  * Manages database operations.
@@ -152,7 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // having to deal with nulls in the future, since we will consider this a required
             // field going forward.
             ContentValues defaultDestLanguageValues = new ContentValues();
-            defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, "xx");
+            defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, LanguageService.INVALID_ISO_CODE);
             db.update(DictionariesTable.TABLE_NAME, defaultDestLanguageValues, null, null);
         }
     }
