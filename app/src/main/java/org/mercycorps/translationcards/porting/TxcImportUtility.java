@@ -371,7 +371,7 @@ public class TxcImportUtility {
         }
     }
 
-    private class ImportSpecDictionary {
+    protected class ImportSpecDictionary {
 
         public final String isoCode;
         public final String language;
