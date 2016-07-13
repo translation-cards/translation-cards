@@ -45,6 +45,7 @@ public class TxcImportUtility {
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
     private static final String DEFAULT_SOURCE_LANGUAGE = "en";
+    public static final String NO_AUDIO = "";
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private TranslationRepository translationRepository;
@@ -62,8 +63,8 @@ public class TxcImportUtility {
         ZipInputStream zip = getZip(context, source);
         String filename = source.getLastPathSegment();
         File targetDir = getImportTargetDirectory(context, filename);
-        String indexFilename = readFiles(zip, targetDir);
-        return getIndex(targetDir, indexFilename, filename, hash);
+        String jsonFilename = readFiles(zip, targetDir);
+        return getIndex(targetDir, jsonFilename, filename, hash);
     }
 
     public void executeImport(ImportSpec importSpec) throws ImportException {
@@ -191,12 +192,12 @@ public class TxcImportUtility {
         return indexFilename;
     }
 
-    private ImportSpec getIndex(File dir, String indexFilename, String defaultLabel, String hash)
+    private ImportSpec getIndex(File dir, String jsonFilename, String defaultLabel, String hash)
             throws ImportException {
-        if (SPEC_FILENAME.equals(indexFilename)) {
+        if (SPEC_FILENAME.equals(jsonFilename)) {
             return getIndexFromSpec(dir, hash);
         } else {
-            return getIndexFromPsv(dir, indexFilename, defaultLabel, hash);
+            return getIndexFromPsv(dir, jsonFilename, defaultLabel, hash);
         }
     }
 
@@ -323,10 +324,15 @@ public class TxcImportUtility {
             long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
-                File cardFile = new File(importSpec.dir, card.filename);
-                translationRepository.addTranslation(
-                        dictionaryId, card.label, false, cardFile.getAbsolutePath(), dictionary.cards.size() - j,
-                        card.translatedText);
+                if(card.filename.equals(NO_AUDIO)){
+                    translationRepository.addTranslation(
+                            dictionaryId, card.label, false, NO_AUDIO, dictionary.cards.size() - j, card.translatedText);
+                }
+                else {
+                    File cardFile = new File(importSpec.dir, card.filename);
+                    translationRepository.addTranslation(
+                            dictionaryId, card.label, false, cardFile.getAbsolutePath(), dictionary.cards.size() - j, card.translatedText);
+                }
             }
         }
     }
