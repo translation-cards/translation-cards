@@ -115,12 +115,12 @@ public class ReviewAndSaveActivityTest {
     }
 
     @Test
-    public void shouldShowLanguagesListFromContextWhenActivityIsCreated() {
+    public void shouldShowLanguagesListInAlphabeticalOrderFromContextWhenActivityIsCreated() {
         newDeckContext.addDestinationLanguage("French");
         newDeckContext.addDestinationLanguage("German");
         newDeckContext.addDestinationLanguage("Chinese");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         TextView translationLanguages = findTextView(activity, R.id.translation_languages);
-        assertEquals("FRENCH  GERMAN  CHINESE", translationLanguages.getText().toString());
+        assertEquals("CHINESE  FRENCH  GERMAN", translationLanguages.getText().toString());
     }
 }

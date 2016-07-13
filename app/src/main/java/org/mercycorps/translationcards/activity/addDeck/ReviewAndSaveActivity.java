@@ -12,7 +12,8 @@ import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 import org.mercycorps.translationcards.view.DeckItem;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -58,9 +59,10 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
      * So we must fill this field from the NewDeckContext's languagesInput String
      */
     private void fillLanguagesListTextView() {
-        Set<String> destinationLanguages = newDeckContext.getDestinationLanguages();
+        List<String> destinationLanguages = new ArrayList<>(newDeckContext.getDestinationLanguages());
         if (destinationLanguages != null) {
-            String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(new ArrayList<>(destinationLanguages));
+            Collections.sort(destinationLanguages);
+            String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(destinationLanguages);
             translationLanguagesTextView.setText(formattedLanguages);
         }
     }
