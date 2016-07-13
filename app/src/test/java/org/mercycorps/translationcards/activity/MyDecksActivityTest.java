@@ -17,6 +17,7 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -40,6 +41,7 @@ public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
             "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.4";
     private static final String DEFAULT_ISO_CODE = "en";
+    private static final String DEFAULT_LANGUAGE_NAME = "English";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqlLiteDatabase;
@@ -143,7 +145,7 @@ public class MyDecksActivityTest {
     private Deck[] mockDecks(boolean shouldCreateDeck){
         if(!shouldCreateDeck) return null;
         Deck[] arrayOfDecks = new Deck[1];
-        Deck deck = new Deck("", "", "", 0l, false, DEFAULT_ISO_CODE);
+        Deck deck = new Deck("", "", "", 0l, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
         arrayOfDecks[0] = deck;
         return arrayOfDecks;
     }

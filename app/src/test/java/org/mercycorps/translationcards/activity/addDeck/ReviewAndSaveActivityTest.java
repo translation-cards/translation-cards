@@ -16,6 +16,7 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
@@ -44,6 +45,7 @@ public class ReviewAndSaveActivityTest {
     private static final long DB_ID = 0L;
     private static final long CREATION_TIMESTAMP = 753004800000L;
     private static final String SOURCE_LANGUAGE_ISO = "en";
+    private static final String SOURCE_LANGUAGE_NAME = "English";
     private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private NewDeckContext newDeckContext;
@@ -53,7 +55,7 @@ public class ReviewAndSaveActivityTest {
     public void setup() {
         DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{});
-        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_ISO);
+        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, new Language(SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_NAME));
         newDeckContext = new NewDeckContext(deck, false);
     }
 

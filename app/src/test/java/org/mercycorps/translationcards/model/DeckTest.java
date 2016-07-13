@@ -19,7 +19,7 @@ public class DeckTest {
 
     @Before
     public void setUp() throws Exception {
-        deck = new Deck("", "author", "", -1, 1454946439262L, false, "");
+        deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""));
     }
 
     @Test

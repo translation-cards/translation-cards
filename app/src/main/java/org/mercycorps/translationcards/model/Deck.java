@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.model;
 
 import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.repository.LanguageRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -26,20 +25,20 @@ public class Deck implements Serializable {
     private Dictionary[] dictionaries;
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
-                boolean locked, String sourceLanguageIso) {
+                boolean locked, Language sourceLanguage) {
         this.title = title;
         this.author = author;
         this.externalId = externalId;
         this.dbId = dbId;
         this.timestamp = timestamp;
         this.locked = locked;
-        this.sourceLanguage = new LanguageRepository().withISO(sourceLanguageIso);
+        this.sourceLanguage = sourceLanguage;
         dictionaries = null;
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
-                String sourceLanguageIso) {
-        this(title, author, externalId, -1, timestamp, locked, sourceLanguageIso);
+                Language sourceLanguage) {
+        this(title, author, externalId, -1, timestamp, locked, sourceLanguage);
     }
 
     public Deck() {

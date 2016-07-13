@@ -25,6 +25,7 @@ import org.mercycorps.translationcards.activity.translations.CardListAdapter;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
@@ -75,7 +76,8 @@ public class TranslationsActivityTest {
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
     private static final int EMPTY_DECK_ID = 2;
-    private static final String DEFUALT_ISO_CODE = "en";
+    private static final String DEFAULT_ISO_CODE = "en";
+    private static final String DEFAULT_LANGUAGE_NAME = "English";
     private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
     private Translation translation;
@@ -106,7 +108,7 @@ public class TranslationsActivityTest {
     }
 
     private void initializeStubsAndMocks() {
-        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFUALT_ISO_CODE);
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
         when(deckService.currentDeck()).thenReturn(deck);
 
         Dictionary[] dictionaries = new Dictionary[3];
@@ -190,7 +192,7 @@ public class TranslationsActivityTest {
     }
 
     private Activity createLockedDeckTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, DEFUALT_ISO_CODE);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
         when(deckService.currentDeck()).thenReturn(deck);
         return createActivityWithDeck(deck);
     }

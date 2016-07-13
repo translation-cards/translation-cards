@@ -8,7 +8,9 @@ import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
@@ -22,10 +24,12 @@ public class DeckRepository {
     public static final int NONEXISTENT_ID = -1;
     private DatabaseHelper databaseHelper;
     private DictionaryRepository dictionaryRepository;
+    private LanguageService languageService;
 
-    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper) {
+    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper, LanguageService languageService) {
         this.dictionaryRepository = dictionaryRepository;
         this.databaseHelper = databaseHelper;
+        this.languageService = languageService;
     }
 
     public Deck[] getAllDecks() {
@@ -37,6 +41,9 @@ public class DeckRepository {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while(hasNext){
+
+            String sourceLanguageIso = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO));
+            Language language = languageService.getLanguageWithIso(sourceLanguageIso);
             Deck deck = new Deck(
                     cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
@@ -44,7 +51,7 @@ public class DeckRepository {
                     cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO)));
+                    language);
 
             decks[i] = deck;
             hasNext = cursor.moveToNext();

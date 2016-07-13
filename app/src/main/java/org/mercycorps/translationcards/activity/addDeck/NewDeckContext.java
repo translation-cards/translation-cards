@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 public class NewDeckContext implements Serializable {
+    private static final String ENGLISH_NAME = "English";
     private static final String NO_VALUE = "";
     private static final String ENGLISH_ISO = "en";
 
@@ -17,7 +18,7 @@ public class NewDeckContext implements Serializable {
     private final LinkedHashSet<String> destinationLanguages;
 
     public NewDeckContext() {
-        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_ISO), false);
+        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, new Language(ENGLISH_ISO,  ENGLISH_NAME)), false);
     }
 
     public NewDeckContext(Deck deck, boolean isEdit) {

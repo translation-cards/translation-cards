@@ -3,6 +3,7 @@ package org.mercycorps.translationcards.service;
 
 import android.support.annotation.NonNull;
 
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 
 import java.util.ArrayList;
@@ -64,5 +65,13 @@ public class LanguageService {
         }
 
         return titleCaseName.trim();
+    }
+
+    public Language getLanguageWithName(String languageName) {
+        return new Language(getIsoForLanguage(languageName), languageName);
+    }
+
+    public Language getLanguageWithIso(String languageIso) {
+        return new Language(languageIso, getLanguageDisplayName(languageIso));
     }
 }

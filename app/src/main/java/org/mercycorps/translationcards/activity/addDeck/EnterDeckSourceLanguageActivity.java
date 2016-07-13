@@ -9,9 +9,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Language;
-import org.mercycorps.translationcards.repository.LanguageRepository;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import butterknife.Bind;
@@ -21,6 +21,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     public static final int REQUEST_CODE = 0;
     @Bind(R.id.deck_source_language_view)
     TextView sourceLanguageView;
+    private LanguageService languageService;
 
     @Override
     public void inflateView() {
@@ -29,6 +30,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
+        languageService = ((MainApplication)getApplication()).getLanguageService();
         fillSourceLanguageField();
         formatLanguageButton();
     }
@@ -83,7 +85,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private void updateContextWithSourceLanguage() {
-        Language language = new LanguageRepository().withName(sourceLanguageView.getText().toString());
+        Language language = languageService.getLanguageWithName(sourceLanguageView.getText().toString());
         getContextFromIntent().setSourceLanguage(language);
     }
 }
