@@ -30,8 +30,6 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
 
     public static final int DISABLED_OPACITY = 235;
     public static final int DEFAULT_OPACITY = 255;
-    public static final int DISABLED_BITMAP_OPACITY = 100;
-    public static final int DEFAULT_BITMAP_OPACITY = 255;
     private TranslationsActivity translationsActivity;
     private TranslationService translationService;
     private DictionaryService dictionaryService;

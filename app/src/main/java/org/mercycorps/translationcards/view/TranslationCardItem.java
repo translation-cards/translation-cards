@@ -4,17 +4,24 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,6 +58,9 @@ public class TranslationCardItem extends LinearLayout {
     FrameLayout audioIconLayout;
     @Bind(R.id.audio_icon)
     ImageView audioIcon;
+    @Nullable
+    @Bind(R.id.translation_card_progress_bar)
+    ProgressBar progressBar;
 
     public void setTranslation(Translation translation, String language){
         this.translationItem=translation;
@@ -96,7 +106,6 @@ public class TranslationCardItem extends LinearLayout {
     public void initState(){
         setTranslationSourcePhrase();
         updateTranslatedTextView();
-
         setExpansionIndicator();
         setCardTopBackground();
         setCardBottomVisibility();
@@ -179,20 +188,20 @@ public class TranslationCardItem extends LinearLayout {
 
     @OnClick(R.id.translation_card)
     protected void translationCardClicked() {
-        if(playAudioOnClick) {
-//        try {
-//            DecoratedMediaManager mediaManager = this/getContext().getApplicationContext().getMainApplication().getDecoratedMediaManager();
-//            if(mediaManager.isPlaying()) {
-//                mediaManager.stop();
-//            } else {
-//                mediaManager.play(translationItem.getFilename(), progressBar, translationItem.getIsAsset());
-//            }
-//        } catch (AudioFileException e) {
-//            String message = String.format(this.getContext().getString(R.string.could_not_play_audio_message),
-//                    dictionaryLanguage);
-//            ToastHelper.showToast(this.getContext(), message);
-//            Log.d(TAG, e.getMessage());
-//        }
+        if(playAudioOnClick && progressBar != null) {
+            try {
+                DecoratedMediaManager mediaManager = ((MainApplication)getContext().getApplicationContext()).getDecoratedMediaManager();
+               if(mediaManager.isPlaying()) {
+                    mediaManager.stop();
+                } else {
+                    mediaManager.play(translationItem.getFilename(), progressBar, translationItem.getIsAsset());
+                }
+            } catch (AudioFileException e) {
+                String message = String.format(this.getContext().getString(R.string.could_not_play_audio_message),
+                        dictionaryLanguage);
+                ToastHelper.showToast(this.getContext(), message);
+                Log.d(TAG, e.getMessage());
+            }
         }
     }
 }

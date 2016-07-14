@@ -19,9 +19,7 @@ import butterknife.OnClick;
 import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.OnLanguageTabSelectedListener;
 
 public class SummaryActivity extends AddTranslationActivity {
-    private static final String TAG = "SummaryActivity";
     @Bind(R.id.summary_detail)TextView summaryDetail;
-    @Bind(R.id.summary_progress_bar)ProgressBar progressBar;
     @Bind(R.id.translation_card_item)TranslationCardItem translationCard;
 
     @Override
@@ -52,24 +50,6 @@ public class SummaryActivity extends AddTranslationActivity {
         saveTranslation();
         stopMediaManager();
         startNextActivity(SummaryActivity.this, TranslationsActivity.class);
-    }
-
-    @OnClick(R.id.translation_card_item)
-    protected void translationCardClicked() {
-        Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-        try {
-            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
-            if(mediaManager.isPlaying()) {
-                mediaManager.stop();
-            } else {
-                mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
-            }
-        } catch (AudioFileException e) {
-            String message = String.format(getString(R.string.could_not_play_audio_message),
-                    getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage());
-            showToast(message);
-            Log.d(TAG, e.getMessage());
-        }
     }
 
     @OnClick(R.id.summary_activity_back)
