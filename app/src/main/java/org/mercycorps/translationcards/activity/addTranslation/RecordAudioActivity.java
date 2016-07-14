@@ -54,7 +54,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_record_audio);
-
     }
 
     @Override
@@ -68,7 +67,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
         updatePlayButtonState();
-        updateTranslatedTextView();
+        updateTranslationCard();
         updateNextButtonState(false);
     }
 
@@ -77,7 +76,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
             @Override
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updatePlayButtonState();
-                updateTranslatedTextView();
+                updateTranslationCard();
                 stopAudioIfPlaying();
                 stopIfRecording();
             }
@@ -138,7 +137,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
 
 
-    private void updateTranslatedTextView() {
+    private void updateTranslationCard() {
         Translation translationItem=getLanguageTabsFragment().getCurrentTranslation().getTranslation();
         translationCardItem.setTranslation(translationItem, getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage());
     }

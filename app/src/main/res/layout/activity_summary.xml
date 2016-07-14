@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/org.mercycorps.translationcards"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -65,11 +66,12 @@
             android:maxHeight="1dp"
             android:id="@+id/summary_progress_bar" />
 
-        <include layout="@layout/translation_card"
+        <org.mercycorps.translationcards.view.TranslationCardItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/summary_progress_bar"
-            android:id="@+id/summary_translation_card"/>
+            android:layout_below="@id/summary_progress_bar"
+            android:id="@+id/translation_card_item"
+            custom:showEditAndDeleteOptions="false"/>
     </RelativeLayout>
     <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
          the rest (on small screens, the soft keyboard can reduce the available height such that

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/org.mercycorps.translationcards"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -49,6 +50,7 @@
             android:layout_below="@+id/recording_audio_instructions"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            custom:showAudioIcon="false"
             android:id="@+id/translation_card_item"/>
 
         <LinearLayout

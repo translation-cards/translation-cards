@@ -1,9 +1,13 @@
 package org.mercycorps.translationcards.view;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.junit.Before;
@@ -40,39 +44,30 @@ public class TranslationCardItemTest {
         originTranslationTextView = (TextView)translationCardItem.findViewById(R.id.origin_translation_text);
         destinationTranslationTextView = (TextView)translationCardItem.findViewById(R.id.translated_text);
         expansionIndicatorIcon = (ImageView) translationCardItem.findViewById(R.id.indicator_icon);
+
+
+        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+        translationCardItem.setTranslation(translationItem, "English");
     }
 
     @Test
     public void shouldSetTranslationSourceTextWhenLoaded(){
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
-
         assertEquals("First Translation", originTranslationTextView.getText());
     }
     @Test
     public void shouldSetDestinationTranslationTextWhenLoaded(){
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
-
         assertEquals("Translated Text", destinationTranslationTextView.getText());
     }
     @Test
     public void shouldHaveCollapseIconVisibleWhenLoaded(){
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
-
         assertThat(shadowOf(expansionIndicatorIcon.getBackground()).getCreatedFromResId(), is(R.drawable.collapse_arrow));
 
     }
 
     @Test
     public void shouldHaveExpandIconVisibleWhenLoadedAndCollapsed(){
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
-
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertEquals(R.drawable.expand_arrow, shadowOf(expansionIndicatorIcon.getBackground()).getCreatedFromResId());
-
     }
 
 
@@ -84,8 +79,6 @@ public class TranslationCardItemTest {
     }
     @Test
     public void shouldShowExpandedCardTopBackgroundWhenExpanded() {
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
         View translationParent = translationCardItem.findViewById( R.id.translation_card_parent);
         assertEquals(R.drawable.card_top_background_expanded, shadowOf(translationParent.getBackground()).getCreatedFromResId());
     }
@@ -99,18 +92,23 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldShowTranslationChildWhenActivityIsCreated() {
-
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
         View translationCardChild = translationCardItem.findViewById(R.id.translation_child);
         assertEquals(View.VISIBLE, translationCardChild.getVisibility());
     }
     @Test
     public void shouldExpandTranslationCardWhenCardIndicatorIsClickedTwice() {
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
-        translationCardItem.setTranslation(translationItem, "English");
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertEquals(View.VISIBLE, translationCardItem.findViewById(R.id.translation_child).getVisibility());
+    }
+
+
+    @Test
+    @TargetApi(19)
+    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
+        LinearLayout translationCardParent = (LinearLayout) translationCardItem.findViewById(R.id.translation_card_parent);
+        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
+        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
+        assertEquals(TranslationCardItem.DISABLED_OPACITY, background.getAlpha());
     }
 }

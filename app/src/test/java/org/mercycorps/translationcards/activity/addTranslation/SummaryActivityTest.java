@@ -120,7 +120,7 @@ public class SummaryActivityTest {
     @Test
     public void shouldPlayAudioFileWhenTranslationCardIsClicked() throws AudioFileException {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        activity.findViewById(R.id.summary_translation_card).performClick();
+        activity.findViewById(R.id.translation_card_item).performClick();
         ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
         verify(getDecoratedMediaManager()).play(helper.DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
@@ -131,7 +131,7 @@ public class SummaryActivityTest {
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
         doThrow(new AudioFileException()).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
 
-        activity.findViewById(R.id.summary_translation_card).performClick();
+        activity.findViewById(R.id.translation_card_item).performClick();
 
         assertEquals(helper.DEFAULT_DICTIONARY_LABEL + " translation not recorded.", ShadowToast.getTextOfLatestToast());
     }
@@ -185,8 +185,8 @@ public class SummaryActivityTest {
     public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
         setupAudioPlayerManager();
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        click(activity, R.id.summary_translation_card);
-        click(activity, R.id.summary_translation_card);
+        click(activity, R.id.translation_card_item);
+        click(activity, R.id.translation_card_item);
         verify(getDecoratedMediaManager()).stop();
     }
 
@@ -290,17 +290,6 @@ public class SummaryActivityTest {
     }
 
 
-    @Test
-    @TargetApi(19)
-    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-
-        LinearLayout translationCardParent = findLinearLayout(activity, R.id.translation_card_parent);
-        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
-        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
-
-        assertEquals(SummaryActivity.DISABLED_OPACITY, background.getAlpha());
-    }
 
     @Test
     public void shouldGreyOutAudioIconWhenTranslationContainsNoAudio() {
