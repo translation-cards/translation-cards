@@ -60,10 +60,8 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
      */
     private void fillLanguagesListTextView() {
         List<String> destinationLanguages = new ArrayList<>(newDeckContext.getDestinationLanguages());
-        if (destinationLanguages != null) {
-            Collections.sort(destinationLanguages);
-            String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(destinationLanguages);
-            translationLanguagesTextView.setText(formattedLanguages);
-        }
+        Collections.sort(destinationLanguages);
+        String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(destinationLanguages);
+        translationLanguagesTextView.setText(formattedLanguages);
     }
 }

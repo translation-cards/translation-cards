@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/backgroundColor">
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingBottom="20dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/enter_source_language_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:id="@+id/enter_source_language_image" />
+                android:adjustViewBounds="true" />
 
             <TextView
+                android:id="@+id/deck_review_and_save_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/enter_source_language_image"
-                android:paddingTop="18dp"
+                android:background="@color/colorPrimary"
                 android:paddingBottom="18dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textColor="@color/textColor"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary"
+                android:paddingTop="18dp"
                 android:text="@string/deck_deck_review_and_save_title"
-                android:id="@+id/deck_review_and_save_title" />
+                android:textColor="@color/textColor"
+                android:textSize="20sp" />
 
             <RelativeLayout
                 android:id="@+id/language_tabs_fragment"
@@ -41,24 +42,24 @@
                 android:layout_below="@id/deck_review_and_save_title" />
 
             <TextView
+                android:id="@+id/deck_review_and_save_detail"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/language_tabs_fragment"
-                android:paddingTop="24dp"
+                android:lineSpacingExtra="3dp"
                 android:paddingBottom="24dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textSize="16.5sp"
-                android:lineSpacingExtra="3dp"
+                android:paddingTop="24dp"
                 android:text="@string/activity_deck_review_and_save_description"
-                android:id="@+id/deck_review_and_save_detail" />
+                android:textSize="16.5sp" />
 
 
             <org.mercycorps.translationcards.view.DeckItem
+                android:id="@+id/deck_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/deck_review_and_save_detail"
-                android:id="@+id/deck_item"/>
+                android:layout_below="@+id/deck_review_and_save_detail" />
 
             <!-- This frame layout exists to ensure that the navigation bar at the bottom doesn't cover up
                  the rest (on small screens, the soft keyboard can reduce the available height such that
@@ -71,47 +72,50 @@
                 android:layout_below="@id/deck_review_and_save_detail" />
         </RelativeLayout>
     </ScrollView>
+
     <RelativeLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="@color/navBarColor"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true">
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/navBarColor"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/deck_review_and_save_step_marker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/deck_review_and_save_step_marker">
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/step_unselected" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,11 +125,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/deck_review_and_save_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:paddingTop="16dp"
-            android:id="@+id/deck_review_and_save_back">
+            android:layout_marginStart="20dp"
+            android:paddingTop="16dp">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -133,27 +139,30 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/deck_review_and_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
-            android:paddingTop="16dp"
-            android:id="@+id/deck_review_and_save_button">
+            android:paddingTop="16dp">
+
             <TextView
+                android:id="@+id/deck_review_and_save_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="16sp"
-                android:textColor="@color/primaryTextColor"
                 android:text="@string/navigation_button_save"
-                android:id="@+id/deck_review_and_save_button_text" />
+                android:textColor="@color/primaryTextColor"
+                android:textSize="16sp" />
+
             <ImageView
+                android:id="@+id/deck_review_and_save_button_arrow"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/forward_arrow"
-                android:id="@+id/deck_review_and_save_button_arrow" />
+                android:src="@drawable/forward_arrow" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
