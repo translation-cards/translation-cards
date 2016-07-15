@@ -409,7 +409,7 @@ public class TxcImportUtility {
         }
     }
 
-    private class ImportSpecCard {
+    protected class ImportSpecCard {
 
         public final String label;
         public final String filename;
