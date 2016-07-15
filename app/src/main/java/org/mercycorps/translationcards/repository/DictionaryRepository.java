@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import static org.mercycorps.translationcards.model.DatabaseHelper.DictionariesTable.*;
 
@@ -16,11 +17,13 @@ import static org.mercycorps.translationcards.model.DatabaseHelper.DictionariesT
 public class DictionaryRepository {
 
     private DatabaseHelper databaseHelper;
+    private LanguageService languageService;
     private TranslationRepository translationRepository;
 
-    public DictionaryRepository(DatabaseHelper databaseHelper, TranslationRepository translationRepository) {
+    public DictionaryRepository(DatabaseHelper databaseHelper, TranslationRepository translationRepository, LanguageService languageService) {
         this.translationRepository = translationRepository;
         this.databaseHelper = databaseHelper;
+        this.languageService = languageService;
     }
 
     public Dictionary[] getAllDictionariesForDeck(long deckId) {
@@ -36,7 +39,13 @@ public class DictionaryRepository {
         while (hasNext) {
             String destLanguageIso = cursor.getString(cursor.getColumnIndex(
                     LANGUAGE_ISO));
-            String label = cursor.getString(cursor.getColumnIndex(LABEL));
+            boolean isLabelEmpty = cursor.isNull(cursor.getColumnIndex(LABEL));
+            String label;
+            if (isLabelEmpty) {
+                label = languageService.getLanguageDisplayName(destLanguageIso);
+            } else {
+                label = cursor.getString(cursor.getColumnIndex(LABEL));
+            }
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(ID));
             Dictionary dictionary = new Dictionary(destLanguageIso, label,
                     translationRepository.getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);

@@ -76,7 +76,7 @@ public class MainApplication extends Application {
         if (isTest) return;
         databaseHelper = new DatabaseHelper(context);
         translationRepository = new TranslationRepository(databaseHelper);
-        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository);
+        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
