@@ -222,6 +222,25 @@ public class TranslationCardItemTest {
         assertEquals("", translatedTextView.getText().toString());
     }
 
+    @Test
+    public void shouldHideEditAndDeleteOptionsIfCardIsLocked() {
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("org.mercycorps.translationcards:attr/showEditAndDeleteOptions",
+                String.valueOf(true), "org.mercycorps.translationcards"));
+        AttributeSet attrs =new RoboAttributeSet(attributes,shadowOf(activity).getResourceLoader() );
+        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application,attrs );
+        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+        tc.setTranslation(translationItem, "English", true, 0);
+        assertEquals(View.GONE, tc.findViewById(R.id.translation_grandchild).getVisibility());
+    }
+
+    @Test
+    public void shouldChangeTextSizeIfNoTranslationPresent() {
+        translationCardItem.setTranslationTextSize(18f);
+
+        assertEquals(18f, ((TextView) translationCardItem.findViewById(R.id.translated_text)).getTextSize());
+    }
+
     private void createTranslationCardItemWithAudioOrTranslatedText() {
         Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL);

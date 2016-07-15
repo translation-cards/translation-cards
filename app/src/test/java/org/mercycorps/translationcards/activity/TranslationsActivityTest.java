@@ -267,7 +267,7 @@ public class TranslationsActivityTest {
 
         TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
 
-        assertThat(translatedText.getText().toString(), is("Add " + DICTIONARY_TEST_LABEL + " translation"));
+        assertThat(translatedText.getHint().toString(), is("Add " + DICTIONARY_TEST_LABEL + " translation"));
     }
 
     @Test
@@ -310,7 +310,7 @@ public class TranslationsActivityTest {
     public void shouldHideTranslationCardChildByDefault() {
         View translationsListItem = firstTranslationCardInListView();
 
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
+        assertEquals(View.GONE, translationsListItem.findViewById(R.id.translation_child).getVisibility());
     }
 
     @Test
