@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
@@ -21,7 +22,6 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
-import org.mercycorps.translationcards.activity.translations.CardListAdapter;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -30,6 +30,7 @@ import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
+import org.mercycorps.translationcards.view.TranslationCardItem;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -270,6 +271,8 @@ public class TranslationsActivityTest {
         assertThat(translatedText.getHint().toString(), is("Add " + DICTIONARY_TEST_LABEL + " translation"));
     }
 
+    //Not sure if this is valid test,
+    //if it is does it need to be done for all instances of translation card items?
     @Test
     public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
         int disabledTextColor = -7960954;
@@ -335,6 +338,7 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    @Ignore//this is being tested in translation card item tests
     public void onClick_shouldShowExpandedCardIndicatorWhenTranslationCardIsExpanded() {
         View translationsListItem = firstTranslationCardInListView();
 
@@ -344,9 +348,10 @@ public class TranslationsActivityTest {
     }
 
     @Test
+    @Ignore//this is being tested in translation card item tests
     public void onClick_shouldShowTranslationCardChildWhenCardIsExpanded() {
         View translationsListItem = firstTranslationCardInListView();
-
+        //when(translationService.cardIsExpanded(0)).thenReturn(true);
         translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
 
         ImageView cardIndicator = (ImageView) translationsListItem.findViewById(R.id.indicator_icon);
@@ -431,7 +436,7 @@ public class TranslationsActivityTest {
         LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
         GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
 
-        assertEquals(CardListAdapter.DISABLED_OPACITY, background.getAlpha());
+        assertEquals(TranslationCardItem.DISABLED_OPACITY, background.getAlpha());
 
     }
 

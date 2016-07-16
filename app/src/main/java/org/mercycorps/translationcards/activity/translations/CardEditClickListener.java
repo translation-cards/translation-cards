@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.translations;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
@@ -15,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class CardEditClickListener implements View.OnClickListener {
-    private TranslationsActivity translationsActivity;
+public class CardEditClickListener implements View.OnClickListener {
+    private Activity translationsActivity;
     private Translation translation;
     private Intent intent;
     private DictionaryService dictionaryService;
     private DeckService deckService;
 
-    public CardEditClickListener(TranslationsActivity translationsActivity, Translation translation, Intent intent, DictionaryService dictionaryService, DeckService deckService) {
+    public CardEditClickListener(Activity translationsActivity, Translation translation, Intent intent, DictionaryService dictionaryService, DeckService deckService) {
         this.translationsActivity = translationsActivity;
         this.translation = translation;
         this.intent = intent;
@@ -33,7 +34,7 @@ class CardEditClickListener implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         intent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createAddNewTranslationContext());
-        intent.putExtra(TranslationsActivity.INTENT_KEY_DECK, deckService.currentDeck());
+        intent.putExtra(deckService.INTENT_KEY_DECK, deckService.currentDeck());
 
         translationsActivity.startActivity(intent);
     }

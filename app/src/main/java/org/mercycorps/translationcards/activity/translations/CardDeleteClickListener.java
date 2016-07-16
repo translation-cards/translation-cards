@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity.translations;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
@@ -8,14 +9,14 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.TranslationService;
 
-class CardDeleteClickListener implements View.OnClickListener {
+public class CardDeleteClickListener implements View.OnClickListener {
 
-    private TranslationsActivity translationsActivity;
+    private Activity translationsActivity;
     private Translation translation;
     private TranslationService translationService;
     private AlertDialog.Builder alertDialogBuilder;
 
-    public CardDeleteClickListener(TranslationsActivity translationsActivity, Translation translation, TranslationService translationService, AlertDialog.Builder alertDialogBuilder) {
+    public CardDeleteClickListener(Activity translationsActivity, Translation translation, TranslationService translationService, AlertDialog.Builder alertDialogBuilder) {
         this.translationsActivity = translationsActivity;
         this.translation = translation;
         this.translationService = translationService;
@@ -40,6 +41,7 @@ class CardDeleteClickListener implements View.OnClickListener {
 
     public void deleteTranslation() {
         translationService.deleteTranslation(translation.getLabel());
-        translationsActivity.updateView();
+        //how can i trigger this in a built in event method?
+        ((TranslationsActivity)translationsActivity).updateView();
     }
 }

@@ -17,9 +17,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -239,6 +241,49 @@ public class TranslationCardItemTest {
         translationCardItem.setTranslationTextSize(18f);
 
         assertEquals(18f, ((TextView) translationCardItem.findViewById(R.id.translated_text)).getTextSize());
+    }
+
+    @Test
+    public void shouldShowTranslationCardChildWhenTranslationServiceReturnsExpanded() {
+        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
+        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        when(translationService.cardIsExpanded(0)).thenReturn(true);
+        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, false, 0);
+        View childView=translationCardItem.findViewById(R.id.translation_child);
+
+        assertEquals(View.VISIBLE, childView.getVisibility());
+    }
+
+    @Test
+    public void shouldHideTranslationCardChildWhenTranslationServiceReturnsNotExpanded() {
+        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
+        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        when(translationService.cardIsExpanded(0)).thenReturn(false);
+        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, false, 0);
+        View childView=translationCardItem.findViewById(R.id.translation_child);
+
+        assertEquals(View.GONE, childView.getVisibility());
+    }
+
+    @Test
+    public void shouldCallLanguageServiceOnExpansionClick() {
+        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
+        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        when(translationService.cardIsExpanded(0)).thenReturn(false);
+        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, false, 0);
+        translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
+
+        verify(translationService).expandCard(0);
+    }
+
+    @Test
+    public void shouldCallLanguageServiceOnCollapseClick() {
+        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
+        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        when(translationService.cardIsExpanded(0)).thenReturn(true);
+        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, false, 0);
+        translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
+        verify(translationService).minimizeCard(0);
     }
 
     private void createTranslationCardItemWithAudioOrTranslatedText() {

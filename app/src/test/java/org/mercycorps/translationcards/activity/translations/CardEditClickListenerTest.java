@@ -96,7 +96,7 @@ public class CardEditClickListenerTest {
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(intent, times(2)).putExtra(argumentCaptor.capture(), any(AddNewTranslationContext.class));
 
-        assertEquals(TranslationsActivity.INTENT_KEY_DECK, getArgumentToSecondMethodCall(argumentCaptor));
+        assertEquals(deckService.INTENT_KEY_DECK, getArgumentToSecondMethodCall(argumentCaptor));
     }
 
     @Test

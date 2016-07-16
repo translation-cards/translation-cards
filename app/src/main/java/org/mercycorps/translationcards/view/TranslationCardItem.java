@@ -1,6 +1,9 @@
 package org.mercycorps.translationcards.view;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -17,9 +20,13 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.translations.CardDeleteClickListener;
+import org.mercycorps.translationcards.activity.translations.CardEditClickListener;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
@@ -42,7 +49,9 @@ public class TranslationCardItem extends LinearLayout {
     private boolean showDeleteAndEditOptions;
     private boolean isCardLocked = false;
     private TranslationService translationService;
-    private int position;
+    private DictionaryService dictionaryService;
+    private DeckService deckService;
+    private Integer position;
     public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
 
@@ -88,6 +97,10 @@ public class TranslationCardItem extends LinearLayout {
     private void init(){
         inflate(getContext(), R.layout.translation_card, this);
         ButterKnife.bind(this);
+        //would prefer this be injected in constructor somewhere
+        translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
+        deckService=((MainApplication)getContext().getApplicationContext()).getDeckService();
+        dictionaryService=((MainApplication)getContext().getApplicationContext()).getDictionaryService();
     }
     private void setStateFromAttributes(Context context, AttributeSet attrs){
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -108,8 +121,8 @@ public class TranslationCardItem extends LinearLayout {
     private void initState(){
         setTranslationSourcePhrase();
         updateTranslatedTextView();
-        setExpansionIndicator();
-        setCardTopBackground();
+        updateExpansionIndicator();
+        updateCardTopBackground();
         setCardBottomVisibility();
         hideGrandchildAndAudioIcon();
         greyOutCardIfNoAudioTranslation();
@@ -130,27 +143,44 @@ public class TranslationCardItem extends LinearLayout {
         initState();
     }
 
-    public void setTranslationService(TranslationService translationService){
-        this.translationService=translationService;
-    }
-
     public void setTranslationTextSize(float textSize){
         ((TextView) findViewById(R.id.translated_text)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
     }
 
-    public void setEditAndDeleteClickListeners(View.OnClickListener editClickListener, View.OnClickListener deleteClickListener){
-        editButton.setOnClickListener(editClickListener);
-        deleteButton.setOnClickListener(deleteClickListener);
+    public void setEditAndDeleteClickListeners(Activity activity, Intent intent){
+        if(showDeleteAndEditOptions){
+            editButton.setOnClickListener(new CardEditClickListener(activity,
+                    translationItem,
+                    intent,
+                    dictionaryService,
+                    deckService));
+            deleteButton.setOnClickListener(new CardDeleteClickListener(activity,
+                            translationItem,
+                            translationService,
+                            new AlertDialog.Builder(activity)));
+        }
     }
 
     private boolean getIsCardExpanded(){
-        if(translationService != null){
+        if(position != null){
             isCardExpanded=translationService.cardIsExpanded(position);
         }
         return isCardExpanded;
     }
 
-    private void setExpansionIndicator(){
+    private void setIsCardExpanded(boolean newIsCardExpandedInd){
+        isCardExpanded=newIsCardExpandedInd;
+        if(position != null) {
+            if (newIsCardExpandedInd) {
+                translationService.expandCard(position);
+            }
+            else{
+                translationService.minimizeCard(position);
+            }
+        }
+    }
+
+    private void updateExpansionIndicator(){
         if(getIsCardExpanded())
         {
             expansionIndicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
@@ -159,7 +189,7 @@ public class TranslationCardItem extends LinearLayout {
             expansionIndicatorIcon.setBackgroundResource(R.drawable.expand_arrow);
         }
     }
-    private void setCardTopBackground(){
+    private void updateCardTopBackground(){
         View cardTopBackground = findViewById(R.id.translation_card_parent);
         int rightPadding = cardTopBackground.getPaddingRight();
         int leftPadding = cardTopBackground.getPaddingLeft();
@@ -216,17 +246,9 @@ public class TranslationCardItem extends LinearLayout {
 
     @OnClick(R.id.translation_indicator_layout)
     protected void toggleCardExpansion(){
-        isCardExpanded=!getIsCardExpanded();
-        if(translationService != null) {
-            if (isCardExpanded) {
-                translationService.expandCard(position);
-            }
-            else{
-                translationService.minimizeCard(position);
-            }
-        }
-        setExpansionIndicator();
-        setCardTopBackground();
+        setIsCardExpanded(!getIsCardExpanded());
+        updateExpansionIndicator();
+        updateCardTopBackground();
         setCardBottomVisibility();
         greyOutCardIfNoAudioTranslation();
     }

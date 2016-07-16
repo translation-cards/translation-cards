@@ -47,21 +47,11 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
         boolean isCardLocked = deckService.currentDeck().isLocked();
         String currentDictionaryLabel = LanguageService.getTitleCaseName(dictionaryService.currentDictionary().getLanguage());
         TranslationCardItem translationCardItemView = (TranslationCardItem)(translationItemView.findViewById(R.id.translation_card_list_item));
-        translationCardItemView.setTranslationService(translationService);
         translationCardItemView.setTranslation(item,currentDictionaryLabel, isCardLocked, position);
 
         if (!isCardLocked) {
             Intent intent = new Intent(translationsActivity, EnterSourcePhraseActivity.class);
-            translationCardItemView.setEditAndDeleteClickListeners(
-                    new CardEditClickListener(translationsActivity,
-                                                item,
-                                                intent,
-                                                dictionaryService,
-                                                deckService),
-                    new CardDeleteClickListener(translationsActivity,
-                                                item,
-                                                translationService,
-                                                new AlertDialog.Builder(translationsActivity)));
+            translationCardItemView.setEditAndDeleteClickListeners(translationsActivity, intent);
         }
 
 
