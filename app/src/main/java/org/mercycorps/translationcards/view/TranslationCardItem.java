@@ -47,7 +47,6 @@ public class TranslationCardItem extends LinearLayout {
     private boolean playAudioOnClick;
     private boolean showAudioIcon;
     private boolean showDeleteAndEditOptions;
-    private boolean isCardLocked = false;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
@@ -124,7 +123,8 @@ public class TranslationCardItem extends LinearLayout {
         updateExpansionIndicator();
         updateCardTopBackground();
         setCardBottomVisibility();
-        hideGrandchildAndAudioIcon();
+        updateEditDeleteVisibility();
+        updateAudioIconVisibility();
         greyOutCardIfNoAudioTranslation();
     }
 
@@ -135,10 +135,9 @@ public class TranslationCardItem extends LinearLayout {
         initState();
     }
 
-    public void setTranslation(Translation translation, String language, boolean isCardLocked, int position){
+    public void setTranslation(Translation translation, String language, int position){
         this.translationItem=translation;
         this.dictionaryLanguage=language;
-        this.isCardLocked = isCardLocked;
         this.position = position;
         initState();
     }
@@ -148,7 +147,7 @@ public class TranslationCardItem extends LinearLayout {
     }
 
     public void setEditAndDeleteClickListeners(Activity activity, Intent intent){
-        if(showDeleteAndEditOptions){
+        if(showDeleteAndEditOptions && !deckService.currentDeck().isLocked()){
             editButton.setOnClickListener(new CardEditClickListener(activity,
                     translationItem,
                     intent,
@@ -206,12 +205,14 @@ public class TranslationCardItem extends LinearLayout {
         translationChild.setVisibility(visibility);
     }
 
-    protected void hideGrandchildAndAudioIcon() {
+    protected void updateEditDeleteVisibility() {
+        if(!showDeleteAndEditOptions || deckService.currentDeck().isLocked()){
+            translationGrandChild.setVisibility(View.GONE);
+        }
+    }
+    protected void updateAudioIconVisibility() {
         if(!showAudioIcon) {
             audioIconLayout.setVisibility(View.GONE);
-        }
-        if(!showDeleteAndEditOptions || isCardLocked){
-            translationGrandChild.setVisibility(View.GONE);
         }
     }
 
