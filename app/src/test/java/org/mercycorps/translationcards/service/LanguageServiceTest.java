@@ -87,4 +87,10 @@ public class LanguageServiceTest {
     public void shouldReturnEmptyStringIfNullPassedToGetTitleCaseName() {
         assertEquals("", LanguageService.getTitleCaseName(null));
     }
+
+    @Test
+    public void shouldReturnTitleCasedStringWhenSpaceAtFront() {
+        String titleCasedString = LanguageService.getTitleCaseName(" A title cased string");
+        assertEquals("A Title Cased String", titleCasedString);
+    }
 }
