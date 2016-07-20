@@ -34,9 +34,9 @@ import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslation
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -75,7 +75,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         translationService.initializeCardStates();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
-
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();
@@ -159,7 +158,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         inflateListFooter();
 
         listAdapter = new CardListAdapter(this,
-                this, R.layout.translation_item, R.id.origin_translation_text,
+                R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>(), translationService, dictionaryService, deckService);
         list.setAdapter(listAdapter);
     }
@@ -184,7 +183,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private void launchGetStartedActivity(){
         Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
-        nextIntent.putExtra(deckService.INTENT_KEY_DECK, deckService.currentDeck());
+        nextIntent.putExtra(DeckService.INTENT_KEY_DECK, deckService.currentDeck());
         startActivity(nextIntent);
     }
 

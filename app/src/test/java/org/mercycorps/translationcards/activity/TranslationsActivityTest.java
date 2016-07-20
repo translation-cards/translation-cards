@@ -213,19 +213,6 @@ public class TranslationsActivityTest {
         assertEquals(View.VISIBLE, translationsListItem.findViewById(R.id.translation_grandchild).getVisibility());
     }
 
-    //Not sure if this is valid test,
-    //if it is does it need to be done for all instances of translation card items?
-    @Test
-    public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
-        int disabledTextColor = -7960954;
-        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
-
-        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-
-        assertThat(translatedText.getTextSize(), is(18f));
-        assertThat(translatedText.getCurrentTextColor(), is(disabledTextColor));
-    }
-
     @Test
     public void shouldStartGetStartedActivityWhenAddTranslationButtonIsClicked() {
         click(translationsActivity, R.id.add_translation_button);

@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,7 +36,6 @@ import org.robolectric.shadows.RoboAttributeSet;
 import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -48,7 +47,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -63,41 +64,45 @@ public class TranslationCardItemTest {
     public static final boolean IS_NOT_ASSET = false;
 
     private Activity activity;
+    private DeckService deckService;
+
     @Before
     public void setUp() throws Exception {
-        activity= Robolectric.buildActivity(Activity.class).create().get();
-        DeckService deckService = ((MainApplication) RuntimeEnvironment.application).getDeckService();
+        activity = Robolectric.buildActivity(Activity.class).create().get();
+        deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
         Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
         when(deckService.currentDeck()).thenReturn(basicDeck);
     }
 
-    private TranslationCardItem getDefaultTranslationCard(){
-        TranslationCardItem translationCardItem = (TranslationCardItem) LayoutInflater.from(activity).inflate(R.layout.translation_card_item, null);
-
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+    private TranslationCardItem getDefaultTranslationCard() {
+        TranslationCardItem translationCardItem = new TranslationCardItem(activity);
+        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL);
         return translationCardItem;
     }
+
     @Test
-    public void shouldSetTranslationSourceTextWhenLoaded(){
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        assertEquals("First Translation", ((TextView)translationCardItem.findViewById(R.id.origin_translation_text)).getText());
+    public void shouldSetTranslationSourceTextWhenLoaded() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        assertEquals("First Translation", ((TextView) translationCardItem.findViewById(R.id.origin_translation_text)).getText());
     }
+
     @Test
-    public void shouldSetDestinationTranslationTextWhenLoaded(){
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        assertEquals("Translated Text", ((TextView)translationCardItem.findViewById(R.id.translated_text)).getText());
+    public void shouldSetDestinationTranslationTextWhenLoaded() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        assertEquals("Translated Text", ((TextView) translationCardItem.findViewById(R.id.translated_text)).getText());
     }
+
     @Test
-    public void shouldHaveCollapseIconVisibleWhenLoaded(){
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+    public void shouldHaveCollapseIconVisibleWhenLoaded() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         ImageView expansionIndicatorIcon = (ImageView) translationCardItem.findViewById(R.id.indicator_icon);
         assertThat(shadowOf(expansionIndicatorIcon.getBackground()).getCreatedFromResId(), is(R.drawable.collapse_arrow));
     }
 
     @Test
-    public void shouldHaveExpandIconVisibleWhenLoadedAndCollapsed(){
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+    public void shouldHaveExpandIconVisibleWhenLoadedAndCollapsed() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         ImageView expansionIndicatorIcon = (ImageView) translationCardItem.findViewById(R.id.indicator_icon);
 
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
@@ -106,34 +111,37 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldCollapseCardWhenIndicatorIconIsClicked() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
-        View translationChild = translationCardItem.findViewById( R.id.translation_child);
+        View translationChild = translationCardItem.findViewById(R.id.translation_child);
         assertEquals(View.GONE, translationChild.getVisibility());
     }
+
     @Test
     public void shouldShowExpandedCardTopBackgroundWhenExpanded() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        View translationParent = translationCardItem.findViewById( R.id.translation_card_parent);
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View translationParent = translationCardItem.findViewById(R.id.translation_card_parent);
         assertEquals(R.drawable.card_top_background_expanded, shadowOf(translationParent.getBackground()).getCreatedFromResId());
     }
+
     @Test
     public void shouldNotShowExpandedCardTopBackgroundWhenCollapsed() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
-        View translationParent = translationCardItem.findViewById( R.id.translation_card_parent);
+        View translationParent = translationCardItem.findViewById(R.id.translation_card_parent);
         assertEquals(R.drawable.card_top_background, shadowOf(translationParent.getBackground()).getCreatedFromResId());
     }
 
     @Test
     public void shouldShowTranslationChildWhenActivityIsCreated() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         View translationCardChild = translationCardItem.findViewById(R.id.translation_child);
         assertEquals(View.VISIBLE, translationCardChild.getVisibility());
     }
+
     @Test
     public void shouldShowCardBottomWhenCardIndicatorIsClickedTwice() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         assertEquals(View.VISIBLE, translationCardItem.findViewById(R.id.translation_child).getVisibility());
@@ -141,7 +149,7 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldShowCollapseCardIndicatorWhenIndicatorIsClickedTwice() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         ImageView indicatorIcon = (ImageView) translationCardItem.findViewById(R.id.indicator_icon);
@@ -151,41 +159,42 @@ public class TranslationCardItemTest {
     @Test
     @TargetApi(19)
     public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         LinearLayout translationCardParent = (LinearLayout) translationCardItem.findViewById(R.id.translation_card_parent);
-        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
-        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
+        LayerDrawable bgDrawable = (LayerDrawable) translationCardParent.getBackground();
+        GradientDrawable background = (GradientDrawable) bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
         assertEquals(TranslationCardItem.DISABLED_OPACITY, background.getAlpha());
     }
 
     @Test
     public void shouldDisplayMuteIconWhenTranslationContainsNoAudio() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        View audioIcon= translationCardItem.findViewById(R.id.audio_icon);
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View audioIcon = translationCardItem.findViewById(R.id.audio_icon);
         assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio_40));
     }
+
     @Test
     public void shouldDisplayAudioIconWhenTranslationContainsAudio() {
         TranslationCardItem translationCardItem = createTranslationCardItemWithAudioAndNoTranslatedText();
-        View audioIcon= translationCardItem.findViewById(R.id.audio_icon);
+        View audioIcon = translationCardItem.findViewById(R.id.audio_icon);
         assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.audio));
     }
 
     @Test
-    public void shouldBeExpandedWhenExpandAttributeSetToTrue(){
+    public void shouldBeExpandedWhenExpandAttributeSetToTrue() {
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("org.mercycorps.translationcards:attr/expandedOnStart",
                 String.valueOf(true), "org.mercycorps.translationcards"));
-        AttributeSet attrs =new RoboAttributeSet(attributes,shadowOf(activity).getResourceLoader() );
-        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application,attrs );
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+        AttributeSet attrs = new RoboAttributeSet(attributes, shadowOf(activity).getResourceLoader());
+        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application, attrs);
+        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
         tc.setTranslation(translationItem, "English");
         assertEquals(View.VISIBLE, tc.findViewById(R.id.translation_child).getVisibility());
     }
 
     @Test
     public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
         doThrow(new AudioFileException()).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
 
@@ -195,20 +204,20 @@ public class TranslationCardItemTest {
     }
 
     @Test
-    public void shouldBeCollapsedWhenExpandAttributeSetToFalse(){
+    public void shouldBeCollapsedWhenExpandAttributeSetToFalse() {
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("org.mercycorps.translationcards:attr/expandedOnStart",
                 String.valueOf(false), "org.mercycorps.translationcards"));
-        AttributeSet attrs =new RoboAttributeSet(attributes,shadowOf(activity).getResourceLoader() );
-        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application,attrs );
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+        AttributeSet attrs = new RoboAttributeSet(attributes, shadowOf(activity).getResourceLoader());
+        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application, attrs);
+        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
         tc.setTranslation(translationItem, "English");
         assertEquals(View.GONE, tc.findViewById(R.id.translation_child).getVisibility());
     }
 
     @Test
     public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
         createTranslationCardItemWithAudioAndNoTranslatedText();
         translationCardItem.findViewById(R.id.translation_card).performClick();
@@ -218,7 +227,7 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldGreyOutTranslationSourceTextWhenItContainsNoAudio() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
         TextView translationText = (TextView) translationCardItem.findViewById(R.id.origin_translation_text);
         assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
     }
@@ -236,7 +245,7 @@ public class TranslationCardItemTest {
     public void shouldShowHintTextWhenNoTranslatedTextPhraseIsProvided() {
         TranslationCardItem translationCardItem = createTranslationCardItemWithAudioAndNoTranslatedText();
         TextView translatedTextView = (TextView) translationCardItem.findViewById(R.id.translated_text);
-        assertEquals(String.format("Add %s translation",  DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
+        assertEquals(String.format("Add %s translation", DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
     }
 
     @Test
@@ -300,50 +309,42 @@ public class TranslationCardItemTest {
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("org.mercycorps.translationcards:attr/showEditAndDeleteOptions",
                 String.valueOf(true), "org.mercycorps.translationcards"));
-        AttributeSet attrs =new RoboAttributeSet(attributes,shadowOf(activity).getResourceLoader() );
-        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application,attrs );
-        Translation translationItem=new Translation("First Translation",false,null,1,"Translated Text");
+        AttributeSet attrs = new RoboAttributeSet(attributes, shadowOf(activity).getResourceLoader());
+        TranslationCardItem tc = new TranslationCardItem(RuntimeEnvironment.application, attrs);
+        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
         tc.setTranslation(translationItem, "English");
         return tc;
     }
 
     @Test
-    public void shouldChangeTextSizeIfNoTranslationPresent() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        translationCardItem.setTranslationTextSize(18f);
-
-        assertEquals(18f, ((TextView) translationCardItem.findViewById(R.id.translated_text)).getTextSize());
-    }
-
-    @Test
     public void shouldShowTranslationCardChildWhenTranslationServiceReturnsExpanded() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
-        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
+        TranslationService translationService = ((TestMainApplication) RuntimeEnvironment.application).getTranslationService();
         when(translationService.cardIsExpanded(0)).thenReturn(true);
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, 0);
-        View childView=translationCardItem.findViewById(R.id.translation_child);
+        View childView = translationCardItem.findViewById(R.id.translation_child);
 
         assertEquals(View.VISIBLE, childView.getVisibility());
     }
 
     @Test
     public void shouldHideTranslationCardChildWhenTranslationServiceReturnsNotExpanded() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
-        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
+        TranslationService translationService = ((TestMainApplication) RuntimeEnvironment.application).getTranslationService();
         when(translationService.cardIsExpanded(0)).thenReturn(false);
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, 0);
-        View childView=translationCardItem.findViewById(R.id.translation_child);
+        View childView = translationCardItem.findViewById(R.id.translation_child);
 
         assertEquals(View.GONE, childView.getVisibility());
     }
 
     @Test
     public void shouldCallLanguageServiceOnExpansionClick() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
-        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
+        TranslationService translationService = ((TestMainApplication) RuntimeEnvironment.application).getTranslationService();
         when(translationService.cardIsExpanded(0)).thenReturn(false);
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, 0);
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
@@ -352,19 +353,72 @@ public class TranslationCardItemTest {
     }
 
     @Test
+    public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
+        int disabledTextColor = ContextCompat.getColor(activity, R.color.textDisabled);
+        TranslationCardItem translationsListItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
+        translationsListItem.setTranslation(translationItem, "English");
+
+        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
+
+        assertEquals(18f, translatedText.getTextSize());
+        assertEquals(disabledTextColor, translatedText.getCurrentTextColor());
+    }
+
+    @Test
     public void shouldCallLanguageServiceOnCollapseClick() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
-        TranslationService translationService = ((TestMainApplication)RuntimeEnvironment.application).getTranslationService();
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
+        TranslationService translationService = ((TestMainApplication) RuntimeEnvironment.application).getTranslationService();
         when(translationService.cardIsExpanded(0)).thenReturn(true);
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL, 0);
         translationCardItem.findViewById(R.id.translation_indicator_layout).performClick();
         verify(translationService).minimizeCard(0);
     }
 
+    @Test
+    public void shouldSetDeleteClickListenerIfCardNotLocked() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View.OnClickListener deleteListener = mock(View.OnClickListener.class);
+        translationCardItem.setDeleteClickListener(deleteListener);
+        translationCardItem.findViewById(R.id.translation_card_delete).performClick();
+        verify(deleteListener).onClick(any(View.class));
+    }
+
+    @Test
+    public void shouldNotSetDeleteClickListenerIfCardLocked() {
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
+        when(deckService.currentDeck()).thenReturn(basicDeck);
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View.OnClickListener deleteListener = mock(View.OnClickListener.class);
+        translationCardItem.setDeleteClickListener(deleteListener);
+        translationCardItem.findViewById(R.id.translation_card_delete).performClick();
+        verifyZeroInteractions(deleteListener);
+    }
+
+    @Test
+    public void shouldSetEditClickListenerIfCardNotLocked() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View.OnClickListener editListener = mock(View.OnClickListener.class);
+        translationCardItem.setEditClickListener(editListener);
+        translationCardItem.findViewById(R.id.translation_card_edit).performClick();
+        verify(editListener).onClick(any(View.class));
+    }
+
+    @Test
+    public void shouldNotSetEditClickListenerIfCardLocked() {
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
+        when(deckService.currentDeck()).thenReturn(basicDeck);
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        View.OnClickListener editListener = mock(View.OnClickListener.class);
+        translationCardItem.setEditClickListener(editListener);
+        translationCardItem.findViewById(R.id.translation_card_edit).performClick();
+        verifyZeroInteractions(editListener);
+    }
+
     private TranslationCardItem createTranslationCardItemWithAudioAndNoTranslatedText() {
-        TranslationCardItem translationCardItem =getDefaultTranslationCard();
-        Translation translationItem=new Translation("First Translation",false,DEFAULT_AUDIO_FILE,1,"");
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        Translation translationItem = new Translation("First Translation", false, DEFAULT_AUDIO_FILE, 1, "");
         translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL);
         return translationCardItem;
     }

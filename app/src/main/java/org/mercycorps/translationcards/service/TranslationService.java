@@ -36,10 +36,22 @@ public class TranslationService {
     }
 
     public void deleteTranslation(String sourcePhrase) {
-        for(Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
+        expanded.remove(getPositionOfTranslation(sourcePhrase));
+
+        for (Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
             translationRepository.deleteTranslation(translation.getDbId());
         }
+    }
+
+    private int getPositionOfTranslation(String sourcePhrase) {
+        List<Translation> translations = getCurrentTranslations();
+        for (int i = 0; i < translations.size(); i++) {
+            if (translations.get(i).getLabel().equals(sourcePhrase)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void expandCard(int position) {

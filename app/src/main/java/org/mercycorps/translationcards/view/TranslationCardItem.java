@@ -1,9 +1,6 @@
 package org.mercycorps.translationcards.view;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -20,13 +17,10 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.translations.CardDeleteClickListener;
-import org.mercycorps.translationcards.activity.translations.CardEditClickListener;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
@@ -40,17 +34,16 @@ import butterknife.OnClick;
  */
 public class TranslationCardItem extends LinearLayout {
     private static final String TAG = "TranslationCardItem";
-    private Translation translationItem;
+    private Translation translation;
     private String dictionaryLanguage;
-    private boolean isCardExpanded;
-    private boolean greyOutIfNoAudio;
-    private boolean playAudioOnClick;
-    private boolean showAudioIcon;
-    private boolean showDeleteAndEditOptions;
+    private boolean cardExpanded = true;
+    private boolean greyOutIfNoAudio = true;
+    private boolean playAudioOnClick = true;
+    private boolean showAudioIcon = true;
+    private boolean showDeleteAndEditOptions = false;
     private TranslationService translationService;
-    private DictionaryService dictionaryService;
     private DeckService deckService;
-    private Integer position;
+    private Integer index;
     public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
 
@@ -96,10 +89,8 @@ public class TranslationCardItem extends LinearLayout {
     private void init(){
         inflate(getContext(), R.layout.translation_card, this);
         ButterKnife.bind(this);
-        //would prefer this be injected in constructor somewhere
         translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
         deckService=((MainApplication)getContext().getApplicationContext()).getDeckService();
-        dictionaryService=((MainApplication)getContext().getApplicationContext()).getDictionaryService();
     }
     private void setStateFromAttributes(Context context, AttributeSet attrs){
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -107,7 +98,7 @@ public class TranslationCardItem extends LinearLayout {
                 R.styleable.TranslationCardItem,
                 0, 0);
         try {
-            isCardExpanded = a.getBoolean(R.styleable.TranslationCardItem_expandedOnStart, true);
+            cardExpanded = a.getBoolean(R.styleable.TranslationCardItem_expandedOnStart, true);
             greyOutIfNoAudio = a.getBoolean(R.styleable.TranslationCardItem_greyOutCardIfNoAudio, true);
             showAudioIcon = a.getBoolean(R.styleable.TranslationCardItem_showAudioIcon, true);
             playAudioOnClick = a.getBoolean(R.styleable.TranslationCardItem_playAudioOnClick, true);
@@ -130,57 +121,49 @@ public class TranslationCardItem extends LinearLayout {
 
 
     public void setTranslation(Translation translation, String language){
-        this.translationItem=translation;
-        this.dictionaryLanguage=language;
+        this.translation = translation;
+        this.dictionaryLanguage = language;
         initState();
     }
 
-    public void setTranslation(Translation translation, String language, int position){
-        this.translationItem=translation;
+    public void setTranslation(Translation translation, String language, int index){
+        this.translation =translation;
         this.dictionaryLanguage=language;
-        this.position = position;
+        this.index = index;
         initState();
     }
-
-    public void setTranslationTextSize(float textSize){
-        ((TextView) findViewById(R.id.translated_text)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+    public void setEditClickListener(OnClickListener listener){
+        if(!deckService.currentDeck().isLocked()){
+            this.editButton.setOnClickListener(listener);
+        }
     }
-
-    public void setEditAndDeleteClickListeners(Activity activity, Intent intent){
-        if(showDeleteAndEditOptions && !deckService.currentDeck().isLocked()){
-            editButton.setOnClickListener(new CardEditClickListener(activity,
-                    translationItem,
-                    intent,
-                    dictionaryService,
-                    deckService));
-            deleteButton.setOnClickListener(new CardDeleteClickListener(activity,
-                            translationItem,
-                            translationService,
-                            new AlertDialog.Builder(activity)));
+    public void setDeleteClickListener(OnClickListener listener){
+        if(!deckService.currentDeck().isLocked()) {
+            this.deleteButton.setOnClickListener(listener);
         }
     }
 
-    private boolean getIsCardExpanded(){
-        if(position != null){
-            isCardExpanded=translationService.cardIsExpanded(position);
+    private boolean isCardExpanded(){
+        if(index != null){
+            cardExpanded = translationService.cardIsExpanded(index);
         }
-        return isCardExpanded;
+        return cardExpanded;
     }
 
-    private void setIsCardExpanded(boolean newIsCardExpandedInd){
-        isCardExpanded=newIsCardExpandedInd;
-        if(position != null) {
-            if (newIsCardExpandedInd) {
-                translationService.expandCard(position);
+    public void setCardExpanded(boolean cardExpanded){
+        this.cardExpanded =cardExpanded;
+        if(index != null) {
+            if (cardExpanded) {
+                translationService.expandCard(index);
             }
             else{
-                translationService.minimizeCard(position);
+                translationService.minimizeCard(index);
             }
         }
     }
 
     private void updateExpansionIndicator(){
-        if(getIsCardExpanded())
+        if(isCardExpanded())
         {
             expansionIndicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
         }
@@ -192,7 +175,7 @@ public class TranslationCardItem extends LinearLayout {
         View cardTopBackground = findViewById(R.id.translation_card_parent);
         int rightPadding = cardTopBackground.getPaddingRight();
         int leftPadding = cardTopBackground.getPaddingLeft();
-        if (getIsCardExpanded()) {
+        if (isCardExpanded()) {
             cardTopBackground.setBackgroundResource(R.drawable.card_top_background_expanded);
         } else {
             cardTopBackground.setBackgroundResource(R.drawable.card_top_background);
@@ -201,7 +184,7 @@ public class TranslationCardItem extends LinearLayout {
     }
 
     private void setCardBottomVisibility(){
-        int visibility = getIsCardExpanded() ?  View.VISIBLE : View.GONE ;
+        int visibility = isCardExpanded() ?  View.VISIBLE : View.GONE ;
         translationChild.setVisibility(visibility);
     }
 
@@ -217,23 +200,29 @@ public class TranslationCardItem extends LinearLayout {
     }
 
     private void updateTranslatedTextView() {
-        String translatedText = translationItem.getTranslatedText();
+        String translatedText = translation.getTranslatedText();
         translatedTextView.setText(translatedText);
         if (translatedText.isEmpty()) {
             String formattedLanguage = LanguageService.getTitleCaseName(dictionaryLanguage);
             translatedTextView.setHint(String.format("Add %s translation", formattedLanguage));
+            translatedTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f);
+            translatedTextView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.textDisabled));
+        }
+        else{
+            translatedTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20f);
+            translatedTextView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.primaryTextColor));
         }
     }
     private void setTranslationSourcePhrase() {
-        originTranslationTextView.setText(translationItem.getLabel());
+        originTranslationTextView.setText(translation.getLabel());
     }
 
     private void greyOutCardIfNoAudioTranslation() {
         if(greyOutIfNoAudio) {
             LayerDrawable cardTopBackground = (LayerDrawable) translationCardParent.getBackground();
-            int backgroundId = getIsCardExpanded() ? R.id.card_top_background_expanded : R.id.card_top_background;
+            int backgroundId = isCardExpanded() ? R.id.card_top_background_expanded : R.id.card_top_background;
             GradientDrawable cardTopBackgroundDrawable = (GradientDrawable) cardTopBackground.findDrawableByLayerId(backgroundId);
-            if (!translationItem.isAudioFilePresent()) {
+            if (!translation.isAudioFilePresent()) {
                 cardTopBackgroundDrawable.setAlpha(DISABLED_OPACITY);
                 originTranslationTextView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.textDisabled));
                 audioIcon.setBackgroundResource(R.drawable.no_audio_40);
@@ -247,7 +236,7 @@ public class TranslationCardItem extends LinearLayout {
 
     @OnClick(R.id.translation_indicator_layout)
     protected void toggleCardExpansion(){
-        setIsCardExpanded(!getIsCardExpanded());
+        setCardExpanded(!isCardExpanded());
         updateExpansionIndicator();
         updateCardTopBackground();
         setCardBottomVisibility();
@@ -263,7 +252,7 @@ public class TranslationCardItem extends LinearLayout {
                 if(mediaManager.isPlaying()) {
                     mediaManager.stop();
                 } else {
-                    mediaManager.play(translationItem.getFilename(), progressBar, translationItem.getIsAsset());
+                    mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
                 }
             } catch (AudioFileException e) {
                 String message = String.format(this.getContext().getString(R.string.could_not_play_audio_message),
@@ -272,5 +261,14 @@ public class TranslationCardItem extends LinearLayout {
                 Log.d(TAG, e.getMessage());
             }
         }
+    }
+    public void setShowDeleteAndEditOptions(boolean showDeleteAndEditOptions){
+        this.showDeleteAndEditOptions=showDeleteAndEditOptions;
+    }
+    public void setGreyOutIfNoAudio(boolean greyOutIfNoAudio){
+        this.greyOutIfNoAudio=greyOutIfNoAudio;
+    }
+    public Translation getTranslation(){
+        return translation;
     }
 }
