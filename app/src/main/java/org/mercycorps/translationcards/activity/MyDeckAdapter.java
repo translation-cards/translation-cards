@@ -65,7 +65,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMe
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deck.delete();
+                                deckService.delete(deck);
                                 activity.refreshMyDecksList();
                             }
                         })

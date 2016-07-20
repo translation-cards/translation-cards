@@ -28,13 +28,6 @@ public class DeckTest {
     }
 
     @Test
-    public void shouldDeleteDeckFromDBWhenDeleteIsCalled() {
-        deck.delete();
-
-        verify(((MainApplication)MainApplication.getContextFromMainApp()).getDeckRepository()).deleteDeck(deck.getDbId());
-    }
-
-    @Test
     public void getDeckInformation_shouldFormatDeckInformation() {
         assertThat(deck.getDeckInformation(),is("author, 02/08/16"));
     }
