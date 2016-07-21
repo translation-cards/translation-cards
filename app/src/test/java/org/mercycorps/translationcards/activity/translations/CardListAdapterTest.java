@@ -48,28 +48,37 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class CardListAdapterTest {
     public static final String TRANSLATION_LABEL = "Test Translation";
+    public static final String TRANSLATION_LABEL_2 = "Test Translation";
     private CardListAdapter cardListAdapter;
     private Activity activity;
     private List<Translation> translations;
     private TranslationService mockTranslationService;
     private Dictionary defaultDictionary;
+    private Translation firstTranslation;
+    private Translation secondTranslation;
+    private Deck basicDeck;
 
     @Before
     public void setUp() {
         activity = Robolectric.buildActivity(Activity.class).create().get();
         translations = new ArrayList<>();
-        translations.add(new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text"));
+        firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
+        translations.add(firstTranslation);
+        secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
+        translations.add(secondTranslation);
 
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         DeckService mockDeckService = ((TestMainApplication) activity.getApplication()).getDeckService();
         mockTranslationService = ((TestMainApplication) activity.getApplication()).getTranslationService();
-        defaultDictionary = new Dictionary("eng", "English", new Translation[0], 0, 0);
+        Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
+        defaultDictionary = new Dictionary("eng", "English", translationsArray, 0, 0);
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);
+        dictionaries.add(defaultDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
-        Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
+        basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
         when(mockDeckService.currentDeck()).thenReturn(basicDeck);
 
         cardListAdapter = new CardListAdapter(
@@ -97,7 +106,7 @@ public class CardListAdapterTest {
     }
 
     @Test
-    public void shouldSetMessageOfAlertDialog() throws Exception {
+    public void shouldSetMessageOfAlertDialogOnDeleteClick() throws Exception {
         View resultingView = cardListAdapter.getView(0, null, null);
         ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
         resultingView.findViewById(R.id.translation_card_delete).performClick();
@@ -155,56 +164,45 @@ public class CardListAdapterTest {
 
     @Test
     public void shouldPassContextWithRightNumberOfNewTranslationsWhenEditTriggered() {
-
-        View resultingView = cardListAdapter.getView(0, null, null);
-        resultingView.findViewById(R.id.translation_card_edit).performClick();
-        AddNewTranslationContext context = (AddNewTranslationContext)shadowOf(shadowOf(activity).getNextStartedActivity()).getExtras().get(AddTranslationActivity.CONTEXT_INTENT_KEY);
-
-        assertEquals(1, context.getNewTranslations().size());
+        List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
+        assertEquals(2, newTranslations.size());
     }
 
     @Test
     public void shouldPassContextWithEditFlagWhenEditTriggered() {
-        View resultingView = cardListAdapter.getView(0, null, null);
-        resultingView.findViewById(R.id.translation_card_edit).performClick();
-        AddNewTranslationContext context = (AddNewTranslationContext)shadowOf(shadowOf(activity).getNextStartedActivity()).getExtras().get(AddTranslationActivity.CONTEXT_INTENT_KEY);
-
-        for(NewTranslation newTranslation : context.getNewTranslations()) {
+        List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
+        for(NewTranslation newTranslation : newTranslations) {
             assertEquals(TranslationsActivity.IS_EDIT, (boolean)newTranslation.isEdit());
         }
     }
 
-//    @Test
-//    public void shouldPassContextWithCorrectTranslations() {
-//        cardEditClickListener.onClick(view);
-//
-//        ArgumentCaptor<AddNewTranslationContext> argumentCaptor = ArgumentCaptor.forClass(AddNewTranslationContext.class);
-//        verify(intent, times(2)).putExtra(any(String.class), argumentCaptor.capture());
-//
-//        List<NewTranslation> newTranslations = getContextPassedToFirstMethodCall(argumentCaptor).getNewTranslations();
-//        assertEquals(firstTranslation, newTranslations.get(0).getTranslation());
-//        assertEquals(secondTranslation, newTranslations.get(1).getTranslation());
-//    }
-//
-//    @Test
-//    public void shouldPassContextWithCorrectDictionaries() {
-//        cardEditClickListener.onClick(view);
-//
-//        ArgumentCaptor<AddNewTranslationContext> argumentCaptor = ArgumentCaptor.forClass(AddNewTranslationContext.class);
-//        verify(intent, times(2)).putExtra(any(String.class), argumentCaptor.capture());
-//
-//        List<NewTranslation> newTranslations = getContextPassedToFirstMethodCall(argumentCaptor).getNewTranslations();
-//        assertEquals(firstDictionary, newTranslations.get(0).getDictionary());
-//        assertEquals(secondDictionary, newTranslations.get(1).getDictionary());
-//    }
-//
-//    @Test
-//    public void shouldPassCorrectDeck() {
-//        cardEditClickListener.onClick(view);
-//
-//        ArgumentCaptor<Deck> argumentCaptor = ArgumentCaptor.forClass(Deck.class);
-//        verify(intent, times(2)).putExtra(any(String.class), argumentCaptor.capture());
-//
-//        assertEquals(deck, getArgumentToSecondMethodCall(argumentCaptor));
-//    }
+    @Test
+    public void shouldPassContextWithCorrectTranslationsWhenEditTriggered() {
+        List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
+        assertEquals(firstTranslation, newTranslations.get(0).getTranslation());
+    }
+
+    @Test
+    public void shouldPassContextWithCorrectDictionariesWhenEditTriggered() {
+        List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
+        assertEquals(defaultDictionary, newTranslations.get(0).getDictionary());
+    }
+
+    private List<NewTranslation> triggerEditAndGetTranslationsSentInContext() {
+        View resultingView = cardListAdapter.getView(0, null, null);
+        resultingView.findViewById(R.id.translation_card_edit).performClick();
+        AddNewTranslationContext context = (AddNewTranslationContext)shadowOf(shadowOf(activity).getNextStartedActivity())
+                                                                                .getExtras()
+                                                                                .get(AddTranslationActivity.CONTEXT_INTENT_KEY);
+
+        return context.getNewTranslations();
+    }
+
+    @Test
+    public void shouldPassCorrectDeckWhenEditTriggered() {
+        View resultingView = cardListAdapter.getView(0, null, null);
+        resultingView.findViewById(R.id.translation_card_edit).performClick();
+        Deck retrievedDeck = (Deck)shadowOf(shadowOf(activity).getNextStartedActivity()).getExtras().get(DeckService.INTENT_KEY_DECK);
+        assertEquals(basicDeck, retrievedDeck);
+    }
 }
