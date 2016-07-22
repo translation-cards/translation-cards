@@ -12,7 +12,12 @@ android {
         versionName "1.1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        jackOptions {
+            enabled true
+        }
     }
+
     signingConfigs {
         release {
             storeFile file("../keystore.jks")
@@ -21,6 +26,7 @@ android {
             keyPassword System.getenv("KEYPWD").toString().replace("DONTEVERUSETHIS=0", "")
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -28,6 +34,11 @@ android {
             signingConfig signingConfigs.release
 
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {
