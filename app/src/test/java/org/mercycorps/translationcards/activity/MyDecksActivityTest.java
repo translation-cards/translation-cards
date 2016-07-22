@@ -39,7 +39,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
-            "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.0.4";
+            "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.1.0";
     private static final String DEFAULT_ISO_CODE = "en";
     private static final String DEFAULT_LANGUAGE_NAME = "English";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);

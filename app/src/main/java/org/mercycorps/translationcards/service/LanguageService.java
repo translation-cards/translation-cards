@@ -59,6 +59,7 @@ public class LanguageService {
             return "";
         }
         String titleCaseName = "";
+        name = name.trim();
         String[] tokens = name.split(" ");
         for (String token : tokens) {
             String lowerCaseName = token.toLowerCase();

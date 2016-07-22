@@ -97,10 +97,6 @@ public class Deck implements Serializable {
         this.title = title;
     }
 
-    public void delete() {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDeckRepository().deleteDeck(dbId);
-    }
-
     public void setSourceLanguage(Language language){
         this.sourceLanguage = language;
     }
