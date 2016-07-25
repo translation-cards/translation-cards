@@ -41,7 +41,7 @@ The story cards resulting from analysis are used by developers to create the fea
   1. The tests also serve as a form of documentation. If you’re not sure what a class is supposed to do, read the titles of its tests to get a gist of its behavior.
   1. Run all the tests before you push, whether you added new ones or not. If they don’t pass, try to make them pass without modifying existing tests. They serve as regression indicators, and changing them to suit your new feature should be done sparingly.
 5. Take Breaks
-  1. You’d be surprised how much progress you can make by taking it easy for five minutes and coming back to your code with a fresh mind. Still can’t solve it? This is a collaborative atmosphere, feel free to ask someone near you, or ask an organizer.
+  1. You’d be surprised how much progress you can make by taking it easy for five minutes and coming back to your code with a fresh mind. Still can’t solve it? This is a collaborative atmosphere, feel free to ask someone on the slack channel, or ask an organizer.
 6. Pull request
   1. When you’re done with the feature and all the tests are passing, push your code to your forked project.
   2. View your new branch on the Github site, and create a New Pull Request.
