@@ -43,6 +43,8 @@ frustration later on.
 9. Find the latest work. We use milestones to split apart the cycles of work (also called iterations in Agile)
 Choose the latest milestone once in the Boards tab by clicking the Milestones dropdown. The higher the story is on the board the more important it is. The stories also have labels such as ‘UX’, ‘Bug’, or ‘Feature’ which indicate what category of work needs to be done for that story. 
 
+### Workflow
+Please read the [Development Guide.]() This explains the Translation Cards development steps and process.
 
 ### Pull Requests
 * When creating a pull request, be sure to set:
