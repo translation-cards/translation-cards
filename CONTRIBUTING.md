@@ -59,7 +59,7 @@ use Github pull requests for this purpose.
 All documents, spreadsheets, presentations, and UX work related to this project is saved on the Translation Cards [drive] (https://drive.google.com/open?id=0Bx3lspqM75QyeVRheDJ0cWZlMkU)
 
 ### Communication via Slack
-For all project updates, questions, concerns and communication we use [slack] (https://translation-cards.slack.com/?redir=%2Fadmin%2Finvites)
+For all project updates, questions, concerns and communication we use [slack] (https://translation-cards.slack.com/?redir=%2Fadmin%2Finvites). If you do not have an account, ask for an invite to slack from one of the Translation Cards team members.
 
 ### The small print
 Contributions made by corporations are covered by a different agreement than
