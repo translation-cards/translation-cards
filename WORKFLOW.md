@@ -58,9 +58,12 @@ The story cards resulting from analysis are used by developers to create the fea
 1. Choose a story
   1. Find a higher priority issue card in the ‘Ready for QA’ column and move it to ‘In QA’
 2. Pull the code
-	You can do this one of two ways:
+  
+  You can do this one of two ways:
   1. Have the developers who worked on the story load the application from their computer onto a physical android device for you to test.
-OR, using Git
+  
+  OR, using Git
+
   1. Find the pull request for that story. Let’s assume the pull request is “Deck Creation Summary Screen #151”
   2. Navigate to your project directory and use the following git commands to get the pull request’s code onto your machine
     1. git fetch origin pull/151/head:deck-creation-summary-screen
