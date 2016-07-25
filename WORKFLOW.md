@@ -30,26 +30,28 @@ The story cards resulting from analysis are used by developers to create the fea
 ## Developer
 1. Find a pair
   1. If you can, work with another developer. You will likely write better code and finish faster. It’s also a great way to make friends!
-1. Choose a story
+2. Choose a story
   1. Stories are ranked in order of priority. Try to pick a story at or near the top of the Ready for Dev pipeline.
   1. Make a comment on the story card to indicate who is working on it.
   1. Move the card from ‘Ready for Dev’ to ‘In Dev’
-1. Create a branch
+3. Create a branch
   1. In your forked project, create a branch for the feature. Name it descriptively, for example deck-creation-summary-screen
-1. Complete the story
+4. Complete the story
   1. We try to practice Test Driven Development. Before implementing any code, first go to a class’ respective test class (or create one if it doesn’t yet exist) and write a test that will fail until we implement the first simplest step to developing the feature. When we see the test fail, it’s time to write code to make it pass. Once we have a passing test always make sure to refactor the code you have written. Red - Green - Refactor.
   1. The tests also serve as a form of documentation. If you’re not sure what a class is supposed to do, read the titles of its tests to get a gist of its behavior.
   1. Run all the tests before you push, whether you added new ones or not. If they don’t pass, try to make them pass without modifying existing tests. They serve as regression indicators, and changing them to suit your new feature should be done sparingly.
-1. Take Breaks
+5. Take Breaks
   1. You’d be surprised how much progress you can make by taking it easy for five minutes and coming back to your code with a fresh mind. Still can’t solve it? This is a collaborative atmosphere, feel free to ask someone near you, or ask an organizer.
-  1. Pull request
-    1. When you’re done with the feature and all the tests are passing, push your code to your forked project.
-    1. View your new branch on the Github site, and create a New Pull Request.
+6. Pull request
+  1. When you’re done with the feature and all the tests are passing, push your code to your forked project.
+  2. View your new branch on the Github site, and create a New Pull Request.
     1. Set the base fork to translation-cards/translation-cards
-    1. Set the base to develop-hackathon
-  1. Title your Pull Request and add a description
-  1. Click “Create Pull Request”
-1. Move the Issue Card
+    1. Set the base to develop 
+      * Pull requests into the master branch will not be accepted. 
+  3. Before making a pull request, make sure you grab the latest changes from the upstream repo. Take a look at this document out to see how you can do this: [Syncing a Fork](https://help.github.com/articles/syncing-a-fork/)
+  4. Title your Pull Request and add a description
+  5. Click “Create Pull Request” button
+7. Move the Issue Card
   1. Take the card from the ‘In Dev’ pipeline and place it in the ‘Ready for QA’ pipeline
 
 ## Quality Analyst
