@@ -51,10 +51,6 @@ Choose the latest milestone once in the Boards tab by clicking the Milestones dr
 * Pull requests into the master branch will not be accepted. 
 * Please include a descriptive title and a helpful comment.
 
-### Code reviews
-All submissions, including submissions by project members, require review. We
-use Github pull requests for this purpose.
-
 ### Google Drive
 All documents, spreadsheets, presentations, and UX work related to this project is saved on the Translation Cards [drive] (https://drive.google.com/open?id=0Bx3lspqM75QyeVRheDJ0cWZlMkU)
 
