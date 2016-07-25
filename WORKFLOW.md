@@ -57,23 +57,23 @@ The story cards resulting from analysis are used by developers to create the fea
 ## Quality Analyst
 1. Choose a story
   1. Find a higher priority issue card in the ‘Ready for QA’ column and move it to ‘In QA’
-1. Pull the code
+2. Pull the code
 	You can do this one of two ways:
   1. Have the developers who worked on the story load the application from their computer onto a physical android device for you to test.
 OR, using Git
   1. Find the pull request for that story. Let’s assume the pull request is “Deck Creation Summary Screen #151”
-  1. Navigate to your project directory and use the following git commands to get the pull request’s code onto your machine
+  2. Navigate to your project directory and use the following git commands to get the pull request’s code onto your machine
     1. git fetch origin pull/151/head:deck-creation-summary-screen
-    1. git checkout deck-creation-summary-screen
-1. Run the application
+    2. git checkout deck-creation-summary-screen
+3. Run the application
   1. Use your emulator or an Android device
-1. Check the Acceptance Criteria
+4. Check the Acceptance Criteria
   1. Make sure the requirements listed in the card are satisfied
-1. Check for edge cases
+5. Check for edge cases
   1. Check interactions with other screens/features, and for specific cases tha wree not touched on in the card
-1. Send it back!
-If something is wrong, get in touch with the people who worked on it, and share your findings with them.
-If necessary, move the issue card back to In Dev.
-Merge the Pull Request
-Once everything looks good, and you’re sure the pull request is trying to merge into translation-cards/develop-hackathon, merge the pull request.
-DO NOT merge pull requests into translation-cards/master
+6. Send it back!
+  1. If something is wrong, get in touch with the people who worked on it, and share your findings with them.
+  2. If necessary, move the issue card back to In Dev.
+7. Merge the Pull Request
+  1. Once everything looks good, and you’re sure the pull request is trying to merge into translation-cards/develop-hackathon, merge the pull request.
+  2. DO NOT merge pull requests into translation-cards/master
