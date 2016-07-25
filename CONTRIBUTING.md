@@ -32,6 +32,9 @@ frustration later on.
   - Choose a system image. Marshmallow is recommended.
   - Name the AVD and Finish.
   - Select the newly created emulator and click Ok.
+  - If the run process fails, check the 'Messages' section in the lower tray of the IDE (Or by pressing Ctrl-0 or Cmd-0). You may need to download missing packages.
+    - Click the 'Gradle' icon in the top right of the window. Click the refresh button (the leftmost icon).
+    - A message will appear prompting you to download missing dependencies.
 7. Install the [Zenhub plugin](https://www.zenhub.io/) to your browser
 8. Navigate to the Boards tab of the Github repo
   - This is the Storyboard for the project. 
