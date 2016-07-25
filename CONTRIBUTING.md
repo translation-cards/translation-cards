@@ -44,7 +44,7 @@ frustration later on.
 Choose the latest milestone once in the Boards tab by clicking the Milestones dropdown. The higher the story is on the board the more important it is. The stories also have labels such as ‘UX’, ‘Bug’, or ‘Feature’ which indicate what category of work needs to be done for that story. 
 
 ### Workflow
-Please read the [Development Guide.]() This explains the Translation Cards development steps and process.
+Please read the [Development Guide.](/WORKFLOW.md) This explains the Translation Cards development steps and process.
 
 ### Pull Requests
 * When creating a pull request, be sure to set:
