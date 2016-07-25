@@ -48,6 +48,7 @@ Choose the latest milestone once in the Boards tab by clicking the Milestones dr
 * When creating a pull request, be sure to set:
   * The base fork to `translation-cards/translation-cards`
   * The base to `develop`
+* Before making a pull request, sync your fork with the upstream repo ([more info](https://help.github.com/articles/syncing-a-fork/))
 * Pull requests into the master branch will not be accepted. 
 * Please include a descriptive title and a helpful comment.
 
