@@ -16,9 +16,13 @@ The story cards resulting from analysis are used by developers to create the fea
   1. Add a description of the feature and why it is needed.
   1. Add specific Acceptance Criteria using the form:
     1. Given [context], When [action], Then [expected outcome] for example:
-    Given I am creating a deck
-    When I click next after adding a title
-    Then I am directed to enter a deck source language
+      ```
+      Given I am creating a deck
+    
+      When I click next after adding a title
+    
+      Then I am directed to enter a deck source language
+      ```
     1. If you require more context on a card, don’t hesitate to ask an organizer
 1. Move the Issue (again!)
   1. Take the completed card and put it in the Ready for Dev pipeline
