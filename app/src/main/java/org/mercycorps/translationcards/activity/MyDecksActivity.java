@@ -47,7 +47,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         deckService = ((MainApplication)getApplication()).getDeckService();
         dictionaryService = ((MainApplication)getApplication()).getDictionaryService();
         deckRepository = ((MainApplication)getApplication()).getDeckRepository();
-
     }
 
     @Override

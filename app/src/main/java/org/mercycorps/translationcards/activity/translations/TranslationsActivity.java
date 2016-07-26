@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
@@ -34,15 +35,17 @@ import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslation
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -61,21 +64,26 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
-    protected DecoratedMediaManager decoratedMediaManager;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
+
+    @Inject DecoratedMediaManager decoratedMediaManager;
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
-        decoratedMediaManager = application.getDecoratedMediaManager();
         translationService = application.getTranslationService();
         translationService.initializeCardStates();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
+
+        DaggerActivityInjectorComponent.builder()
+                .baseComponent(MainApplication.getBaseComponent())
+                .build()
+                .inject(this);
 
         setContentView(R.layout.activity_translations);
         initTabs();

@@ -59,6 +59,8 @@ public class MainApplication extends Application {
     private DictionaryRepository dictionaryRepository;
     private TxcImportUtility txcImportUtility;
 
+    private static BaseComponent baseComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,6 +85,18 @@ public class MainApplication extends Application {
         deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
+
+        ApplicationComponent applicationComponent = DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        baseComponent = DaggerBaseComponent.builder()
+                .applicationComponent(applicationComponent)
+                .build();
+    }
+
+    public static BaseComponent getBaseComponent(){
+        return baseComponent;
     }
 
     @NonNull
