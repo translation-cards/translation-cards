@@ -1,14 +1,9 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
@@ -16,7 +11,6 @@ import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity
 import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
@@ -52,10 +46,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getSerializableExtra(CONTEXT_INTENT_KEY));
         nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getSerializableExtra(INTENT_KEY_DECK_ID));
         startActivity(nextIntent);
-    }
-
-    protected void showToast(String message) {
-        ToastHelper.showToast(getApplicationContext(), message);
     }
 
     protected MainApplication getMainApplication() {
