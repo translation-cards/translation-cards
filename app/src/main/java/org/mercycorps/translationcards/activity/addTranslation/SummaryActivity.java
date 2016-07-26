@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
@@ -13,16 +12,17 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.*;
+import static org.mercycorps.translationcards.fragment.TranslationTabsFragment.OnLanguageTabSelectedListener;
 
 public class SummaryActivity extends AddTranslationActivity {
     private static final String TAG = "SummaryActivity";
@@ -87,7 +87,7 @@ public class SummaryActivity extends AddTranslationActivity {
         } catch (AudioFileException e) {
             String message = String.format(getString(R.string.could_not_play_audio_message),
                     getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage());
-            showToast(message);
+            ToastHelper.showToast(this, message);
             Log.d(TAG, e.getMessage());
         }
     }

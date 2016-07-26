@@ -152,7 +152,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
             playAudioFile();
         } catch (AudioFileException e) {
             Log.d(TAG, "Error getting audio asset: " + e);
-            showToast(e.getMessage());
+            ToastHelper.showToast(this, e.getMessage());
         }
     }
 
@@ -263,7 +263,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
             handleIsRecordingState();
         } catch (RecordAudioException e) {
             Log.d(TAG, "Error creating file for recording: " + e);
-            showToast(getString(R.string.unable_to_record_message));
+            ToastHelper.showToast(this, getString(R.string.unable_to_record_message));
         }
     }
 
