@@ -90,6 +90,7 @@ public class TranslationsActivityTest {
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
+
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();

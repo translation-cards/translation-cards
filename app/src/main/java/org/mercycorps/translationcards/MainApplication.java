@@ -90,12 +90,13 @@ public class MainApplication extends Application {
                 .builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
         baseComponent = DaggerBaseComponent.builder()
                 .applicationComponent(applicationComponent)
                 .build();
     }
 
-    public static BaseComponent getBaseComponent(){
+    public BaseComponent getBaseComponent(){
         return baseComponent;
     }
 

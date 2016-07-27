@@ -38,11 +38,28 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
     private TranslationRepository translationRepository = mock(TranslationRepository.class);
 
+    private static BaseComponent baseComponent;
+
     @Override
     public void onCreate() {
         isTest = true;
         super.onCreate();
+
+        ApplicationComponent applicationComponent = DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+
+        baseComponent = DaggerTestBaseComponent.builder()
+                .applicationComponent(applicationComponent)
+                .build();
     }
+
+    @Override
+    public BaseComponent getBaseComponent(){
+        return baseComponent;
+    }
+
     @Override
     public void beforeTest(Method method) {
         System.out.println();

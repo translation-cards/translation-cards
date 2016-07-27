@@ -81,7 +81,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         deckService = application.getDeckService();
 
         DaggerActivityInjectorComponent.builder()
-                .baseComponent(MainApplication.getBaseComponent())
+                .baseComponent(application.getBaseComponent())
                 .build()
                 .inject(this);
 
