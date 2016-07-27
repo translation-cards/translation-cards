@@ -13,12 +13,11 @@ import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -73,10 +72,6 @@ public class TestAddTranslationCardActivityHelper {
 
     public static AudioRecorderManager getAudioRecorderManager() {
         return getApplication().getAudioRecorderManager();
-    }
-
-    public static DecoratedMediaManager getDecoratedMediaManager() {
-        return getApplication().getDecoratedMediaManager();
     }
 
     public static ScheduledExecutorService getScheduledExecutorService() {

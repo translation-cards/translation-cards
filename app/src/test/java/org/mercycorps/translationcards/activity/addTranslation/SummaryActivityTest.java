@@ -14,16 +14,24 @@ import android.widget.TextView;
 import junit.framework.Assert;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestBaseComponent;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowToast;
+
+import javax.inject.Inject;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -37,7 +45,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDecoratedMediaManager;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getTranslationService;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -51,10 +58,21 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class SummaryActivityTest {
-    public static final String DEFAULT_DICTIONARY_LABEL = "Dictionary";
     private static final boolean IS_NOT_ASSET = false;
 
-    AddTranslationActivityHelper<SummaryActivity> helper = new AddTranslationActivityHelper<>(SummaryActivity.class);;
+    AddTranslationActivityHelper<SummaryActivity> helper = new AddTranslationActivityHelper<>(SummaryActivity.class);
+
+    @Inject DecoratedMediaManager decoratedMediaManager;
+
+    @Before
+    public void setUp() throws Exception {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        DaggerTestActivityInjectorComponent
+                .builder()
+                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
+                .build()
+                .inject(this);
+    }
 
     @After
     public void teardown() {
@@ -122,14 +140,14 @@ public class SummaryActivityTest {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         activity.findViewById(R.id.summary_translation_card).performClick();
         ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
-        verify(getDecoratedMediaManager()).play(helper.DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
+        verify(decoratedMediaManager).play(helper.DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
 
     @Test
     public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
         Activity activity = helper.createActivityToTest();
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
-        doThrow(new AudioFileException()).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
+        when(decoratedMediaManager.isPlaying()).thenReturn(false);
+        doThrow(new AudioFileException()).when(decoratedMediaManager).play(anyString(), any(ProgressBar.class), anyBoolean());
 
         activity.findViewById(R.id.summary_translation_card).performClick();
 
@@ -187,7 +205,7 @@ public class SummaryActivityTest {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.summary_translation_card);
         click(activity, R.id.summary_translation_card);
-        verify(getDecoratedMediaManager()).stop();
+        verify(decoratedMediaManager).stop();
     }
 
     @Test
@@ -231,18 +249,18 @@ public class SummaryActivityTest {
 
     @Test
     public void shouldStopPlayingAudioWhenSaveTranslationButtonIsClicked() {
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+        when(decoratedMediaManager.isPlaying()).thenReturn(true);
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.save_translation_button);
-        verify(getDecoratedMediaManager()).stop();
+        verify(decoratedMediaManager).stop();
     }
 
     @Test
     public void shouldStopPlayingAudioWhenBackButtonIsClicked() {
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+        when(decoratedMediaManager.isPlaying()).thenReturn(true);
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.summary_activity_back);
-        verify(getDecoratedMediaManager()).stop();
+        verify(decoratedMediaManager).stop();
     }
 
     @Test
@@ -274,11 +292,11 @@ public class SummaryActivityTest {
     @Test
     public void shouldStopAudioWhenAudioIsPlayingAndDifferentLanguageTabSelected() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(true);
+        when(decoratedMediaManager.isPlaying()).thenReturn(true);
 
         clickLanguageTabAtPosition(activity, 1);
 
-        verify(getDecoratedMediaManager()).stop();
+        verify(decoratedMediaManager).stop();
     }
 
     @Test
@@ -310,6 +328,6 @@ public class SummaryActivityTest {
     }
 
     public void setupAudioPlayerManager() throws AudioFileNotSetException {
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
+        when(decoratedMediaManager.isPlaying()).thenReturn(false).thenReturn(true);
     }
 }

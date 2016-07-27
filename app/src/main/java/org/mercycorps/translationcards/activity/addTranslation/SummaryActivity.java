@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.exception.AudioFileException;
@@ -17,6 +19,8 @@ import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +33,6 @@ public class SummaryActivity extends AddTranslationActivity {
     private boolean isCardExpanded = true;
     public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
-    public static final int DEFAULT_BITMAP_OPACITY = 255;
-    public static final int DISABLED_BITMAP_OPACITY = 100;
     @Bind(R.id.origin_translation_text)TextView sourceTextView;
     @Bind(R.id.translated_text)TextView translatedTextView;
     @Bind(R.id.translation_child)LinearLayout translationChildLayout;
@@ -40,8 +42,15 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.indicator_icon)ImageView indicatorIcon;
     @Bind(R.id.audio_icon)ImageView audioIcon;
 
+    @Inject DecoratedMediaManager mediaManager;
+
     @Override
     public void inflateView() {
+        MainApplication application = (MainApplication) getApplication();
+        DaggerActivityInjectorComponent.builder()
+                .baseComponent(application.getBaseComponent())
+                .build()
+                .inject(this);
         setContentView(R.layout.activity_summary);
         View translationCardParent = findViewById(R.id.translation_card_parent);
         int rightPadding= translationCardParent.getPaddingRight();
@@ -78,7 +87,6 @@ public class SummaryActivity extends AddTranslationActivity {
     protected void translationCardClicked() {
         Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
         try {
-            DecoratedMediaManager mediaManager = getDecoratedMediaManager();
             if(mediaManager.isPlaying()) {
                 mediaManager.stop();
             } else {
@@ -182,14 +190,9 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     private void stopMediaManager() {
-        DecoratedMediaManager mediaManager = getDecoratedMediaManager();
         if (mediaManager.isPlaying()) {
             mediaManager.stop();
         }
-    }
-
-    private DecoratedMediaManager getDecoratedMediaManager(){
-        return getMainApplication().getDecoratedMediaManager();
     }
 
     private void saveTranslation() {

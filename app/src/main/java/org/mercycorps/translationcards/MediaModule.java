@@ -7,7 +7,6 @@ import dagger.Provides;
 
 @Module
 public class MediaModule {
-
     @Provides
     DecoratedMediaManager providesDecoratedMediaManager() {
         return new DecoratedMediaManager();

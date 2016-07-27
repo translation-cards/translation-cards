@@ -10,8 +10,10 @@ import static org.mockito.Mockito.mock;
 @Module
 public class MockMediaModule {
 
+    DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
+
     @Provides
     DecoratedMediaManager providesDecoratedMediaManager() {
-        return mock(DecoratedMediaManager.class);
+        return decoratedMediaManager;
     }
 }

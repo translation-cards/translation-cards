@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards;
 
+import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 
 import dagger.Component;
@@ -8,4 +9,5 @@ import dagger.Component;
 public interface ActivityInjectorComponent {
 
     void inject(TranslationsActivity activity);
+    void inject(SummaryActivity activity);
 }
