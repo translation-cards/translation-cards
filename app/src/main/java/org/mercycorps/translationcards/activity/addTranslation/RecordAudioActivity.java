@@ -13,7 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
@@ -24,6 +27,8 @@ import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -63,8 +68,15 @@ public class RecordAudioActivity extends AddTranslationActivity {
     FrameLayout audioIconLayout;
     private PermissionService permissionService;
 
+    @Inject AudioPlayerManager audioPlayerManager;
+
     @Override
     public void inflateView() {
+        MainApplication application = (MainApplication) getApplication();
+        DaggerActivityInjectorComponent.builder()
+                .baseComponent(application.getBaseComponent())
+                .build()
+                .inject(this);
         setContentView(R.layout.activity_record_audio);
         View v = findViewById(R.id.translation_card_parent);
 
@@ -252,8 +264,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     protected void stopAudioIfPlaying() {
-        if (getAudioPlayerManager().isPlaying()) {
-            getAudioPlayerManager().stop();
+        if (audioPlayerManager.isPlaying()) {
+            audioPlayerManager.stop();
         }
     }
 
@@ -269,7 +281,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void playAudioFile() throws AudioFileException {
         Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-        getAudioPlayerManager().play(translation.getFilename(), translation.getIsAsset());
+        audioPlayerManager.play(translation.getFilename(), translation.getIsAsset());
     }
 
     private void handleIsRecordingState() throws RecordAudioException {

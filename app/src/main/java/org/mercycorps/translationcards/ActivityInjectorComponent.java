@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards;
 
+import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 
@@ -10,4 +11,6 @@ public interface ActivityInjectorComponent {
 
     void inject(TranslationsActivity activity);
     void inject(SummaryActivity activity);
+    void inject(RecordAudioActivity activity);
+
 }

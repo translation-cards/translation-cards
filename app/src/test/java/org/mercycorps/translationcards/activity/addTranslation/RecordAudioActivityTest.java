@@ -15,10 +15,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestBaseComponent;
 import org.mercycorps.translationcards.TestMainApplication;
-import org.mercycorps.translationcards.service.PermissionService;
+import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -27,6 +31,8 @@ import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowToast;
 
 import java.util.Collections;
+
+import javax.inject.Inject;
 
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
@@ -44,10 +50,8 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAudioPlayerManager;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAudioRecorderManager;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getFirstNewTranslationFromContext;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setupAudioPlayerManager;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -63,8 +67,16 @@ public class RecordAudioActivityTest {
     AddTranslationActivityHelper<RecordAudioActivity> helper = new AddTranslationActivityHelper<>(RecordAudioActivity.class);
     private PermissionService permissionService = ((TestMainApplication)RuntimeEnvironment.application).getPermissionService();
 
+    @Inject AudioPlayerManager audioPlayerManager;
+
     @Before
     public void setup() {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        DaggerTestActivityInjectorComponent
+                .builder()
+                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
+                .build()
+                .inject(this);
         when(permissionService.checkPermission(any(Activity.class), anyString())).thenReturn(true);
     }
 
@@ -228,10 +240,9 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldPlayAudioFileWhenPlayButtonIsClicked() throws Exception {
-        setupAudioPlayerManager();
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.play_audio_button);
-        verify(getAudioPlayerManager()).play(DEFAULT_AUDIO_FILE, IS_NOT_ASSET);
+        verify(audioPlayerManager).play(DEFAULT_AUDIO_FILE, IS_NOT_ASSET);
     }
 
     @Test
@@ -356,26 +367,26 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldStopPlayingWhenRecordButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        when(getAudioPlayerManager().isPlaying()).thenReturn(true);
+        when(audioPlayerManager.isPlaying()).thenReturn(true);
         click(activity, R.id.play_audio_button);
         click(activity, R.id.record_audio_button);
-        verify(getAudioPlayerManager()).stop();
+        verify(audioPlayerManager).stop();
     }
 
     @Test
     public void shouldStopPlayingWhenNextButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        when(getAudioPlayerManager().isPlaying()).thenReturn(true);
+        when(audioPlayerManager.isPlaying()).thenReturn(true);
         click(activity, R.id.record_activity_next);
-        verify(getAudioPlayerManager()).stop();
+        verify(audioPlayerManager).stop();
     }
 
     @Test
     public void shouldStopPlayingWhenBackButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        when(getAudioPlayerManager().isPlaying()).thenReturn(true);
+        when(audioPlayerManager.isPlaying()).thenReturn(true);
         click(activity, R.id.record_activity_back);
-        verify(getAudioPlayerManager()).stop();
+        verify(audioPlayerManager).stop();
     }
 
     @Test
@@ -564,10 +575,10 @@ public class RecordAudioActivityTest {
     public void shouldStopAudioWhenPlayingAndLanguageTabIsChanged() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
 
-        when(getAudioPlayerManager().isPlaying()).thenReturn(true);
+        when(audioPlayerManager.isPlaying()).thenReturn(true);
         clickLanguageTabAtPosition(activity, 1);
 
-        verify(getAudioPlayerManager()).stop();
+        verify(audioPlayerManager).stop();
     }
 
     @Test
