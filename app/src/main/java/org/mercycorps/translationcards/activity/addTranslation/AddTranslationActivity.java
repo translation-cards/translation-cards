@@ -9,7 +9,6 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
-import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 
 
@@ -50,10 +49,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
 
     protected MainApplication getMainApplication() {
         return ((MainApplication) getApplication());
-    }
-
-    protected AudioPlayerManager getAudioPlayerManager(){
-        return getMainApplication().getAudioPlayerManager();
     }
 
     protected AudioRecorderManager getAudioRecorderManager(){
