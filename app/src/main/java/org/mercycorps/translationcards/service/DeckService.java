@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class DeckService {
 
+    public static final String INTENT_KEY_DECK = "Deck";
+
     private DeckRepository deckRepository;
     private List<Deck> decks;
     private Deck currentDeck;

@@ -105,23 +105,6 @@ public class SummaryActivityTest {
         assertEquals(helper.DEFAULT_TRANSLATED_TEXT, translatedTextView.getText().toString());
     }
 
-    @Test
-    public void shouldShowHintTextWhenNoTranslatedTextPhraseIsProvided() {
-        Activity activity = helper.createActivityToTest();
-        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
-        assertEquals(String.format("Add %s translation", helper.DEFAULT_DICTIONARY_LABEL), translatedTextView.getHint());
-    }
-
-    @Test
-    public void shouldSetTextViewToEmptyStringWhenNoTranslatedTextPhraseIsProvided() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
-
-        clickLanguageTabAtPosition(activity, 1);
-        clickLanguageTabAtPosition(activity, 0);
-
-        TextView translatedTextView = (TextView) activity.findViewById(R.id.translated_text);
-        assertEquals("", translatedTextView.getText().toString());
-    }
 
     @Test
     public void shouldMakeTranslationChildLinearLayoutVisibleWhenLayoutIsLoaded() {
@@ -133,25 +116,6 @@ public class SummaryActivityTest {
     public void shouldMakeTranslationGrandchildLinearLayoutGone() {
         Activity activity = helper.createActivityToTest();
         assertEquals(View.GONE, activity.findViewById(R.id.translation_grandchild).getVisibility());
-    }
-
-    @Test
-    public void shouldPlayAudioFileWhenTranslationCardIsClicked() throws AudioFileException {
-        Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        activity.findViewById(R.id.summary_translation_card).performClick();
-        ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.summary_progress_bar);
-        verify(decoratedMediaManager).play(helper.DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
-    }
-
-    @Test
-    public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
-        Activity activity = helper.createActivityToTest();
-        when(decoratedMediaManager.isPlaying()).thenReturn(false);
-        doThrow(new AudioFileException()).when(decoratedMediaManager).play(anyString(), any(ProgressBar.class), anyBoolean());
-
-        activity.findViewById(R.id.summary_translation_card).performClick();
-
-        assertEquals(helper.DEFAULT_DICTIONARY_LABEL + " translation not recorded.", ShadowToast.getTextOfLatestToast());
     }
 
     @Test
@@ -199,53 +163,6 @@ public class SummaryActivityTest {
         assertEquals("Here's your new card. Before you save, be sure to review the phrase, translation, and recording.", summaryDetail.getText().toString());
     }
 
-    @Test
-    public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
-        setupAudioPlayerManager();
-        Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        click(activity, R.id.summary_translation_card);
-        click(activity, R.id.summary_translation_card);
-        verify(decoratedMediaManager).stop();
-    }
-
-    @Test
-    public void shouldShowCollapseIndicatorWhenTranslationCardIsCreated() {
-        Activity activity = helper.createActivityToTest();
-        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
-        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
-    }
-
-    @Test
-    public void shouldCollapseTranslationCardWhenCardIndicatorIsClicked() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        assertEquals(View.GONE, findView(activity, R.id.translation_child).getVisibility());
-    }
-
-    @Test
-    public void shouldShowExpandCardIndicatorWhenTranslationCardIsCollapsed() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
-        assertEquals(R.drawable.expand_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
-    }
-
-    @Test
-    public void shouldExpandTranslationCardWhenCardIndicatorIsClickedTwice() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        click(activity, R.id.translation_indicator_layout);
-        assertEquals(View.VISIBLE, findView(activity, R.id.translation_child).getVisibility());
-    }
-
-    @Test
-    public void shouldShowCollapseCardIndicatorWhenTranslationCardIsClickedTwice() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        click(activity, R.id.translation_indicator_layout);
-        ImageView indicatorIcon = findImageView(activity, R.id.indicator_icon);
-        assertEquals(R.drawable.collapse_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
-    }
 
     @Test
     public void shouldStopPlayingAudioWhenSaveTranslationButtonIsClicked() {
@@ -299,33 +216,6 @@ public class SummaryActivityTest {
         verify(decoratedMediaManager).stop();
     }
 
-    @Test
-    public void shouldGreyOutTranslationSourceTextWhenItContainsNoAudio() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-
-        TextView translationText = findTextView(activity, R.id.origin_translation_text);
-        assertEquals(getColor(activity, R.color.textDisabled), translationText.getCurrentTextColor());
-    }
-
-
-    @Test
-    @TargetApi(19)
-    public void shouldGreyOutTranslationCardWhenItContainsNoAudio() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-
-        LinearLayout translationCardParent = findLinearLayout(activity, R.id.translation_card_parent);
-        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
-        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background_expanded);
-
-        assertEquals(SummaryActivity.DISABLED_OPACITY, background.getAlpha());
-    }
-
-    @Test
-    public void shouldGreyOutAudioIconWhenTranslationContainsNoAudio() {
-        Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-        ImageView audioIcon = findImageView(activity, R.id.audio_icon);
-        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio_40));
-    }
 
     public void setupAudioPlayerManager() throws AudioFileNotSetException {
         when(decoratedMediaManager.isPlaying()).thenReturn(false).thenReturn(true);
