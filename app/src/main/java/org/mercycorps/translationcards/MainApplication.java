@@ -44,7 +44,6 @@ public class MainApplication extends Application {
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
-    private AudioPlayerManager audioPlayerManager;
     private static Context context;
     private ScheduledExecutorService scheduledExecutorService;
     private DecoratedMediaManager decoratedMediaManager;
@@ -69,8 +68,8 @@ public class MainApplication extends Application {
         permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        audioPlayerManager = new AudioPlayerManager(mediaPlayer);
-        decoratedMediaManager = new DecoratedMediaManager();
+        AudioPlayerManager audioPlayerManager = new AudioPlayerManager(mediaPlayer);
+        decoratedMediaManager = new DecoratedMediaManager(audioPlayerManager);
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
@@ -132,10 +131,6 @@ public class MainApplication extends Application {
 
     public AudioRecorderManager getAudioRecorderManager() {
         return audioRecorderManager;
-    }
-
-    public AudioPlayerManager getAudioPlayerManager() {
-        return audioPlayerManager;
     }
 
     public static Context getContextFromMainApp() {

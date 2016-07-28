@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestBaseComponent;
@@ -72,11 +71,7 @@ public class RecordAudioActivityTest {
     @Before
     public void setup() {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        DaggerTestActivityInjectorComponent
-                .builder()
-                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
-                .build()
-                .inject(this);
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
         when(permissionService.checkPermission(any(Activity.class), anyString())).thenReturn(true);
     }
 

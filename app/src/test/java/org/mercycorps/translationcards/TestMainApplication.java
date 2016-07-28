@@ -86,11 +86,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public AudioPlayerManager getAudioPlayerManager() {
-        return audioPlayerManager;
-    }
-
-    @Override
     public FileDescriptor getFileDescriptor(String fileName) throws IOException {
         return new FileDescriptor();
     }

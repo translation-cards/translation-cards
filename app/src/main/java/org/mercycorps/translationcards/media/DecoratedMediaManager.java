@@ -9,6 +9,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import static org.mercycorps.translationcards.MainApplication.getContextFromMainApp;
 
 /**
@@ -21,16 +23,19 @@ public class DecoratedMediaManager {
     private ScheduledFuture scheduledFuture;
     private static final int RESET_PROGRESS_BAR = 0;
     private String filename;
+    private AudioPlayerManager audioPlayerManager;
 
-    public DecoratedMediaManager() {
+    @Inject
+    public DecoratedMediaManager(AudioPlayerManager audioPlayerManager) {
+        this.audioPlayerManager = audioPlayerManager;
     }
 
     //// TODO: 3/28/16 There is an implicit order here. Play has to be called before you can call maxDuration or getCurrentPosition.
     public void play(String filename, ProgressBar progressBar, boolean isAsset) throws AudioFileException {
         this.progressBar = progressBar;
         this.filename = filename;
-        getAudioPlayerManager().play(this.filename, isAsset);
-        progressBar.setMax(getAudioPlayerManager().getMaxDuration());
+        audioPlayerManager.play(this.filename, isAsset);
+        progressBar.setMax(audioPlayerManager.getMaxDuration());
         schedule();
     }
 
@@ -45,7 +50,7 @@ public class DecoratedMediaManager {
             @Override
             public void run() {
                 if(!isPlaying()) stop();
-                else progressBar.setProgress(getAudioPlayerManager().getCurrentPosition());
+                else progressBar.setProgress(audioPlayerManager.getCurrentPosition());
             }
         };
     }
@@ -53,17 +58,13 @@ public class DecoratedMediaManager {
 
     public void stop() {
         if (playHasNotBeenCalled()) return;
-        getAudioPlayerManager().stop();
+        audioPlayerManager.stop();
         progressBar.setProgress(RESET_PROGRESS_BAR);
         scheduledFuture.cancel(true);
     }
 
     private boolean playHasNotBeenCalled() {
         return progressBar == null || scheduledFuture == null;
-    }
-
-    private AudioPlayerManager getAudioPlayerManager() {
-        return ((MainApplication) getContextFromMainApp()).getAudioPlayerManager();
     }
 
     private ScheduledExecutorService getExecutorService(){
@@ -74,7 +75,7 @@ public class DecoratedMediaManager {
     }
 
     public boolean isPlaying() {
-        return getAudioPlayerManager().isPlaying();
+        return audioPlayerManager.isPlaying();
     }
 
     public boolean isCurrentlyPlayingSameCard(String fileName) {

@@ -11,9 +11,11 @@ import dagger.Provides;
 
 @Module
 public class MediaModule {
+
+    @PerActivity
     @Provides
-    DecoratedMediaManager providesDecoratedMediaManager() {
-        return new DecoratedMediaManager();
+    DecoratedMediaManager providesDecoratedMediaManager(AudioPlayerManager audioPlayerManager) {
+        return new DecoratedMediaManager(audioPlayerManager);
     }
 
     @Provides

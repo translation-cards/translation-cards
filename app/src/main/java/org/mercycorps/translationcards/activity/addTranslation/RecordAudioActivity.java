@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
@@ -61,10 +60,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
-        DaggerActivityInjectorComponent.builder()
-                .baseComponent(application.getBaseComponent())
-                .build()
-                .inject(this);
+        application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_record_audio);
     }
 

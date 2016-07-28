@@ -18,7 +18,6 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
-import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
@@ -95,10 +94,7 @@ public class TranslationCardItem extends LinearLayout {
         inflate(getContext(), R.layout.translation_card, this);
         ButterKnife.bind(this);
         MainApplication application = (MainApplication)getContext().getApplicationContext();
-        DaggerActivityInjectorComponent.builder()
-                .baseComponent(application.getBaseComponent())
-                .build()
-                .inject(this);
+        application.getBaseComponent().inject(this);
         translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
         deckService=((MainApplication)getContext().getApplicationContext()).getDeckService();
     }

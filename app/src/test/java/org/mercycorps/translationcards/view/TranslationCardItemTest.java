@@ -45,7 +45,6 @@ import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -76,11 +75,7 @@ public class TranslationCardItemTest {
     @Before
     public void setUp() throws Exception {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        DaggerTestActivityInjectorComponent
-                .builder()
-                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
-                .build()
-                .inject(this);
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         activity = Robolectric.buildActivity(Activity.class).create().get();
         deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
