@@ -19,9 +19,11 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestBaseComponent;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
@@ -37,12 +39,14 @@ import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
 import static org.junit.Assert.assertThat;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getDecoratedMediaManager;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
@@ -66,8 +70,18 @@ public class TranslationCardItemTest {
     private Activity activity;
     private DeckService deckService;
 
+    @Inject
+    DecoratedMediaManager decoratedMediaManager;
+
     @Before
     public void setUp() throws Exception {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        DaggerTestActivityInjectorComponent
+                .builder()
+                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
+                .build()
+                .inject(this);
+
         activity = Robolectric.buildActivity(Activity.class).create().get();
         deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
         Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
@@ -195,8 +209,8 @@ public class TranslationCardItemTest {
     @Test
     public void shouldShowToastNotificationWhenTranslationCardWithoutAudioFileIsClicked() throws AudioFileException {
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(false);
-        doThrow(new AudioFileException()).when(getDecoratedMediaManager()).play(anyString(), any(ProgressBar.class), anyBoolean());
+        when(decoratedMediaManager.isPlaying()).thenReturn(false);
+        doThrow(new AudioFileException()).when(decoratedMediaManager).play(anyString(), any(ProgressBar.class), anyBoolean());
 
         translationCardItem.findViewById(R.id.translation_card).performClick();
 
@@ -218,11 +232,11 @@ public class TranslationCardItemTest {
     @Test
     public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
-        when(getDecoratedMediaManager().isPlaying()).thenReturn(false).thenReturn(true);
+        when(decoratedMediaManager.isPlaying()).thenReturn(false).thenReturn(true);
         createTranslationCardItemWithAudioAndNoTranslatedText();
         translationCardItem.findViewById(R.id.translation_card).performClick();
         translationCardItem.findViewById(R.id.translation_card).performClick();
-        verify(getDecoratedMediaManager()).stop();
+        verify(decoratedMediaManager).stop();
     }
 
     @Test
@@ -237,7 +251,7 @@ public class TranslationCardItemTest {
         TranslationCardItem translationCardItem = createTranslationCardItemWithAudioAndNoTranslatedText();
         translationCardItem.findViewById(R.id.translation_card).performClick();
         ProgressBar progressBar = (ProgressBar) translationCardItem.findViewById(R.id.translation_card_progress_bar);
-        verify(getDecoratedMediaManager()).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
+        verify(decoratedMediaManager).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
 
 

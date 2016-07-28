@@ -1,20 +1,15 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.view.TranslationCardItem;
-import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.uiHelper.ToastHelper;
 
 import javax.inject.Inject;
 

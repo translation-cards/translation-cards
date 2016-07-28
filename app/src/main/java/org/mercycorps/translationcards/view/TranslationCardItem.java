@@ -18,12 +18,15 @@ import android.widget.TextView;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
+import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +72,8 @@ public class TranslationCardItem extends LinearLayout {
     View editButton;
     @Bind(R.id.translation_card_delete)
     View deleteButton;
+    @Inject
+    DecoratedMediaManager mediaManager;
 
     public TranslationCardItem(Context context) {
         super(context);
@@ -89,6 +94,11 @@ public class TranslationCardItem extends LinearLayout {
     private void init(){
         inflate(getContext(), R.layout.translation_card, this);
         ButterKnife.bind(this);
+        MainApplication application = (MainApplication)getContext().getApplicationContext();
+        DaggerActivityInjectorComponent.builder()
+                .baseComponent(application.getBaseComponent())
+                .build()
+                .inject(this);
         translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
         deckService=((MainApplication)getContext().getApplicationContext()).getDeckService();
     }
@@ -248,7 +258,6 @@ public class TranslationCardItem extends LinearLayout {
     protected void translationCardClicked() {
         if(playAudioOnClick && progressBar != null) {
             try {
-                DecoratedMediaManager mediaManager = ((MainApplication)getContext().getApplicationContext()).getDecoratedMediaManager();
                 if(mediaManager.isPlaying()) {
                     mediaManager.stop();
                 } else {
