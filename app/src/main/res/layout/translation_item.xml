@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mercycorps.translationcards.view.TranslationCardItem
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parent_translation_list_item">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-        <include layout="@layout/translation_card" />
-        <ProgressBar
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/play_progress"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:minHeight="1dp"
-            android:maxHeight="1dp"
-            android:id="@+id/list_item_progress_bar" />
-    </RelativeLayout>
-</FrameLayout>
+    android:id="@+id/translation_card_list_item"
+    custom:expandedOnStart="true"
+    custom:showEditAndDeleteOptions="true"/>
