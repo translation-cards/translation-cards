@@ -8,15 +8,15 @@ import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
-import org.mercycorps.translationcards.media.AudioPlayerManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
-import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;

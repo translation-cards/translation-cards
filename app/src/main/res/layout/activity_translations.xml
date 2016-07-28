@@ -28,6 +28,8 @@
         android:divider="@color/listBackgroundColor"
         android:dividerHeight="20dp"
         android:layout_below="@+id/tabScroll"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:id="@+id/translations_list" />
 
     <ImageView

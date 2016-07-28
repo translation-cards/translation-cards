@@ -436,12 +436,6 @@ public class RecordAudioActivityTest {
         assertEquals(R.drawable.collapse_arrow, shadowOf(expandArrowIcon.getBackground()).getCreatedFromResId());
     }
 
-    @Test
-    public void shouldShowTranslationChildWhenActivityIsCreated() {
-        Activity activity = helper.createActivityToTest();
-        View translationChild = findView(activity, R.id.translation_child);
-        assertEquals(View.VISIBLE, translationChild.getVisibility());
-    }
 
     @Test
     public void shouldDisplayDescriptionWhenActivityIsCreated() {
@@ -457,13 +451,6 @@ public class RecordAudioActivityTest {
         assertTrue(indicatorLayout.isClickable());
     }
 
-    @Test
-    public void shouldCollapseCardWhenIndicatorIconIsClicked() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        View translationChild = findView(activity, R.id.translation_child);
-        assertEquals(View.GONE, translationChild.getVisibility());
-    }
 
     @Test
     public void shouldMakeTranslationGrandchildLinearLayoutGone() {
@@ -479,13 +466,6 @@ public class RecordAudioActivityTest {
         assertEquals(R.drawable.expand_arrow, shadowOf(indicatorIcon.getBackground()).getCreatedFromResId());
     }
 
-    @Test
-    public void shouldExpandTranslationCardWhenCardIndicatorIsClickedTwice() {
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.translation_indicator_layout);
-        click(activity, R.id.translation_indicator_layout);
-        assertEquals(View.VISIBLE, findView(activity, R.id.translation_child).getVisibility());
-    }
 
     @Test
     public void shouldShowCollapseCardIndicatorWhenTranslationCardIsClickedTwice() {

@@ -57,7 +57,6 @@ import butterknife.OnClick;
  */
 public class TranslationsActivity extends AbstractTranslationCardsActivity {
 
-    public static final String INTENT_KEY_DECK = "Deck";
     public static final String INTENT_KEY_CURRENT_DICTIONARY_INDEX = "CurrentDictionaryIndex";
     protected static final boolean IS_EDIT = true;
 
@@ -168,7 +167,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         inflateListFooter();
 
         listAdapter = new CardListAdapter(this,
-                this, R.layout.translation_item, R.id.origin_translation_text,
+                R.layout.translation_item, R.id.origin_translation_text,
                 new ArrayList<Translation>(), translationService, dictionaryService, deckService);
         list.setAdapter(listAdapter);
     }
@@ -193,7 +192,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private void launchGetStartedActivity(){
         Intent nextIntent = new Intent(TranslationsActivity.this, GetStartedActivity.class);
         nextIntent.putExtra(AddTranslationActivity.CONTEXT_INTENT_KEY, createTranslationContext());
-        nextIntent.putExtra(INTENT_KEY_DECK, deckService.currentDeck());
+        nextIntent.putExtra(DeckService.INTENT_KEY_DECK, deckService.currentDeck());
         startActivity(nextIntent);
     }
 

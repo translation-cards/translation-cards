@@ -1,10 +1,7 @@
 package org.mercycorps.translationcards.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +18,6 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
-import org.mercycorps.translationcards.activity.translations.CardListAdapter;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -40,11 +36,9 @@ import org.robolectric.util.ActivityController;
 
 import java.util.Arrays;
 
-import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -212,74 +206,12 @@ public class TranslationsActivityTest {
                 DEFAULT_DECK_NAME));
     }
 
+
+
     @Test
-    public void initList_shouldHaveCorrectOriginTextWhenCardIsCreated() {
+    public void initList_shouldShowEditAndDeleteSectionByDefault() {
         View translationsListItem = firstTranslationCardInListView();
-
-        TextView originTranslationText = (TextView) translationsListItem.findViewById(
-                R.id.origin_translation_text);
-
-        assertThat(originTranslationText.getText().toString(), is(TRANSLATION_LABEL));
-    }
-
-    @Test
-    public void initList_shouldHaveCorrectTranslatedTextWhenCardIsCreated() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-        assertThat(translatedText.getText().toString(), is(TRANSLATED_TEXT));
-    }
-
-    @Test
-    public void initList_shouldHaveEditCardIcon() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        ImageView editCardIcon = (ImageView) translationsListItem.findViewById(R.id.edit_card_icon);
-        assertThat(editCardIcon, is(notNullValue()));
-    }
-
-    @Test
-    public void initList_shouldHaveEditCardLabel() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        TextView editCardLabel = (TextView) translationsListItem.findViewById(R.id.edit_card_label);
-        assertThat(editCardLabel.getText().toString(), is("Edit this flashcard"));
-    }
-
-    @Test
-    public void initList_shouldHaveDeleteCardIcon() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        ImageView deleteCardIcon = (ImageView) translationsListItem.findViewById(R.id.delete_card_icon);
-        assertThat(deleteCardIcon, is(notNullValue()));
-    }
-
-    @Test
-    public void initList_shouldHaveDeleteCardLabel() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        TextView deleteCardLabel = (TextView) translationsListItem.findViewById(R.id.delete_card_label);
-        assertThat(deleteCardLabel.getText().toString(), is("Delete this flashcard"));
-    }
-
-    @Test
-    public void shouldHaveCorrectHintMessageWhenTranslatedTextIsEmpty() {
-        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
-
-        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-
-        assertThat(translatedText.getText().toString(), is("Add " + DICTIONARY_TEST_LABEL + " translation"));
-    }
-
-    @Test
-    public void shouldHaveCorrectTextFormattingWhenTranslatedTextIsEmpty() {
-        int disabledTextColor = -7960954;
-        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
-
-        TextView translatedText = (TextView) translationsListItem.findViewById(R.id.translated_text);
-
-        assertThat(translatedText.getTextSize(), is(18f));
-        assertThat(translatedText.getCurrentTextColor(), is(disabledTextColor));
+        assertEquals(View.VISIBLE, translationsListItem.findViewById(R.id.translation_grandchild).getVisibility());
     }
 
     @Test
@@ -311,47 +243,7 @@ public class TranslationsActivityTest {
     public void shouldHideTranslationCardChildByDefault() {
         View translationsListItem = firstTranslationCardInListView();
 
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
-    }
-
-    @Test
-    public void shouldShowCollapsedCardIndicatorWhenTranslationCardIsExpandedThenCollapsed() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-
-        ImageView cardIndicator = (ImageView) translationsListItem.findViewById(R.id.indicator_icon);
-        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(R.drawable.expand_arrow));
-    }
-
-    @Test
-    public void shouldHideTranslationCardChildWhenTranslationCardIsExpandedThenCollapsed() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.GONE));
-    }
-
-    @Test
-    public void onClick_shouldShowExpandedCardIndicatorWhenTranslationCardIsExpanded() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-
-        assertThat(translationsListItem.findViewById(R.id.translation_child).getVisibility(), is(View.VISIBLE));
-    }
-
-    @Test
-    public void onClick_shouldShowTranslationCardChildWhenCardIsExpanded() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        translationsListItem.findViewById(R.id.translation_indicator_layout).performClick();
-
-        ImageView cardIndicator = (ImageView) translationsListItem.findViewById(R.id.indicator_icon);
-        assertThat(shadowOf(cardIndicator.getBackground()).getCreatedFromResId(), is(R.drawable.collapse_arrow));
+        assertEquals(View.GONE, translationsListItem.findViewById(R.id.translation_child).getVisibility());
     }
 
     @Test
@@ -396,44 +288,6 @@ public class TranslationsActivityTest {
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
         AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
         assertFalse(context.isEdit());
-    }
-
-    @Test
-    public void shouldDisplayGrayedOutSourceTranslationWhenNoAudioHasBeenRecorded(){
-        View translationsListItem = firstTranslationCardInListView();
-        TextView translationText = (TextView)translationsListItem.findViewById(R.id.origin_translation_text);
-        assertEquals(getColor(translationsActivity, R.color.textDisabled), translationText.getCurrentTextColor());
-    }
-
-    @Test
-    public void shouldDisplayNoAudioIconWhenNoAudioHasBeenRecorded() {
-        View translationsListItem = firstTranslationCardInListView();
-
-        ImageView audioIcon = (ImageView)translationsListItem.findViewById(R.id.audio_icon);
-
-        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.no_audio_40));
-    }
-
-    @Test
-    public void shouldDisplayAudioIconWhenAudioHasBeenRecorded() {
-        View translationsListItem = listItemWithNoTranslatedTextAndWithAudio();
-
-        ImageView audioIcon = (ImageView)translationsListItem.findViewById(R.id.audio_icon);
-
-        assertThat(shadowOf(audioIcon.getBackground()).getCreatedFromResId(), is(R.drawable.audio));
-    }
-
-    @Test
-    @TargetApi(19)
-    public void shouldDisplayGrayedOutCardWhenNoAudioHasBeenRecorded(){
-        View translationsListItem = firstTranslationCardInListView();
-        LinearLayout translationCardParent = (LinearLayout)translationsListItem.findViewById(R.id.translation_card_parent);
-
-        LayerDrawable bgDrawable= (LayerDrawable)translationCardParent.getBackground();
-        GradientDrawable background = (GradientDrawable)bgDrawable.findDrawableByLayerId(R.id.card_top_background);
-
-        assertEquals(CardListAdapter.DISABLED_OPACITY, background.getAlpha());
-
     }
 
 
