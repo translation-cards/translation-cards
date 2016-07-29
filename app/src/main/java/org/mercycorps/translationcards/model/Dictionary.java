@@ -16,9 +16,17 @@
 
 package org.mercycorps.translationcards.model;
 
+import android.support.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -69,8 +77,8 @@ public class Dictionary implements Serializable {
     }
 
     public Translation getTranslationBySourcePhrase(String sourcePhrase) {
-        for(Translation translation : translations) {
-            if(sourcePhrase.equals(translation.getLabel())) {
+        for (Translation translation : translations) {
+            if (sourcePhrase.equals(translation.getLabel())) {
                 return translation;
             }
         }
@@ -92,12 +100,36 @@ public class Dictionary implements Serializable {
         ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().addDictionary(destLanguageIso, language, itemIndex, deckId);
     }
 
-    public void setDeckId(long deckId) {
-        this.deckId = deckId;
-    }
-
     @Override
     public String toString() {
         return language;
+    }
+
+    protected JSONObject toJSON() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(JsonKeys.DICTIONARY_DEST_ISO_CODE, destLanguageIso);
+        jsonObject.put(JsonKeys.CARDS, createJSONTranslationsArray());
+
+        return jsonObject;
+    }
+
+    @NonNull
+    private JSONArray createJSONTranslationsArray() throws JSONException {
+        JSONArray translationJSONArray = new JSONArray();
+        for (Translation translation : translations) {
+            translationJSONArray.put(translation.toJSON());
+        }
+        return translationJSONArray;
+    }
+
+    protected List<String> getAudioPaths() {
+        List<String> paths = new ArrayList<>();
+        for (Translation translation : translations) {
+            if (translation.isAudioFilePresent()) {
+                paths.add(translation.getFilePath());
+            }
+        }
+
+        return paths;
     }
 }

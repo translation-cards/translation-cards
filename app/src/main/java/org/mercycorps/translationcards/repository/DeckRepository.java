@@ -92,7 +92,7 @@ public class DeckRepository {
                     // Don't delete the built-in assets.
                     continue;
                 }
-                File file = new File(translation.getFilename());
+                File file = new File(translation.getFilePath());
                 if (file.exists()) {
                     // It should always exist, but check to be safe.
                     file.delete();

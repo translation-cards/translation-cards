@@ -29,12 +29,12 @@ public class CardAudioClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (decoratedMediaManager.isCurrentlyPlayingSameCard(translation.getFilename())) {
+        if (decoratedMediaManager.isCurrentlyPlayingSameCard(translation.getFilePath())) {
             stopMediaPlayer();
         } else {
             stopMediaPlayer();
             try {
-                decoratedMediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+                decoratedMediaManager.play(translation.getFilePath(), progressBar, translation.getIsAsset());
             } catch (AudioFileException e) {
                 Context context = progressBar.getContext();
                 String noAudioMessage = String.format(context.getString(R.string.could_not_play_audio_message), currentDictionary);

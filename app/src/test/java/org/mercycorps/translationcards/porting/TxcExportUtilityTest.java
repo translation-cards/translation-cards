@@ -125,15 +125,15 @@ public class TxcExportUtilityTest {
 
         JSONObject firstCard = cardsArray.getJSONObject(0);
         assertEquals(firstTranslation.getLabel(), firstCard.getString(JsonKeys.CARD_LABEL));
-        assertEquals(firstTranslation.getFilename(), firstCard.getString(JsonKeys.CARD_DEST_AUDIO));
+        assertEquals(firstTranslation.getFilePath(), firstCard.getString(JsonKeys.CARD_DEST_AUDIO));
         assertEquals(firstTranslation.getTranslatedText(), firstCard.getString(JsonKeys.CARD_DEST_TEXT));
 
         JSONObject secondCard = cardsArray.getJSONObject(1);
         assertEquals(secondTranslation.getLabel(), secondCard.getString(JsonKeys.CARD_LABEL));
-        assertEquals(secondTranslation.getFilename(), secondCard.getString(JsonKeys.CARD_DEST_AUDIO));
+        assertEquals(secondTranslation.getFilePath(), secondCard.getString(JsonKeys.CARD_DEST_AUDIO));
         assertEquals(secondTranslation.getTranslatedText(), secondCard.getString(JsonKeys.CARD_DEST_TEXT));
 
-        assertEquals(translationFilenames.get(firstTranslation.getFilename()), firstTranslation);
-        assertEquals(translationFilenames.get(secondTranslation.getFilename()), secondTranslation);
+        assertEquals(translationFilenames.get(firstTranslation.getFilePath()), firstTranslation);
+        assertEquals(translationFilenames.get(secondTranslation.getFilePath()), secondTranslation);
     }
 }

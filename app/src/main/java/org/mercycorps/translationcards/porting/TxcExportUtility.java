@@ -138,7 +138,7 @@ public class TxcExportUtility {
     private String buildUniqueFilename(
             Translation translation,
             Map<String, Translation> translationFilenames) throws ExportException {
-        String baseName = new File(translation.getFilename()).getName();
+        String baseName = new File(translation.getFilePath()).getName();
         if (!translationFilenames.containsKey(baseName)) {
             return baseName;
         }
@@ -176,9 +176,9 @@ public class TxcExportUtility {
     private FileInputStream getFileInputStream(Translation translation) throws IOException {
         FileInputStream translationInput;
         if (translation.getIsAsset()) {
-            translationInput = MainApplication.getContextFromMainApp().getAssets().openFd(translation.getFilename()).createInputStream();
+            translationInput = MainApplication.getContextFromMainApp().getAssets().openFd(translation.getFilePath()).createInputStream();
         } else {
-            translationInput = new FileInputStream(new File(translation.getFilename()));
+            translationInput = new FileInputStream(new File(translation.getFilePath()));
         }
         return translationInput;
     }

@@ -1,10 +1,18 @@
 package org.mercycorps.translationcards.model;
 
+import android.support.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -42,7 +50,6 @@ public class Deck implements Serializable {
     }
 
     public Deck() {
-
     }
 
     public String getTitle() {
@@ -82,6 +89,7 @@ public class Deck implements Serializable {
     public String getSourceLanguageIso() {
         return sourceLanguage.getIso();
     }
+
     public String getSourceLanguageName() {
         return sourceLanguage.getName();
     }
@@ -97,7 +105,7 @@ public class Deck implements Serializable {
         this.title = title;
     }
 
-    public void setSourceLanguage(Language language){
+    public void setSourceLanguage(Language language) {
         this.sourceLanguage = language;
     }
 
@@ -105,4 +113,35 @@ public class Deck implements Serializable {
         this.author = author;
     }
 
+    public JSONObject toJSON(String exportedDeckName) throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put(JsonKeys.DECK_LABEL, exportedDeckName);
+        json.put(JsonKeys.PUBLISHER, author);
+        if (externalId != null) {
+            json.put(JsonKeys.EXTERNAL_ID, externalId);
+        }
+        json.put(JsonKeys.TIMESTAMP, timestamp);
+        json.put(JsonKeys.SOURCE_LANGUAGE, getSourceLanguageIso());
+        json.put(JsonKeys.LOCKED, locked);
+        json.put(JsonKeys.DICTIONARIES, getDictionariesJSON());
+        return json;
+    }
+
+    @NonNull
+    private JSONArray getDictionariesJSON() throws JSONException {
+        JSONArray dictionaryJSONArray = new JSONArray();
+        for (Dictionary dictionary : getDictionaries()) {
+            dictionaryJSONArray.put(dictionary.toJSON());
+        }
+        return dictionaryJSONArray;
+    }
+
+    public List<String> getAudioFilePaths() {
+        List<String> allAudioFilePaths = new ArrayList<>();
+        for (Dictionary dictionary : getDictionaries()) {
+            allAudioFilePaths.addAll(dictionary.getAudioPaths());
+        }
+        return allAudioFilePaths;
+    }
 }

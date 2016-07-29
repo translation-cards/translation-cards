@@ -261,7 +261,7 @@ public class TranslationCardItem extends LinearLayout {
                 if(mediaManager.isPlaying()) {
                     mediaManager.stop();
                 } else {
-                    mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
+                    mediaManager.play(translation.getFilePath(), progressBar, translation.getIsAsset());
                 }
             } catch (AudioFileException e) {
                 String message = String.format(this.getContext().getString(R.string.could_not_play_audio_message),

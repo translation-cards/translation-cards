@@ -1,14 +1,11 @@
 package org.mercycorps.translationcards.model;
 
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.porting.JsonKeys;
 
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -19,15 +16,14 @@ public class Translation implements Serializable {
     public static final String DEFAULT_TRANSLATED_TEXT = "";
     private String label;
     private boolean isAsset;
-    private String filename;
+    private String filePath;
     private long dbId;
     private String translatedText;
 
-
-    public Translation(String label, boolean isAsset, String filename, long dbId, String translatedText) {
+    public Translation(String label, boolean isAsset, String filePath, long dbId, String translatedText) {
         this.label = label;
         this.isAsset = isAsset;
-        this.filename = filename;
+        this.filePath = filePath;
         this.dbId = dbId;
         this.translatedText = translatedText;
     }
@@ -35,12 +31,10 @@ public class Translation implements Serializable {
     public Translation() {
         label = "";
         isAsset = false;
-        filename = "";
+        filePath = "";
         dbId = -1;
         translatedText = "";
     }
-
-
 
     public String getLabel() {
         return label;
@@ -50,8 +44,8 @@ public class Translation implements Serializable {
         return isAsset;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getFilePath() {
+        return filePath;
     }
 
     public long getDbId() {
@@ -70,33 +64,28 @@ public class Translation implements Serializable {
         this.translatedText = translatedText;
     }
 
-    public void setMediaPlayerDataSource(Context context, MediaPlayer mp) throws IOException {
-        if (isAsset) {
-            AssetFileDescriptor fd = context.getAssets().openFd(filename);
-            mp.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
-            fd.close();
-        } else {
-            mp.setDataSource(new FileInputStream(filename).getFD());
-        }
-    }
-
     public void setLabel(String label) {
         this.label = label;
     }
 
-    public void setAudioFileName(String audioFileName) {
-        this.filename = audioFileName;
+    public void setAudioFilePath(String audioFileName) {
+        this.filePath = audioFileName;
     }
 
-    public boolean isAudioFilePresent(){
-        return !(filename == null || filename.isEmpty());
-    }
-
-    public FileDescriptor createFileDescriptor() throws IOException {
-        return new FileInputStream(filename).getFD();
+    public boolean isAudioFilePresent() {
+        return !(filePath == null || filePath.isEmpty());
     }
 
     public void saveWithDictionary(Long dictionaryId) {
-        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
+        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filePath, translatedText);
+    }
+
+    protected JSONObject toJSON() throws JSONException {
+        JSONObject cardJson = new JSONObject();
+        String name = new File(this.filePath).getName();
+        cardJson.put(JsonKeys.CARD_LABEL, label);
+        cardJson.put(JsonKeys.CARD_DEST_AUDIO, name);
+        cardJson.put(JsonKeys.CARD_DEST_TEXT, translatedText);
+        return cardJson;
     }
 }

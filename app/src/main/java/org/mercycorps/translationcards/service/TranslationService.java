@@ -69,9 +69,9 @@ public class TranslationService {
     public void saveTranslationContext(NewTranslation context) {
         Translation translation = context.getTranslation();
         if (context.isEdit()) {
-            translationRepository.updateTranslation(translation.getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+            translationRepository.updateTranslation(translation.getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilePath(), translation.getTranslatedText());
         } else {
-            translationRepository.addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilename(), translation.getTranslatedText());
+            translationRepository.addTranslationAtTop(context.getDictionary().getDbId(), translation.getLabel(), translation.getIsAsset(), translation.getFilePath(), translation.getTranslatedText());
         }
     }
 }
