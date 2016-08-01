@@ -6,22 +6,20 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.MediaConfig;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.uiHelper.ToastHelper;
+import org.mercycorps.translationcards.view.TranslationCardItem;
 
 import java.util.List;
 
@@ -37,8 +35,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
     RelativeLayout playAudioButton;
     @Bind(R.id.record_audio_button)
     RelativeLayout recordAudioButton;
-    @Bind(R.id.origin_translation_text)
-    TextView originTranslationText;
     @Bind(R.id.record_audio_icon)
     ImageView recordAudioIcon;
     @Bind(R.id.record_activity_back)
@@ -51,27 +47,13 @@ public class RecordAudioActivity extends AddTranslationActivity {
     TextView nextButtonText;
     @Bind(R.id.recording_audio_next_arrow)
     ImageView nextButtonArrow;
-    @Bind(R.id.indicator_icon)
-    ImageView translationCardIndicatorIcon;
-    @Bind(R.id.translation_child)
-    LinearLayout translationChild;
-    @Bind(R.id.translation_grandchild)
-    LinearLayout translationGrandChild;
-    @Bind(R.id.translated_text)
-    TextView translatedTextView;
-    @Bind(R.id.audio_icon_layout)
-    FrameLayout audioIconLayout;
+    @Bind(R.id.translation_card_item)
+    TranslationCardItem translationCardItem;
     private PermissionService permissionService;
 
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_record_audio);
-        View v = findViewById(R.id.translation_card_parent);
-
-        int rightPadding = v.getPaddingRight();
-        int leftPadding = v.getPaddingLeft();
-        v.setBackgroundResource(R.drawable.card_top_background_expanded);
-        v.setPadding(leftPadding, 0, rightPadding, 0);
     }
 
     @Override
@@ -85,11 +67,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
         inflateLanguageTabsFragment();
         setOnLanguageTabClickListener();
         updatePlayButtonState();
-        showTranslationSourcePhrase();
-        updateTranslatedTextView();
+        updateTranslationCard();
         updateNextButtonState(false);
-        expandTranslationCard();
-        hideGrandchildAndAudioIcon();
     }
 
     private void setOnLanguageTabClickListener() {
@@ -97,7 +76,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
             @Override
             public void onLanguageTabSelected(NewTranslation previousTranslation) {
                 updatePlayButtonState();
-                updateTranslatedTextView();
+                updateTranslationCard();
                 stopAudioIfPlaying();
                 stopIfRecording();
             }
@@ -156,44 +135,11 @@ public class RecordAudioActivity extends AddTranslationActivity {
         }
     }
 
-    @OnClick(R.id.translation_indicator_layout)
-    protected void translationIndicatorLayoutClick() {
-        int visibility = isCardExpanded ? View.GONE : View.VISIBLE;
-        View v = findViewById(R.id.translation_card_parent);
 
-        int rightPadding = v.getPaddingRight();
-        int leftPadding = v.getPaddingLeft();
-        if (isCardExpanded) {
-            v.setBackgroundResource(R.drawable.card_top_background);
-        } else {
-            v.setBackgroundResource(R.drawable.card_top_background_expanded);
-        }
-        v.setPadding(leftPadding, 0, rightPadding, 0);
 
-        int backgroundResource = isCardExpanded ? R.drawable.expand_arrow : R.drawable.collapse_arrow;
-        translationChild.setVisibility(visibility);
-        translationCardIndicatorIcon.setBackgroundResource(backgroundResource);
-        isCardExpanded = !isCardExpanded;
-    }
-
-    protected void expandTranslationCard() {
-        translationCardIndicatorIcon.setBackgroundResource(R.drawable.collapse_arrow);
-        translationChild.setVisibility(View.VISIBLE);
-    }
-
-    protected void hideGrandchildAndAudioIcon() {
-        translationGrandChild.setVisibility(View.GONE);
-        audioIconLayout.setVisibility(View.GONE);
-    }
-
-    private void updateTranslatedTextView() {
-        String translatedText = getLanguageTabsFragment().getCurrentTranslation().getTranslation().getTranslatedText();
-        translatedTextView.setText(translatedText);
-        if (translatedText.isEmpty()) {
-            String dictionaryLanguage = getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage();
-            String formattedLanguage = LanguageService.getTitleCaseName(dictionaryLanguage);
-            translatedTextView.setHint(String.format("Add %s translation", formattedLanguage));
-        }
+    private void updateTranslationCard() {
+        Translation translationItem=getLanguageTabsFragment().getCurrentTranslation().getTranslation();
+        translationCardItem.setTranslation(translationItem, getLanguageTabsFragment().getCurrentTranslation().getDictionary().getLanguage());
     }
 
     private void updateNextButtonState(boolean isRecording) {
@@ -213,9 +159,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         nextButtonArrow.setBackgroundResource(nextButtonArrowColor);
     }
 
-    private void showTranslationSourcePhrase() {
-        originTranslationText.setText(getContextFromIntent().getSourcePhrase());
-    }
+
 
     private void updateBackButtonState(boolean isRecording) {
         boolean isEnabled = !isRecording;

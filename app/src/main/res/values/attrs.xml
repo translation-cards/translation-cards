@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TranslationCardItem">
+        <attr name="showAudioIcon" format="boolean" />
+        <attr name="greyOutCardIfNoAudio" format="boolean" />
+        <attr name="playAudioOnClick" format="boolean" />
+        <attr name="expandedOnStart" format="boolean" />
+        <attr name="showEditAndDeleteOptions" format="boolean" />
+    </declare-styleable>
+</resources>
