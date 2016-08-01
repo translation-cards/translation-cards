@@ -11,9 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.RecordAudioException;
+import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.MediaConfig;
 import org.mercycorps.translationcards.model.Translation;
@@ -22,6 +24,8 @@ import org.mercycorps.translationcards.uiHelper.ToastHelper;
 import org.mercycorps.translationcards.view.TranslationCardItem;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -48,18 +52,21 @@ public class RecordAudioActivity extends AddTranslationActivity {
     ImageView nextButtonArrow;
     @Bind(R.id.translation_card_item)
     TranslationCardItem translationCardItem;
-    private PermissionService permissionService;
     private NewTranslation currentTranslation;
+
+    @Inject AudioPlayerManager audioPlayerManager;
+    @Inject PermissionService permissionService;
 
     @Override
     public void inflateView() {
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_record_audio);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionService = getMainApplication().getPermissionService();
     }
 
     @Override
@@ -196,8 +203,8 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     protected void stopAudioIfPlaying() {
-        if (getAudioPlayerManager().isPlaying()) {
-            getAudioPlayerManager().stop();
+        if (audioPlayerManager.isPlaying()) {
+            audioPlayerManager.stop();
         }
     }
 
@@ -213,7 +220,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void playAudioFile() throws AudioFileException {
         Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-        getAudioPlayerManager().play(translation.getFilePath(), translation.getIsAsset());
+        audioPlayerManager.play(translation.getFilePath(), translation.getIsAsset());
     }
 
     private void handleIsRecordingState() throws RecordAudioException {

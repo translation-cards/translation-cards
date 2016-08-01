@@ -27,7 +27,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
@@ -79,10 +78,7 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         dictionaryService = application.getDictionaryService();
         deckService = application.getDeckService();
 
-        DaggerActivityInjectorComponent.builder()
-                .baseComponent(application.getBaseComponent())
-                .build()
-                .inject(this);
+        application.getBaseComponent().inject(this);
 
         setContentView(R.layout.activity_translations);
         initTabs();

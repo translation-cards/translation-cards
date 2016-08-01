@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.activity.addTranslation;
 import android.view.View;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.DaggerActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
@@ -28,10 +27,7 @@ public class SummaryActivity extends AddTranslationActivity {
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
-        DaggerActivityInjectorComponent.builder()
-                .baseComponent(application.getBaseComponent())
-                .build()
-                .inject(this);
+        application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_summary);
     }
 

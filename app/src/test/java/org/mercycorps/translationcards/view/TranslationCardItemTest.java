@@ -45,7 +45,6 @@ import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -76,23 +75,12 @@ public class TranslationCardItemTest {
     @Before
     public void setUp() throws Exception {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        DaggerTestActivityInjectorComponent
-                .builder()
-                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
-                .build()
-                .inject(this);
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         activity = Robolectric.buildActivity(Activity.class).create().get();
         deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
         Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
         when(deckService.currentDeck()).thenReturn(basicDeck);
-    }
-
-    private TranslationCardItem getDefaultTranslationCard() {
-        TranslationCardItem translationCardItem = new TranslationCardItem(activity);
-        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
-        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL);
-        return translationCardItem;
     }
 
     @Test
@@ -230,13 +218,32 @@ public class TranslationCardItemTest {
     }
 
     @Test
-    public void shouldStopPlayingWhenPlayButtonIsClickedTwice() throws AudioFileNotSetException {
+    public void shouldStopPlayingWhenPlayButtonIsClickedTwiceOnSameCard() throws AudioFileNotSetException {
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
-        when(decoratedMediaManager.isPlaying()).thenReturn(false).thenReturn(true);
+        when(decoratedMediaManager.isCurrentlyPlayingSameCard(translationCardItem.getTranslation().getFilePath()))
+                .thenReturn(false).thenReturn(true);
         createTranslationCardItemWithAudioAndNoTranslatedText();
         translationCardItem.findViewById(R.id.translation_card).performClick();
         translationCardItem.findViewById(R.id.translation_card).performClick();
         verify(decoratedMediaManager).stop();
+    }
+
+    @Test
+    public void shouldStopPlayingWhenPlayButtonIsClickedWhileAudioIsPlayingForDifferentCard() {
+        TranslationCardItem translationCardItem = getDefaultTranslationCard();
+        when(decoratedMediaManager.isPlaying()).thenReturn(true);
+        createTranslationCardItemWithAudioAndNoTranslatedText();
+        translationCardItem.findViewById(R.id.translation_card).performClick();
+        verify(decoratedMediaManager).stop();
+    }
+
+    @Test
+    public void shouldPlayWhenPlayButtonIsClickedWhileAudioIsPlayingForDifferentCard() throws AudioFileException {
+        TranslationCardItem translationCardItem = createTranslationCardItemWithAudioAndNoTranslatedText();
+        when(decoratedMediaManager.isCurrentlyPlayingSameCard(DEFAULT_AUDIO_FILE)).thenReturn(false);
+        translationCardItem.findViewById(R.id.translation_card).performClick();
+        ProgressBar progressBar = (ProgressBar) translationCardItem.findViewById(R.id.translation_card_progress_bar);
+        verify(decoratedMediaManager).play(DEFAULT_AUDIO_FILE, progressBar, IS_NOT_ASSET);
     }
 
     @Test
@@ -428,6 +435,13 @@ public class TranslationCardItemTest {
         translationCardItem.setEditClickListener(editListener);
         translationCardItem.findViewById(R.id.translation_card_edit).performClick();
         verifyZeroInteractions(editListener);
+    }
+
+    private TranslationCardItem getDefaultTranslationCard() {
+        TranslationCardItem translationCardItem = new TranslationCardItem(activity);
+        Translation translationItem = new Translation("First Translation", false, null, 1, "Translated Text");
+        translationCardItem.setTranslation(translationItem, DEFAULT_DICTIONARY_LABEL);
+        return translationCardItem;
     }
 
     private TranslationCardItem createTranslationCardItemWithAudioAndNoTranslatedText() {

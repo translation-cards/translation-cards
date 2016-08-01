@@ -1,14 +1,9 @@
 package org.mercycorps.translationcards.activity.addTranslation;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -18,38 +13,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.DaggerTestActivityInjectorComponent;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestBaseComponent;
-import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowToast;
 
 import javax.inject.Inject;
 
-import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.clickLanguageTabAtPosition;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getTranslationService;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -67,11 +51,7 @@ public class SummaryActivityTest {
     @Before
     public void setUp() throws Exception {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        DaggerTestActivityInjectorComponent
-                .builder()
-                .testBaseComponent((TestBaseComponent) application.getBaseComponent())
-                .build()
-                .inject(this);
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
     }
 
     @After

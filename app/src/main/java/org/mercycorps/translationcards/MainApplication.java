@@ -8,9 +8,7 @@ import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
@@ -20,7 +18,6 @@ import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
@@ -29,8 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Used to create singletons for dependency injection.
@@ -44,17 +39,13 @@ public class MainApplication extends Application {
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
-    private AudioPlayerManager audioPlayerManager;
     private static Context context;
-    private ScheduledExecutorService scheduledExecutorService;
-    private DecoratedMediaManager decoratedMediaManager;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
     private TranslationRepository translationRepository;
     protected boolean isTest = false;
     private LanguageService languageService;
-    private PermissionService permissionService;
     private DeckRepository deckRepository;
     private DictionaryRepository dictionaryRepository;
     private TxcImportUtility txcImportUtility;
@@ -66,11 +57,7 @@ public class MainApplication extends Application {
         super.onCreate();
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
-        scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        audioPlayerManager = new AudioPlayerManager(mediaPlayer);
-        decoratedMediaManager = new DecoratedMediaManager();
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
@@ -134,10 +121,6 @@ public class MainApplication extends Application {
         return audioRecorderManager;
     }
 
-    public AudioPlayerManager getAudioPlayerManager() {
-        return audioPlayerManager;
-    }
-
     public static Context getContextFromMainApp() {
         return context;
     }
@@ -159,14 +142,6 @@ public class MainApplication extends Application {
         return new MediaRecorder();
     }
 
-    public ScheduledExecutorService getScheduledExecutorService() {
-        return scheduledExecutorService;
-    }
-
-    public DecoratedMediaManager getDecoratedMediaManager() {
-        return decoratedMediaManager;
-    }
-
     public TranslationService getTranslationService() {
         return translationService;
     }
@@ -182,11 +157,7 @@ public class MainApplication extends Application {
     public LanguageService getLanguageService() {
         return languageService;
     }
-
-    public PermissionService getPermissionService() {
-        return permissionService;
-    }
-
+    
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }

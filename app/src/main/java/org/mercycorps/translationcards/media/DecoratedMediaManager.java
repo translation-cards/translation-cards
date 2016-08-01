@@ -2,14 +2,13 @@ package org.mercycorps.translationcards.media;
 
 import android.widget.ProgressBar;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.mercycorps.translationcards.MainApplication.getContextFromMainApp;
+import javax.inject.Inject;
 
 /**
  * Created by karthikbalasubramanian on 3/28/16.
@@ -21,22 +20,27 @@ public class DecoratedMediaManager {
     private ScheduledFuture scheduledFuture;
     private static final int RESET_PROGRESS_BAR = 0;
     private String filename;
+    private AudioPlayerManager audioPlayerManager;
+    private ScheduledExecutorService scheduledExecutorService;
 
-    public DecoratedMediaManager() {
+    @Inject
+    public DecoratedMediaManager(AudioPlayerManager audioPlayerManager, ScheduledExecutorService scheduledExecutorService) {
+        this.audioPlayerManager = audioPlayerManager;
+        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     //// TODO: 3/28/16 There is an implicit order here. Play has to be called before you can call maxDuration or getCurrentPosition.
     public void play(String filename, ProgressBar progressBar, boolean isAsset) throws AudioFileException {
         this.progressBar = progressBar;
         this.filename = filename;
-        getAudioPlayerManager().play(this.filename, isAsset);
-        progressBar.setMax(getAudioPlayerManager().getMaxDuration());
+        audioPlayerManager.play(this.filename, isAsset);
+        progressBar.setMax(audioPlayerManager.getMaxDuration());
         schedule();
     }
 
 
     private void schedule() {
-        scheduledFuture = getExecutorService().scheduleAtFixedRate(createRunnable(), INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
+        scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(createRunnable(), INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
     }
 
     //// TODO: 3/28/16 Figure out how to unit test this!
@@ -45,7 +49,7 @@ public class DecoratedMediaManager {
             @Override
             public void run() {
                 if(!isPlaying()) stop();
-                else progressBar.setProgress(getAudioPlayerManager().getCurrentPosition());
+                else progressBar.setProgress(audioPlayerManager.getCurrentPosition());
             }
         };
     }
@@ -53,7 +57,7 @@ public class DecoratedMediaManager {
 
     public void stop() {
         if (playHasNotBeenCalled()) return;
-        getAudioPlayerManager().stop();
+        audioPlayerManager.stop();
         progressBar.setProgress(RESET_PROGRESS_BAR);
         scheduledFuture.cancel(true);
     }
@@ -62,19 +66,12 @@ public class DecoratedMediaManager {
         return progressBar == null || scheduledFuture == null;
     }
 
-    private AudioPlayerManager getAudioPlayerManager() {
-        return ((MainApplication) getContextFromMainApp()).getAudioPlayerManager();
-    }
-
-    private ScheduledExecutorService getExecutorService(){
-        return ((MainApplication) getContextFromMainApp()).getScheduledExecutorService();
-    }
     public ScheduledFuture getScheduledFuture() {
         return scheduledFuture;
     }
 
     public boolean isPlaying() {
-        return getAudioPlayerManager().isPlaying();
+        return audioPlayerManager.isPlaying();
     }
 
     public boolean isCurrentlyPlayingSameCard(String fileName) {
