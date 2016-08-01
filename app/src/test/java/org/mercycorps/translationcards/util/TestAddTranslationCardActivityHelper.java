@@ -21,7 +21,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.Collections;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 public class TestAddTranslationCardActivityHelper {
@@ -60,12 +59,6 @@ public class TestAddTranslationCardActivityHelper {
     public static AudioRecorderManager getAudioRecorderManager() {
         return getApplication().getAudioRecorderManager();
     }
-
-    public static ScheduledExecutorService getScheduledExecutorService() {
-        return getApplication().getScheduledExecutorService();
-    }
-
-
 
     public static Translation createTranslation() {
         Translation translation = new Translation();

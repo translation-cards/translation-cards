@@ -92,11 +92,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public ScheduledExecutorService getScheduledExecutorService(){
-        return mockedScheduledExecutorService;
-    }
-
-    @Override
     public TranslationService getTranslationService() {
         return translationService;
     }

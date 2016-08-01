@@ -2,7 +2,6 @@ package org.mercycorps.translationcards.media;
 
 import android.widget.ProgressBar;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,8 +9,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-
-import static org.mercycorps.translationcards.MainApplication.getContextFromMainApp;
 
 /**
  * Created by karthikbalasubramanian on 3/28/16.
@@ -24,10 +21,12 @@ public class DecoratedMediaManager {
     private static final int RESET_PROGRESS_BAR = 0;
     private String filename;
     private AudioPlayerManager audioPlayerManager;
+    private ScheduledExecutorService scheduledExecutorService;
 
     @Inject
-    public DecoratedMediaManager(AudioPlayerManager audioPlayerManager) {
+    public DecoratedMediaManager(AudioPlayerManager audioPlayerManager, ScheduledExecutorService scheduledExecutorService) {
         this.audioPlayerManager = audioPlayerManager;
+        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     //// TODO: 3/28/16 There is an implicit order here. Play has to be called before you can call maxDuration or getCurrentPosition.
@@ -41,7 +40,7 @@ public class DecoratedMediaManager {
 
 
     private void schedule() {
-        scheduledFuture = getExecutorService().scheduleAtFixedRate(createRunnable(), INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
+        scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(createRunnable(), INITIAL_DELAY, PERIOD, TimeUnit.MILLISECONDS);
     }
 
     //// TODO: 3/28/16 Figure out how to unit test this!
@@ -67,9 +66,6 @@ public class DecoratedMediaManager {
         return progressBar == null || scheduledFuture == null;
     }
 
-    private ScheduledExecutorService getExecutorService(){
-        return ((MainApplication) getContextFromMainApp()).getScheduledExecutorService();
-    }
     public ScheduledFuture getScheduledFuture() {
         return scheduledFuture;
     }

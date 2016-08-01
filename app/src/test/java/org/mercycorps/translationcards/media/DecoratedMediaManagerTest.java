@@ -4,13 +4,10 @@ import android.widget.ProgressBar;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -18,15 +15,12 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.DEFAULT_POSITION;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.INITIAL_DELAY;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.PERIOD;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getScheduledExecutorService;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Config(constants = BuildConfig.class, sdk = 21)
-@RunWith(RobolectricGradleTestRunner.class)
 public class DecoratedMediaManagerTest {
     public static final String FILENAME = "Filename";
     private static final boolean IS_NOT_ASSET = false;
@@ -34,13 +28,17 @@ public class DecoratedMediaManagerTest {
     private static final int RESET_PROGRESS_BAR = 0;
 
     private ProgressBar progressBar;
-    private final AudioPlayerManager audioPlayerManager = mock(AudioPlayerManager.class);
+    private AudioPlayerManager audioPlayerManager;
+    private ScheduledExecutorService scheduledExecutorService;
 
     @Before
     public void setUp() throws Exception {
-        setupAudioPlayerManager();
+        audioPlayerManager = mock(AudioPlayerManager.class);
+        scheduledExecutorService = mock(ScheduledExecutorService.class);
         progressBar = mock(ProgressBar.class);
-        decoratedMediaManager = new DecoratedMediaManager(audioPlayerManager);
+        setupAudioPlayerManager();
+
+        decoratedMediaManager = new DecoratedMediaManager(audioPlayerManager, scheduledExecutorService);
     }
 
     @Test
@@ -65,7 +63,7 @@ public class DecoratedMediaManagerTest {
     @Test
     public void shouldCreatedScheduledFutureWhenPlayIsCalled() throws Exception {
         decoratedMediaManager.play(FILENAME, progressBar, IS_NOT_ASSET);
-        verify(getScheduledExecutorService()).scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS));
+        verify(scheduledExecutorService).scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -85,7 +83,7 @@ public class DecoratedMediaManagerTest {
     private void setupAudioPlayerManager() {
         when(audioPlayerManager.getCurrentPosition()).thenReturn(DEFAULT_POSITION);
         when(audioPlayerManager.getMaxDuration()).thenReturn(DEFAULT_MAX);
-        when(getScheduledExecutorService().scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS)))
+        when(scheduledExecutorService.scheduleAtFixedRate(any(Runnable.class), eq(INITIAL_DELAY), eq(PERIOD), eq(TimeUnit.MILLISECONDS)))
                 .thenReturn(mock(ScheduledFuture.class));
     }
 }

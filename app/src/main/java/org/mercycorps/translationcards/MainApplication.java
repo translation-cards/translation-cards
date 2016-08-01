@@ -27,8 +27,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Used to create singletons for dependency injection.
@@ -43,7 +41,6 @@ public class MainApplication extends Application {
     private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
     private static Context context;
-    private ScheduledExecutorService scheduledExecutorService;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
@@ -64,7 +61,6 @@ public class MainApplication extends Application {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
-        scheduledExecutorService = Executors.newScheduledThreadPool(1);
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
@@ -147,10 +143,6 @@ public class MainApplication extends Application {
 
     public MediaRecorder getMediaRecorder() {
         return new MediaRecorder();
-    }
-
-    public ScheduledExecutorService getScheduledExecutorService() {
-        return scheduledExecutorService;
     }
 
     public TranslationService getTranslationService() {
