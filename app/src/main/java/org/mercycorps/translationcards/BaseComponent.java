@@ -8,7 +8,7 @@ import org.mercycorps.translationcards.view.TranslationCardItem;
 import dagger.Component;
 
 @PerActivity
-@Component(modules = {MediaModule.class}, dependencies = ApplicationComponent.class)
+@Component(modules = {MediaModule.class, ServiceModule.class}, dependencies = ApplicationComponent.class)
 public interface BaseComponent {
     void inject(TranslationsActivity activity);
     void inject(SummaryActivity activity);

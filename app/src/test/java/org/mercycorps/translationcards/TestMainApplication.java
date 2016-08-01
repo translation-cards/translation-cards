@@ -9,14 +9,12 @@ import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
-import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static org.mockito.Mockito.mock;
 
@@ -25,11 +23,9 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     private DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
     private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
-    private ScheduledExecutorService mockedScheduledExecutorService = mock(ScheduledExecutorService.class);
     private TranslationService translationService = mock(TranslationService.class);
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
-    private PermissionService permissionService = mock(PermissionService.class);
     private DeckRepository deckRepository = mock(DeckRepository.class);
     private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
     private TranslationRepository translationRepository = mock(TranslationRepository.class);
@@ -107,10 +103,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public PermissionService getPermissionService() {
-        return permissionService;
-    }
-
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }

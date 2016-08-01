@@ -18,7 +18,6 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestBaseComponent;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.PermissionService;
@@ -64,9 +63,9 @@ public class RecordAudioActivityTest {
     private static final boolean IS_NOT_ASSET = false;
 
     AddTranslationActivityHelper<RecordAudioActivity> helper = new AddTranslationActivityHelper<>(RecordAudioActivity.class);
-    private PermissionService permissionService = ((TestMainApplication)RuntimeEnvironment.application).getPermissionService();
 
     @Inject AudioPlayerManager audioPlayerManager;
+    @Inject PermissionService permissionService;
 
     @Before
     public void setup() {

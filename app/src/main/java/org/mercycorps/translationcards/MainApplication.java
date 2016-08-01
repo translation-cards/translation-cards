@@ -18,7 +18,6 @@ import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
@@ -47,7 +46,6 @@ public class MainApplication extends Application {
     private TranslationRepository translationRepository;
     protected boolean isTest = false;
     private LanguageService languageService;
-    private PermissionService permissionService;
     private DeckRepository deckRepository;
     private DictionaryRepository dictionaryRepository;
     private TxcImportUtility txcImportUtility;
@@ -59,7 +57,6 @@ public class MainApplication extends Application {
         super.onCreate();
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
@@ -160,11 +157,7 @@ public class MainApplication extends Application {
     public LanguageService getLanguageService() {
         return languageService;
     }
-
-    public PermissionService getPermissionService() {
-        return permissionService;
-    }
-
+    
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }

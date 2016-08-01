@@ -52,10 +52,10 @@ public class RecordAudioActivity extends AddTranslationActivity {
     ImageView nextButtonArrow;
     @Bind(R.id.translation_card_item)
     TranslationCardItem translationCardItem;
-    private PermissionService permissionService;
     private NewTranslation currentTranslation;
 
     @Inject AudioPlayerManager audioPlayerManager;
+    @Inject PermissionService permissionService;
 
     @Override
     public void inflateView() {
@@ -67,7 +67,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionService = getMainApplication().getPermissionService();
     }
 
     @Override
