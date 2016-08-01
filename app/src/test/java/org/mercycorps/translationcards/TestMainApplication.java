@@ -2,9 +2,7 @@ package org.mercycorps.translationcards;
 
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
@@ -26,10 +24,8 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
 
     private DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
     private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
-    private AudioPlayerManager audioPlayerManager = mock(AudioPlayerManager.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
     private ScheduledExecutorService mockedScheduledExecutorService = mock(ScheduledExecutorService.class);
-    private DecoratedMediaManager decoratedMediaManager = mock(DecoratedMediaManager.class);
     private TranslationService translationService = mock(TranslationService.class);
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
@@ -93,12 +89,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public MediaRecorder getMediaRecorder() {
         return mediaRecorder;
-    }
-
-
-    @Override
-    public DecoratedMediaManager getDecoratedMediaManager() {
-        return decoratedMediaManager;
     }
 
     @Override

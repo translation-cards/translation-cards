@@ -254,8 +254,11 @@ public class TranslationCardItem extends LinearLayout {
     protected void translationCardClicked() {
         if(playAudioOnClick && progressBar != null) {
             try {
-                if(mediaManager.isPlaying()) {
+                if(mediaManager.isCurrentlyPlayingSameCard(translation.getFilename())) {
                     mediaManager.stop();
+                } else if (mediaManager.isPlaying()) {
+                    mediaManager.stop();
+                    mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
                 } else {
                     mediaManager.play(translation.getFilename(), progressBar, translation.getIsAsset());
                 }

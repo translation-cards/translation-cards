@@ -8,9 +8,7 @@ import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.mercycorps.translationcards.media.AudioPlayerManager;
 import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
@@ -46,7 +44,6 @@ public class MainApplication extends Application {
     private AudioRecorderManager audioRecorderManager;
     private static Context context;
     private ScheduledExecutorService scheduledExecutorService;
-    private DecoratedMediaManager decoratedMediaManager;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
@@ -68,8 +65,6 @@ public class MainApplication extends Application {
         permissionService = new PermissionService();
         audioRecorderManager = new AudioRecorderManager();
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        AudioPlayerManager audioPlayerManager = new AudioPlayerManager(mediaPlayer);
-        decoratedMediaManager = new DecoratedMediaManager(audioPlayerManager);
         context = getApplicationContext();
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
@@ -156,10 +151,6 @@ public class MainApplication extends Application {
 
     public ScheduledExecutorService getScheduledExecutorService() {
         return scheduledExecutorService;
-    }
-
-    public DecoratedMediaManager getDecoratedMediaManager() {
-        return decoratedMediaManager;
     }
 
     public TranslationService getTranslationService() {
