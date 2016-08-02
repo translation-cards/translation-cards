@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.porting;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.model.Deck;
 
 import java.io.File;
@@ -19,8 +18,13 @@ import java.util.zip.ZipOutputStream;
 
 public class TxcExportUtility {
 
-    private static final String SPEC_FILENAME = "card_deck.json";
+    static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
+    private InputStreamBuilder inputStreamBuilder;
+
+    public TxcExportUtility(InputStreamBuilder inputStreamBuilder) {
+        this.inputStreamBuilder = inputStreamBuilder;
+    }
 
     public void exportDeck(Deck deck, String exportedDeckName, File file)
             throws ExportException {
@@ -49,7 +53,7 @@ public class TxcExportUtility {
         }
     }
 
-    private void writeDeckToZipStream(Deck deck, String exportedDeckName, ZipOutputStream zipOutputStream) throws ExportException {
+    protected void writeDeckToZipStream(Deck deck, String exportedDeckName, ZipOutputStream zipOutputStream) throws ExportException {
         try {
             JSONObject deckAsJSON = deck.toJSON(exportedDeckName);
             zipOutputStream.putNextEntry(new ZipEntry(SPEC_FILENAME));
@@ -60,7 +64,7 @@ public class TxcExportUtility {
         }
     }
 
-    private void addAudioFilesToZip(Map<String, Boolean> filePaths, ZipOutputStream zipOutputStream) throws ExportException {
+    protected void addAudioFilesToZip(Map<String, Boolean> filePaths, ZipOutputStream zipOutputStream) throws ExportException {
         try {
             for (Map.Entry<String, Boolean> entry : filePaths.entrySet()) {
                 String baseFilename = new File(entry.getKey()).getName();
@@ -82,9 +86,9 @@ public class TxcExportUtility {
     private FileInputStream getFileInputStream(Map.Entry<String, Boolean> fileToAssetEntry) throws IOException {
         FileInputStream translationInput;
         if (fileToAssetEntry.getValue()) {
-            translationInput = MainApplication.getContextFromMainApp().getAssets().openFd(fileToAssetEntry.getKey()).createInputStream();
+            translationInput = inputStreamBuilder.getAssetInputStream(fileToAssetEntry.getKey());
         } else {
-            translationInput = new FileInputStream(new File(fileToAssetEntry.getKey()));
+            translationInput = inputStreamBuilder.getFileInputStream(fileToAssetEntry.getKey());
         }
 
         return translationInput;

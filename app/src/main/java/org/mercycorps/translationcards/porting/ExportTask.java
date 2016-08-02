@@ -44,7 +44,7 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
         if (targetFile.exists()) {
             targetFile.delete();
         }
-        TxcExportUtility exportingUtility = new TxcExportUtility();
+        TxcExportUtility exportingUtility = new TxcExportUtility(new InputStreamBuilder(activity.getApplication()));
         try {
             exportingUtility.exportDeck(deck, exportedDeckName, targetFile);
         } catch (final ExportException e) {
