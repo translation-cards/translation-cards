@@ -1,14 +1,5 @@
 package org.mercycorps.translationcards.model;
 
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
-
-import org.mercycorps.translationcards.MainApplication;
-
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -23,7 +14,6 @@ public class Translation implements Serializable {
     private long dbId;
     private String translatedText;
 
-
     public Translation(String label, boolean isAsset, String filename, long dbId, String translatedText) {
         this.label = label;
         this.isAsset = isAsset;
@@ -33,14 +23,8 @@ public class Translation implements Serializable {
     }
 
     public Translation() {
-        label = "";
-        isAsset = false;
-        filename = "";
-        dbId = -1;
-        translatedText = "";
+        this("", false, "", -1, "");
     }
-
-
 
     public String getLabel() {
         return label;
@@ -70,16 +54,6 @@ public class Translation implements Serializable {
         this.translatedText = translatedText;
     }
 
-    public void setMediaPlayerDataSource(Context context, MediaPlayer mp) throws IOException {
-        if (isAsset) {
-            AssetFileDescriptor fd = context.getAssets().openFd(filename);
-            mp.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
-            fd.close();
-        } else {
-            mp.setDataSource(new FileInputStream(filename).getFD());
-        }
-    }
-
     public void setLabel(String label) {
         this.label = label;
     }
@@ -90,13 +64,5 @@ public class Translation implements Serializable {
 
     public boolean isAudioFilePresent(){
         return !(filename == null || filename.isEmpty());
-    }
-
-    public FileDescriptor createFileDescriptor() throws IOException {
-        return new FileInputStream(filename).getFD();
-    }
-
-    public void saveWithDictionary(Long dictionaryId) {
-        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filename, translatedText);
     }
 }

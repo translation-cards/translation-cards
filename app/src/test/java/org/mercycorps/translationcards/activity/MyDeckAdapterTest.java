@@ -20,10 +20,8 @@ import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Language;
-import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
@@ -43,7 +41,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,8 +67,6 @@ public class MyDeckAdapterTest {
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
-    private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
-    private DictionaryRepository dictionaryRepository = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryRepository();
 
     @Before
     public void setUp() throws Exception {
@@ -86,8 +81,9 @@ public class MyDeckAdapterTest {
         DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
 
-        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)});
+        Dictionary[] dictionaries = {new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)};
         deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
+        when(deck.getDictionaries()).thenReturn(dictionaries);
         view = getAdapterViewForDeck(deck);
     }
 
@@ -206,7 +202,7 @@ public class MyDeckAdapterTest {
     public void shouldDisplayLockIconWhenDeckIsLocked() {
         Deck lockedDeck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, true,
                 new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
-
+        when(lockedDeck.getDictionaries()).thenReturn(new Dictionary[0]);
         View view = getAdapterViewForDeck(lockedDeck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.VISIBLE, frameLayout.getVisibility());

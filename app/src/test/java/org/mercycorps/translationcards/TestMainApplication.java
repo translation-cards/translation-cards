@@ -68,11 +68,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     }
 
     @Override
-    public DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
-    }
-
-    @Override
     public AudioRecorderManager getAudioRecorderManager() {
         return audioRecorderManager;
     }
@@ -111,10 +106,4 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     public DictionaryRepository getDictionaryRepository() {
         return dictionaryRepository;
     }
-
-    @Override
-    public TranslationRepository getTranslationRepository() {
-        return translationRepository;
-    }
-
 }

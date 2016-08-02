@@ -16,8 +16,6 @@
 
 package org.mercycorps.translationcards.model;
 
-import org.mercycorps.translationcards.MainApplication;
-
 import java.io.Serializable;
 
 /**
@@ -74,10 +72,7 @@ public class Dictionary implements Serializable {
                 return translation;
             }
         }
-        Translation translation = new Translation();
-        translation.setLabel(sourcePhrase);
-        translation.saveWithDictionary(dbId);
-        return translation;
+        return new Translation();
     }
 
     public long getDbId() {
@@ -86,10 +81,6 @@ public class Dictionary implements Serializable {
 
     private boolean isNullOrEmpty(String value) {
         return (value == null) || value.isEmpty();
-    }
-
-    public void save(Integer itemIndex) {
-        ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().addDictionary(destLanguageIso, language, itemIndex, deckId);
     }
 
     public void setDeckId(long deckId) {

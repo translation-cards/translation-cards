@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards;
 
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
 
 import dagger.Module;
@@ -15,5 +16,10 @@ public class MockServiceModule {
     @Provides
     PermissionService providesPermissionService() {
         return permissionService;
+    }
+
+    @Provides
+    LanguageService providesLanguageService() {
+        return mock(LanguageService.class);
     }
 }

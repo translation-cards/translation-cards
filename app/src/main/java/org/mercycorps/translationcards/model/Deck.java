@@ -1,11 +1,14 @@
 package org.mercycorps.translationcards.model;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -24,6 +27,8 @@ public class Deck implements Serializable {
     // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
 
+    @Inject DictionaryRepository dictionaryRepository;
+
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
                 boolean locked, Language sourceLanguage) {
         this.title = title;
@@ -34,6 +39,9 @@ public class Deck implements Serializable {
         this.locked = locked;
         this.sourceLanguage = sourceLanguage;
         dictionaries = null;
+
+        MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
+        application.getBaseComponent().inject(this);
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
@@ -88,7 +96,7 @@ public class Deck implements Serializable {
 
     public Dictionary[] getDictionaries() {
         if (dictionaries == null) {
-            dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().getAllDictionariesForDeck(dbId);
+            dictionaries = dictionaryRepository.getAllDictionariesForDeck(dbId);
         }
         return dictionaries;
     }

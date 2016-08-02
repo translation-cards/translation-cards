@@ -37,13 +37,11 @@ public class MainApplication extends Application {
 
     private static String TAG = MainApplication.class.getName();
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
-    private DatabaseHelper databaseHelper;
     private AudioRecorderManager audioRecorderManager;
     private static Context context;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
-    private TranslationRepository translationRepository;
     protected boolean isTest = false;
     private LanguageService languageService;
     private DeckRepository deckRepository;
@@ -63,13 +61,13 @@ public class MainApplication extends Application {
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
         languageService = new LanguageService(languagesImportUtility);
         if (isTest) return;
-        databaseHelper = new DatabaseHelper(context);
-        translationRepository = new TranslationRepository(databaseHelper);
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        TranslationRepository translationRepository = new TranslationRepository(databaseHelper);
         dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
-        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
+        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository, dictionaryRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
 
@@ -113,10 +111,6 @@ public class MainApplication extends Application {
         }
     }
 
-    public DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
-    }
-
     public AudioRecorderManager getAudioRecorderManager() {
         return audioRecorderManager;
     }
@@ -157,16 +151,12 @@ public class MainApplication extends Application {
     public LanguageService getLanguageService() {
         return languageService;
     }
-    
+
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }
 
     public DictionaryRepository getDictionaryRepository() {
         return dictionaryRepository;
-    }
-
-    public TranslationRepository getTranslationRepository() {
-        return translationRepository;
     }
 }

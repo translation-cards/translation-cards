@@ -27,6 +27,8 @@ import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 public class ImportActivity extends AppCompatActivity {
 
     public static final int PERMISSION_REQUEST_EXTERNAL_WRITE = 1;
@@ -35,9 +37,15 @@ public class ImportActivity extends AppCompatActivity {
     private BroadcastReceiver onDownloadComplete;
     private AlertDialog downloadDialog;
 
+    @Inject LanguageService languageService;
+    @Inject TranslationRepository translationRepository;
+    @Inject DictionaryRepository dictionaryRepository;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
 
         portingUtility = createImportUtility();
 
@@ -56,10 +64,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private TxcImportUtility createImportUtility() {
-        LanguageService languageService = ((MainApplication)getApplication()).getLanguageService();
         DeckRepository deckRepository = ((MainApplication)getApplication()).getDeckRepository();
-        DictionaryRepository dictionaryRepository = ((MainApplication)getApplication()).getDictionaryRepository();
-        TranslationRepository translationRepository = ((MainApplication)getApplication()).getTranslationRepository();
         return new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
     }
 
