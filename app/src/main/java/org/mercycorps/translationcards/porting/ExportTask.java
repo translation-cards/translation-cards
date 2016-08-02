@@ -44,10 +44,9 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
         if (targetFile.exists()) {
             targetFile.delete();
         }
-        LanguageService languageService = ((MainApplication) activity.getApplication()).getLanguageService();
-        TxcExportUtility exportingUtility = new TxcExportUtility(languageService);
+        TxcExportUtility exportingUtility = new TxcExportUtility();
         try {
-            exportingUtility.exportData(deck, exportedDeckName, deck.getDictionaries(), targetFile);
+            exportingUtility.exportDeck(deck, exportedDeckName, targetFile);
         } catch (final ExportException e) {
             activity.runOnUiThread(new Runnable() {
                 @Override

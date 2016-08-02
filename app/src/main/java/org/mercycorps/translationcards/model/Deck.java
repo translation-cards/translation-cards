@@ -7,13 +7,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -132,16 +133,21 @@ public class Deck implements Serializable {
     private JSONArray getDictionariesJSON() throws JSONException {
         JSONArray dictionaryJSONArray = new JSONArray();
         for (Dictionary dictionary : getDictionaries()) {
+            String destLanguageIso = dictionary.getDestLanguageIso();
+            if(null == destLanguageIso || destLanguageIso.isEmpty()) {
+                LanguageService languageService = ((MainApplication) MainApplication.getContextFromMainApp()).getLanguageService();
+                dictionary.setDestLanguageIso(languageService.getIsoForLanguage(dictionary.getLanguage()));
+            }
             dictionaryJSONArray.put(dictionary.toJSON());
         }
         return dictionaryJSONArray;
     }
 
-    public List<String> getAudioFilePaths() {
-        List<String> allAudioFilePaths = new ArrayList<>();
+    public Map<String, Boolean> getAudioFilePaths() {
+        HashMap<String, Boolean> audioFilesMap = new HashMap<>();
         for (Dictionary dictionary : getDictionaries()) {
-            allAudioFilePaths.addAll(dictionary.getAudioPaths());
+            audioFilesMap.putAll(dictionary.getAudioPaths());
         }
-        return allAudioFilePaths;
+        return audioFilesMap;
     }
 }

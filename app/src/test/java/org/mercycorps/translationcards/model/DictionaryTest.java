@@ -10,9 +10,10 @@ import org.mercycorps.translationcards.porting.JsonKeys;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,16 +23,18 @@ import static org.mockito.Mockito.when;
 public class DictionaryTest {
 
     @Test
-    public void shouldReturnListOfTranslationPaths() {
+    public void shouldReturnMapOfAudioPathsToAssetBoolean() {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
-        Translation secondTranslation = new Translation("", false, "/filename2", 1L, "");
+        Translation secondTranslation = new Translation("", true, "/filename2", 1L, "");
         Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L, 1L);
 
-        List<String> audioPaths = dictionary.getAudioPaths();
+        Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
         assertEquals(2, audioPaths.size());
-        assertTrue(audioPaths.contains("/filename1"));
-        assertTrue(audioPaths.contains("/filename2"));
+        assertTrue(audioPaths.containsKey("/filename1"));
+        assertTrue(audioPaths.containsKey("/filename2"));
+        assertFalse(audioPaths.get("/filename1"));
+        assertTrue(audioPaths.get("/filename2"));
     }
 
     @Test
@@ -40,10 +43,10 @@ public class DictionaryTest {
         Translation secondTranslation = new Translation("", false, "", 1L, "");
         Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L, 1L);
 
-        List<String> audioPaths = dictionary.getAudioPaths();
+        Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
         assertEquals(1, audioPaths.size());
-        assertTrue(audioPaths.contains("/filename1"));
+        assertTrue(audioPaths.containsKey("/filename1"));
     }
 
     @Test

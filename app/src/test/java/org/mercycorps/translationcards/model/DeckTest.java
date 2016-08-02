@@ -14,8 +14,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -95,18 +95,51 @@ public class DeckTest {
     }
 
     @Test
-    public void shouldReturnAudioPathsForAllDictionaries() throws Exception {
+    public void shouldReturnAudioPathMapForAllDictionaries() throws Exception {
         Dictionary firstDictionary = mock(Dictionary.class);
         Dictionary secondDictionary = mock(Dictionary.class);
         Dictionary[] dictionaries = {firstDictionary, secondDictionary};
-        when(firstDictionary.getAudioPaths()).thenReturn(Arrays.asList("firstPath", "secondPath"));
-        when(secondDictionary.getAudioPaths()).thenReturn(Arrays.asList("thirdPath", "fourthPath"));
+        Map<String, Boolean> firstDictionaryMap = new HashMap<>();
+        firstDictionaryMap.put("firstPath", false);
+        firstDictionaryMap.put("secondPath", false);
+        Map<String, Boolean> secondDictionaryMap = new HashMap<>();
+        secondDictionaryMap.put("thirdPath", false);
+        secondDictionaryMap.put("fourthPath", false);
+        when(firstDictionary.getAudioPaths()).thenReturn(firstDictionaryMap);
+        when(secondDictionary.getAudioPaths()).thenReturn(secondDictionaryMap);
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(dictionaries);
 
-        List<String> audioFilePaths = deck.getAudioFilePaths();
+        Map<String, Boolean> audioFilePaths = deck.getAudioFilePaths();
 
         assertEquals(4, audioFilePaths.size());
-        assertTrue(audioFilePaths.containsAll(firstDictionary.getAudioPaths()));
-        assertTrue(audioFilePaths.containsAll(secondDictionary.getAudioPaths()));
+        assertTrue(audioFilePaths.keySet().containsAll(firstDictionary.getAudioPaths().keySet()));
+        assertTrue(audioFilePaths.keySet().containsAll(secondDictionary.getAudioPaths().keySet()));
+    }
+
+    @Test
+    public void shouldRetrieveIsoCodeForDictionariesWithEmptyIsoCode() throws JSONException {
+        Dictionary emptyIsoDictionary = new Dictionary("", "English", new Translation[0], 789L, 123L);
+        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{emptyIsoDictionary});
+        JSONObject jsonObject = deck.toJSON("");
+
+
+        JSONArray dictionariesArray = jsonObject.getJSONArray(JsonKeys.DICTIONARIES);
+        JSONObject actualDictionary = dictionariesArray.getJSONObject(0);
+
+        assertEquals(1, dictionariesArray.length());
+        assertEquals("en", actualDictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
+    }
+
+    @Test
+    public void shouldRetrieveIsoCodeForDictionariesWithNullIsoCode() throws JSONException {
+        Dictionary nullIsoDictionary = new Dictionary(null, "English", new Translation[0], 789L, 123L);
+        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{nullIsoDictionary});
+        JSONObject jsonObject = deck.toJSON("");
+
+        JSONArray dictionariesArray = jsonObject.getJSONArray(JsonKeys.DICTIONARIES);
+        JSONObject actualDictionary = dictionariesArray.getJSONObject(0);
+
+        assertEquals(1, dictionariesArray.length());
+        assertEquals("en", actualDictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
     }
 }

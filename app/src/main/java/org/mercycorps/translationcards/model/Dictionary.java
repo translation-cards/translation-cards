@@ -25,8 +25,8 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -62,6 +62,10 @@ public class Dictionary implements Serializable {
 
     public String getDestLanguageIso() {
         return destLanguageIso;
+    }
+
+    protected void setDestLanguageIso(String newIso) {
+        destLanguageIso = newIso;
     }
 
     public String getLanguage() {
@@ -122,14 +126,14 @@ public class Dictionary implements Serializable {
         return translationJSONArray;
     }
 
-    protected List<String> getAudioPaths() {
-        List<String> paths = new ArrayList<>();
+    protected Map<String, Boolean> getAudioPaths() {
+        HashMap<String, Boolean> pathMap = new HashMap<>();
         for (Translation translation : translations) {
             if (translation.isAudioFilePresent()) {
-                paths.add(translation.getFilePath());
+                pathMap.put(translation.getFilePath(), translation.getIsAsset());
             }
         }
 
-        return paths;
+        return pathMap;
     }
 }
