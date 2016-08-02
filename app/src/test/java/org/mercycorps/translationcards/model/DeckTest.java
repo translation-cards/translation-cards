@@ -51,6 +51,17 @@ public class DeckTest {
     }
 
     @Test
+    public void shouldReturnDestinationLanguagesAsString() throws Exception {
+        when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{
+                new Dictionary("en", "English", null, 1L, 1L),
+                new Dictionary("fa", "Farsi", null, 2L, 1L)
+        });
+        String destinationLanguagesForDisplay = deck.getDestinationLanguagesForDisplay();
+
+        assertEquals("ENGLISH  FARSI", destinationLanguagesForDisplay);
+    }
+
+    @Test
     public void shouldWriteDeckMetadataToJson() throws JSONException {
         JSONObject jsonObject = deck.toJSON(EXPORTED_DECK_NAME);
 

@@ -32,6 +32,7 @@ public class Deck implements Serializable {
     private Language sourceLanguage;
     // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
+    private static final String LANGUAGE_LIST_DELIMITER = "  ";
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
                 boolean locked, Language sourceLanguage) {
@@ -95,7 +96,17 @@ public class Deck implements Serializable {
         return sourceLanguage.getName();
     }
 
-    public Dictionary[] getDictionaries() {
+    public String getDestinationLanguagesForDisplay() {
+        Dictionary[] dictionaries = getDictionariesFromRepo();
+        StringBuilder builder = new StringBuilder();
+        for (Dictionary dictionary : dictionaries) {
+            builder.append(dictionary.getLanguage().toUpperCase()).append(LANGUAGE_LIST_DELIMITER);
+        }
+
+        return builder.toString().trim();
+    }
+
+    private Dictionary[] getDictionariesFromRepo() {
         if (dictionaries == null) {
             dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().getAllDictionariesForDeck(dbId);
         }
@@ -132,9 +143,9 @@ public class Deck implements Serializable {
     @NonNull
     private JSONArray getDictionariesJSON() throws JSONException {
         JSONArray dictionaryJSONArray = new JSONArray();
-        for (Dictionary dictionary : getDictionaries()) {
+        for (Dictionary dictionary : getDictionariesFromRepo()) {
             String destLanguageIso = dictionary.getDestLanguageIso();
-            if(null == destLanguageIso || destLanguageIso.isEmpty()) {
+            if (null == destLanguageIso || destLanguageIso.isEmpty()) {
                 LanguageService languageService = ((MainApplication) MainApplication.getContextFromMainApp()).getLanguageService();
                 dictionary.setDestLanguageIso(languageService.getIsoForLanguage(dictionary.getLanguage()));
             }
@@ -145,7 +156,7 @@ public class Deck implements Serializable {
 
     public Map<String, Boolean> getAudioFilePaths() {
         HashMap<String, Boolean> audioFilesMap = new HashMap<>();
-        for (Dictionary dictionary : getDictionaries()) {
+        for (Dictionary dictionary : getDictionariesFromRepo()) {
             audioFilesMap.putAll(dictionary.getAudioPaths());
         }
         return audioFilesMap;
