@@ -1,6 +1,7 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
 
@@ -25,5 +26,11 @@ public class MockRepositoryModule {
     @Provides
     DictionaryRepository providesDictionaryRepository() {
         return mock(DictionaryRepository.class);
+    }
+
+    @PerApplication
+    @Provides
+    DeckRepository providesDeckRepository() {
+        return mock(DeckRepository.class);
     }
 }

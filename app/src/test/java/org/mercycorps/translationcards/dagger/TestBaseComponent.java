@@ -1,6 +1,7 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.activity.ImportActivity;
+import org.mercycorps.translationcards.activity.MyDecksActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivityTest;
@@ -10,7 +11,7 @@ import org.mercycorps.translationcards.view.TranslationCardItemTest;
 
 import dagger.Component;
 
-@PerActivity
+@PerApplication
 @Component(modules = {MockMediaModule.class, MockServiceModule.class, MockRepositoryModule.class}, dependencies = ApplicationComponent.class)
 public interface TestBaseComponent extends BaseComponent {
     void inject(SummaryActivityTest activity);
@@ -20,4 +21,5 @@ public interface TestBaseComponent extends BaseComponent {
     void inject(ReviewAndSaveActivityTest reviewAndSaveActivity);
     void inject(EnterDeckSourceLanguageActivityTest enterDeckSourceLanguageActivity);
     void inject(LanguageSelectorActivityTest languageSelectorActivity);
+    void inject(MyDecksActivityTest myDecksActivityTest);
 }

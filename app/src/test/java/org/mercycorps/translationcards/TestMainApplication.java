@@ -2,11 +2,12 @@ package org.mercycorps.translationcards;
 
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.media.AudioRecorderManager;
-import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.dagger.ApplicationComponent;
+import org.mercycorps.translationcards.dagger.ApplicationModule;
+import org.mercycorps.translationcards.dagger.BaseComponent;
+import org.mercycorps.translationcards.dagger.DaggerApplicationComponent;
+import org.mercycorps.translationcards.dagger.DaggerTestBaseComponent;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
-import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -20,15 +21,11 @@ import static org.mockito.Mockito.mock;
 
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
-    private DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
-    private AudioRecorderManager audioRecorderManager = mock(AudioRecorderManager.class);
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
     private TranslationService translationService = mock(TranslationService.class);
     private DictionaryService dictionaryService = mock(DictionaryService.class);
     private DeckService deckService = mock(DeckService.class);
     private DeckRepository deckRepository = mock(DeckRepository.class);
-    private DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
-    private TranslationRepository translationRepository = mock(TranslationRepository.class);
 
     private static BaseComponent baseComponent;
 
@@ -65,11 +62,6 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public void afterTest(Method method) {
 
-    }
-
-    @Override
-    public AudioRecorderManager getAudioRecorderManager() {
-        return audioRecorderManager;
     }
 
     @Override

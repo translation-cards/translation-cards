@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestBaseComponent;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;

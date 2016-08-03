@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestBaseComponent;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.util.ActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;

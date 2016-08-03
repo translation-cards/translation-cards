@@ -13,12 +13,10 @@ import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
-import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 
 import java.util.Collections;
 
@@ -56,20 +54,12 @@ public class TestAddTranslationCardActivityHelper {
         return Robolectric.buildActivity(instanceOfClass).withIntent(intent).create().get();
     }
 
-    public static AudioRecorderManager getAudioRecorderManager() {
-        return getApplication().getAudioRecorderManager();
-    }
-
     public static Translation createTranslation() {
         Translation translation = new Translation();
         translation.setLabel(DEFAULT_TRANSLATION_LABEL);
         translation.setTranslatedText(DEFAULT_TRANSLATED_TEXT);
         translation.setAudioFileName(DEFAULT_AUDIO_FILE);
         return translation;
-    }
-
-    private static TestMainApplication getApplication() {
-        return (TestMainApplication) RuntimeEnvironment.application;
     }
 
     public static void setText(Activity activity, int resId, String textToSet) {
@@ -121,10 +111,6 @@ public class TestAddTranslationCardActivityHelper {
     public static TranslationService getTranslationService() {
 
         return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getTranslationService();
-    }
-
-    public static int getAlertDialogTitleId(){
-        return 2131558473;
     }
 
     public static void clickLanguageTabAtPosition(Activity activity, Integer position) {

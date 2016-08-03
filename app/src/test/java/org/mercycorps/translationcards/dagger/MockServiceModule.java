@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;

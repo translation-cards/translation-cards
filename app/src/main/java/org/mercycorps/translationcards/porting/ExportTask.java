@@ -15,6 +15,8 @@ import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 /**
  * Created by njimenez on 4/26/16.
  */
@@ -26,8 +28,11 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
     private Context context = org.mercycorps.translationcards.MainApplication.getContextFromMainApp();
     private Deck deck;
     private Activity activity;
+    @Inject LanguageService languageService;
 
     public ExportTask(String exportedDeckName, Deck deck, Activity activity) {
+        MainApplication application = (MainApplication) activity.getApplication();
+        application.getBaseComponent().inject(this);
         this.exportedDeckName = exportedDeckName;
         this.deck = deck;
         this.activity = activity;
@@ -44,7 +49,6 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
         if (targetFile.exists()) {
             targetFile.delete();
         }
-        LanguageService languageService = ((MainApplication) activity.getApplication()).getLanguageService();
         TxcExportUtility exportingUtility = new TxcExportUtility(languageService);
         try {
             exportingUtility.exportData(deck, exportedDeckName, deck.getDictionaries(), targetFile);
