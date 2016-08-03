@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.fragment.TranslationTabsFragment;
-import org.mercycorps.translationcards.media.AudioRecorderManager;
 
 
 public abstract class AddTranslationActivity extends AbstractTranslationCardsActivity {
@@ -45,14 +43,6 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getSerializableExtra(CONTEXT_INTENT_KEY));
         nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getSerializableExtra(INTENT_KEY_DECK_ID));
         startActivity(nextIntent);
-    }
-
-    protected MainApplication getMainApplication() {
-        return ((MainApplication) getApplication());
-    }
-
-    protected AudioRecorderManager getAudioRecorderManager(){
-        return getMainApplication().getAudioRecorderManager();
     }
 
     private void hideActionBar() {

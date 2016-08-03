@@ -7,15 +7,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.TestMainApplication;
+import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.porting.JsonKeys;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -30,13 +34,14 @@ import static org.mockito.Mockito.when;
 public class DeckTest {
     private Deck deck;
     public static final String EXPORTED_DECK_NAME = "exportedDeckName";
-    private DictionaryRepository dictionaryRepository;
+    @Inject DictionaryRepository dictionaryRepository;
+    @Inject LanguageService languageService;
 
     @Before
     public void setUp() throws Exception {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
         deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""));
-        TestMainApplication mainApplication = (TestMainApplication) RuntimeEnvironment.application;
-        dictionaryRepository = mainApplication.getDictionaryRepository();
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{new Dictionary("")});
     }
 
@@ -131,6 +136,7 @@ public class DeckTest {
     public void shouldRetrieveIsoCodeForDictionariesWithEmptyIsoCode() throws JSONException {
         Dictionary emptyIsoDictionary = new Dictionary("", "English", new Translation[0], 789L, 123L);
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{emptyIsoDictionary});
+        when(languageService.getIsoForLanguage("English")).thenReturn("en");
         JSONObject jsonObject = deck.toJSON("");
 
 
@@ -145,6 +151,7 @@ public class DeckTest {
     public void shouldRetrieveIsoCodeForDictionariesWithNullIsoCode() throws JSONException {
         Dictionary nullIsoDictionary = new Dictionary(null, "English", new Translation[0], 789L, 123L);
         when(dictionaryRepository.getAllDictionariesForDeck(anyLong())).thenReturn(new Dictionary[]{nullIsoDictionary});
+        when(languageService.getIsoForLanguage("English")).thenReturn("en");
         JSONObject jsonObject = deck.toJSON("");
 
         JSONArray dictionariesArray = jsonObject.getJSONArray(JsonKeys.DICTIONARIES);

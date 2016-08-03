@@ -12,9 +12,6 @@ public class AudioRecorderManager {
     private MediaRecorder mediaRecorder;
     private boolean isRecording;
 
-    public AudioRecorderManager() {
-    }
-
     //// TODO: 3/28/16  Currently because of 3click bug, we are having to do this. Refactor
     public boolean record(MediaConfig mediaConfig) throws RecordAudioException {
         mediaRecorder = ((MainApplication) MainApplication.getContextFromMainApp()).getMediaRecorder();

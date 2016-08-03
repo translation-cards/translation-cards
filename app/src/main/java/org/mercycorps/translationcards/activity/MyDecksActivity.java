@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 
 /**
@@ -30,7 +32,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
-    private DeckRepository deckRepository;
 
     @Bind(R.id.my_decks_list)
     ListView myDeckListView;
@@ -41,12 +42,15 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private DeckService deckService;
     private DictionaryService dictionaryService;
 
+    @Inject DeckRepository deckRepository;
+
     @Override
     public void inflateView() {
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_my_decks);
         deckService = ((MainApplication)getApplication()).getDeckService();
         dictionaryService = ((MainApplication)getApplication()).getDictionaryService();
-        deckRepository = ((MainApplication)getApplication()).getDeckRepository();
     }
 
     @Override

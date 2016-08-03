@@ -17,8 +17,9 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestBaseComponent;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.PermissionService;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
@@ -48,7 +49,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getAudioRecorderManager;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getFirstNewTranslationFromContext;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -66,6 +66,7 @@ public class RecordAudioActivityTest {
 
     @Inject AudioPlayerManager audioPlayerManager;
     @Inject PermissionService permissionService;
+    @Inject AudioRecorderManager audioRecorderManager;
 
     @Before
     public void setup() {
@@ -197,7 +198,7 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldDisableNextButtonWhenRecordingIsHappening() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContextsAudioOnSecondTab();
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         click(activity, R.id.record_audio_button);
 
         LinearLayout nextButton = findLinearLayout(activity, R.id.record_activity_next);
@@ -214,7 +215,7 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldDisableBackButtonWhenRecordingIsHappening() {
         Activity activity = helper.createActivityToTest();
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         click(activity, R.id.record_audio_button);
 
         LinearLayout backButton = findLinearLayout(activity, R.id.record_activity_back);
@@ -285,7 +286,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordBackgroundToDeepRedWhenItIsRecording() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         View recordButton = activity.findViewById(R.id.record_audio_button);
@@ -294,7 +295,7 @@ public class RecordAudioActivityTest {
 
      @Test
     public void shouldChangeRecordAudioIconToStopIconWhenItIsRecording() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         View recordIcon = activity.findViewById(R.id.record_audio_icon);
@@ -303,7 +304,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordButtonBackgroundToRedWhenFinishedRecording() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(audioRecorderManager.isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
@@ -313,7 +314,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordAudioIconToRecordIconWhenFinishedRecording() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(audioRecorderManager.isRecording()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
@@ -325,12 +326,12 @@ public class RecordAudioActivityTest {
     public void shouldChangeRecordButtonBackgroundToRedWhenItIsFinishedRecordingByPressingPlay() {
         Activity activity = helper.createActivityToTest();
 
-        when(getAudioRecorderManager().isRecording())
+        when(audioRecorderManager.isRecording())
                 .thenReturn(false)
                 .thenReturn(true);
         click(activity, R.id.record_audio_button);
 
-        when(getAudioRecorderManager().isRecording())
+        when(audioRecorderManager.isRecording())
                 .thenReturn(true)
                 .thenReturn(false);
         click(activity, R.id.play_audio_button);
@@ -342,7 +343,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldChangeRecordButtonIconToRecordIconWhenItIsFinishedRecordingByPressingPlay() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(audioRecorderManager.isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
@@ -353,9 +354,9 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldStopRecordingWhenPlayButtonIsClicked() {
         Activity activity = helper.createActivityToTest();
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         click(activity, R.id.play_audio_button);
-        verify(getAudioRecorderManager()).stop();
+        verify(audioRecorderManager).stop();
     }
 
     @Test
@@ -386,17 +387,17 @@ public class RecordAudioActivityTest {
     @Test
     public void shouldStopRecordingWhenNextButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         click(activity, R.id.record_activity_next);
-        verify(getAudioRecorderManager()).stop();
+        verify(audioRecorderManager).stop();
     }
 
     @Test
     public void shouldStopRecordingWhenBackButtonIsClicked() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         click(activity, R.id.record_activity_back);
-        verify(getAudioRecorderManager()).stop();
+        verify(audioRecorderManager).stop();
     }
 
     @Test
@@ -407,7 +408,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldEnableBackButtonsWhenRecordingIsStoppedByPlayClick() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(audioRecorderManager.isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
@@ -416,7 +417,7 @@ public class RecordAudioActivityTest {
 
     @Test
     public void shouldEnableNextButtonWhenRecordingIsStoppedByPlayClick() {
-        when(getAudioRecorderManager().isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(audioRecorderManager.isRecording()).thenReturn(false).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.play_audio_button);
@@ -559,10 +560,10 @@ public class RecordAudioActivityTest {
     public void shouldStopRecordingWhenLanguageTabIsChanged() {
         Activity activity = helper.createActivityToTestWithMultipleNewTranslationContexts();
 
-        when(getAudioRecorderManager().isRecording()).thenReturn(true);
+        when(audioRecorderManager.isRecording()).thenReturn(true);
         clickLanguageTabAtPosition(activity, 1);
 
-        verify(getAudioRecorderManager()).stop();
+        verify(audioRecorderManager).stop();
     }
 
     @Test

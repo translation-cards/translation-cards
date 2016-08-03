@@ -11,10 +11,14 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.util.ActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -22,15 +26,18 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(RobolectricGradleTestRunner.class)
 public class LanguageSelectorActivityTest {
 
+    @Inject LanguageService languageService;
+
     private ActivityHelper<LanguageSelectorActivity> helper;
     private Activity activity;
-    private MainApplication mainApplication;
 
     @Before
     public void setup() {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
+
         helper = new ActivityHelper<>(LanguageSelectorActivity.class);
         activity = helper.getActivityWithIntent(new Intent());
-        mainApplication = (MainApplication) activity.getApplication();
     }
 
     @Test
@@ -38,7 +45,6 @@ public class LanguageSelectorActivityTest {
         ListView languagesList = (ListView) activity.findViewById(R.id.languages_list);
         ListAdapter languagesListAdapter = languagesList.getAdapter();
         languagesListAdapter.getCount();
-        LanguageService languageService = mainApplication.getLanguageService();
         assertEquals(languageService.getLanguageNames().size(), languagesListAdapter.getCount());
     }
 }

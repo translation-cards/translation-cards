@@ -12,9 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Language;
@@ -23,6 +24,8 @@ import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,21 +46,23 @@ public class MyDecksActivityTest {
     private static final String DEFAULT_ISO_CODE = "en";
     private static final String DEFAULT_LANGUAGE_NAME = "English";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
-    private DatabaseHelper databaseHelper;
-    private SQLiteDatabase sqlLiteDatabase;
-    private Cursor cursor;
+
+    @Inject DeckRepository deckRepository;
 
     @Before
     public void setup() {
-        cursor = mock(Cursor.class);
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
+
+        Cursor cursor = mock(Cursor.class);
         when(cursor.getCount()).thenReturn(1);
         when(cursor.moveToFirst()).thenReturn(true);
         when(cursor.getString(anyInt())).thenReturn("cursor string");
         when(cursor.getLong(anyInt())).thenReturn(12345l);
         when(cursor.getInt(anyInt())).thenReturn(1234);
-        sqlLiteDatabase = mock(SQLiteDatabase.class);
+        SQLiteDatabase sqlLiteDatabase = mock(SQLiteDatabase.class);
         when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
-        databaseHelper = mock(DatabaseHelper.class);
+        DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
     }
     
@@ -138,7 +143,6 @@ public class MyDecksActivityTest {
     }
 
     private void setUpMocks(boolean shouldCreateDeck){
-        DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
         when(deckRepository.getAllDecks()).thenReturn(mockDecks(shouldCreateDeck));
     }
 

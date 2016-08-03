@@ -40,7 +40,9 @@ public class TranslationService {
 
         for (Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
             Translation translation = dictionary.getTranslationBySourcePhrase(sourcePhrase);
-            translationRepository.deleteTranslation(translation.getDbId());
+            if (translation.getDbId() != -1) {
+                translationRepository.deleteTranslation(translation.getDbId());
+            }
         }
     }
 

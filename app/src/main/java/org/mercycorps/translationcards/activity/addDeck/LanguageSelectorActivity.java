@@ -16,6 +16,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.service.LanguageService;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 
 public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
@@ -25,6 +27,7 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
     ListView languagesList;
     @Bind(R.id.language_filter_field)
     EditText languageFilterField;
+    @Inject LanguageService languageService;
     private ArrayAdapter<String> languagesAdapter;
     private String selectedLanguage;
 
@@ -35,7 +38,9 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
 
     @Override
     protected void initStates() {
-        super.initStates();
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
+
         initLanguagesAdapter();
         initLanguagesFilter();
         initListView();
@@ -83,7 +88,6 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
     }
 
     private void initLanguagesAdapter() {
-        LanguageService languageService = ((MainApplication) getApplication()).getLanguageService();
         languagesAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
                 languageService.getLanguageNames());

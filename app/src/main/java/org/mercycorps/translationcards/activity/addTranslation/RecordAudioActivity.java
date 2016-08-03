@@ -55,6 +55,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
     private NewTranslation currentTranslation;
 
     @Inject AudioPlayerManager audioPlayerManager;
+    @Inject AudioRecorderManager audioRecorderManager;
     @Inject PermissionService permissionService;
 
     @Override
@@ -113,7 +114,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
         } else {
             stopAudioIfPlaying();
             tryToRecord();
-            boolean isRecording = getAudioRecorderManager().isRecording();
+            boolean isRecording = audioRecorderManager.isRecording();
             updateRecordButtonState(isRecording);
             updateBackButtonState(isRecording);
             updateNextButtonState(isRecording);
@@ -183,9 +184,9 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void stopIfRecording() {
-        if (getAudioRecorderManager().isRecording()) {
-            getAudioRecorderManager().stop();
-            boolean isRecording = getAudioRecorderManager().isRecording();
+        if (audioRecorderManager.isRecording()) {
+            audioRecorderManager.stop();
+            boolean isRecording = audioRecorderManager.isRecording();
             updateBackButtonState(isRecording);
             updateNextButtonState(isRecording);
             updateRecordButtonState(isRecording);
@@ -224,7 +225,6 @@ public class RecordAudioActivity extends AddTranslationActivity {
     }
 
     private void handleIsRecordingState() throws RecordAudioException {
-        AudioRecorderManager audioRecorderManager = getAudioRecorderManager();
         if (audioRecorderManager.isRecording()) {
             audioRecorderManager.stop();
         } else {

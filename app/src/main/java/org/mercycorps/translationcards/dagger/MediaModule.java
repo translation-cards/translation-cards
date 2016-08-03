@@ -1,9 +1,10 @@
-package org.mercycorps.translationcards;
+package org.mercycorps.translationcards.dagger;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import org.mercycorps.translationcards.media.AudioPlayerManager;
+import org.mercycorps.translationcards.media.AudioRecorderManager;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 
 import java.util.concurrent.Executors;
@@ -15,17 +16,24 @@ import dagger.Provides;
 @Module
 public class MediaModule {
 
-    @PerActivity
+    @PerApplication
     @Provides
     DecoratedMediaManager providesDecoratedMediaManager(AudioPlayerManager audioPlayerManager, ScheduledExecutorService scheduledExecutorService) {
         return new DecoratedMediaManager(audioPlayerManager, scheduledExecutorService);
     }
 
+    @PerApplication
     @Provides
     AudioPlayerManager providesAudioPlayerManager() {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         return new AudioPlayerManager(mediaPlayer);
+    }
+
+    @PerApplication
+    @Provides
+    AudioRecorderManager providesAudioRecorderManager() {
+        return new AudioRecorderManager();
     }
 
     @Provides

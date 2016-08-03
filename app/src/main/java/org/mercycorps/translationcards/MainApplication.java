@@ -8,7 +8,11 @@ import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.mercycorps.translationcards.media.AudioRecorderManager;
+import org.mercycorps.translationcards.dagger.ApplicationComponent;
+import org.mercycorps.translationcards.dagger.ApplicationModule;
+import org.mercycorps.translationcards.dagger.BaseComponent;
+import org.mercycorps.translationcards.dagger.DaggerApplicationComponent;
+import org.mercycorps.translationcards.dagger.DaggerBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
@@ -37,17 +41,12 @@ public class MainApplication extends Application {
 
     private static String TAG = MainApplication.class.getName();
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
-    private DatabaseHelper databaseHelper;
-    private AudioRecorderManager audioRecorderManager;
     private static Context context;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
     private DeckService deckService;
-    private TranslationRepository translationRepository;
     protected boolean isTest = false;
-    private LanguageService languageService;
     private DeckRepository deckRepository;
-    private DictionaryRepository dictionaryRepository;
     private TxcImportUtility txcImportUtility;
 
     private static BaseComponent baseComponent;
@@ -55,24 +54,6 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        audioRecorderManager = new AudioRecorderManager();
-        context = getApplicationContext();
-        createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
-        LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
-        languageService = new LanguageService(languagesImportUtility);
-        if (isTest) return;
-        databaseHelper = new DatabaseHelper(context);
-        translationRepository = new TranslationRepository(databaseHelper);
-        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
-        deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
-        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
-        checkForBundledDeckAndLoad(databaseHelper);
-        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository);
-        dictionaryService = new DictionaryService(dictionaryRepository, deckService);
-        translationService = new TranslationService(translationRepository, dictionaryService);
-
         ApplicationComponent applicationComponent = DaggerApplicationComponent
                 .builder()
                 .applicationModule(new ApplicationModule(this))
@@ -81,6 +62,22 @@ public class MainApplication extends Application {
         baseComponent = DaggerBaseComponent.builder()
                 .applicationComponent(applicationComponent)
                 .build();
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        context = getApplicationContext();
+        createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
+        LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
+        LanguageService languageService = new LanguageService(languagesImportUtility);
+        if (isTest) return;
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        TranslationRepository translationRepository = new TranslationRepository(databaseHelper);
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
+        deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
+        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
+        checkForBundledDeckAndLoad(databaseHelper);
+        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository, dictionaryRepository);
+        dictionaryService = new DictionaryService(dictionaryRepository, deckService);
+        translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
     public BaseComponent getBaseComponent(){
@@ -111,14 +108,6 @@ public class MainApplication extends Application {
         if (deckRepository.retrieveKeyForDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
             txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
         }
-    }
-
-    public DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
-    }
-
-    public AudioRecorderManager getAudioRecorderManager() {
-        return audioRecorderManager;
     }
 
     public static Context getContextFromMainApp() {
@@ -154,19 +143,7 @@ public class MainApplication extends Application {
         return deckService;
     }
 
-    public LanguageService getLanguageService() {
-        return languageService;
-    }
-    
     public DeckRepository getDeckRepository() {
         return deckRepository;
-    }
-
-    public DictionaryRepository getDictionaryRepository() {
-        return dictionaryRepository;
-    }
-
-    public TranslationRepository getTranslationRepository() {
-        return translationRepository;
     }
 }

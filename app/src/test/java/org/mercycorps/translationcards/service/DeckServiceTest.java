@@ -3,42 +3,33 @@ package org.mercycorps.translationcards.service;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mockito.Mock;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by agarrard and natashaJimenez on 6/9/16.
  */
 
-@Config(constants = BuildConfig.class, sdk = 21)
-@RunWith(RobolectricGradleTestRunner.class)
 public class DeckServiceTest {
 
     private DeckService deckService;
-    @Mock
     private Deck deck;
-
-    private LanguageService languageService = ((TestMainApplication) RuntimeEnvironment.application).getLanguageService();
-    private DeckRepository deckRepository = ((TestMainApplication) RuntimeEnvironment.application).getDeckRepository();
+    private DeckRepository deckRepository;
 
     @Before
     public void setup() {
-        initMocks(this);
-        deckService = new DeckService(languageService, Arrays.asList(deck), deckRepository);
+        deck = mock(Deck.class);
+        LanguageService languageService = mock(LanguageService.class);
+        deckRepository = mock(DeckRepository.class);
+        DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
+        deckService = new DeckService(languageService, Collections.singletonList(deck), deckRepository, dictionaryRepository);
     }
 
     @Test
@@ -46,6 +37,7 @@ public class DeckServiceTest {
         HashSet<String> destinationLanguages = new HashSet<>();
         destinationLanguages.add("Arabic");
         destinationLanguages.add("Farsi");
+
         deckService.save(deck, destinationLanguages);
 
         verify(deckRepository).addDeck(deck.getTitle(), deck.getAuthor(), deck.getTimestamp(), deck.getExternalId(), "", deck.isLocked(), deck.getSourceLanguageIso());

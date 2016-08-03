@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
 import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.repository.DictionaryRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -34,6 +37,9 @@ public class Deck implements Serializable {
     private Dictionary[] dictionaries;
     private static final String LANGUAGE_LIST_DELIMITER = "  ";
 
+    @Inject DictionaryRepository dictionaryRepository;
+    @Inject LanguageService languageService;
+
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
                 boolean locked, Language sourceLanguage) {
         this.title = title;
@@ -44,6 +50,9 @@ public class Deck implements Serializable {
         this.locked = locked;
         this.sourceLanguage = sourceLanguage;
         dictionaries = null;
+
+        MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
+        application.getBaseComponent().inject(this);
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
@@ -108,7 +117,7 @@ public class Deck implements Serializable {
 
     private Dictionary[] getDictionariesFromRepo() {
         if (dictionaries == null) {
-            dictionaries = ((MainApplication) MainApplication.getContextFromMainApp()).getDictionaryRepository().getAllDictionariesForDeck(dbId);
+            dictionaries = dictionaryRepository.getAllDictionariesForDeck(dbId);
         }
         return dictionaries;
     }
@@ -146,7 +155,6 @@ public class Deck implements Serializable {
         for (Dictionary dictionary : getDictionariesFromRepo()) {
             String destLanguageIso = dictionary.getDestLanguageIso();
             if (null == destLanguageIso || destLanguageIso.isEmpty()) {
-                LanguageService languageService = ((MainApplication) MainApplication.getContextFromMainApp()).getLanguageService();
                 dictionary.setDestLanguageIso(languageService.getIsoForLanguage(dictionary.getLanguage()));
             }
             dictionaryJSONArray.put(dictionary.toJSON());

@@ -29,11 +29,7 @@ public class Translation implements Serializable {
     }
 
     public Translation() {
-        label = "";
-        isAsset = false;
-        filePath = "";
-        dbId = -1;
-        translatedText = "";
+        this("", false, "", -1, "");
     }
 
     public String getLabel() {
@@ -74,10 +70,6 @@ public class Translation implements Serializable {
 
     public boolean isAudioFilePresent() {
         return !(filePath == null || filePath.isEmpty());
-    }
-
-    public void saveWithDictionary(Long dictionaryId) {
-        dbId = ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationRepository().addTranslationAtTop(dictionaryId, label, isAsset, filePath, translatedText);
     }
 
     protected JSONObject toJSON() throws JSONException {
