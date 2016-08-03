@@ -101,9 +101,4 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     public DeckRepository getDeckRepository() {
         return deckRepository;
     }
-
-    @Override
-    public DictionaryRepository getDictionaryRepository() {
-        return dictionaryRepository;
-    }
 }

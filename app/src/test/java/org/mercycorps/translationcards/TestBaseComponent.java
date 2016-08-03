@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards;
 
 import org.mercycorps.translationcards.activity.ImportActivity;
+import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivityTest;
+import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivityTest;
@@ -16,4 +18,6 @@ public interface TestBaseComponent extends BaseComponent {
     void inject(TranslationCardItemTest activity);
     void inject(ImportActivity importActivity);
     void inject(ReviewAndSaveActivityTest reviewAndSaveActivity);
+    void inject(EnterDeckSourceLanguageActivityTest enterDeckSourceLanguageActivity);
+    void inject(LanguageSelectorActivityTest languageSelectorActivity);
 }

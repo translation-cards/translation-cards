@@ -14,6 +14,8 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.service.LanguageService;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -21,7 +23,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     public static final int REQUEST_CODE = 0;
     @Bind(R.id.deck_source_language_view)
     TextView sourceLanguageView;
-    private LanguageService languageService;
+    @Inject LanguageService languageService;
 
     @Override
     public void inflateView() {
@@ -30,7 +32,8 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
-        languageService = ((MainApplication)getApplication()).getLanguageService();
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
         fillSourceLanguageField();
         formatLanguageButton();
     }

@@ -6,25 +6,42 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.TestBaseComponent;
+import org.mercycorps.translationcards.model.Language;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class EnterDeckSourceLanguageActivityTest {
 
+    @Inject LanguageService languageService;
+
     AddDeckActivityHelper<EnterDeckSourceLanguageActivity> helper = new AddDeckActivityHelper<>(EnterDeckSourceLanguageActivity.class);
+
+    @Before
+    public void setUp() throws Exception {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
+    }
 
     @After
     public void teardown() {
@@ -66,6 +83,7 @@ public class EnterDeckSourceLanguageActivityTest {
     public void shouldSaveSourceLanguageToContextWhenLanguageSelectorReturns() {
         NewDeckContext newDeckContext = new NewDeckContext();
         EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity) helper.createActivityToTestWithContext(newDeckContext);
+        when(languageService.getLanguageWithName("Spanish")).thenReturn(new Language("", "Spanish"));
         Intent data = new Intent();
         data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "Spanish");
         activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);

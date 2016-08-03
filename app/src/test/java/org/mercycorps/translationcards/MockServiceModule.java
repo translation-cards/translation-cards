@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 public class MockServiceModule {
 
     private final PermissionService permissionService = mock(PermissionService.class);
+    private final LanguageService languageService = mock(LanguageService.class);
 
     @Provides
     PermissionService providesPermissionService() {
@@ -20,6 +21,6 @@ public class MockServiceModule {
 
     @Provides
     LanguageService providesLanguageService() {
-        return mock(LanguageService.class);
+        return languageService;
     }
 }

@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards;
 
 import org.mercycorps.translationcards.activity.ImportActivity;
+import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
+import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivity;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
@@ -17,5 +19,7 @@ public interface BaseComponent {
     void inject(RecordAudioActivity activity);
     void inject(TranslationCardItem cardItemView);
     void inject(ImportActivity importActivity);
+    void inject(EnterDeckSourceLanguageActivity enterDeckSourceLanguageActivity);
+    void inject(LanguageSelectorActivity languageSelectorActivity);
     void inject(Deck deck);
 }

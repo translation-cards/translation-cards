@@ -45,7 +45,6 @@ public class MainApplication extends Application {
     protected boolean isTest = false;
     private LanguageService languageService;
     private DeckRepository deckRepository;
-    private DictionaryRepository dictionaryRepository;
     private TxcImportUtility txcImportUtility;
 
     private static BaseComponent baseComponent;
@@ -63,7 +62,7 @@ public class MainApplication extends Application {
         if (isTest) return;
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         TranslationRepository translationRepository = new TranslationRepository(databaseHelper);
-        dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
+        DictionaryRepository dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
@@ -154,9 +153,5 @@ public class MainApplication extends Application {
 
     public DeckRepository getDeckRepository() {
         return deckRepository;
-    }
-
-    public DictionaryRepository getDictionaryRepository() {
-        return dictionaryRepository;
     }
 }
