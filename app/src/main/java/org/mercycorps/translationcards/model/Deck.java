@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.Serializable;
@@ -42,9 +41,6 @@ public class Deck implements Serializable {
         this.locked = locked;
         this.sourceLanguage = sourceLanguage;
         this.dictionaries = dictionaries;
-
-        MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
-        application.getBaseComponent().inject(this);
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,

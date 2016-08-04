@@ -19,6 +19,7 @@ import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslation
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.GetStartedActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;
@@ -35,6 +36,8 @@ import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -78,15 +81,16 @@ public class TranslationsActivityTest {
     ActivityController<TranslationsActivity> controller;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
-    private DeckService deckService;
+
+    @Inject DeckService deckService;
 
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         translationService = application.getTranslationService();
         dictionaryService = application.getDictionaryService();
-        deckService = application.getDeckService();
 
         initializeStubsAndMocks();
 

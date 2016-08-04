@@ -67,7 +67,7 @@ public class MyDeckAdapterTest {
     private View view;
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
-    private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
+    private DeckService deckService = mock(DeckService.class);
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
 
     @Before

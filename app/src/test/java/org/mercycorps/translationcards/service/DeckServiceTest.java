@@ -12,6 +12,7 @@ import java.util.HashSet;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by agarrard and natashaJimenez on 6/9/16.
@@ -29,7 +30,8 @@ public class DeckServiceTest {
         LanguageService languageService = mock(LanguageService.class);
         deckRepository = mock(DeckRepository.class);
         DictionaryRepository dictionaryRepository = mock(DictionaryRepository.class);
-        deckService = new DeckService(languageService, Collections.singletonList(deck), deckRepository, dictionaryRepository);
+        when(deckRepository.getAllDecks()).thenReturn(new Deck[]{deck});
+        deckService = new DeckService(languageService, deckRepository, dictionaryRepository);
     }
 
     @Test

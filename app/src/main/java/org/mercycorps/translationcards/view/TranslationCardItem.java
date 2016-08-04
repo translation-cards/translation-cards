@@ -44,7 +44,6 @@ public class TranslationCardItem extends LinearLayout {
     private boolean showAudioIcon = true;
     private boolean showDeleteAndEditOptions = false;
     private TranslationService translationService;
-    private DeckService deckService;
     private Integer index;
     public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
@@ -73,6 +72,7 @@ public class TranslationCardItem extends LinearLayout {
     View deleteButton;
     @Inject
     DecoratedMediaManager mediaManager;
+    @Inject DeckService deckService;
 
     public TranslationCardItem(Context context) {
         super(context);
@@ -96,7 +96,6 @@ public class TranslationCardItem extends LinearLayout {
         MainApplication application = (MainApplication)getContext().getApplicationContext();
         application.getBaseComponent().inject(this);
         translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
-        deckService=((MainApplication)getContext().getApplicationContext()).getDeckService();
     }
     private void setStateFromAttributes(Context context, AttributeSet attrs){
         TypedArray a = context.getTheme().obtainStyledAttributes(

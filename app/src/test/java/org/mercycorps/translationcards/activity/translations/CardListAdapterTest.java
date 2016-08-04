@@ -9,12 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;
@@ -31,6 +33,8 @@ import org.robolectric.shadows.ShadowAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -54,8 +58,13 @@ public class CardListAdapterTest {
     private Translation firstTranslation;
     private Deck basicDeck;
 
+    @Inject DeckService mockDeckService;
+
     @Before
     public void setUp() {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
+
         activity = Robolectric.buildActivity(Activity.class).create().get();
         translations = new ArrayList<>();
         firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
@@ -64,7 +73,6 @@ public class CardListAdapterTest {
         translations.add(secondTranslation);
 
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
-        DeckService mockDeckService = ((TestMainApplication) activity.getApplication()).getDeckService();
         mockTranslationService = ((TestMainApplication) activity.getApplication()).getTranslationService();
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
         defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);

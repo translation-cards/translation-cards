@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
@@ -24,6 +23,8 @@ import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
@@ -46,9 +47,10 @@ public class ReviewAndSaveActivityTest {
     private static final String SOURCE_LANGUAGE_ISO = "en";
     private static final String SOURCE_LANGUAGE_NAME = "English";
     private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
-    private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private NewDeckContext newDeckContext;
     private Deck deck;
+
+    @Inject DeckService deckService;
 
     @Before
     public void setup() {

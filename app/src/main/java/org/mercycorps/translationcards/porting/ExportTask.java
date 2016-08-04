@@ -8,14 +8,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
-
-import javax.inject.Inject;
 
 /**
  * Created by njimenez on 4/26/16.
@@ -30,8 +26,6 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
     private Activity activity;
 
     public ExportTask(String exportedDeckName, Deck deck, Activity activity) {
-        MainApplication application = (MainApplication) activity.getApplication();
-        application.getBaseComponent().inject(this);
         this.exportedDeckName = exportedDeckName;
         this.deck = deck;
         this.activity = activity;

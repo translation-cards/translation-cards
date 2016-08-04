@@ -3,11 +3,13 @@ package org.mercycorps.translationcards.dagger;
 import org.mercycorps.translationcards.activity.ImportActivity;
 import org.mercycorps.translationcards.activity.MyDeckAdapterTest;
 import org.mercycorps.translationcards.activity.MyDecksActivityTest;
+import org.mercycorps.translationcards.activity.TranslationsActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivityTest;
+import org.mercycorps.translationcards.activity.translations.CardListAdapterTest;
 import org.mercycorps.translationcards.model.DeckTest;
 import org.mercycorps.translationcards.view.TranslationCardItemTest;
 
@@ -24,6 +26,8 @@ public interface TestBaseComponent extends BaseComponent {
     void inject(EnterDeckSourceLanguageActivityTest enterDeckSourceLanguageActivity);
     void inject(LanguageSelectorActivityTest languageSelectorActivity);
     void inject(MyDecksActivityTest myDecksActivityTest);
+    void inject(TranslationsActivityTest translationsActivityTest);
     void inject(MyDeckAdapterTest myDeckAdapterTest);
     void inject(DeckTest deckTest);
+    void inject(CardListAdapterTest cardListAdapterTest);
 }

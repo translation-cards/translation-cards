@@ -83,9 +83,4 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     public DictionaryService getDictionaryService() {
         return dictionaryService;
     }
-
-    @Override
-    public DeckService getDeckService() {
-        return deckService;
-    }
 }
