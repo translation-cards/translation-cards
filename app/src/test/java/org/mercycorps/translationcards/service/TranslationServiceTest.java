@@ -34,8 +34,8 @@ public class TranslationServiceTest {
     public void setup() {
         initMocks(this);
 
-        defaultTranslation = new Translation("label", true, "filename", 1l, "translated text");
-        noAudioTranslation = new Translation("no audio label", true, "", 2l, "no audio translated text");
+        defaultTranslation = new Translation("label", true, "filename", 1L, "translated text");
+        noAudioTranslation = new Translation("no audio label", true, "", 2L, "no audio translated text");
         translationsFromRepository = Arrays.asList(defaultTranslation, noAudioTranslation);
 
         when(translationRepository.getTranslationsForDictionary(any(Dictionary.class))).thenReturn(translationsFromRepository);
@@ -52,13 +52,13 @@ public class TranslationServiceTest {
 
     @Test
     public void deleteTranslation_shouldDeleteTranslationsBySourcePhraseFromCurrentDictionaries() {
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{defaultTranslation}, 0l, 0l);
+        Dictionary dictionary = new Dictionary("", "", new Translation[]{defaultTranslation}, 0L);
         List<Dictionary> dictionaries = Collections.singletonList(dictionary);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
         translationService.deleteTranslation("label");
 
-        verify(translationRepository).deleteTranslation(1l);
+        verify(translationRepository).deleteTranslation(1L);
     }
 
     @Test

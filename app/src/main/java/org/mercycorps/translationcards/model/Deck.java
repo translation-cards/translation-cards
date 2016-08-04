@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
-import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -15,8 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -32,11 +29,8 @@ public class Deck implements Serializable {
     private long timestamp;
     private boolean locked;
     private Language sourceLanguage;
-    // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
     private static final String LANGUAGE_LIST_DELIMITER = "  ";
-
-    @Inject LanguageService languageService;
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
                 boolean locked, Language sourceLanguage, Dictionary[] dictionaries) {
@@ -143,10 +137,6 @@ public class Deck implements Serializable {
     private JSONArray getDictionariesJSON() throws JSONException {
         JSONArray dictionaryJSONArray = new JSONArray();
         for (Dictionary dictionary : dictionaries) {
-            String destLanguageIso = dictionary.getDestLanguageIso();
-            if (null == destLanguageIso || destLanguageIso.isEmpty()) {
-                dictionary.setDestLanguageIso(languageService.getIsoForLanguage(dictionary.getLanguage()));
-            }
             dictionaryJSONArray.put(dictionary.toJSON());
         }
         return dictionaryJSONArray;

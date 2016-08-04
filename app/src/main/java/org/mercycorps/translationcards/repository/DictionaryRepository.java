@@ -48,7 +48,7 @@ public class DictionaryRepository {
             }
             long dictionaryId = cursor.getLong(cursor.getColumnIndex(ID));
             Dictionary dictionary = new Dictionary(destLanguageIso, label,
-                    translationRepository.getTranslationsByDictionaryId(dictionaryId), dictionaryId, deckId);
+                    translationRepository.getTranslationsByDictionaryId(dictionaryId), dictionaryId);
             dictionaries[i] = dictionary;
             i++;
             hasNext = cursor.moveToNext();

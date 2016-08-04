@@ -10,15 +10,12 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.porting.JsonKeys;
-import org.mercycorps.translationcards.service.LanguageService;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -32,7 +29,6 @@ import static org.mockito.Mockito.when;
 public class DeckTest {
     private Deck deck;
     public static final String EXPORTED_DECK_NAME = "exportedDeckName";
-    @Inject LanguageService languageService;
 
     @Before
     public void setUp() throws Exception {
@@ -54,19 +50,6 @@ public class DeckTest {
     }
 
     @Test
-    public void shouldReturnDestinationLanguagesAsString() throws Exception {
-        Dictionary[] dictionaries = new Dictionary[]{
-                new Dictionary("en", "English", null, 1L, 1L),
-                new Dictionary("fa", "Farsi", null, 2L, 1L)
-        };
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
-
-        String destinationLanguagesForDisplay = deck.getDestinationLanguagesForDisplay();
-
-        assertEquals("ENGLISH  FARSI", destinationLanguagesForDisplay);
-    }
-
-    @Test
     public void shouldWriteDeckMetadataToJson() throws JSONException {
         JSONObject jsonObject = deck.toJSON(EXPORTED_DECK_NAME);
 
@@ -76,6 +59,19 @@ public class DeckTest {
         assertEquals(deck.getTimestamp(), jsonObject.getLong(JsonKeys.TIMESTAMP));
         assertEquals(deck.getSourceLanguageIso(), jsonObject.getString(JsonKeys.SOURCE_LANGUAGE));
         assertEquals(deck.isLocked(), jsonObject.getBoolean(JsonKeys.LOCKED));
+    }
+
+    @Test
+    public void shouldReturnDestinationLanguagesAsString() throws Exception {
+        Dictionary[] dictionaries = new Dictionary[]{
+                new Dictionary("en", "English", null, 1L),
+                new Dictionary("fa", "Farsi", null, 2L)
+        };
+        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+
+        String destinationLanguagesForDisplay = deck.getDestinationLanguagesForDisplay();
+
+        assertEquals("ENGLISH  FARSI", destinationLanguagesForDisplay);
     }
 
     @Test
@@ -130,33 +126,5 @@ public class DeckTest {
         assertEquals(4, audioFilePaths.size());
         assertTrue(audioFilePaths.keySet().containsAll(firstDictionary.getAudioPaths().keySet()));
         assertTrue(audioFilePaths.keySet().containsAll(secondDictionary.getAudioPaths().keySet()));
-    }
-
-    @Test
-    public void shouldRetrieveIsoCodeForDictionariesWithEmptyIsoCode() throws JSONException {
-        Dictionary emptyIsoDictionary = new Dictionary("", "English", new Translation[0], 789L, 123L);
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), new Dictionary[]{emptyIsoDictionary});
-        when(languageService.getIsoForLanguage("English")).thenReturn("en");
-
-        JSONObject jsonObject = deck.toJSON("");
-
-        JSONArray dictionariesArray = jsonObject.getJSONArray(JsonKeys.DICTIONARIES);
-        JSONObject actualDictionary = dictionariesArray.getJSONObject(0);
-        assertEquals(1, dictionariesArray.length());
-        assertEquals("en", actualDictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
-    }
-
-    @Test
-    public void shouldRetrieveIsoCodeForDictionariesWithNullIsoCode() throws JSONException {
-        Dictionary nullIsoDictionary = new Dictionary(null, "English", new Translation[0], 789L, 123L);
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), new Dictionary[]{nullIsoDictionary});
-        when(languageService.getIsoForLanguage("English")).thenReturn("en");
-
-        JSONObject jsonObject = deck.toJSON("");
-
-        JSONArray dictionariesArray = jsonObject.getJSONArray(JsonKeys.DICTIONARIES);
-        JSONObject actualDictionary = dictionariesArray.getJSONObject(0);
-        assertEquals(1, dictionariesArray.length());
-        assertEquals("en", actualDictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
     }
 }

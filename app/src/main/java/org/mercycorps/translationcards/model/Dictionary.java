@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -36,35 +37,24 @@ public class Dictionary implements Serializable {
 
 
     private long dbId;
-    private long deckId;
     private String destLanguageIso;
     private String language;
     private Translation[] translations;
 
 
-    public Dictionary(String destLanguageIso, String language, Translation[] translations, long dbId,
-                      long deckId) {
+    public Dictionary(@NonNull String destLanguageIso, String language, Translation[] translations, long dbId) {
         this.destLanguageIso = destLanguageIso;
         this.language = language;
         this.translations = translations;
         this.dbId = dbId;
-        this.deckId = deckId;
     }
 
     public Dictionary(String language) {
-        this.language = language;
-        this.translations = new Translation[0];
-        this.dbId = -1;
-        this.deckId = -1;
-        this.destLanguageIso = "";
+        this(LanguageService.INVALID_ISO_CODE, language, new Translation[0], -1L);
     }
 
     public String getDestLanguageIso() {
         return destLanguageIso;
-    }
-
-    protected void setDestLanguageIso(String newIso) {
-        destLanguageIso = newIso;
     }
 
     public String getLanguage() {

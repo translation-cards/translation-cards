@@ -26,7 +26,7 @@ public class DictionaryTest {
     public void shouldReturnMapOfAudioPathsToAssetBoolean() {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
         Translation secondTranslation = new Translation("", true, "/filename2", 1L, "");
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L, 1L);
+        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
 
         Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
@@ -41,7 +41,7 @@ public class DictionaryTest {
     public void shouldNotReturnTranslationPathsWithNoAudio() {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
         Translation secondTranslation = new Translation("", false, "", 1L, "");
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L, 1L);
+        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
 
         Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
@@ -51,7 +51,7 @@ public class DictionaryTest {
 
     @Test
     public void shouldReturnJSONObjectWithDictionaryMetadata() throws JSONException {
-        Dictionary dictionary = new Dictionary("destinationIso", "language", new Translation[]{}, 1L, 1L);
+        Dictionary dictionary = new Dictionary("destinationIso", "language", new Translation[]{}, 1L);
 
         JSONObject json = dictionary.toJSON();
 
@@ -62,7 +62,7 @@ public class DictionaryTest {
     public void shouldWriteTranslationsToJSON() throws JSONException {
         Translation firstTranslation = mock(Translation.class);
         Translation secondTranslation = mock(Translation.class);
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L, 1L);
+        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
         JSONObject firstTranslationAsJSON = new JSONObject();
         JSONObject secondTranslationAsJSON = new JSONObject();
         when(firstTranslation.toJSON()).thenReturn(firstTranslationAsJSON);
