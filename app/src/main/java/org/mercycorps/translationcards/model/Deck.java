@@ -1,14 +1,18 @@
 package org.mercycorps.translationcards.model;
 
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
+import android.support.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
-
-import javax.inject.Inject;
+import java.util.Map;
 
 /**
  * Contains information about a collection of phrases in one or more languages.
@@ -24,13 +28,11 @@ public class Deck implements Serializable {
     private long timestamp;
     private boolean locked;
     private Language sourceLanguage;
-    // The dictionaries list is lazily initialized.
     private Dictionary[] dictionaries;
-
-    @Inject DictionaryRepository dictionaryRepository;
+    private static final String LANGUAGE_LIST_DELIMITER = "  ";
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
-                boolean locked, Language sourceLanguage) {
+                boolean locked, Language sourceLanguage, Dictionary[] dictionaries) {
         this.title = title;
         this.author = author;
         this.externalId = externalId;
@@ -38,19 +40,15 @@ public class Deck implements Serializable {
         this.timestamp = timestamp;
         this.locked = locked;
         this.sourceLanguage = sourceLanguage;
-        dictionaries = null;
-
-        MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
-        application.getBaseComponent().inject(this);
+        this.dictionaries = dictionaries;
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
                 Language sourceLanguage) {
-        this(title, author, externalId, -1, timestamp, locked, sourceLanguage);
+        this(title, author, externalId, -1, timestamp, locked, sourceLanguage, new Dictionary[0]);
     }
 
     public Deck() {
-
     }
 
     public String getTitle() {
@@ -90,22 +88,25 @@ public class Deck implements Serializable {
     public String getSourceLanguageIso() {
         return sourceLanguage.getIso();
     }
+
     public String getSourceLanguageName() {
         return sourceLanguage.getName();
     }
 
-    public Dictionary[] getDictionaries() {
-        if (dictionaries == null) {
-            dictionaries = dictionaryRepository.getAllDictionariesForDeck(dbId);
+    public String getDestinationLanguagesForDisplay() {
+        StringBuilder builder = new StringBuilder();
+        for (Dictionary dictionary : dictionaries) {
+            builder.append(dictionary.getLanguage().toUpperCase()).append(LANGUAGE_LIST_DELIMITER);
         }
-        return dictionaries;
+
+        return builder.toString().trim();
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setSourceLanguage(Language language){
+    public void setSourceLanguage(Language language) {
         this.sourceLanguage = language;
     }
 
@@ -113,4 +114,35 @@ public class Deck implements Serializable {
         this.author = author;
     }
 
+    public JSONObject toJSON(String exportedDeckName) throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put(JsonKeys.DECK_LABEL, exportedDeckName);
+        json.put(JsonKeys.PUBLISHER, author);
+        if (externalId != null) {
+            json.put(JsonKeys.EXTERNAL_ID, externalId);
+        }
+        json.put(JsonKeys.TIMESTAMP, timestamp);
+        json.put(JsonKeys.SOURCE_LANGUAGE, getSourceLanguageIso());
+        json.put(JsonKeys.LOCKED, locked);
+        json.put(JsonKeys.DICTIONARIES, getDictionariesJSON());
+        return json;
+    }
+
+    @NonNull
+    private JSONArray getDictionariesJSON() throws JSONException {
+        JSONArray dictionaryJSONArray = new JSONArray();
+        for (Dictionary dictionary : dictionaries) {
+            dictionaryJSONArray.put(dictionary.toJSON());
+        }
+        return dictionaryJSONArray;
+    }
+
+    public Map<String, Boolean> getAudioFilePaths() {
+        HashMap<String, Boolean> audioFilesMap = new HashMap<>();
+        for (Dictionary dictionary : dictionaries) {
+            audioFilesMap.putAll(dictionary.getAudioPaths());
+        }
+        return audioFilesMap;
+    }
 }

@@ -221,7 +221,7 @@ public class RecordAudioActivity extends AddTranslationActivity {
 
     private void playAudioFile() throws AudioFileException {
         Translation translation = getLanguageTabsFragment().getCurrentTranslation().getTranslation();
-        audioPlayerManager.play(translation.getFilename(), translation.getIsAsset());
+        audioPlayerManager.play(translation.getFilePath(), translation.getIsAsset());
     }
 
     private void handleIsRecordingState() throws RecordAudioException {

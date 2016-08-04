@@ -58,7 +58,7 @@ public class TestAddTranslationCardActivityHelper {
         Translation translation = new Translation();
         translation.setLabel(DEFAULT_TRANSLATION_LABEL);
         translation.setTranslatedText(DEFAULT_TRANSLATED_TEXT);
-        translation.setAudioFileName(DEFAULT_AUDIO_FILE);
+        translation.setAudioFilePath(DEFAULT_AUDIO_FILE);
         return translation;
     }
 

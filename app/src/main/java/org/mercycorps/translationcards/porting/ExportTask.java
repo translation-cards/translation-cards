@@ -8,14 +8,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
-
-import javax.inject.Inject;
 
 /**
  * Created by njimenez on 4/26/16.
@@ -28,11 +24,8 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
     private Context context = org.mercycorps.translationcards.MainApplication.getContextFromMainApp();
     private Deck deck;
     private Activity activity;
-    @Inject LanguageService languageService;
 
     public ExportTask(String exportedDeckName, Deck deck, Activity activity) {
-        MainApplication application = (MainApplication) activity.getApplication();
-        application.getBaseComponent().inject(this);
         this.exportedDeckName = exportedDeckName;
         this.deck = deck;
         this.activity = activity;
@@ -49,9 +42,9 @@ public class ExportTask extends AsyncTask<Void, Void, Boolean> {
         if (targetFile.exists()) {
             targetFile.delete();
         }
-        TxcExportUtility exportingUtility = new TxcExportUtility(languageService);
+        TxcExportUtility exportingUtility = new TxcExportUtility(new InputStreamBuilder(activity.getApplication()));
         try {
-            exportingUtility.exportData(deck, exportedDeckName, deck.getDictionaries(), targetFile);
+            exportingUtility.exportDeck(deck, exportedDeckName, targetFile);
         } catch (final ExportException e) {
             activity.runOnUiThread(new Runnable() {
                 @Override

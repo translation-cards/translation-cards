@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
+import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
 
@@ -11,16 +12,21 @@ import static org.mockito.Mockito.mock;
 @Module
 public class MockServiceModule {
 
-    private final PermissionService permissionService = mock(PermissionService.class);
-    private final LanguageService languageService = mock(LanguageService.class);
-
+    @PerApplication
     @Provides
     PermissionService providesPermissionService() {
-        return permissionService;
+        return mock(PermissionService.class);
     }
 
+    @PerApplication
     @Provides
     LanguageService providesLanguageService() {
-        return languageService;
+        return mock(LanguageService.class);
+    }
+
+    @PerApplication
+    @Provides
+    DeckService providesDeckService() {
+        return mock(DeckService.class);
     }
 }

@@ -35,7 +35,7 @@ public class NewTranslation implements Serializable {
     }
 
     public void setAudioFile(String fileName){
-        this.translation.setAudioFileName(fileName);
+        this.translation.setAudioFilePath(fileName);
     }
 
 

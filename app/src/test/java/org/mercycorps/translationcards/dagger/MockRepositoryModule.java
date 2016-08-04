@@ -18,11 +18,13 @@ public class MockRepositoryModule {
         return mock(DatabaseHelper.class);
     }
 
+    @PerApplication
     @Provides
     TranslationRepository providesTranslationRepository() {
         return mock(TranslationRepository.class);
     }
 
+    @PerApplication
     @Provides
     DictionaryRepository providesDictionaryRepository() {
         return mock(DictionaryRepository.class);

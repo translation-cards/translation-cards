@@ -1,14 +1,9 @@
 package org.mercycorps.translationcards.porting;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -24,37 +18,30 @@ import java.util.zip.ZipOutputStream;
 
 public class TxcExportUtility {
 
-    private static final String SPEC_FILENAME = "card_deck.json";
+    static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
-    private LanguageService languageService;
+    private InputStreamBuilder inputStreamBuilder;
 
-    public TxcExportUtility(LanguageService languageService) {
-        this.languageService = languageService;
+    public TxcExportUtility(InputStreamBuilder inputStreamBuilder) {
+        this.inputStreamBuilder = inputStreamBuilder;
     }
 
-    public void exportData(Deck deck, String exportedDeckName, Dictionary[] dictionaries, File file)
+    public void exportDeck(Deck deck, String exportedDeckName, File file)
             throws ExportException {
         ZipOutputStream zos = null;
         try {
             OutputStream os;
-            try {
-                os = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                throw new ExportException(ExportException.ExportProblem.TARGET_FILE_NOT_FOUND, e);
-            }
+            os = new FileOutputStream(file);
             zos = new ZipOutputStream(os);
-            Map<String, Translation> translationFilenames =
-                    buildSpec(deck, exportedDeckName, dictionaries, zos);
-            for (String filename : translationFilenames.keySet()) {
-                addFileToZip(filename, translationFilenames.get(filename), zos);
-            }
+            writeDeckToZipStream(deck, exportedDeckName, zos);
+            addAudioFilesToZip(deck.getAudioFilePaths(), zos);
+        } catch (FileNotFoundException e) {
+            throw new ExportException(ExportException.ExportProblem.TARGET_FILE_NOT_FOUND, e);
         } catch (ExportException e) {
-            if (zos != null) {
-                try {
-                    zos.close();
-                } catch (IOException ignored) {
-                    // Do nothing, we've failed already anyway.
-                }
+            try {
+                zos.close();
+            } catch (IOException ignored) {
+                // Do nothing, we've failed already anyway.
             }
             file.delete();
             throw e;
@@ -66,120 +53,44 @@ public class TxcExportUtility {
         }
     }
 
-    protected Map<String, Translation> buildSpec(
-            Deck deck, String exportedDeckName, Dictionary[] dictionaries, ZipOutputStream zos)
-            throws ExportException {
-
-        Map<String, Translation> translationFilenames = new HashMap<>();
-        JSONObject json = new JSONObject();
+    protected void writeDeckToZipStream(Deck deck, String exportedDeckName, ZipOutputStream zipOutputStream) throws ExportException {
         try {
-            writeDeckMetadataToJson(deck, exportedDeckName, json);
-            writeDictionariesToJson(dictionaries, translationFilenames, json);
-        } catch (JSONException e) {
+            JSONObject deckAsJSON = deck.toJSON(exportedDeckName);
+            zipOutputStream.putNextEntry(new ZipEntry(SPEC_FILENAME));
+            zipOutputStream.write(deckAsJSON.toString().getBytes());
+            zipOutputStream.closeEntry();
+        } catch (IOException | JSONException e) {
             throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
         }
+    }
 
+    protected void addAudioFilesToZip(Map<String, Boolean> filePaths, ZipOutputStream zipOutputStream) throws ExportException {
         try {
-            zos.putNextEntry(new ZipEntry(SPEC_FILENAME));
-            zos.write(json.toString().getBytes());
-            zos.closeEntry();
-        } catch (IOException e) {
-            throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
-        }
-
-        return translationFilenames;
-    }
-
-    protected void writeDictionariesToJson(Dictionary[] dictionaries, Map<String, Translation> translationFilenames, JSONObject json) throws JSONException, ExportException {
-        JSONArray dictionariesJson = new JSONArray();
-        for (Dictionary dictionary : dictionaries) {
-            JSONObject dictionaryJson = new JSONObject();
-            String destLanguageIso = dictionary.getDestLanguageIso();
-            if ((null == destLanguageIso) || "".equals(destLanguageIso)) {
-                destLanguageIso = languageService.getIsoForLanguage(dictionary.getLanguage());
+            for (Map.Entry<String, Boolean> entry : filePaths.entrySet()) {
+                String baseFilename = new File(entry.getKey()).getName();
+                zipOutputStream.putNextEntry(new ZipEntry(baseFilename));
+                FileInputStream translationAudioInput = getFileInputStream(entry);
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int read;
+                while ((read = translationAudioInput.read(buffer)) != -1) {
+                    zipOutputStream.write(buffer, 0, read);
+                }
+                translationAudioInput.close();
+                zipOutputStream.closeEntry();
             }
-            dictionaryJson.put(
-                    JsonKeys.DICTIONARY_DEST_ISO_CODE, destLanguageIso);
-            writeTranslationsToJson(translationFilenames, dictionary, dictionaryJson);
-            dictionariesJson.put(dictionaryJson);
-        }
-        json.put(JsonKeys.DICTIONARIES, dictionariesJson);
-    }
-
-    protected void writeTranslationsToJson(Map<String, Translation> translationFilenames, Dictionary dictionary, JSONObject dictionaryJson) throws ExportException, JSONException {
-        JSONArray cardsJson = new JSONArray();
-        for (int i = 0; i < dictionary.getTranslationCount(); i++) {
-            Translation translation = dictionary.getTranslation(i);
-            String translationFilename = "";
-            if (translation.isAudioFilePresent()) {
-                translationFilename = buildUniqueFilename(translation, translationFilenames);
-                translationFilenames.put(translationFilename, translation);
-            }
-            JSONObject cardJson = new JSONObject();
-            cardJson.put(JsonKeys.CARD_LABEL, translation.getLabel());
-            cardJson.put(JsonKeys.CARD_DEST_AUDIO, translationFilename);
-            cardJson.put(JsonKeys.CARD_DEST_TEXT, translation.getTranslatedText());
-            cardsJson.put(cardJson);
-        }
-        dictionaryJson.put(JsonKeys.CARDS, cardsJson);
-    }
-
-    protected void writeDeckMetadataToJson(Deck deck, String exportedDeckName, JSONObject json) throws JSONException {
-        json.put(JsonKeys.DECK_LABEL, exportedDeckName);
-        json.put(JsonKeys.PUBLISHER, deck.getAuthor());
-        if (deck.getExternalId() != null) {
-            json.put(JsonKeys.EXTERNAL_ID, deck.getExternalId());
-        }
-        json.put(JsonKeys.TIMESTAMP, deck.getTimestamp());
-        json.put(JsonKeys.SOURCE_LANGUAGE, deck.getSourceLanguageIso());
-        json.put(JsonKeys.LOCKED, deck.isLocked());
-    }
-
-    private String buildUniqueFilename(
-            Translation translation,
-            Map<String, Translation> translationFilenames) throws ExportException {
-        String baseName = new File(translation.getFilename()).getName();
-        if (!translationFilenames.containsKey(baseName)) {
-            return baseName;
-        }
-        int appendage = 2;
-        while (appendage < 100) {
-            // We have to have this cut off at some point. If someone has 100 files of the same name
-            // somehow, this is going to fail for them.
-            String name = String.format("%s-%d", baseName, appendage);
-            if (!translationFilenames.containsKey(name)) {
-                return name;
-            }
-            appendage++;
-        }
-        throw new ExportException(ExportException.ExportProblem.TOO_MANY_DUPLICATE_FILENAMES, null);
-    }
-
-    private void addFileToZip(
-            String filename, Translation translation, ZipOutputStream zos)
-            throws ExportException {
-        try {
-            zos.putNextEntry(new ZipEntry(filename));
-            FileInputStream translationInput = getFileInputStream(translation);
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int read;
-            while ((read = translationInput.read(buffer)) != -1) {
-                zos.write(buffer, 0, read);
-            }
-            translationInput.close();
-            zos.closeEntry();
         } catch (IOException e) {
             throw new ExportException(ExportException.ExportProblem.WRITE_ERROR, e);
         }
     }
 
-    private FileInputStream getFileInputStream(Translation translation) throws IOException {
+    private FileInputStream getFileInputStream(Map.Entry<String, Boolean> fileToAssetEntry) throws IOException {
         FileInputStream translationInput;
-        if (translation.getIsAsset()) {
-            translationInput = MainApplication.getContextFromMainApp().getAssets().openFd(translation.getFilename()).createInputStream();
+        if (fileToAssetEntry.getValue()) {
+            translationInput = inputStreamBuilder.getAssetInputStream(fileToAssetEntry.getKey());
         } else {
-            translationInput = new FileInputStream(new File(translation.getFilename()));
+            translationInput = inputStreamBuilder.getFileInputStream(fileToAssetEntry.getKey());
         }
+
         return translationInput;
     }
 }

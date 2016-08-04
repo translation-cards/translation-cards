@@ -16,7 +16,17 @@
 
 package org.mercycorps.translationcards.model;
 
+import android.support.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.service.LanguageService;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Contains information about a set of phrases for a particular language.
@@ -27,27 +37,20 @@ public class Dictionary implements Serializable {
 
 
     private long dbId;
-    private long deckId;
     private String destLanguageIso;
     private String language;
     private Translation[] translations;
 
 
-    public Dictionary(String destLanguageIso, String language, Translation[] translations, long dbId,
-                      long deckId) {
+    public Dictionary(@NonNull String destLanguageIso, String language, Translation[] translations, long dbId) {
         this.destLanguageIso = destLanguageIso;
         this.language = language;
         this.translations = translations;
         this.dbId = dbId;
-        this.deckId = deckId;
     }
 
     public Dictionary(String language) {
-        this.language = language;
-        this.translations = new Translation[0];
-        this.dbId = -1;
-        this.deckId = -1;
-        this.destLanguageIso = "";
+        this(LanguageService.INVALID_ISO_CODE, language, new Translation[0], -1L);
     }
 
     public String getDestLanguageIso() {
@@ -67,8 +70,8 @@ public class Dictionary implements Serializable {
     }
 
     public Translation getTranslationBySourcePhrase(String sourcePhrase) {
-        for(Translation translation : translations) {
-            if(sourcePhrase.equals(translation.getLabel())) {
+        for (Translation translation : translations) {
+            if (sourcePhrase.equals(translation.getLabel())) {
                 return translation;
             }
         }
@@ -83,12 +86,36 @@ public class Dictionary implements Serializable {
         return (value == null) || value.isEmpty();
     }
 
-    public void setDeckId(long deckId) {
-        this.deckId = deckId;
-    }
-
     @Override
     public String toString() {
         return language;
+    }
+
+    protected JSONObject toJSON() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(JsonKeys.DICTIONARY_DEST_ISO_CODE, destLanguageIso);
+        jsonObject.put(JsonKeys.CARDS, createJSONTranslationsArray());
+
+        return jsonObject;
+    }
+
+    @NonNull
+    private JSONArray createJSONTranslationsArray() throws JSONException {
+        JSONArray translationJSONArray = new JSONArray();
+        for (Translation translation : translations) {
+            translationJSONArray.put(translation.toJSON());
+        }
+        return translationJSONArray;
+    }
+
+    protected Map<String, Boolean> getAudioPaths() {
+        HashMap<String, Boolean> pathMap = new HashMap<>();
+        for (Translation translation : translations) {
+            if (translation.isAudioFilePresent()) {
+                pathMap.put(translation.getFilePath(), translation.getIsAsset());
+            }
+        }
+
+        return pathMap;
     }
 }

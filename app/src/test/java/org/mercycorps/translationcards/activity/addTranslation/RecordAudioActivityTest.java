@@ -230,7 +230,7 @@ public class RecordAudioActivityTest {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.record_audio_button);
         click(activity, R.id.record_audio_button);
-        assertTrue(getFirstNewTranslationFromContext(activity).getTranslation().getFilename().contains("TranslationCards"));
+        assertTrue(getFirstNewTranslationFromContext(activity).getTranslation().getFilePath().contains("TranslationCards"));
     }
 
     @Test

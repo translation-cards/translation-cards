@@ -4,7 +4,6 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 
-import java.util.List;
 import java.util.Set;
 
 public class DeckService {
@@ -16,11 +15,11 @@ public class DeckService {
     private Deck currentDeck;
     private LanguageService languageService;
 
-    public DeckService(LanguageService languageService, List<Deck> decks, DeckRepository deckRepository, DictionaryRepository dictionaryRepository) {
+    public DeckService(LanguageService languageService, DeckRepository deckRepository, DictionaryRepository dictionaryRepository) {
         this.deckRepository = deckRepository;
         this.languageService = languageService;
         this.dictionaryRepository = dictionaryRepository;
-        currentDeck = decks.get(0);
+        currentDeck = deckRepository.getAllDecks()[0];
     }
 
 

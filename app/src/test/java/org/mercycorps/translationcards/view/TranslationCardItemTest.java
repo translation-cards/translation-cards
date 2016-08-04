@@ -67,10 +67,9 @@ public class TranslationCardItemTest {
     public static final boolean IS_NOT_ASSET = false;
 
     private Activity activity;
-    private DeckService deckService;
 
-    @Inject
-    DecoratedMediaManager decoratedMediaManager;
+    @Inject DecoratedMediaManager decoratedMediaManager;
+    @Inject DeckService deckService;
 
     @Before
     public void setUp() throws Exception {
@@ -78,7 +77,6 @@ public class TranslationCardItemTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         activity = Robolectric.buildActivity(Activity.class).create().get();
-        deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
         Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
         when(deckService.currentDeck()).thenReturn(basicDeck);
     }
@@ -220,7 +218,7 @@ public class TranslationCardItemTest {
     @Test
     public void shouldStopPlayingWhenPlayButtonIsClickedTwiceOnSameCard() throws AudioFileNotSetException {
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
-        when(decoratedMediaManager.isCurrentlyPlayingSameCard(translationCardItem.getTranslation().getFilename()))
+        when(decoratedMediaManager.isCurrentlyPlayingSameCard(translationCardItem.getTranslation().getFilePath()))
                 .thenReturn(false).thenReturn(true);
         createTranslationCardItemWithAudioAndNoTranslatedText();
         translationCardItem.findViewById(R.id.translation_card).performClick();
@@ -279,7 +277,6 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldHideEditAndDeleteOptionsIfCardIsLocked() {
-        DeckService deckService = ((MainApplication) RuntimeEnvironment.application).getDeckService();
         Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
         when(deckService.currentDeck()).thenReturn(basicDeck);
         TranslationCardItem tc = getTranslationCardItemWithEditAndDeleteButtonsConfiguredToShow();

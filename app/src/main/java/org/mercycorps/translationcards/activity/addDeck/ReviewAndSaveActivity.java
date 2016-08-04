@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -25,8 +27,12 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     DeckItem deckItem;
     private NewDeckContext newDeckContext;
 
+    @Inject DeckService deckService;
+
     @Override
     public void inflateView() {
+        MainApplication application = (MainApplication) getApplication();
+        application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_deck_review_and_save);
     }
 
@@ -40,7 +46,6 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
-        DeckService deckService = ((MainApplication) getApplication()).getDeckService();
         deckService.save(newDeckContext.getDeck(), newDeckContext.getDestinationLanguages());
         startNextActivity(this, MyDecksActivity.class);
     }

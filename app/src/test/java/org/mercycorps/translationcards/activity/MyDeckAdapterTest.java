@@ -15,9 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
+import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -65,11 +67,13 @@ public class MyDeckAdapterTest {
     private View view;
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
-    private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
+    private DeckService deckService = mock(DeckService.class);
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
 
     @Before
     public void setUp() throws Exception {
+        MainApplication application = (MainApplication) RuntimeEnvironment.application;
+        ((TestBaseComponent) application.getBaseComponent()).inject(this);
         Cursor cursor = mock(Cursor.class);
         when(cursor.getCount()).thenReturn(1);
         when(cursor.moveToFirst()).thenReturn(true);
@@ -82,8 +86,7 @@ public class MyDeckAdapterTest {
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
 
         Dictionary[] dictionaries = {new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)};
-        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
-        when(deck.getDictionaries()).thenReturn(dictionaries);
+        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), dictionaries);
         view = getAdapterViewForDeck(deck);
     }
 
@@ -201,8 +204,7 @@ public class MyDeckAdapterTest {
     @Test
     public void shouldDisplayLockIconWhenDeckIsLocked() {
         Deck lockedDeck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, true,
-                new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
-        when(lockedDeck.getDictionaries()).thenReturn(new Dictionary[0]);
+                new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), new Dictionary[0]);
         View view = getAdapterViewForDeck(lockedDeck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.VISIBLE, frameLayout.getVisibility());

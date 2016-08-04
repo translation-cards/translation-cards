@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
-
-import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,13 +19,20 @@ public class DeckItem extends LinearLayout {
     public static final String DELETE_DECK = "Delete";
     public static final String SHARE_DECK = "Share";
 
-    @Bind(R.id.deck_name) TextView deckNameTextView;
-    @Bind(R.id.deck_information) TextView deckInformationTextView;
-    @Bind(R.id.lock_icon) FrameLayout lockIcon;
-    @Bind(R.id.translation_languages) TextView translationLanguagesTextView;
-    @Bind(R.id.deck_menu) FrameLayout deckMenu;
-    @Bind(R.id.origin_language) TextView originLanguageTextView;
-    @Bind(R.id.deck_card) View deckCard;
+    @Bind(R.id.deck_name)
+    TextView deckNameTextView;
+    @Bind(R.id.deck_information)
+    TextView deckInformationTextView;
+    @Bind(R.id.lock_icon)
+    FrameLayout lockIcon;
+    @Bind(R.id.translation_languages)
+    TextView translationLanguagesTextView;
+    @Bind(R.id.deck_menu)
+    FrameLayout deckMenu;
+    @Bind(R.id.origin_language)
+    TextView originLanguageTextView;
+    @Bind(R.id.deck_card)
+    View deckCard;
     private PopupMenu popupMenu;
     private DeckMenuListener menuListener;
     private Deck deck;
@@ -71,16 +75,15 @@ public class DeckItem extends LinearLayout {
         deckInformationTextView.setText(deck.getDeckInformation());
         originLanguageTextView.setText(deck.getSourceLanguageName().toUpperCase());
         showLockIconIfDeckIsLocked(deck);
-        translationLanguagesTextView.setText(LanguageDisplayUtil.getDestLanguageFromDictionariesForDisplay(Arrays.asList(deck.getDictionaries())));
+        translationLanguagesTextView.setText(deck.getDestinationLanguagesForDisplay());
         deckMenu.setVisibility(View.GONE);
     }
 
     private void showLockIconIfDeckIsLocked(Deck deck) {
-        if(!deck.isLocked()){
+        if (!deck.isLocked()) {
             lockIcon.setVisibility(View.GONE);
             deckInformationTextView.setPadding(getPaddingInPx(16), 0, getPaddingInPx(16), getPaddingInPx(20));
-        }
-        else{
+        } else {
             lockIcon.setVisibility(View.VISIBLE);
             deckInformationTextView.setPadding(getPaddingInPx(5), 0, getPaddingInPx(16), getPaddingInPx(20));
         }

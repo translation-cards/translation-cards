@@ -4,11 +4,10 @@ import org.mercycorps.translationcards.activity.ImportActivity;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivity;
+import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivity;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.porting.ExportTask;
 import org.mercycorps.translationcards.view.TranslationCardItem;
 
 import dagger.Component;
@@ -24,6 +23,5 @@ public interface BaseComponent {
     void inject(EnterDeckSourceLanguageActivity enterDeckSourceLanguageActivity);
     void inject(LanguageSelectorActivity languageSelectorActivity);
     void inject(MyDecksActivity myDecksActivity);
-    void inject(Deck deck);
-    void inject(ExportTask exportTask);
+    void inject(ReviewAndSaveActivity reviewAndSaveActivity);
 }

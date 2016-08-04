@@ -29,7 +29,6 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Used to create singletons for dependency injection.
@@ -44,7 +43,6 @@ public class MainApplication extends Application {
     private static Context context;
     private TranslationService translationService;
     private DictionaryService dictionaryService;
-    private DeckService deckService;
     protected boolean isTest = false;
     private DeckRepository deckRepository;
     private TxcImportUtility txcImportUtility;
@@ -75,7 +73,7 @@ public class MainApplication extends Application {
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
-        deckService = new DeckService(languageService, Arrays.asList(deckRepository.getAllDecks()), deckRepository, dictionaryRepository);
+        DeckService deckService = new DeckService(languageService, deckRepository, dictionaryRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
     }
@@ -137,13 +135,5 @@ public class MainApplication extends Application {
 
     public DictionaryService getDictionaryService() {
         return dictionaryService;
-    }
-
-    public DeckService getDeckService() {
-        return deckService;
-    }
-
-    public DeckRepository getDeckRepository() {
-        return deckRepository;
     }
 }
