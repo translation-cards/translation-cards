@@ -103,9 +103,6 @@ public class TranslationsActivityTest {
     }
 
     private void initializeStubsAndMocks() {
-        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
-        when(deckService.currentDeck()).thenReturn(deck);
-
         Dictionary[] dictionaries = new Dictionary[3];
         translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "audio.mp3", DEFAULT_LONG, null);
@@ -113,6 +110,9 @@ public class TranslationsActivityTest {
         dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
         dictionaries[2] = new Dictionary(NO_ISO_CODE, DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG, DEFAULT_DECK_ID);
+
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME), dictionaries);
+        when(deckService.currentDeck()).thenReturn(deck);
 
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(Arrays.asList(dictionaries));
@@ -187,7 +187,7 @@ public class TranslationsActivityTest {
     }
 
     private Activity createLockedDeckTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME), new Dictionary[0]);
         when(deckService.currentDeck()).thenReturn(deck);
         return createActivityWithDeck(deck);
     }

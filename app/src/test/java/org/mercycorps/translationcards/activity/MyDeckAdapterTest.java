@@ -24,7 +24,6 @@ import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
@@ -36,8 +35,6 @@ import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowPopupMenu;
 import org.robolectric.util.ActivityController;
-
-import javax.inject.Inject;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -73,8 +70,6 @@ public class MyDeckAdapterTest {
     private DeckService deckService = ((TestMainApplication) RuntimeEnvironment.application).getDeckService();
     private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
 
-    @Inject DictionaryRepository dictionaryRepository;
-
     @Before
     public void setUp() throws Exception {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
@@ -91,8 +86,7 @@ public class MyDeckAdapterTest {
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
 
         Dictionary[] dictionaries = {new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)};
-        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
-        when(dictionaryRepository.getAllDictionariesForDeck(deck.getDbId())).thenReturn(dictionaries);
+        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), dictionaries);
         view = getAdapterViewForDeck(deck);
     }
 
@@ -210,8 +204,7 @@ public class MyDeckAdapterTest {
     @Test
     public void shouldDisplayLockIconWhenDeckIsLocked() {
         Deck lockedDeck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, true,
-                new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME));
-        when(dictionaryRepository.getAllDictionariesForDeck(lockedDeck.getDbId())).thenReturn(new Dictionary[0]);
+                new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), new Dictionary[0]);
         View view = getAdapterViewForDeck(lockedDeck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.VISIBLE, frameLayout.getVisibility());

@@ -8,13 +8,13 @@ import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
-import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.*;
+import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.DICTIONARY_ID;
+import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.TABLE_NAME;
 
 /**
  * Created by njimenez on 6/27/16.
@@ -43,15 +43,16 @@ public class DeckRepository {
         while(hasNext){
 
             String sourceLanguageIso = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO));
-            Language language = languageService.getLanguageWithIso(sourceLanguageIso);
+            long dbId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(
                     cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.PUBLISHER)),
                     cursor.getString(cursor.getColumnIndex(DecksTable.EXTERNAL_ID)),
-                    cursor.getLong(cursor.getColumnIndex(DecksTable.ID)),
+                    dbId,
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    language);
+                    languageService.getLanguageWithIso(sourceLanguageIso),
+                    dictionaryRepository.getAllDictionariesForDeck(dbId));
 
             decks[i] = deck;
             hasNext = cursor.moveToNext();

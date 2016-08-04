@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
 import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -37,11 +36,10 @@ public class Deck implements Serializable {
     private Dictionary[] dictionaries;
     private static final String LANGUAGE_LIST_DELIMITER = "  ";
 
-    @Inject DictionaryRepository dictionaryRepository;
     @Inject LanguageService languageService;
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
-                boolean locked, Language sourceLanguage) {
+                boolean locked, Language sourceLanguage, Dictionary[] dictionaries) {
         this.title = title;
         this.author = author;
         this.externalId = externalId;
@@ -49,7 +47,7 @@ public class Deck implements Serializable {
         this.timestamp = timestamp;
         this.locked = locked;
         this.sourceLanguage = sourceLanguage;
-        dictionaries = null;
+        this.dictionaries = dictionaries;
 
         MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
         application.getBaseComponent().inject(this);
@@ -57,7 +55,7 @@ public class Deck implements Serializable {
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
                 Language sourceLanguage) {
-        this(title, author, externalId, -1, timestamp, locked, sourceLanguage);
+        this(title, author, externalId, -1, timestamp, locked, sourceLanguage, new Dictionary[0]);
     }
 
     public Deck() {
@@ -106,20 +104,12 @@ public class Deck implements Serializable {
     }
 
     public String getDestinationLanguagesForDisplay() {
-        Dictionary[] dictionaries = getDictionariesFromRepo();
         StringBuilder builder = new StringBuilder();
         for (Dictionary dictionary : dictionaries) {
             builder.append(dictionary.getLanguage().toUpperCase()).append(LANGUAGE_LIST_DELIMITER);
         }
 
         return builder.toString().trim();
-    }
-
-    private Dictionary[] getDictionariesFromRepo() {
-        if (dictionaries == null) {
-            dictionaries = dictionaryRepository.getAllDictionariesForDeck(dbId);
-        }
-        return dictionaries;
     }
 
     public void setTitle(String title) {
@@ -152,7 +142,7 @@ public class Deck implements Serializable {
     @NonNull
     private JSONArray getDictionariesJSON() throws JSONException {
         JSONArray dictionaryJSONArray = new JSONArray();
-        for (Dictionary dictionary : getDictionariesFromRepo()) {
+        for (Dictionary dictionary : dictionaries) {
             String destLanguageIso = dictionary.getDestLanguageIso();
             if (null == destLanguageIso || destLanguageIso.isEmpty()) {
                 dictionary.setDestLanguageIso(languageService.getIsoForLanguage(dictionary.getLanguage()));
@@ -164,7 +154,7 @@ public class Deck implements Serializable {
 
     public Map<String, Boolean> getAudioFilePaths() {
         HashMap<String, Boolean> audioFilesMap = new HashMap<>();
-        for (Dictionary dictionary : getDictionariesFromRepo()) {
+        for (Dictionary dictionary : dictionaries) {
             audioFilesMap.putAll(dictionary.getAudioPaths());
         }
         return audioFilesMap;
