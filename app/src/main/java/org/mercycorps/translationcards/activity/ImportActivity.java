@@ -40,6 +40,7 @@ public class ImportActivity extends AppCompatActivity {
     @Inject LanguageService languageService;
     @Inject TranslationRepository translationRepository;
     @Inject DictionaryRepository dictionaryRepository;
+    @Inject DeckRepository deckRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,6 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     private TxcImportUtility createImportUtility() {
-        DeckRepository deckRepository = ((MainApplication)getApplication()).getDeckRepository();
         return new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
     }
 
@@ -196,7 +196,7 @@ public class ImportActivity extends AppCompatActivity {
                                     handleError(e);
                                     return;
                                 }
-                                ((MainApplication)getApplication()).getDeckRepository().deleteDeck(otherVersion);
+                                deckRepository.deleteDeck(otherVersion);
                                 goToMainScreen();
                                 break;
                         }

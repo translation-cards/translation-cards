@@ -88,9 +88,4 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     public DeckService getDeckService() {
         return deckService;
     }
-
-    @Override
-    public DeckRepository getDeckRepository() {
-        return deckRepository;
-    }
 }

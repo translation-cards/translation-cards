@@ -142,8 +142,4 @@ public class MainApplication extends Application {
     public DeckService getDeckService() {
         return deckService;
     }
-
-    public DeckRepository getDeckRepository() {
-        return deckRepository;
-    }
 }
