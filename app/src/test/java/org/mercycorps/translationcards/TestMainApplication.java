@@ -7,10 +7,6 @@ import org.mercycorps.translationcards.dagger.ApplicationModule;
 import org.mercycorps.translationcards.dagger.BaseComponent;
 import org.mercycorps.translationcards.dagger.DaggerApplicationComponent;
 import org.mercycorps.translationcards.dagger.DaggerTestBaseComponent;
-import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
-import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.TestLifecycleApplication;
 
 import java.io.FileDescriptor;
@@ -22,10 +18,6 @@ import static org.mockito.Mockito.mock;
 public class TestMainApplication extends MainApplication implements TestLifecycleApplication {
 
     private MediaRecorder mediaRecorder = mock(MediaRecorder.class);
-    private TranslationService translationService = mock(TranslationService.class);
-    private DictionaryService dictionaryService = mock(DictionaryService.class);
-    private DeckService deckService = mock(DeckService.class);
-    private DeckRepository deckRepository = mock(DeckRepository.class);
 
     private static BaseComponent baseComponent;
 
@@ -72,15 +64,5 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
     @Override
     public MediaRecorder getMediaRecorder() {
         return mediaRecorder;
-    }
-
-    @Override
-    public TranslationService getTranslationService() {
-        return translationService;
-    }
-
-    @Override
-    public DictionaryService getDictionaryService() {
-        return dictionaryService;
     }
 }

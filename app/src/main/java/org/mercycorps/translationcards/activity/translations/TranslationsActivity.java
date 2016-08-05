@@ -62,22 +62,20 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private TextView[] languageTabTextViews;
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
-    private TranslationService translationService;
 
     @Inject DecoratedMediaManager decoratedMediaManager;
     @Inject DeckService deckService;
     @Inject DictionaryService dictionaryService;
+    @Inject TranslationService translationService;
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
-        translationService = application.getTranslationService();
-        translationService.initializeCardStates();
-
         application.getBaseComponent().inject(this);
 
+        translationService.initializeCardStates();
         setContentView(R.layout.activity_translations);
         initTabs();
         initList();

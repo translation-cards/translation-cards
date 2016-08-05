@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.EnterSourcePhraseActivity;
@@ -53,12 +52,12 @@ public class CardListAdapterTest {
     private CardListAdapter cardListAdapter;
     private Activity activity;
     private List<Translation> translations;
-    private TranslationService mockTranslationService;
     private Dictionary defaultDictionary;
     private Translation firstTranslation;
     private Deck basicDeck;
 
     @Inject DeckService mockDeckService;
+    @Inject TranslationService mockTranslationService;
 
     @Before
     public void setUp() {
@@ -73,7 +72,6 @@ public class CardListAdapterTest {
         translations.add(secondTranslation);
 
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
-        mockTranslationService = ((TestMainApplication) activity.getApplication()).getTranslationService();
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
         defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);

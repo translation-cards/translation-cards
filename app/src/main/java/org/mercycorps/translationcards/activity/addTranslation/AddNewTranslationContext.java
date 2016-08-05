@@ -6,19 +6,25 @@ import org.mercycorps.translationcards.service.TranslationService;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class AddNewTranslationContext implements Serializable {
 
     private List<NewTranslation> newTranslations;
     private boolean isEdit;
 
-    public AddNewTranslationContext(List<NewTranslation> newTranslations) {
-        this.newTranslations = newTranslations;
-        isEdit = false;
-    }
+    @Inject TranslationService translationService;
 
     public AddNewTranslationContext(List<NewTranslation> newTranslations, boolean isEdit) {
         this.newTranslations = newTranslations;
         this.isEdit = isEdit;
+
+        MainApplication application = (MainApplication) MainApplication.getContextFromMainApp();
+        application.getBaseComponent().inject(this);
+    }
+
+    public AddNewTranslationContext(List<NewTranslation> newTranslations) {
+        this(newTranslations, false);
     }
 
     public List<NewTranslation> getNewTranslations() {
@@ -27,13 +33,9 @@ public class AddNewTranslationContext implements Serializable {
 
    public void save() {
        for (NewTranslation newTranslation : newTranslations) {
-           getTranslationService().saveTranslationContext(newTranslation);
+           translationService.saveTranslationContext(newTranslation);
        }
    }
-
-    private TranslationService getTranslationService() {
-        return ((MainApplication) MainApplication.getContextFromMainApp()).getTranslationService();
-    }
 
     public String getSourcePhrase() {
         return newTranslations.isEmpty() ? "" : getTranslationsSourcePhrase();

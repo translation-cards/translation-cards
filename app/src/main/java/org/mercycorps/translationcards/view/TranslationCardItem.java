@@ -43,7 +43,6 @@ public class TranslationCardItem extends LinearLayout {
     private boolean playAudioOnClick = true;
     private boolean showAudioIcon = true;
     private boolean showDeleteAndEditOptions = false;
-    private TranslationService translationService;
     private Integer index;
     public static final int DISABLED_OPACITY = 220;
     public static final int DEFAULT_OPACITY = 255;
@@ -70,9 +69,10 @@ public class TranslationCardItem extends LinearLayout {
     View editButton;
     @Bind(R.id.translation_card_delete)
     View deleteButton;
-    @Inject
-    DecoratedMediaManager mediaManager;
+
+    @Inject DecoratedMediaManager mediaManager;
     @Inject DeckService deckService;
+    @Inject TranslationService translationService;
 
     public TranslationCardItem(Context context) {
         super(context);
@@ -95,7 +95,6 @@ public class TranslationCardItem extends LinearLayout {
         ButterKnife.bind(this);
         MainApplication application = (MainApplication)getContext().getApplicationContext();
         application.getBaseComponent().inject(this);
-        translationService=((MainApplication)getContext().getApplicationContext()).getTranslationService();
     }
     private void setStateFromAttributes(Context context, AttributeSet attrs){
         TypedArray a = context.getTheme().obtainStyledAttributes(

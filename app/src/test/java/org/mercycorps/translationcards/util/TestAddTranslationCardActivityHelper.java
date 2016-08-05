@@ -8,14 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.AddTranslationActivity;
 import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.service.TranslationService;
 import org.robolectric.Robolectric;
 
 import java.util.Collections;
@@ -106,11 +104,6 @@ public class TestAddTranslationCardActivityHelper {
 
     public static NewTranslation getFirstNewTranslationFromContext(Activity activity) {
         return getContextFromIntent(activity).getNewTranslations().get(0);
-    }
-
-    public static TranslationService getTranslationService() {
-
-        return ((TestMainApplication) TestMainApplication.getContextFromMainApp()).getTranslationService();
     }
 
     public static void clickLanguageTabAtPosition(Activity activity, Integer position) {

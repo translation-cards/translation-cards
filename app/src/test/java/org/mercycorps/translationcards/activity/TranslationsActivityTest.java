@@ -76,20 +76,17 @@ public class TranslationsActivityTest {
     private static final String DEFAULT_LANGUAGE_NAME = "English";
     private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
-    private Translation translation;
     private Deck deck;
     ActivityController<TranslationsActivity> controller;
-    private TranslationService translationService;
 
     @Inject DeckService deckService;
     @Inject DictionaryService dictionaryService;
+    @Inject TranslationService translationService;
 
     @Before
     public void setUp() {
         TestMainApplication application = (TestMainApplication) RuntimeEnvironment.application;
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
-
-        translationService = application.getTranslationService();
 
         initializeStubsAndMocks();
 
@@ -106,7 +103,7 @@ public class TranslationsActivityTest {
 
     private void initializeStubsAndMocks() {
         Dictionary[] dictionaries = new Dictionary[3];
-        translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
+        Translation translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "audio.mp3", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
         dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG);

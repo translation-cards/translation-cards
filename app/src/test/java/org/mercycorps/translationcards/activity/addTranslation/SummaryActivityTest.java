@@ -18,6 +18,7 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.mercycorps.translationcards.util.AddTranslationActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -32,7 +33,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.clickLanguageTabAtPosition;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.getTranslationService;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,11 +42,11 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class SummaryActivityTest {
-    private static final boolean IS_NOT_ASSET = false;
 
     AddTranslationActivityHelper<SummaryActivity> helper = new AddTranslationActivityHelper<>(SummaryActivity.class);
 
     @Inject DecoratedMediaManager decoratedMediaManager;
+    @Inject TranslationService translationService;
 
     @Before
     public void setUp() throws Exception {
@@ -116,7 +116,7 @@ public class SummaryActivityTest {
     public void shouldSaveTranslationContextWhenUserClicksSave() {
         Activity activity = helper.createActivityToTestWithNewTranslationContext();
         click(activity, R.id.save_translation_button);
-        verify(getTranslationService()).saveTranslationContext(any(NewTranslation.class));
+        verify(translationService).saveTranslationContext(any(NewTranslation.class));
     }
 
     @Test

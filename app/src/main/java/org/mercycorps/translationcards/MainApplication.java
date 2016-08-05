@@ -19,10 +19,7 @@ import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
-import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -41,8 +38,6 @@ public class MainApplication extends Application {
     private static String TAG = MainApplication.class.getName();
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private static Context context;
-    private TranslationService translationService;
-    private DictionaryService dictionaryService;
     protected boolean isTest = false;
     private DeckRepository deckRepository;
     private TxcImportUtility txcImportUtility;
@@ -73,9 +68,6 @@ public class MainApplication extends Application {
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
-        DeckService deckService = new DeckService(languageService, deckRepository, dictionaryRepository);
-        dictionaryService = new DictionaryService(dictionaryRepository, deckService);
-        translationService = new TranslationService(translationRepository, dictionaryService);
     }
 
     public BaseComponent getBaseComponent(){
@@ -127,13 +119,5 @@ public class MainApplication extends Application {
 
     public MediaRecorder getMediaRecorder() {
         return new MediaRecorder();
-    }
-
-    public TranslationService getTranslationService() {
-        return translationService;
-    }
-
-    public DictionaryService getDictionaryService() {
-        return dictionaryService;
     }
 }

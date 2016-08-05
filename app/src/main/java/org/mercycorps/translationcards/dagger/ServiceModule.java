@@ -7,10 +7,12 @@ import android.util.Log;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
+import org.mercycorps.translationcards.service.TranslationService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +40,12 @@ public class ServiceModule {
     @Provides
     DictionaryService providesDictionaryService(DictionaryRepository dictionaryRepository, DeckService deckService) {
         return new DictionaryService(dictionaryRepository, deckService);
+    }
+
+    @PerApplication
+    @Provides
+    TranslationService providesTranslationService(TranslationRepository translationRepository, DictionaryService dictionaryService) {
+        return new TranslationService(translationRepository, dictionaryService);
     }
 
     @PerApplication
