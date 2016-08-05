@@ -4,9 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
-import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
@@ -29,8 +28,8 @@ public class ServiceModule {
 
     @PerApplication
     @Provides
-    DeckService providesDeckService(LanguageService languageService, DeckRepository deckRepository, DictionaryRepository dictionaryRepository) {
-        return new DeckService(languageService, deckRepository, dictionaryRepository);
+    DeckService providesDeckService(Application application) {
+        return ((MainApplication)application).getDeckService();
     }
 
     @PerApplication

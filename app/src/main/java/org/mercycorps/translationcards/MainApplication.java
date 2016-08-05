@@ -48,6 +48,7 @@ public class MainApplication extends Application {
     private TxcImportUtility txcImportUtility;
 
     private static BaseComponent baseComponent;
+    private DeckService deckService;
 
     @Override
     public void onCreate() {
@@ -73,7 +74,7 @@ public class MainApplication extends Application {
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
         txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
         checkForBundledDeckAndLoad(databaseHelper);
-        DeckService deckService = new DeckService(languageService, deckRepository, dictionaryRepository);
+        deckService = new DeckService(languageService, deckRepository, dictionaryRepository);
         dictionaryService = new DictionaryService(dictionaryRepository, deckService);
         translationService = new TranslationService(translationRepository, dictionaryService);
     }
@@ -127,6 +128,10 @@ public class MainApplication extends Application {
 
     public MediaRecorder getMediaRecorder() {
         return new MediaRecorder();
+    }
+
+    public DeckService getDeckService() {
+        return deckService;
     }
 
     public TranslationService getTranslationService() {
