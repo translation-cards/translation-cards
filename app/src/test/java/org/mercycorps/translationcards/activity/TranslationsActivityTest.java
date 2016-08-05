@@ -80,9 +80,9 @@ public class TranslationsActivityTest {
     private Deck deck;
     ActivityController<TranslationsActivity> controller;
     private TranslationService translationService;
-    private DictionaryService dictionaryService;
 
     @Inject DeckService deckService;
+    @Inject DictionaryService dictionaryService;
 
     @Before
     public void setUp() {
@@ -90,7 +90,6 @@ public class TranslationsActivityTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         translationService = application.getTranslationService();
-        dictionaryService = application.getDictionaryService();
 
         initializeStubsAndMocks();
 

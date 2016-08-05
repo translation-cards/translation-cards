@@ -63,10 +63,10 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     private View[] languageTabBorders;
     protected CardListAdapter listAdapter;
     private TranslationService translationService;
-    private DictionaryService dictionaryService;
 
     @Inject DecoratedMediaManager decoratedMediaManager;
     @Inject DeckService deckService;
+    @Inject DictionaryService dictionaryService;
 
     @Bind(R.id.add_translation_button) RelativeLayout addTranslationButton;
 
@@ -75,7 +75,6 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         translationService = application.getTranslationService();
         translationService.initializeCardStates();
-        dictionaryService = application.getDictionaryService();
 
         application.getBaseComponent().inject(this);
 

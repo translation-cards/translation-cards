@@ -39,17 +39,16 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
                     "viewform?entry.1158658650=1.1.0";
-    private DictionaryService dictionaryService;
 
     @Inject DeckRepository deckRepository;
     @Inject DeckService deckService;
+    @Inject DictionaryService dictionaryService;
 
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
         application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_my_decks);
-        dictionaryService = ((MainApplication)getApplication()).getDictionaryService();
     }
 
     @Override

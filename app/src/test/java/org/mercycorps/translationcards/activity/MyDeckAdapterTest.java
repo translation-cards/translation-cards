@@ -15,11 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.TestMainApplication;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
@@ -29,7 +26,6 @@ import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowDialog;
@@ -68,12 +64,11 @@ public class MyDeckAdapterTest {
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = mock(DeckService.class);
-    private DictionaryService dictionaryService = ((TestMainApplication) RuntimeEnvironment.application).getDictionaryService();
+    private DictionaryService dictionaryService;
 
     @Before
     public void setUp() throws Exception {
-        MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        ((TestBaseComponent) application.getBaseComponent()).inject(this);
+        dictionaryService = mock(DictionaryService.class);
         Cursor cursor = mock(Cursor.class);
         when(cursor.getCount()).thenReturn(1);
         when(cursor.moveToFirst()).thenReturn(true);

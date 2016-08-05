@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
 import org.mercycorps.translationcards.service.PermissionService;
 
@@ -22,6 +23,12 @@ public class MockServiceModule {
     @Provides
     LanguageService providesLanguageService() {
         return mock(LanguageService.class);
+    }
+
+    @PerApplication
+    @Provides
+    DictionaryService providesDictionaryService() {
+        return mock(DictionaryService.class);
     }
 
     @PerApplication
