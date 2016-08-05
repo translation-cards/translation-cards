@@ -18,6 +18,7 @@ package org.mercycorps.translationcards.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -32,10 +33,12 @@ import org.mercycorps.translationcards.service.LanguageService;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TranslationCards.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
+    private final LanguageService languageService;
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context, LanguageService languageService) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.languageService = languageService;
     }
 
     public class DecksTable {
@@ -154,6 +157,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues defaultDestLanguageValues = new ContentValues();
             defaultDestLanguageValues.put(DictionariesTable.LANGUAGE_ISO, LanguageService.INVALID_ISO_CODE);
             db.update(DictionariesTable.TABLE_NAME, defaultDestLanguageValues, null, null);
+        }
+        if (oldVersion < 4) {
+            updateEmptyOrInvalidLabelAndIsoCodes(db);
+        }
+    }
+
+    private void updateEmptyOrInvalidLabelAndIsoCodes(SQLiteDatabase db) {
+        String selectQuery = "SELECT " +
+                DictionariesTable.ID +
+                ", " +
+                DictionariesTable.LABEL +
+                ", " +
+                DictionariesTable.LANGUAGE_ISO +
+                " FROM " +
+                DictionariesTable.TABLE_NAME +
+                " WHERE LENGTH(" +
+                DictionariesTable.LANGUAGE_ISO +
+                ") > 2 OR " +
+                DictionariesTable.LABEL +
+                " = '' OR " +
+                DictionariesTable.LABEL +
+                " IS NULL OR " +
+                DictionariesTable.LANGUAGE_ISO +
+                " = '" +
+                LanguageService.INVALID_ISO_CODE +
+                "' OR " +
+                DictionariesTable.LANGUAGE_ISO +
+                " = ''";
+        Cursor badDataCursor = db.rawQuery(selectQuery, null);
+        while (badDataCursor.moveToNext()) {
+            long rowID = badDataCursor.getLong(badDataCursor.getColumnIndex(DictionariesTable.ID));
+            String currentLabel = badDataCursor.getString(badDataCursor.getColumnIndex(DictionariesTable.LABEL));
+            String currentIso = badDataCursor.getString(badDataCursor.getColumnIndex(DictionariesTable.LANGUAGE_ISO));
+            ContentValues newValues = new ContentValues();
+            replaceEmptyLabel(currentLabel, currentIso, newValues);
+            updateInvalidIso(currentLabel, currentIso, newValues);
+
+            db.update(DictionariesTable.TABLE_NAME,
+                    newValues,
+                    DictionariesTable.ID + " = ?",
+                    new String[]{String.valueOf(rowID)});
+        }
+        badDataCursor.close();
+    }
+
+    private void updateInvalidIso(String currentLabel, String currentIso, ContentValues newValues) {
+        if (currentIso.equals(LanguageService.INVALID_ISO_CODE) || currentIso.isEmpty()) {
+            String newIso = languageService.getIsoForLanguage(currentLabel);
+            newValues.put(DictionariesTable.LANGUAGE_ISO, newIso);
+        }
+    }
+
+    private void replaceEmptyLabel(String currentLabel, String currentIso, ContentValues newValues) {
+        if (currentLabel == null || currentLabel.isEmpty()) {
+            if (currentIso.length() > 2) {
+                newValues.put(DictionariesTable.LABEL, currentIso);
+                String newIso = languageService.getIsoForLanguage(currentIso);
+                newValues.put(DictionariesTable.LANGUAGE_ISO, newIso);
+            } else {
+                String newLabel = languageService.getLanguageDisplayName(currentIso);
+                newValues.put(DictionariesTable.LABEL, newLabel);
+            }
         }
     }
 

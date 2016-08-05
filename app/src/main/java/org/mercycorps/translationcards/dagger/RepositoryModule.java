@@ -15,8 +15,8 @@ import dagger.Provides;
 public class RepositoryModule {
     @PerApplication
     @Provides
-    DatabaseHelper providesDatabaseHelper(Application application) {
-        return new DatabaseHelper(application.getApplicationContext());
+    DatabaseHelper providesDatabaseHelper(Application application, LanguageService languageService) {
+        return new DatabaseHelper(application.getApplicationContext(), languageService);
     }
 
     @PerApplication
