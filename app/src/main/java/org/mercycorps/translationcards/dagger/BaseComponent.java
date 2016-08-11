@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.activity.ImportActivity;
 import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
@@ -15,6 +16,7 @@ import dagger.Component;
 @PerApplication
 @Component(modules = {MediaModule.class, ServiceModule.class, RepositoryModule.class})
 public interface BaseComponent {
+    void inject(MainApplication mainApplication);
     void inject(TranslationsActivity activity);
     void inject(SummaryActivity activity);
     void inject(RecordAudioActivity activity);

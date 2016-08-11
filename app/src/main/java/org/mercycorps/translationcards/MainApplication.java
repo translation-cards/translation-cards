@@ -2,27 +2,20 @@ package org.mercycorps.translationcards;
 
 import android.app.Application;
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.mercycorps.translationcards.dagger.BaseComponent;
 import org.mercycorps.translationcards.dagger.DaggerBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
-import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.repository.DictionaryRepository;
-import org.mercycorps.translationcards.repository.TranslationRepository;
-import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
+import javax.inject.Inject;
 
 /**
  * Used to create singletons for dependency injection.
@@ -36,59 +29,32 @@ public class MainApplication extends Application {
     public static final String PRE_BUNDLED_DECK_EXTERNAL_ID = "org.innovation.unhcr.txc-default-deck";
     private static Context context;
     protected boolean isTest = false;
-    private DeckRepository deckRepository;
-    private TxcImportUtility txcImportUtility;
 
     private static BaseComponent baseComponent;
+
+    @Inject DeckRepository deckRepository;
+    @Inject TxcImportUtility txcImportUtility;
+    @Inject DatabaseHelper databaseHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        baseComponent = DaggerBaseComponent.builder().build();
-
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         context = getApplicationContext();
+        baseComponent = DaggerBaseComponent.builder().build();
+        baseComponent.inject(this);
+
         createAudioRecordingDirs(); //// TODO: 3/23/16 is this the correct place to do this
-        LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
-        LanguageService languageService = new LanguageService(languagesImportUtility);
-        if (isTest) return;
-        DatabaseHelper databaseHelper = new DatabaseHelper(languageService);
-        TranslationRepository translationRepository = new TranslationRepository(databaseHelper);
-        DictionaryRepository dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
-        deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);
-        txcImportUtility = new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
-        checkForBundledDeckAndLoad(databaseHelper);
+        checkForBundledDeckAndLoad();
     }
 
     public BaseComponent getBaseComponent(){
         return baseComponent;
     }
 
-    @NonNull
-    private LanguagesImportUtility createLanguagesImportUtility() {
-        InputStream inputStream;
-        try {
-            inputStream = context.getAssets().open("language_codes.json");
-        } catch (IOException e) {
-            Log.e(TAG, e.toString());
-            inputStream = null;
-        }
-        LanguagesImportUtility languagesImportUtility = new LanguagesImportUtility(inputStream);
-        try {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (IOException e) {
-            Log.e(TAG, e.toString());
-        }
-        return languagesImportUtility;
-    }
-
-    private void checkForBundledDeckAndLoad(DatabaseHelper dbHelper) {
+    private void checkForBundledDeckAndLoad() {
         if (deckRepository.retrieveKeyForDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
-            txcImportUtility.loadBundledDeck(dbHelper.getWritableDatabase());
+            txcImportUtility.loadBundledDeck(databaseHelper.getWritableDatabase());
         }
     }
 

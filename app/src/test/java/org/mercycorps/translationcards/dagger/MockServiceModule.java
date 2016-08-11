@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
+import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.service.LanguageService;
@@ -42,5 +43,11 @@ public class MockServiceModule {
     @Provides
     DeckService providesDeckService() {
         return mock(DeckService.class);
+    }
+
+    @PerApplication
+    @Provides
+    TxcImportUtility providesTxcImportUtility() {
+        return mock(TxcImportUtility.class);
     }
 }
