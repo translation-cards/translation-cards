@@ -8,10 +8,7 @@ import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.mercycorps.translationcards.dagger.ApplicationComponent;
-import org.mercycorps.translationcards.dagger.ApplicationModule;
 import org.mercycorps.translationcards.dagger.BaseComponent;
-import org.mercycorps.translationcards.dagger.DaggerApplicationComponent;
 import org.mercycorps.translationcards.dagger.DaggerBaseComponent;
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
@@ -47,14 +44,9 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ApplicationComponent applicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
 
-        baseComponent = DaggerBaseComponent.builder()
-                .applicationComponent(applicationComponent)
-                .build();
+        baseComponent = DaggerBaseComponent.builder().build();
+
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         context = getApplicationContext();

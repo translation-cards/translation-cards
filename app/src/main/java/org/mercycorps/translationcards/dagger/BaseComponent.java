@@ -13,7 +13,7 @@ import org.mercycorps.translationcards.view.TranslationCardItem;
 import dagger.Component;
 
 @PerApplication
-@Component(modules = {MediaModule.class, ServiceModule.class, RepositoryModule.class}, dependencies = ApplicationComponent.class)
+@Component(modules = {MediaModule.class, ServiceModule.class, RepositoryModule.class})
 public interface BaseComponent {
     void inject(TranslationsActivity activity);
     void inject(SummaryActivity activity);

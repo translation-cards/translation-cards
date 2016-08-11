@@ -15,7 +15,7 @@ import org.mercycorps.translationcards.view.TranslationCardItemTest;
 import dagger.Component;
 
 @PerApplication
-@Component(modules = {MockMediaModule.class, MockServiceModule.class, MockRepositoryModule.class}, dependencies = ApplicationComponent.class)
+@Component(modules = {MockMediaModule.class, MockServiceModule.class, MockRepositoryModule.class})
 public interface TestBaseComponent extends BaseComponent {
     void inject(SummaryActivityTest activity);
     void inject(RecordAudioActivityTest activity);

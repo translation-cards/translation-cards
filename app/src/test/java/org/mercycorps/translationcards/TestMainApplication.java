@@ -2,10 +2,7 @@ package org.mercycorps.translationcards;
 
 import android.media.MediaRecorder;
 
-import org.mercycorps.translationcards.dagger.ApplicationComponent;
-import org.mercycorps.translationcards.dagger.ApplicationModule;
 import org.mercycorps.translationcards.dagger.BaseComponent;
-import org.mercycorps.translationcards.dagger.DaggerApplicationComponent;
 import org.mercycorps.translationcards.dagger.DaggerTestBaseComponent;
 import org.robolectric.TestLifecycleApplication;
 
@@ -26,14 +23,7 @@ public class TestMainApplication extends MainApplication implements TestLifecycl
         isTest = true;
         super.onCreate();
 
-        ApplicationComponent applicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-
-        baseComponent = DaggerTestBaseComponent.builder()
-                .applicationComponent(applicationComponent)
-                .build();
+        baseComponent = DaggerTestBaseComponent.builder().build();
     }
 
     @Override
