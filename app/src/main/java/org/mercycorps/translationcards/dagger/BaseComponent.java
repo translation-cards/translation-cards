@@ -5,7 +5,6 @@ import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivity;
 import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivity;
-import org.mercycorps.translationcards.activity.addTranslation.AddNewTranslationContext;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
@@ -25,5 +24,4 @@ public interface BaseComponent {
     void inject(MyDecksActivity myDecksActivity);
     void inject(ReviewAndSaveActivity reviewAndSaveActivity);
     void inject(TranslationCardItem cardItemView);
-    void inject(AddNewTranslationContext addNewTranslationContext);
 }

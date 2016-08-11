@@ -8,7 +8,10 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.service.TranslationService;
 import org.mercycorps.translationcards.view.TranslationCardItem;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,6 +26,7 @@ public class SummaryActivity extends AddTranslationActivity {
     @Bind(R.id.translation_card_item)TranslationCardItem translationCard;
 
     @Inject DecoratedMediaManager mediaManager;
+    @Inject TranslationService translationService;
 
     @Override
     public void inflateView() {
@@ -79,7 +83,6 @@ public class SummaryActivity extends AddTranslationActivity {
         });
     }
 
-
     static final ButterKnife.Setter<View, Boolean> INVISIBLE = new ButterKnife.Setter<View, Boolean>() {
         @Override public void set(View view, Boolean value, int index) {
             view.setEnabled(value);
@@ -93,6 +96,9 @@ public class SummaryActivity extends AddTranslationActivity {
     }
 
     private void saveTranslation() {
-        getContextFromIntent().save();
+        List<NewTranslation> newTranslations = getContextFromIntent().getNewTranslations();
+        for (NewTranslation newTranslation : newTranslations) {
+            translationService.saveTranslationContext(newTranslation);
+        }
     }
 }
