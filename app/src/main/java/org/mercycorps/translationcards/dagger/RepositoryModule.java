@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.dagger;
 
-import android.app.Application;
-
 import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
@@ -15,8 +13,8 @@ import dagger.Provides;
 public class RepositoryModule {
     @PerApplication
     @Provides
-    DatabaseHelper providesDatabaseHelper(Application application, LanguageService languageService) {
-        return new DatabaseHelper(application.getApplicationContext(), languageService);
+    DatabaseHelper providesDatabaseHelper(LanguageService languageService) {
+        return new DatabaseHelper(languageService);
     }
 
     @PerApplication

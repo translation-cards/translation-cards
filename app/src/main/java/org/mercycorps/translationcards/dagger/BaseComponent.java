@@ -19,11 +19,11 @@ public interface BaseComponent {
     void inject(TranslationsActivity activity);
     void inject(SummaryActivity activity);
     void inject(RecordAudioActivity activity);
-    void inject(TranslationCardItem cardItemView);
     void inject(ImportActivity importActivity);
     void inject(EnterDeckSourceLanguageActivity enterDeckSourceLanguageActivity);
     void inject(LanguageSelectorActivity languageSelectorActivity);
     void inject(MyDecksActivity myDecksActivity);
     void inject(ReviewAndSaveActivity reviewAndSaveActivity);
+    void inject(TranslationCardItem cardItemView);
     void inject(AddNewTranslationContext addNewTranslationContext);
 }

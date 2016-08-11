@@ -10,7 +10,6 @@ import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivityTes
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivityTest;
 import org.mercycorps.translationcards.activity.translations.CardListAdapterTest;
-import org.mercycorps.translationcards.model.DeckTest;
 import org.mercycorps.translationcards.view.TranslationCardItemTest;
 
 import dagger.Component;
@@ -28,6 +27,5 @@ public interface TestBaseComponent extends BaseComponent {
     void inject(MyDecksActivityTest myDecksActivityTest);
     void inject(TranslationsActivityTest translationsActivityTest);
     void inject(MyDeckAdapterTest myDeckAdapterTest);
-    void inject(DeckTest deckTest);
     void inject(CardListAdapterTest cardListAdapterTest);
 }

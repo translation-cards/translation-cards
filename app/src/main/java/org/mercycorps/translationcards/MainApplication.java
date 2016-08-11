@@ -62,7 +62,7 @@ public class MainApplication extends Application {
         LanguagesImportUtility languagesImportUtility = createLanguagesImportUtility();
         LanguageService languageService = new LanguageService(languagesImportUtility);
         if (isTest) return;
-        DatabaseHelper databaseHelper = new DatabaseHelper(context, languageService);
+        DatabaseHelper databaseHelper = new DatabaseHelper(languageService);
         TranslationRepository translationRepository = new TranslationRepository(databaseHelper);
         DictionaryRepository dictionaryRepository = new DictionaryRepository(databaseHelper, translationRepository, languageService);
         deckRepository = new DeckRepository(dictionaryRepository, databaseHelper, languageService);

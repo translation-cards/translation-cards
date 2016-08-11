@@ -17,11 +17,11 @@
 package org.mercycorps.translationcards.model;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.service.LanguageService;
 
 /**
@@ -36,8 +36,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 4;
     private final LanguageService languageService;
 
-    public DatabaseHelper(Context context, LanguageService languageService) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public DatabaseHelper(LanguageService languageService) {
+        super(MainApplication.getContextFromMainApp(), DATABASE_NAME, null, DATABASE_VERSION);
         this.languageService = languageService;
     }
 

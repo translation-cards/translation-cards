@@ -7,11 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
-import org.mercycorps.translationcards.MainApplication;
-import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.porting.JsonKeys;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
@@ -32,9 +29,6 @@ public class DeckTest {
 
     @Before
     public void setUp() throws Exception {
-        MainApplication application = (MainApplication) RuntimeEnvironment.application;
-        ((TestBaseComponent) application.getBaseComponent()).inject(this);
-
         Dictionary[] dictionaries = {new Dictionary("")};
         deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
     }
