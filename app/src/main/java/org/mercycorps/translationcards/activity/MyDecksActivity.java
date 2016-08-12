@@ -60,6 +60,12 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         updateDecksView(decks);
     }
 
+    @Override
+    protected void onResume() {
+        refreshMyDecksList();
+        super.onResume();
+    }
+
     private void initListHeader() {
         View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
         myDeckListView.addHeaderView(headerView);

@@ -91,6 +91,15 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        translationService.initializeCardStates();
+        updateView(dictionaryService.getCurrentDictionaryIndex());
+        ListView list = (ListView) findViewById(R.id.translations_list);
+        list.setSelection(0);
+    }
+
+    @Override
     protected void initStates() {
         updateAddTranslationButtonVisibility();
     }

@@ -57,7 +57,7 @@ public class SummaryActivity extends AddTranslationActivity {
     protected void summaryDoneClicked() {
         saveTranslation();
         stopMediaManager();
-        startNextActivity(SummaryActivity.this, TranslationsActivity.class);
+        finish();
     }
 
     @OnClick(R.id.summary_activity_back)

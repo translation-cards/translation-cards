@@ -1,10 +1,9 @@
 package org.mercycorps.translationcards.activity;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.junit.After;
@@ -16,7 +15,6 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
-import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DeckRepository;
@@ -24,6 +22,7 @@ import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
 
 import javax.inject.Inject;
 
@@ -33,8 +32,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -53,17 +50,6 @@ public class MyDecksActivityTest {
     public void setup() {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
-
-        Cursor cursor = mock(Cursor.class);
-        when(cursor.getCount()).thenReturn(1);
-        when(cursor.moveToFirst()).thenReturn(true);
-        when(cursor.getString(anyInt())).thenReturn("cursor string");
-        when(cursor.getLong(anyInt())).thenReturn(12345l);
-        when(cursor.getInt(anyInt())).thenReturn(1234);
-        SQLiteDatabase sqlLiteDatabase = mock(SQLiteDatabase.class);
-        when(sqlLiteDatabase.query(DatabaseHelper.DecksTable.TABLE_NAME, null, null, null, null, null, String.format("%s DESC", DatabaseHelper.DecksTable.ID))).thenReturn(cursor);
-        DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
-        when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
     }
     
     @After 
@@ -73,14 +59,14 @@ public class MyDecksActivityTest {
 
     @Test
     public void testDecksActivityCreation(){
-        setUpMocksWithEmptyDecks();
+        setUpDeckRepositoryWithNoDecks();
         Activity activity = helper.createActivityToTest();
         assertNotNull(activity);
     }
 
     @Test
     public void shouldShowDecksFooterTitleWhenNoDecksArePresent(){
-        setUpMocksWithEmptyDecks();
+        setUpDeckRepositoryWithNoDecks();
         Activity activity = helper.createActivityToTest();
         TextView textView = findTextView(activity, R.id.empty_my_decks_title);
         assertEquals(View.VISIBLE, textView.getVisibility());
@@ -88,7 +74,7 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldShowDecksHeader() {
-        setUpMockWithDecks();
+        setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         LinearLayout linearLayout = findLinearLayout(activity, R.id.my_decks_header);
         assertEquals(View.VISIBLE, linearLayout.getVisibility());
@@ -96,7 +82,7 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldNotShowDecksFooterTitleWhenDecksArePresent(){
-        setUpMockWithDecks();
+        setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         TextView textView = findTextView(activity, R.id.empty_my_decks_title);
         assertEquals(View.GONE, textView.getVisibility());
@@ -104,7 +90,7 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldNotShowDecksFooterMessageWhenDecksArePresent(){
-        setUpMockWithDecks();
+        setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         TextView textView = findAnyView(activity, R.id.empty_my_decks_message);
         assertEquals(View.GONE, textView.getVisibility());
@@ -112,7 +98,7 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldLaunchFeedbackFormWhenFeedbackButtonIsClicked() throws Exception {
-        setUpMockWithDecks();
+        setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.feedback_button);
         assertEquals(URI, shadowOf(activity).getNextStartedActivity().getData().toString());
@@ -120,7 +106,7 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldLaunchImportDeckWhenImportButtonIsClicked(){
-        setUpMocksWithEmptyDecks();
+        setUpDeckRepositoryWithNoDecks();
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.import_deck_button);
         assertEquals("file/*", shadowOf(activity).getNextStartedActivity().getType());
@@ -128,28 +114,48 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldLaunchCreateDeckFlowWhenCreateButtonIsClicked(){
-        setUpMocksWithEmptyDecks();
+        setUpDeckRepositoryWithNoDecks();
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.create_deck_button);
         assertEquals(GetStartedDeckActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
-    private void setUpMockWithDecks(){
-        setUpMocks(true);
+    @Test
+    public void shouldRefreshDecksOnActivityResume() throws Exception {
+        Language defaultSourceLanguage = new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME);
+        Deck firstDeck = new Deck("First Deck", "", "", 0L, false, defaultSourceLanguage);
+        Deck secondDeck = new Deck("Second Deck", "", "", 1L, false, defaultSourceLanguage);
+        when(deckRepository.getAllDecks())
+                .thenReturn(new Deck[]{firstDeck})
+                .thenReturn(new Deck[]{firstDeck, secondDeck});
+        Activity activity = helper.createActivityToTest();
+        ShadowActivity shadowActivity = shadowOf(activity);
+        ListView decksView = (ListView) activity.findViewById(R.id.my_decks_list);
+
+        //Note that the header and footer in the list view contribute to the adapter item count
+        //http://stackoverflow.com/a/11106567
+        assertEquals(3, decksView.getAdapter().getCount());
+        shadowActivity.pauseAndThenResume();
+
+        assertEquals(4, decksView.getAdapter().getCount());
     }
 
-    private void setUpMocksWithEmptyDecks(){
-        setUpMocks(false);
+    private void setUpDeckRepositoryWithDecks(){
+        setUpDeckRepository(true);
     }
 
-    private void setUpMocks(boolean shouldCreateDeck){
-        when(deckRepository.getAllDecks()).thenReturn(mockDecks(shouldCreateDeck));
+    private void setUpDeckRepositoryWithNoDecks(){
+        setUpDeckRepository(false);
     }
 
-    private Deck[] mockDecks(boolean shouldCreateDeck){
-        if(!shouldCreateDeck) return null;
+    private void setUpDeckRepository(boolean shouldCreateDeck){
+        when(deckRepository.getAllDecks()).thenReturn(createStubDeckArray(shouldCreateDeck));
+    }
+
+    private Deck[] createStubDeckArray(boolean shouldCreateDeck){
+        if(!shouldCreateDeck) return new Deck[0];
         Deck[] arrayOfDecks = new Deck[1];
-        Deck deck = new Deck("", "", "", 0l, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
+        Deck deck = new Deck("", "", "", 0L, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
         arrayOfDecks[0] = deck;
         return arrayOfDecks;
     }

@@ -47,7 +47,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
         deckService.save(newDeckContext.getDeck(), newDeckContext.getDestinationLanguages());
-        startNextActivity(this, MyDecksActivity.class);
+        finish();
     }
 
     @OnClick(R.id.deck_review_and_save_back)

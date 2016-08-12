@@ -35,6 +35,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -289,6 +290,20 @@ public class TranslationsActivityTest {
         assertFalse(context.isEdit());
     }
 
+    @Test
+    public void shouldUpdateTranslationsListOnResume() throws Exception {
+        when(translationService.getCurrentTranslations()).thenReturn(new ArrayList<Translation>())
+                .thenReturn(Arrays.asList(new Translation()));
+        ShadowActivity shadowActivity = Shadows.shadowOf(translationsActivity);
+        ListView listView = (ListView)translationsActivity.findViewById(R.id.translations_list);
+
+        shadowActivity.pauseAndThenResume();
+
+        assertEquals(2, listView.getAdapter().getCount());
+        shadowActivity.pauseAndThenResume();
+
+        assertEquals(3, listView.getAdapter().getCount());
+    }
 
     private View firstTranslationCardInListView() {
         ListView translationsList = (ListView) translationsActivity
