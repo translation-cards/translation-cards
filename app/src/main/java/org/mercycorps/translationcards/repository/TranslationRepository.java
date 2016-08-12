@@ -5,14 +5,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.*;
+import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.*;
 
 public class TranslationRepository {
 
@@ -40,7 +39,7 @@ public class TranslationRepository {
         databaseHelper.close();
     }
 
-    public long addTranslation(SQLiteDatabase writableDatabase,
+    private long addTranslation(SQLiteDatabase writableDatabase,
                                long dictionaryId, String label, boolean isAsset, String filename, int itemIndex, String translatedText) {
         Log.d(TAG, "Inserting translation...");
         ContentValues values = new ContentValues();

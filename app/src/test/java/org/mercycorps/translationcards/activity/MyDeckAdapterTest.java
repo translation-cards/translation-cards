@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.repository.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;

@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.porting;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -84,7 +83,7 @@ public class TxcImportUtility {
         return deckRepository.retrieveKeyForDeckWithExternalId(importSpec.externalId);
     }
 
-    public void loadBundledDeck(SQLiteDatabase db) {
+    public void loadBundledDeck() {
         JSONObject jsonObject;
         try {
             Context context = MainApplication.getContextFromMainApp();
@@ -95,7 +94,7 @@ public class TxcImportUtility {
             jsonObject = new JSONObject(new String(buffer, "UTF-8"));
 
             ImportSpec importSpec = buildImportSpec(new File(""), "", jsonObject);
-            loadAssetData(db, context, importSpec);
+            loadAssetData(importSpec);
         } catch (IOException | JSONException | ImportException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -357,15 +356,15 @@ public class TxcImportUtility {
         }
     }
 
-    public void loadAssetData(SQLiteDatabase writableDatabase, Context context, ImportSpec importSpec) {
-        long deckId = deckRepository.addDeck(writableDatabase, importSpec.label, importSpec.publisher, importSpec.timestamp,
+    public void loadAssetData(ImportSpec importSpec) {
+        long deckId = deckRepository.addDeck(importSpec.label, importSpec.publisher, importSpec.timestamp,
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dictionaryRepository.addDictionary(writableDatabase, dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
-                translationRepository.addTranslation(writableDatabase, dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
+                translationRepository.addTranslation(dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);
             }
         }
     }

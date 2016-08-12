@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.mercycorps.translationcards.model;
+package org.mercycorps.translationcards.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;

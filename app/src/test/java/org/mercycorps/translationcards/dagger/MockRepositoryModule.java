@@ -1,6 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
-import org.mercycorps.translationcards.model.DatabaseHelper;
+import org.mercycorps.translationcards.repository.DatabaseHelper;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.repository.DictionaryRepository;
 import org.mercycorps.translationcards.repository.TranslationRepository;

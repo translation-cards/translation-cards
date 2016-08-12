@@ -6,7 +6,6 @@ import android.media.MediaRecorder;
 
 import org.mercycorps.translationcards.dagger.BaseComponent;
 import org.mercycorps.translationcards.dagger.DaggerBaseComponent;
-import org.mercycorps.translationcards.model.DatabaseHelper;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
 
@@ -34,7 +33,6 @@ public class MainApplication extends Application {
 
     @Inject DeckRepository deckRepository;
     @Inject TxcImportUtility txcImportUtility;
-    @Inject DatabaseHelper databaseHelper;
 
     @Override
     public void onCreate() {
@@ -54,7 +52,7 @@ public class MainApplication extends Application {
 
     private void checkForBundledDeckAndLoad() {
         if (deckRepository.retrieveKeyForDeckWithExternalId(PRE_BUNDLED_DECK_EXTERNAL_ID) == DeckRepository.NONEXISTENT_ID) {
-            txcImportUtility.loadBundledDeck(databaseHelper.getWritableDatabase());
+            txcImportUtility.loadBundledDeck();
         }
     }
 

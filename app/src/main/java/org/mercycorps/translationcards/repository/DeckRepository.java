@@ -4,8 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.model.DatabaseHelper;
-import org.mercycorps.translationcards.model.DatabaseHelper.DecksTable;
+import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
@@ -13,8 +12,8 @@ import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
 
-import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.DICTIONARY_ID;
-import static org.mercycorps.translationcards.model.DatabaseHelper.TranslationsTable.TABLE_NAME;
+import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.DICTIONARY_ID;
+import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.TABLE_NAME;
 
 /**
  * Created by njimenez on 6/27/16.
@@ -63,7 +62,7 @@ public class DeckRepository {
         return decks;
     }
 
-    public long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
+    private long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
                         long creationTimestamp, String externalId, String hash, boolean locked,
                         String srcLanguageIso) {
         ContentValues values = new ContentValues();
