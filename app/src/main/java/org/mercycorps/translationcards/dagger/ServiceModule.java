@@ -27,8 +27,8 @@ public class ServiceModule {
 
     @PerApplication
     @Provides
-    DeckService providesDeckService(LanguageService languageService, DeckRepository deckRepository, DictionaryRepository dictionaryRepository) {
-        return new DeckService(languageService, deckRepository, dictionaryRepository);
+    DeckService providesDeckService(DeckRepository deckRepository) {
+        return new DeckService(deckRepository);
     }
 
     @PerApplication

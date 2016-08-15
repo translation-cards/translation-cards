@@ -6,28 +6,48 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
 
 import java.util.List;
 
-public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMenuListener {
+public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListener {
     private final MyDecksActivity activity;
+    private DeckRepository deckRepository;
+    private final List<Deck> decks;
     DeckService deckService;
     private DictionaryService dictionaryService;
 
-    public MyDeckAdapter(MyDecksActivity context, int deckItemResource, int deckNameResource, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService) {
-        super(context, deckItemResource, deckNameResource, decks);
+    public MyDeckAdapter(MyDecksActivity context, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService, DeckRepository deckRepository) {
+        this.decks = decks;
         this.deckService = deckService;
         this.dictionaryService = dictionaryService;
         this.activity = context;
+        this.deckRepository = deckRepository;
+    }
+
+    @Override
+    public int getCount() {
+        return decks.size();
+    }
+
+    @Override
+    public Deck getItem(int position) {
+        return decks.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -65,7 +85,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMe
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deckService.delete(deck);
+                                deckRepository.deleteDeck(deck.getDbId());
                                 activity.refreshMyDecksList();
                             }
                         })
@@ -80,7 +100,7 @@ public class MyDeckAdapter extends ArrayAdapter<Deck> implements DeckItem.DeckMe
     }
 
     private void shareDeck(final Deck deck) {
-        final EditText nameField = new EditText(getContext());
+        final EditText nameField = new EditText(activity);
         nameField.setText(deck.getTitle());
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.deck_export_dialog_title)

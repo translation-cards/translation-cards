@@ -5,9 +5,8 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 import org.mercycorps.translationcards.view.DeckItem;
 
@@ -27,7 +26,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     DeckItem deckItem;
     private NewDeckContext newDeckContext;
 
-    @Inject DeckService deckService;
+    @Inject DeckRepository deckRepository;
 
     @Override
     public void inflateView() {
@@ -46,7 +45,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
 
     @OnClick(R.id.deck_review_and_save_button)
     protected void saveButtonClicked() {
-        deckService.save(newDeckContext.getDeck(), newDeckContext.getDestinationLanguages());
+        deckRepository.saveDeck(newDeckContext.getDeck(), newDeckContext.getDestinationLanguages());
         finish();
     }
 

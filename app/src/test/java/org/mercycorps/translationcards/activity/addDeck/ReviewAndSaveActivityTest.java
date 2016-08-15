@@ -17,7 +17,7 @@ import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;
-import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -50,7 +50,7 @@ public class ReviewAndSaveActivityTest {
     private NewDeckContext newDeckContext;
     private Deck deck;
 
-    @Inject DeckService deckService;
+    @Inject DeckRepository deckRepository;
 
     @Before
     public void setup() {
@@ -95,7 +95,7 @@ public class ReviewAndSaveActivityTest {
         newDeckContext.addDestinationLanguage("Spanish");
         Activity activity = helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.deck_review_and_save_button);
-        verify(deckService).save(deck, newDeckContext.getDestinationLanguages());
+        verify(deckRepository).saveDeck(deck, newDeckContext.getDestinationLanguages());
     }
 
     @Test

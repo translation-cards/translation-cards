@@ -11,6 +11,7 @@ import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.LanguageService;
 
 import java.io.File;
+import java.util.Set;
 
 import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.DICTIONARY_ID;
 import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.TABLE_NAME;
@@ -80,6 +81,27 @@ public class DeckRepository {
                         String hash, boolean locked, String srcLanguageIso) {
         return addDeck(databaseHelper.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
                 hash, locked, srcLanguageIso);
+    }
+
+    public void saveDeck(Deck deck, Set<String> languages) {
+        Long deckID = addDeck(
+                deck.getTitle(),
+                deck.getAuthor(),
+                deck.getTimestamp(),
+                deck.getExternalId(),
+                "",
+                deck.isLocked(),
+                deck.getSourceLanguageIso());
+        saveDictionaries(deckID, languages);
+    }
+
+    private void saveDictionaries(Long deckId, Set<String> languages) {
+        Integer itemIndex = 0;
+        for (String language : languages) {
+            String isoCode = languageService.getIsoForLanguage(language);
+            dictionaryRepository.addDictionary(isoCode, language, itemIndex, deckId);
+            itemIndex++;
+        }
     }
 
     public void deleteDeck(long deckId) {

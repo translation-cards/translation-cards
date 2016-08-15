@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,10 +16,11 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
-import org.mercycorps.translationcards.repository.DatabaseHelper;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Language;
+import org.mercycorps.translationcards.repository.DatabaseHelper;
+import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
@@ -64,6 +64,7 @@ public class MyDeckAdapterTest {
     private MyDecksActivity activity;
     private ActivityController<MyDecksActivity> controller;
     private DeckService deckService = mock(DeckService.class);
+    private DeckRepository deckRepository = mock(DeckRepository.class);
     private DictionaryService dictionaryService;
 
     @Before
@@ -94,7 +95,7 @@ public class MyDeckAdapterTest {
         Intent intent = new Intent();
         controller = Robolectric.buildActivity(MyDecksActivity.class);
         activity = controller.withIntent(intent).create().get();
-        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
         return adapter.getView(0, null, null);
     }
 
@@ -186,7 +187,7 @@ public class MyDeckAdapterTest {
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(deckService).delete(deck);
+        verify(deckRepository).deleteDeck(deck.getDbId());
     }
 
     @Test
@@ -232,7 +233,7 @@ public class MyDeckAdapterTest {
     public void shouldCreateNewViewWhenExistingViewIsNull() {
         controller = Robolectric.buildActivity(MyDecksActivity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
 
         View view = adapter.getView(0, null, null);
         TextView deckName = (TextView) view.findViewById(R.id.deck_name);
@@ -245,7 +246,7 @@ public class MyDeckAdapterTest {
     public void shouldModifyExistingViewIfViewNotNull() {
         controller = Robolectric.buildActivity(MyDecksActivity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        ArrayAdapter<Deck> adapter = new MyDeckAdapter(activity, R.layout.deck_item, R.id.deck_name, singletonList(deck), deckService, dictionaryService);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
 
         DeckItem view = new DeckItem(activity.getApplicationContext());
         adapter.getView(0, view, null);
