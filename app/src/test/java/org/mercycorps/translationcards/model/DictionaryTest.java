@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,5 +76,23 @@ public class DictionaryTest {
         assertEquals(2, cardsArray.length());
         assertEquals(firstTranslationAsJSON, cardsArray.getJSONObject(0));
         assertEquals(secondTranslationAsJSON, cardsArray.getJSONObject(1));
+    }
+
+    @Test
+    public void shouldInflateFromParcel() throws Exception {
+        Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
+        Translation secondTranslation = new Translation("", true, "/filename2", 1L, "");
+        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
+        Parcel parcel = Parcel.obtain();
+
+        dictionary.writeToParcel(parcel, 1);
+        parcel.setDataPosition(0); //data position must be reset before reading from parcel
+        Dictionary fromParcel = Dictionary.CREATOR.createFromParcel(parcel);
+
+        assertEquals(dictionary.getLanguage(), fromParcel.getLanguage());
+        assertEquals(dictionary.getDestLanguageIso(), fromParcel.getDestLanguageIso());
+        assertEquals(dictionary.getAudioPaths(), fromParcel.getAudioPaths());
+        assertEquals(dictionary.getTranslationCount(), fromParcel.getTranslationCount());
+        assertEquals(dictionary.getDbId(), fromParcel.getDbId());
     }
 }

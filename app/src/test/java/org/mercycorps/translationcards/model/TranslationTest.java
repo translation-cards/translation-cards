@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,5 +36,21 @@ public class TranslationTest {
         assertEquals(translation.getLabel(), json.getString(JsonKeys.CARD_LABEL));
         assertEquals("filename.mp3", json.getString(JsonKeys.CARD_DEST_AUDIO));
         assertEquals(translation.getTranslatedText(), json.getString(JsonKeys.CARD_DEST_TEXT));
+    }
+
+    @Test
+    public void shouldInflateFromParcel() throws Exception {
+        Translation translation = new Translation("label", false, "/path/to/filename.mp3", 1L, "translated text");
+        Parcel parcel = Parcel.obtain();
+
+        translation.writeToParcel(parcel, 1);
+        parcel.setDataPosition(0); //data position must be reset before reading from parcel
+        Translation fromParcel = Translation.CREATOR.createFromParcel(parcel);
+
+        assertEquals(translation.getLabel(), fromParcel.getLabel());
+        assertEquals(translation.getTranslatedText(), fromParcel.getTranslatedText());
+        assertEquals(translation.getFilePath(), fromParcel.getFilePath());
+        assertEquals(translation.getIsAsset(), fromParcel.getIsAsset());
+        assertEquals(translation.getDbId(), fromParcel.getDbId());
     }
 }

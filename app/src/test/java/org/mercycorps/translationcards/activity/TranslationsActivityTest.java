@@ -37,6 +37,7 @@ import org.robolectric.util.ActivityController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -277,7 +278,7 @@ public class TranslationsActivityTest {
         firstTranslationCardInListView().findViewById(R.id.translation_card_edit).performClick();
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        AddNewTranslationContext context = nextStartedActivity.getParcelableExtra(CONTEXT_INTENT_KEY);
         assertTrue(context.isEdit());
     }
 
@@ -286,14 +287,14 @@ public class TranslationsActivityTest {
         click(translationsActivity, R.id.add_translation_button);
 
         Intent nextStartedActivity = shadowOf(translationsActivity).getNextStartedActivity();
-        AddNewTranslationContext context = (AddNewTranslationContext) nextStartedActivity.getSerializableExtra(CONTEXT_INTENT_KEY);
+        AddNewTranslationContext context = nextStartedActivity.getParcelableExtra(CONTEXT_INTENT_KEY);
         assertFalse(context.isEdit());
     }
 
     @Test
     public void shouldUpdateTranslationsListOnResume() throws Exception {
         when(translationService.getCurrentTranslations()).thenReturn(new ArrayList<Translation>())
-                .thenReturn(Arrays.asList(new Translation()));
+                .thenReturn(Collections.singletonList(new Translation()));
         ShadowActivity shadowActivity = Shadows.shadowOf(translationsActivity);
         ListView listView = (ListView)translationsActivity.findViewById(R.id.translations_list);
 

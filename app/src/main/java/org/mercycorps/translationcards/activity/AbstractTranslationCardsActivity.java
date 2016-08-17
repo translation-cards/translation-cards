@@ -57,7 +57,7 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
     }
 
     protected Object getObjectFromIntent(String serializableKey){
-        return getIntent().getSerializableExtra(serializableKey);
+        return getIntent().getParcelableExtra(serializableKey);
     }
 
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {

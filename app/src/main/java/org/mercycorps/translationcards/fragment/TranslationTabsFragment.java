@@ -28,7 +28,7 @@ public class TranslationTabsFragment extends Fragment  {
     };
 
     public interface OnLanguageTabSelectedListener {
-        public void onLanguageTabSelected(NewTranslation currentTranslation);
+        void onLanguageTabSelected(NewTranslation currentTranslation);
     }
 
     public void setOnLanguageTabSelectedListener(OnLanguageTabSelectedListener onLanguageTabSelectedListener) {
@@ -39,7 +39,7 @@ public class TranslationTabsFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_translation_tabs, container, false);
         LinearLayout languagesScrollList = (LinearLayout) fragmentView.findViewById(R.id.languages_scroll_list);
-        AddNewTranslationContext addNewTranslationContext = (AddNewTranslationContext) getArguments().getSerializable(AddTranslationActivity.CONTEXT_INTENT_KEY);
+        AddNewTranslationContext addNewTranslationContext = getArguments().getParcelable(AddTranslationActivity.CONTEXT_INTENT_KEY);
         List<NewTranslation> newTranslations = addNewTranslationContext.getNewTranslations();
 
         currentTranslation = newTranslations.get(0);

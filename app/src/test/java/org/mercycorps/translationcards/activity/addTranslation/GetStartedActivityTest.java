@@ -52,7 +52,7 @@ public class GetStartedActivityTest {
     public void shouldPassNewTranslationContextWhenStartingEnterSourcePhraseActivity() {
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.get_started_button);
-        assertEquals(getContextFromIntent(activity), shadowOf(activity).getNextStartedActivity().getSerializableExtra(CONTEXT_INTENT_KEY));
+        assertEquals(getContextFromIntent(activity), shadowOf(activity).getNextStartedActivity().getParcelableExtra(CONTEXT_INTENT_KEY));
     }
 
     @Test

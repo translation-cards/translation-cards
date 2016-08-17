@@ -1,17 +1,18 @@
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.porting.JsonKeys;
 
 import java.io.File;
-import java.io.Serializable;
 
 /**
  * Contains information about a single phrase.
  */
-public class Translation implements Serializable {
+public class Translation implements Parcelable {
 
     public static final String DEFAULT_TRANSLATED_TEXT = "";
     private String label;
@@ -31,6 +32,26 @@ public class Translation implements Serializable {
     public Translation() {
         this("", false, "", -1, "");
     }
+
+    protected Translation(Parcel in) {
+        label = in.readString();
+        isAsset = in.readInt() != 0;
+        filePath = in.readString();
+        dbId = in.readLong();
+        translatedText = in.readString();
+    }
+
+    public static final Creator<Translation> CREATOR = new Creator<Translation>() {
+        @Override
+        public Translation createFromParcel(Parcel in) {
+            return new Translation(in);
+        }
+
+        @Override
+        public Translation[] newArray(int size) {
+            return new Translation[size];
+        }
+    };
 
     public String getLabel() {
         return label;
@@ -79,5 +100,19 @@ public class Translation implements Serializable {
         cardJson.put(JsonKeys.CARD_DEST_AUDIO, name);
         cardJson.put(JsonKeys.CARD_DEST_TEXT, translatedText);
         return cardJson;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(label);
+        dest.writeInt(isAsset? 1 : 0);
+        dest.writeString(filePath);
+        dest.writeLong(dbId);
+        dest.writeString(translatedText);
     }
 }

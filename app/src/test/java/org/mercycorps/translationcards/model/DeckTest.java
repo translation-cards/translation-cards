@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,5 +122,23 @@ public class DeckTest {
         assertEquals(4, audioFilePaths.size());
         assertTrue(audioFilePaths.keySet().containsAll(firstDictionary.getAudioPaths().keySet()));
         assertTrue(audioFilePaths.keySet().containsAll(secondDictionary.getAudioPaths().keySet()));
+    }
+
+    @Test
+    public void shouldInflateFromParcel() throws Exception {
+        Parcel parcel = Parcel.obtain();
+
+        deck.writeToParcel(parcel, 1);
+        parcel.setDataPosition(0); //data position must be reset before reading from parcel
+        Deck fromParcel = Deck.CREATOR.createFromParcel(parcel);
+
+        assertEquals(deck.getTitle(), fromParcel.getTitle());
+        assertEquals(deck.getAuthor(), fromParcel.getAuthor());
+        assertEquals(deck.getExternalId(), fromParcel.getExternalId());
+        assertEquals(deck.getDbId(), fromParcel.getDbId());
+        assertEquals(deck.getTimestamp(), fromParcel.getTimestamp());
+        assertEquals(deck.isLocked(), fromParcel.isLocked());
+        assertEquals(deck.getSourceLanguageIso(), fromParcel.getSourceLanguageIso());
+        assertEquals(deck.getAudioFilePaths(), fromParcel.getAudioFilePaths());
     }
 }

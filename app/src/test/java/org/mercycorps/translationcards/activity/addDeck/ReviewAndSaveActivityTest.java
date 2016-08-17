@@ -59,7 +59,7 @@ public class ReviewAndSaveActivityTest {
 
         Dictionary[] dictionaries = {};
         deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, new Language(SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_NAME), dictionaries);
-        newDeckContext = new NewDeckContext(deck, false);
+        newDeckContext = new NewDeckContext(deck);
     }
 
     @After

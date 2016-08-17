@@ -40,8 +40,8 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {
         finish();
         Intent nextIntent = new Intent(currentContext, nextActivityClass);
-        nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getSerializableExtra(CONTEXT_INTENT_KEY));
-        nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getSerializableExtra(INTENT_KEY_DECK_ID));
+        nextIntent.putExtra(CONTEXT_INTENT_KEY, getIntent().getParcelableExtra(CONTEXT_INTENT_KEY));
+        nextIntent.putExtra(INTENT_KEY_DECK_ID, getIntent().getParcelableExtra(INTENT_KEY_DECK_ID));
         startActivity(nextIntent);
     }
 
@@ -55,7 +55,7 @@ public abstract class AddTranslationActivity extends AbstractTranslationCardsAct
         translationTabsFragment.setCurrentTranslation(getContextFromIntent().getNewTranslations().get(0));
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle arguments = new Bundle();
-        arguments.putSerializable(CONTEXT_INTENT_KEY, getContextFromIntent());
+        arguments.putParcelable(CONTEXT_INTENT_KEY, getContextFromIntent());
         translationTabsFragment.setArguments(arguments);
         transaction.replace(R.id.language_tabs_fragment, translationTabsFragment);
         transaction.commit();

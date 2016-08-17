@@ -37,13 +37,13 @@ public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> e
         Intent intent = new Intent();
         Language sourceLanguage = new Language(DEFAULT_DECK_ISO_CODE, DEFAULT_SOURCE_LANGUAGE_NAME);
         Deck deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_DECK_AUTHOR, "", -1, true, sourceLanguage);
-        NewDeckContext defaultDeckContext = new NewDeckContext(deck, false);
+        NewDeckContext defaultDeckContext = new NewDeckContext(deck);
         intent.putExtra(INTENT_KEY_DECK, defaultDeckContext);
         return getActivityWithIntent(intent);
     }
 
     public NewDeckContext getContextFromIntent(Activity activity) {
-        return (NewDeckContext) activity.getIntent().getSerializableExtra(INTENT_KEY_DECK);
+        return (NewDeckContext) activity.getIntent().getParcelableExtra(INTENT_KEY_DECK);
     }
 
 }

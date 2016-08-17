@@ -48,7 +48,7 @@ public class GetStartedDeckActivityTest {
         NewDeckContext expectedDeckContext = getContextFromIntent(activity);
         click(activity, R.id.deck_get_started_button);
         Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
-        NewDeckContext actualDeckContext = (NewDeckContext) nextStartedActivity.getSerializableExtra(INTENT_KEY_DECK);
+        NewDeckContext actualDeckContext = nextStartedActivity.getParcelableExtra(INTENT_KEY_DECK);
         assertEquals(expectedDeckContext, actualDeckContext);
     }
 
@@ -81,6 +81,6 @@ public class GetStartedDeckActivityTest {
     }
 
     public NewDeckContext getContextFromIntent(Activity activity) {
-        return (NewDeckContext) activity.getIntent().getSerializableExtra(AddDeckActivity.INTENT_KEY_DECK);
+        return (NewDeckContext) activity.getIntent().getParcelableExtra(AddDeckActivity.INTENT_KEY_DECK);
     }
 }

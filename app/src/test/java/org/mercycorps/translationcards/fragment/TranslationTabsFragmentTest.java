@@ -24,7 +24,6 @@ import java.util.List;
 import static android.support.v4.content.ContextCompat.getColor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
@@ -44,7 +43,7 @@ public class TranslationTabsFragmentTest {
         NewTranslation secondTranslationContext = new NewTranslation(new Dictionary("pashto"));
         List<NewTranslation> newTranslations = Arrays.asList(newTranslation, secondTranslationContext);
         AddNewTranslationContext addNewTranslationContext = new AddNewTranslationContext(newTranslations);
-        bundle.putSerializable(BUNDLE_KEY_DICTIONARIES, addNewTranslationContext);
+        bundle.putParcelable(BUNDLE_KEY_DICTIONARIES, addNewTranslationContext);
         translationTabsFragment.setArguments(bundle);
 
         startFragment(translationTabsFragment);

@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -7,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.porting.JsonKeys;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.Map;
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class Deck implements Serializable {
+public class Deck implements Parcelable {
 
     private String title;
     private String author;
@@ -50,6 +51,29 @@ public class Deck implements Serializable {
 
     public Deck() {
     }
+
+    protected Deck(Parcel in) {
+        title = in.readString();
+        author = in.readString();
+        externalId = in.readString();
+        dbId = in.readLong();
+        timestamp = in.readLong();
+        locked = in.readInt() != 0;
+        dictionaries = in.createTypedArray(Dictionary.CREATOR);
+        sourceLanguage = in.readParcelable(Language.class.getClassLoader());
+    }
+
+    public static final Creator<Deck> CREATOR = new Creator<Deck>() {
+        @Override
+        public Deck createFromParcel(Parcel in) {
+            return new Deck(in);
+        }
+
+        @Override
+        public Deck[] newArray(int size) {
+            return new Deck[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -144,5 +168,22 @@ public class Deck implements Serializable {
             audioFilesMap.putAll(dictionary.getAudioPaths());
         }
         return audioFilesMap;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(externalId);
+        dest.writeLong(dbId);
+        dest.writeLong(timestamp);
+        dest.writeInt(locked ? 1 : 0);
+        dest.writeTypedArray(dictionaries, flags);
+        dest.writeParcelable(sourceLanguage, 0);
     }
 }

@@ -16,6 +16,8 @@
 
 package org.mercycorps.translationcards.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -24,7 +26,6 @@ import org.json.JSONObject;
 import org.mercycorps.translationcards.porting.JsonKeys;
 import org.mercycorps.translationcards.service.LanguageService;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  *
  * @author nick.c.worden@gmail.com (Nick Worden)
  */
-public class Dictionary implements Serializable {
+public class Dictionary implements Parcelable {
 
 
     private long dbId;
@@ -52,6 +53,25 @@ public class Dictionary implements Serializable {
     public Dictionary(String language) {
         this(LanguageService.INVALID_ISO_CODE, language, new Translation[0], -1L);
     }
+
+    protected Dictionary(Parcel in) {
+        dbId = in.readLong();
+        destLanguageIso = in.readString();
+        language = in.readString();
+        translations = in.createTypedArray(Translation.CREATOR);
+    }
+
+    public static final Creator<Dictionary> CREATOR = new Creator<Dictionary>() {
+        @Override
+        public Dictionary createFromParcel(Parcel in) {
+            return new Dictionary(in);
+        }
+
+        @Override
+        public Dictionary[] newArray(int size) {
+            return new Dictionary[size];
+        }
+    };
 
     public String getDestLanguageIso() {
         return destLanguageIso;
@@ -117,5 +137,18 @@ public class Dictionary implements Serializable {
         }
 
         return pathMap;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(dbId);
+        dest.writeString(destLanguageIso);
+        dest.writeString(language);
+        dest.writeTypedArray(translations, flags);
     }
 }

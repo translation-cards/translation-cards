@@ -44,7 +44,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndNewDeckContextHasADestinationLanguage() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
@@ -54,7 +54,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldAddLanguageSelectorResultToViewAndNewDeckContext() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
         Intent data = new Intent();
@@ -67,7 +67,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldNotAddLanguageSelectorResultIfNull() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
         Intent emptyIntent = new Intent();
@@ -79,7 +79,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldNotAddLanguageSelectorResultIfInvalidResultCode() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexBox = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
 
@@ -129,7 +129,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldChangeNextButtonColorWhenDestinationLanguageSetIsNotEmpty() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
@@ -139,7 +139,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck(), false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         activity.updateNextButtonState();
@@ -158,7 +158,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldCreateLanguageChipsWhenActivityIsCreatedWithALanguage() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
@@ -175,7 +175,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldRemoveLanguageWhenChipIconTapped() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);
@@ -193,7 +193,7 @@ public class EnterDeckDestinationLanguagesActivityTest {
 
     @Test
     public void shouldDisableNextButtonWhenLastLanguageRemoved() {
-        NewDeckContext newDeckContext = new NewDeckContext(null, false);
+        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
         EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         FlexboxLayout flexboxLayout = (FlexboxLayout) activity.findViewById(R.id.language_chip_flexbox);

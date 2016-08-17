@@ -99,7 +99,7 @@ public class TestAddTranslationCardActivityHelper {
 
 
     public static AddNewTranslationContext getContextFromIntent(Activity activity) {
-        return (AddNewTranslationContext) activity.getIntent().getSerializableExtra(CONTEXT_INTENT_KEY);
+        return (AddNewTranslationContext) activity.getIntent().getParcelableExtra(CONTEXT_INTENT_KEY);
     }
 
     public static NewTranslation getFirstNewTranslationFromContext(Activity activity) {
