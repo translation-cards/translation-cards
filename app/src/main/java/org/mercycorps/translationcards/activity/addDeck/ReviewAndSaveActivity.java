@@ -1,13 +1,13 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.ui.LanguageDisplayUtil;
 import org.mercycorps.translationcards.view.DeckItem;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class ReviewAndSaveActivity extends AddDeckActivity {
+    public static final String DELIMITER = "  ";
     @Bind(R.id.translation_languages)
     TextView translationLanguagesTextView;
     @Bind(R.id.deck_item)
@@ -65,7 +66,7 @@ public class ReviewAndSaveActivity extends AddDeckActivity {
     private void fillLanguagesListTextView() {
         List<String> destinationLanguages = new ArrayList<>(newDeckContext.getDestinationLanguages());
         Collections.sort(destinationLanguages);
-        String formattedLanguages = LanguageDisplayUtil.getDestLanguagesFromStringsForDisplay(destinationLanguages);
-        translationLanguagesTextView.setText(formattedLanguages);
+        String formattedLanguages = TextUtils.join(DELIMITER, destinationLanguages);
+        translationLanguagesTextView.setText(formattedLanguages.toUpperCase());
     }
 }

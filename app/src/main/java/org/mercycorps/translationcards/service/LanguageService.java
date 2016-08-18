@@ -2,12 +2,12 @@ package org.mercycorps.translationcards.service;
 
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +39,12 @@ public class LanguageService {
         return INVALID_ISO_CODE;
     }
 
-    public List<String> getLanguageNames() {
-        List<String> languageNames = new ArrayList<>();
+    public Map<String, String> getLanguageNames() {
+        Map<String, String> languageNames = new HashMap<>();
 
         for (List<String> list : languageMap.values()) {
-            for (String name : list) {
-                languageNames.add(getTitleCaseName(name));
-            }
+            languageNames.put(TextUtils.join(" / ", list), list.get(0));
         }
-
-        Collections.sort(languageNames);
 
         return languageNames;
     }
