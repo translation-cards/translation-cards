@@ -91,6 +91,6 @@ public class NewDeckContext implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(deck, flags);
-        parcel.writeStringArray((String[]) destinationLanguages.toArray());
+        parcel.writeStringArray(destinationLanguages.toArray(new String[destinationLanguages.size()]));
     }
 }
