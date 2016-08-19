@@ -155,10 +155,6 @@
       "names": ["English"]
     },
     {
-      "alpha2": "eo",
-      "names": ["Esperanto"]
-    },
-    {
       "alpha2": "es",
       "names": ["Spanish", "Castilian"]
     },
@@ -263,10 +259,6 @@
       "names": ["Indonesian"]
     },
     {
-      "alpha2": "ie",
-      "names": ["Interlingue", "Occidental"]
-    },
-    {
       "alpha2": "ig",
       "names": ["Igbo"]
     },
@@ -277,10 +269,6 @@
     {
       "alpha2": "ik",
       "names": ["Inupiaq"]
-    },
-    {
-      "alpha2": "io",
-      "names": ["Ido"]
     },
     {
       "alpha2": "is",
@@ -697,10 +685,6 @@
     {
       "alpha2": "vi",
       "names": ["Vietnamese"]
-    },
-    {
-      "alpha2": "vo",
-      "names": ["Volapük"]
     },
     {
       "alpha2": "wa",
