@@ -30,7 +30,7 @@ public class LanguageServiceTest {
     public void setup() throws IOException {
         languagesImportUtility = mock(LanguagesImportUtility.class);
         Map<String, List<String>> languageMap = new HashMap<>();
-        languageMap.put("fa", Arrays.asList("Farsi", "Persian"));
+        languageMap.put("fa", Arrays.asList("Persian", "Farsi"));
         languageMap.put("en", Collections.singletonList("English"));
         languageMap.put("ar", Collections.singletonList("Arabic"));
         when(languagesImportUtility.getLanguageMap()).thenReturn(languageMap);
@@ -68,10 +68,13 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldReturnMapOfDisplayLanguagesToLanguageValue() throws Exception {
-        Map<String, String> displayLanguageMap = languageService.getLanguageNames();
+    public void shouldReturnListOfAllLanguageNames() {
+        List<String> languageNames = languageService.getLanguageNames();
 
-        assertEquals("Farsi", displayLanguageMap.get("Farsi / Persian"));
+        assertEquals(true, languageNames.contains("Farsi"));
+        assertEquals(true, languageNames.contains("Arabic"));
+        assertEquals(true, languageNames.contains("English"));
+        assertEquals(true, languageNames.contains("Persian"));
     }
 
     @Test

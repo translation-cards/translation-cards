@@ -20,8 +20,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.fakes.RoboMenuItem;
 import org.robolectric.shadows.ShadowActivity;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -44,10 +44,7 @@ public class LanguageSelectorActivityTest {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
-        HashMap<String, String> languageMap = new LinkedHashMap<>();
-        languageMap.put("Imaginary / Language / Names", "Imaginary");
-        languageMap.put("Farsi / Persian", "Farsi");
-        when(languageService.getLanguageNames()).thenReturn(languageMap);
+        when(languageService.getLanguageNames()).thenReturn(Arrays.asList("Farsi", "Imaginary", "Persian"));
         helper = new ActivityHelper<>(LanguageSelectorActivity.class);
         activity = helper.getActivityWithIntent(new Intent());
     }
@@ -56,7 +53,7 @@ public class LanguageSelectorActivityTest {
     public void shouldAddLanguagesFromLanguageServiceToAdapter() throws Exception {
         ListView languagesList = (ListView) activity.findViewById(R.id.languages_list);
         ListAdapter languagesListAdapter = languagesList.getAdapter();
-
+        languagesListAdapter.getCount();
         assertEquals(languageService.getLanguageNames().size(), languagesListAdapter.getCount());
     }
 
@@ -83,11 +80,11 @@ public class LanguageSelectorActivityTest {
     }
 
     @Test
-    public void shouldDisplayLanguageMapKeysInLanguageSelectorList() throws Exception {
+    public void shouldDisplayLanguagesFromLanguageServiceList() throws Exception {
         ListView languagesList = (ListView) activity.findViewById(R.id.languages_list);
 
         String languageDisplayName = ((String)languagesList.getAdapter().getItem(0));
 
-        assertEquals("Farsi / Persian", languageDisplayName);
+        assertEquals("Farsi", languageDisplayName);
     }
 }

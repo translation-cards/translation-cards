@@ -16,10 +16,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.service.LanguageService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import butterknife.Bind;
@@ -34,7 +30,6 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
     @Inject LanguageService languageService;
     private ArrayAdapter<String> languagesAdapter;
     private String selectedLanguage;
-    private Map<String, String> displayLanguageMap;
 
     @Override
     public void inflateView() {
@@ -46,7 +41,6 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         application.getBaseComponent().inject(this);
 
-        displayLanguageMap = languageService.getLanguageNames();
         initLanguagesAdapter();
         initLanguagesFilter();
         initListView();
@@ -87,18 +81,16 @@ public class LanguageSelectorActivity extends AbstractTranslationCardsActivity {
         languagesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedLanguage = displayLanguageMap.get(languagesAdapter.getItem(position));
+                selectedLanguage = languagesAdapter.getItem(position);
                 finish();
             }
         });
     }
 
     private void initLanguagesAdapter() {
-        ArrayList displayLanguages = new ArrayList(displayLanguageMap.keySet());
-        Collections.sort(displayLanguages);
         languagesAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
-                displayLanguages);
+                languageService.getLanguageNames());
     }
 
     private void initLanguagesFilter() {
