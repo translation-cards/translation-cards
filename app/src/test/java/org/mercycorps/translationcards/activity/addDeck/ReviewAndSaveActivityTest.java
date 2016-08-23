@@ -16,7 +16,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -58,7 +57,7 @@ public class ReviewAndSaveActivityTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         Dictionary[] dictionaries = {};
-        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, new Language(SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_NAME), dictionaries);
+        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_NAME, dictionaries);
         newDeckContext = new NewDeckContext(deck);
     }
 

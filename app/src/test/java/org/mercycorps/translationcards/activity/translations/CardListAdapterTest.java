@@ -18,7 +18,6 @@ import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
@@ -80,7 +79,7 @@ public class CardListAdapterTest {
         dictionaries.add(defaultDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
-        basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
+        basicDeck = new Deck("Test Deck", "", "1", 1, false, "Language");
         when(mockDeckService.currentDeck()).thenReturn(basicDeck);
 
         cardListAdapter = new CardListAdapter(

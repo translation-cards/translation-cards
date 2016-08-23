@@ -51,7 +51,7 @@ public class DeckRepository {
                     dbId,
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    languageService.getLanguageWithIso(sourceLanguageIso),
+                    languageService.getLanguageDisplayName(sourceLanguageIso),
                     dictionaryRepository.getAllDictionariesForDeck(dbId));
 
             decks[i] = deck;

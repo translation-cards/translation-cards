@@ -88,8 +88,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     }
 
     private void updateContextWithSourceLanguage() {
-        Language language = languageService.getLanguageWithName(sourceLanguageView.getText().toString());
-        getContextFromIntent().setSourceLanguage(language);
+        getContextFromIntent().setSourceLanguage(sourceLanguageView.getText().toString());
     }
 }
 

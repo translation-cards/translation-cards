@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -26,13 +27,16 @@ import static org.mockito.Mockito.when;
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class DeckTest {
+    private static final String NO_VALUE = "";
     private Deck deck;
     public static final String EXPORTED_DECK_NAME = "exportedDeckName";
+    private LanguageService languageService;
 
     @Before
     public void setUp() throws Exception {
-        Dictionary[] dictionaries = {new Dictionary("")};
-        deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+        languageService = mock(LanguageService.class);
+        Dictionary[] dictionaries = {new Dictionary(NO_VALUE)};
+        deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
     }
 
     @Test
@@ -63,7 +67,7 @@ public class DeckTest {
                 new Dictionary("en", "English", null, 1L),
                 new Dictionary("fa", "Farsi", null, 2L)
         };
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+        Deck deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
 
         String destinationLanguagesForDisplay = deck.getDestinationLanguagesForDisplay();
 
@@ -76,7 +80,7 @@ public class DeckTest {
         Dictionary[] dictionaries = {dictionary};
         JSONObject dictionaryJSON = new JSONObject();
         when(dictionary.toJSON()).thenReturn(dictionaryJSON);
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+        Deck deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
 
         JSONObject jsonObject = deck.toJSON(EXPORTED_DECK_NAME);
 
@@ -92,7 +96,7 @@ public class DeckTest {
         JSONObject secondDictionaryJSON = new JSONObject();
         when(firstDictionary.toJSON()).thenReturn(firstDictionaryJSON);
         when(secondDictionary.toJSON()).thenReturn(secondDictionaryJSON);
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+        Deck deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
 
         JSONObject jsonObject = deck.toJSON(EXPORTED_DECK_NAME);
 
@@ -115,7 +119,7 @@ public class DeckTest {
         secondDictionaryMap.put("fourthPath", false);
         when(firstDictionary.getAudioPaths()).thenReturn(firstDictionaryMap);
         when(secondDictionary.getAudioPaths()).thenReturn(secondDictionaryMap);
-        Deck deck = new Deck("", "author", "", -1, 1454946439262L, false, new Language("", ""), dictionaries);
+        Deck deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
 
         Map<String, Boolean> audioFilePaths = deck.getAudioFilePaths();
 

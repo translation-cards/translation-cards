@@ -22,7 +22,6 @@ import org.mercycorps.translationcards.activity.translations.TranslationsActivit
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
@@ -112,7 +111,7 @@ public class TranslationsActivityTest {
         dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG);
         dictionaries[2] = new Dictionary(NO_ISO_CODE, DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG);
 
-        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME), dictionaries);
+        deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFAULT_LANGUAGE_NAME, dictionaries);
         when(deckService.currentDeck()).thenReturn(deck);
 
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
@@ -188,7 +187,7 @@ public class TranslationsActivityTest {
     }
 
     private Activity createLockedDeckTranslationsActivity() {
-        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME), new Dictionary[0]);
+        Deck deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, true, DEFAULT_LANGUAGE_NAME, new Dictionary[0]);
         when(deckService.currentDeck()).thenReturn(deck);
         return createActivityWithDeck(deck);
     }

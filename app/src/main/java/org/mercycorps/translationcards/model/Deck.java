@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.porting.TranslationCardsISO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,12 +29,12 @@ public class Deck implements Parcelable {
     private long dbId;
     private long timestamp;
     private boolean locked;
-    private Language sourceLanguage;
+    private String sourceLanguage;
     private Dictionary[] dictionaries;
     private static final String LANGUAGE_LIST_DELIMITER = "  ";
 
     public Deck(String title, String author, String externalId, long dbId, long timestamp,
-                boolean locked, Language sourceLanguage, Dictionary[] dictionaries) {
+                boolean locked, String sourceLanguage, Dictionary[] dictionaries) {
         this.title = title;
         this.author = author;
         this.externalId = externalId;
@@ -45,7 +46,7 @@ public class Deck implements Parcelable {
     }
 
     public Deck(String title, String author, String externalId, long timestamp, boolean locked,
-                Language sourceLanguage) {
+                String sourceLanguage) {
         this(title, author, externalId, -1, timestamp, locked, sourceLanguage, new Dictionary[0]);
     }
 
@@ -60,7 +61,8 @@ public class Deck implements Parcelable {
         timestamp = in.readLong();
         locked = in.readInt() != 0;
         dictionaries = in.createTypedArray(Dictionary.CREATOR);
-        sourceLanguage = in.readParcelable(Language.class.getClassLoader());
+//        sourceLanguage = in.readParcelable(Language.class.getClassLoader());
+        sourceLanguage = in.readString();
     }
 
     public static final Creator<Deck> CREATOR = new Creator<Deck>() {
@@ -110,11 +112,11 @@ public class Deck implements Parcelable {
     }
 
     public String getSourceLanguageIso() {
-        return sourceLanguage.getIso();
+        return TranslationCardsISO.getISOCodeForLanguage(sourceLanguage);
     }
 
     public String getSourceLanguageName() {
-        return sourceLanguage.getName();
+        return sourceLanguage;
     }
 
     public String getDestinationLanguagesForDisplay() {
@@ -130,7 +132,7 @@ public class Deck implements Parcelable {
         this.title = title;
     }
 
-    public void setSourceLanguage(Language language) {
+    public void setSourceLanguage(String language) {
         this.sourceLanguage = language;
     }
 
@@ -147,7 +149,7 @@ public class Deck implements Parcelable {
             json.put(JsonKeys.EXTERNAL_ID, externalId);
         }
         json.put(JsonKeys.TIMESTAMP, timestamp);
-        json.put(JsonKeys.SOURCE_LANGUAGE, getSourceLanguageIso());
+        json.put(JsonKeys.SOURCE_LANGUAGE, TranslationCardsISO.getISOCodeForLanguage(sourceLanguage));
         json.put(JsonKeys.LOCKED, locked);
         json.put(JsonKeys.DICTIONARIES, getDictionariesJSON());
         return json;
@@ -184,6 +186,6 @@ public class Deck implements Parcelable {
         dest.writeLong(timestamp);
         dest.writeInt(locked ? 1 : 0);
         dest.writeTypedArray(dictionaries, flags);
-        dest.writeParcelable(sourceLanguage, 0);
+        dest.writeString(sourceLanguage);
     }
 }

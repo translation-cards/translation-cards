@@ -12,7 +12,7 @@ public class LanguageCodeLoader {
 
     private static final String TAG = LanguageCodeLoader.class.getName();
 
-    public LanguagesImportUtility createLanguagesImportUtility() {
+    public static LanguagesImportUtility createLanguagesImportUtility() {
         InputStream inputStream;
         try {
             inputStream = MainApplication.getContextFromMainApp().getAssets().open("language_codes.json");
