@@ -58,6 +58,7 @@ public class CardListAdapterTest {
 
     @Inject DeckService mockDeckService;
     @Inject TranslationService mockTranslationService;
+    private Translation secondTranslation;
 
     @Before
     public void setUp() {
@@ -68,16 +69,19 @@ public class CardListAdapterTest {
         translations = new ArrayList<>();
         firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
         translations.add(firstTranslation);
-        Translation secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
-        translations.add(secondTranslation);
 
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
         defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);
+
+        secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
+        Translation[] translations = new Translation[] {secondTranslation};
+        Dictionary secondDictionary = new Dictionary("fa", "Farsi", translations, 0);
+
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);
-        dictionaries.add(defaultDictionary);
+        dictionaries.add(secondDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
         basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
@@ -85,7 +89,7 @@ public class CardListAdapterTest {
 
         cardListAdapter = new CardListAdapter(
                 activity.getApplicationContext(), 0, 0,
-                translations,
+                this.translations,
                 mockTranslationService,
                 mockDictionaryService,
                 mockDeckService);
@@ -181,10 +185,11 @@ public class CardListAdapterTest {
     public void shouldPassContextWithCorrectTranslationsWhenEditTriggered() {
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
         assertEquals(firstTranslation, newTranslations.get(0).getTranslation());
+        assertEquals(secondTranslation, newTranslations.get(1).getTranslation());
     }
 
     @Test
-    public void shouldPassContextWithCorrectDictionariesWhenEditTriggered() {
+    public void shouldPassContextWithCorrectDictionariesWhenEditTriggered() { // line 77
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
         assertEquals(defaultDictionary, newTranslations.get(0).getDictionary());
     }
