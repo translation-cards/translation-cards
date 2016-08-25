@@ -64,24 +64,22 @@ public class CardListAdapterTest {
     public void setUp() {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
-
         activity = Robolectric.buildActivity(Activity.class).create().get();
-        translations = new ArrayList<>();
-        firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
-        translations.add(firstTranslation);
 
+        firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
+        translations = new ArrayList<>();
+        translations.add(firstTranslation);
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
         defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);
 
         secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
-        Translation[] translations = new Translation[] {secondTranslation};
-        Dictionary secondDictionary = new Dictionary("fa", "Farsi", translations, 0);
+        Dictionary secondDictionary = new Dictionary("fa", "Farsi", new Translation[] {secondTranslation}, 0);
 
-        when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);
         dictionaries.add(secondDictionary);
+        when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
         basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
@@ -189,7 +187,7 @@ public class CardListAdapterTest {
     }
 
     @Test
-    public void shouldPassContextWithCorrectDictionariesWhenEditTriggered() { // line 77
+    public void shouldPassContextWithCorrectDictionariesWhenEditTriggered() {
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
         assertEquals(defaultDictionary, newTranslations.get(0).getDictionary());
     }
