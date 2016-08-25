@@ -82,25 +82,30 @@ public class ImportActivity extends AppCompatActivity {
 
     private void loadDataAndImport() {
         if (sourceIsURL()) {
-            downloadFile(source);
+            downloadFile();
         } else {
             importDeck();
         }
     }
 
-    private void downloadFile(Uri source) {
-        String[] parsedURL = source.toString().split("/");
-        String filename = parsedURL[parsedURL.length - 1];
+    private void downloadFile() {
+        String filename = getFilenameFromURL();
         showDownloadAlertDialog(filename);
 
+        String uniqueFilename = filename + "." + System.currentTimeMillis();
         DownloadManager.Request request = new DownloadManager.Request(source);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uniqueFilename);
 
         DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         downloadManager.enqueue(request);
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename;
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + uniqueFilename;
         File downloadedDeck = new File(path);
         this.source = Uri.fromFile(downloadedDeck);
+    }
+
+    private String getFilenameFromURL() {
+        String[] parsedURL = source.toString().split("/");
+        return parsedURL[parsedURL.length - 1];
     }
 
     private void showDownloadAlertDialog(String filename) {
