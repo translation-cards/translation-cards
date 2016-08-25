@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.viewModel.EnterDeckTitleViewModel;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -16,56 +17,40 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
     @Bind(R.id.enter_deck_title_next_label)LinearLayout nextButton;
     @Bind(R.id.enter_deck_title_next_text)TextView nextButtonText;
     @Bind(R.id.enter_deck_title_next_image)ImageView nextButtonImage;
-
-    @Override
-    public void initStates(){
-        setDeckTitle();
-    }
+    private EnterDeckTitleViewModel viewModel;
 
     @Override
     public void inflateView() {
+        viewModel = new EnterDeckTitleViewModel(getContextFromIntent());
         setContentView(R.layout.activity_enter_deck_title);
     }
+
+    @Override
+    public void initStates(){
+        deckTitleInput.setText(viewModel.getDeckTitle());
+    }
+
     @Override
     public void setBitmapsForActivity() {
         setBitmap(R.id.enter_deck_title_image, R.drawable.enter_phrase_image);
     }
 
     @OnClick(R.id.enter_deck_title_back)
-    protected void enterTitleBackButtonClicked(){
-        updateContextWithDeckTitle();
-        startNextActivity(EnterDeckTitleActivity.this, GetStartedDeckActivity.class);
+    protected void enterTitleBackButtonClicked() {
+        viewModel.backButtonClicked(this);
     }
 
     @OnClick(R.id.enter_deck_title_next_label)
     protected void enterTitleNextButtonClicked(){
-        if(!nextButton.isClickable())return;
-        updateContextWithDeckTitle();
-        startNextActivity(EnterDeckTitleActivity.this, EnterDeckSourceLanguageActivity.class);
+        viewModel.nextButtonClicked(this);
     }
 
     @OnTextChanged(R.id.deck_title_input)
     protected void deckTitleInputTextChanged(){
-        nextButton.setClickable(!isDeckTitleEmpty());
-        updateNextButtonColor();
+        viewModel.saveDeckTitle(deckTitleInput.getText().toString());
+        nextButton.setClickable(viewModel.isNextButtonClickable());
+        nextButtonText.setTextColor(ContextCompat.getColor(this, viewModel.getTextColor()));
+        nextButtonImage.setBackgroundResource(viewModel.getNextArrow());
     }
 
-    private void setDeckTitle() {
-        deckTitleInput.setText(getContextFromIntent().getDeckTitle());
-    }
-
-    private void updateContextWithDeckTitle() {
-        getContextFromIntent().setDeckTitle(deckTitleInput.getText().toString());
-    }
-
-    private void updateNextButtonColor() {
-        Integer textColor = isDeckTitleEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
-        Integer nextArrow = isDeckTitleEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
-        nextButtonText.setTextColor(ContextCompat.getColor(this, textColor));
-        nextButtonImage.setBackgroundResource(nextArrow);
-    }
-
-    private boolean isDeckTitleEmpty() {
-        return deckTitleInput.getText().toString().isEmpty();
-    }
 }

@@ -22,7 +22,7 @@ public abstract class AddDeckActivity extends AbstractTranslationCardsActivity {
     public void setBitmapsForActivity() {
     }
 
-    protected void startNextActivity(Context currentContext, Class nextActivityClass) {
+    public void startNextActivity(Context currentContext, Class nextActivityClass) {
         finish();
         Intent nextIntent = new Intent(currentContext, nextActivityClass);
         nextIntent.putExtra(INTENT_KEY_DECK, getIntent().getParcelableExtra(INTENT_KEY_DECK));

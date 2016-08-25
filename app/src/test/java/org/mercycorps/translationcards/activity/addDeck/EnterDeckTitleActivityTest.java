@@ -23,8 +23,6 @@ import static org.mercycorps.translationcards.util.TestAddTranslationCardActivit
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.setText;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -127,23 +125,5 @@ public class EnterDeckTitleActivityTest {
         Activity activity = helper.createActivityToTestWithDefaultDeck();
         EditText enterDeckTitle = findAnyView(activity, R.id.deck_title_input);
         assertEquals(helper.DEFAULT_DECK_NAME, enterDeckTitle.getText().toString());
-    }
-
-    @Test
-    public void shouldSaveDeckTitleToContextWhenNextButtonIsClicked() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
-        click(activity, R.id.enter_deck_title_next_label);
-        verify(newDeckContext).setDeckTitle(helper.DEFAULT_DECK_NAME);
-    }
-
-    @Test
-    public void shouldSaveDeckTitleToContextWhenBackButtonIsClicked() {
-        NewDeckContext newDeckContext = mock(NewDeckContext.class);
-        Activity activity = helper.createActivityToTestWithContext(newDeckContext);
-        setText(activity, R.id.deck_title_input, helper.DEFAULT_DECK_NAME);
-        click(activity, R.id.enter_deck_title_back);
-        verify(newDeckContext).setDeckTitle(helper.DEFAULT_DECK_NAME);
     }
 }
