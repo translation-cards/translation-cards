@@ -18,7 +18,7 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
     private Bitmap currentBitmap;
     private ImageView currentBitmapView;
 
-    protected void setBitmap(int resId, int drawableId) {
+    public void setBitmap(int resId, int drawableId) {
         recycleBitmap();
         currentBitmap = BitmapFactory.decodeResource(getResources(), drawableId);
         currentBitmapView = (ImageView) findViewById(resId);
