@@ -3,9 +3,6 @@ package org.mercycorps.translationcards.viewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
-import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
-import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 
 import static junit.framework.Assert.assertFalse;
@@ -13,7 +10,6 @@ import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class EnterDeckTitleViewModelTest {
@@ -87,34 +83,5 @@ public class EnterDeckTitleViewModelTest {
         when(newDeckContext.getDeckTitle()).thenReturn(A_DECK_TITLE);
 
         assertEquals(R.drawable.forward_arrow, viewModel.getNextArrow());
-    }
-
-    @Test
-    public void shouldStartGetStartedActivityWhenBackButtonPressed() {
-        AddDeckActivity addDeckActivity = mock(AddDeckActivity.class);
-
-        viewModel.backButtonClicked(addDeckActivity);
-
-        verify(addDeckActivity).startNextActivity(addDeckActivity, GetStartedDeckActivity.class);
-    }
-
-    @Test
-    public void shouldStartEnterDeckSourceLanguageActivityWhenADeckTitleExists() {
-        AddDeckActivity addDeckActivity = mock(AddDeckActivity.class);
-        when(newDeckContext.getDeckTitle()).thenReturn(A_DECK_TITLE);
-
-        viewModel.nextButtonClicked(addDeckActivity);
-
-        verify(addDeckActivity).startNextActivity(addDeckActivity, EnterDeckSourceLanguageActivity.class);
-    }
-
-    @Test
-    public void shouldNotStartEnterDeckSourceLanguageActivityWhenADeckTitleDoesNotExist() {
-        AddDeckActivity addDeckActivity = mock(AddDeckActivity.class);
-        when(newDeckContext.getDeckTitle()).thenReturn(NO_DECK_TITLE);
-
-        viewModel.nextButtonClicked(addDeckActivity);
-
-        verifyZeroInteractions(addDeckActivity);
     }
 }

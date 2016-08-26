@@ -37,12 +37,13 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
 
     @OnClick(R.id.enter_deck_title_back)
     protected void enterTitleBackButtonClicked() {
-        viewModel.backButtonClicked(this);
+        startNextActivity(this, GetStartedDeckActivity.class);
     }
 
     @OnClick(R.id.enter_deck_title_next_label)
     protected void enterTitleNextButtonClicked(){
-        viewModel.nextButtonClicked(this);
+        if (viewModel.isDeckTitleEmpty()) return;
+        startNextActivity(this, EnterDeckSourceLanguageActivity.class);
     }
 
     @OnTextChanged(R.id.deck_title_input)

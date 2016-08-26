@@ -1,9 +1,6 @@
 package org.mercycorps.translationcards.viewModel;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
-import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
-import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 
 public class EnterDeckTitleViewModel {
@@ -33,16 +30,7 @@ public class EnterDeckTitleViewModel {
         return isDeckTitleEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
     }
 
-    public void backButtonClicked(AddDeckActivity activity) {
-        activity.startNextActivity(activity, GetStartedDeckActivity.class);
-    }
-
-    public void nextButtonClicked(AddDeckActivity activity) {
-        if (isDeckTitleEmpty()) return;
-        activity.startNextActivity(activity, EnterDeckSourceLanguageActivity.class);
-    }
-
-    private boolean isDeckTitleEmpty() {
+    public boolean isDeckTitleEmpty() {
         return newDeckContext.getDeckTitle().isEmpty();
     }
 }
