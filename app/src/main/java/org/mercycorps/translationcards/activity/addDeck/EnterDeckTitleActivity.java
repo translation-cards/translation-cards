@@ -1,5 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,7 +13,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class EnterDeckTitleActivity extends AddDeckActivity {
+public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeckTitlePresenter.DeckPresenterView {
     @Bind(R.id.deck_title_input)TextView deckTitleInput;
     @Bind(R.id.enter_deck_title_next_label)LinearLayout nextButton;
     @Bind(R.id.enter_deck_title_next_text)TextView nextButtonText;
@@ -20,7 +22,6 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
 
     @Override
     public void inflateView() {
-        presenter = new EnterDeckTitlePresenter(this, getContextFromIntent(), deckTitleInput, nextButton, nextButtonText, nextButtonImage);
         setContentView(R.layout.activity_enter_deck_title);
     }
 
@@ -31,6 +32,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
 
     @Override
     public void setBitmapsForActivity() {
+        presenter = new EnterDeckTitlePresenter(this, getContextFromIntent(), deckTitleInput);
         presenter.inflateBitmaps();
     }
 
@@ -49,4 +51,23 @@ public class EnterDeckTitleActivity extends AddDeckActivity {
         presenter.deckTitleInputChanged();
     }
 
+    @Override
+    public void startActivityWithClass(Class<? extends Activity> nextActivityClass) {
+        startNextActivity(this, nextActivityClass);
+    }
+
+    @Override
+    public void setActivityBitmap(int resId, int drawableId) {
+        setBitmap(resId, drawableId);
+    }
+
+    @Override
+    public LinearLayout getNextButtonLayout() {
+        return nextButton;
+    }
+
+    @Override
+    public int getAppColor(int colorId) {
+        return ContextCompat.getColor(this, colorId);
+    }
 }

@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.viewModel;
 
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.junit.Before;
@@ -25,7 +23,7 @@ public class EnterDeckTitlePresenterTest {
     public void setUp() throws Exception {
         newDeckContext = mock(NewDeckContext.class);
         deckTitleInput = mock(TextView.class);
-        presenter = new EnterDeckTitlePresenter(mock(EnterDeckTitleActivity.class), newDeckContext, deckTitleInput, mock(LinearLayout.class), mock(TextView.class), mock(ImageView.class));
+        presenter = new EnterDeckTitlePresenter(mock(EnterDeckTitleActivity.class), newDeckContext, deckTitleInput);
     }
 
     @Test

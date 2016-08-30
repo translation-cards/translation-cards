@@ -44,8 +44,8 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inflateView();
-        setBitmapsForActivity();
         ButterKnife.bind(this);
+        setBitmapsForActivity();
         initStates();
     }
 
