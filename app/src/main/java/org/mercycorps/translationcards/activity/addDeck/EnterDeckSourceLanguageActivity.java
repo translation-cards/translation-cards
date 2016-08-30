@@ -11,10 +11,7 @@ import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.service.LanguageService;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -23,7 +20,6 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
     public static final int REQUEST_CODE = 0;
     @Bind(R.id.deck_source_language_view)
     TextView sourceLanguageView;
-    @Inject LanguageService languageService;
 
     @Override
     public void inflateView() {
