@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.mercycorps.translationcards.MainApplication;
+import org.mercycorps.translationcards.porting.TranslationCardsISO;
 import org.mercycorps.translationcards.service.LanguageService;
 
 /**
@@ -33,7 +34,7 @@ import org.mercycorps.translationcards.service.LanguageService;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TranslationCards.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private final LanguageService languageService;
 
     public DatabaseHelper(LanguageService languageService) {
@@ -50,6 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String EXTERNAL_ID = "externalId";
         public static final String HASH = "hash";
         public static final String LOCKED = "locked";
+        public static final String SOURCE_LANGUAGE_NAME = "srcLanguageName";
         public static final String SOURCE_LANGUAGE_ISO = "srcLanguageIso";
 
         private static final String INIT_DECKS_SQL =
@@ -61,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         EXTERNAL_ID + " TEXT," +
                         HASH + " TEXT," +
                         LOCKED + " INTEGER," +
-                        SOURCE_LANGUAGE_ISO + " TEXT" +
+                        SOURCE_LANGUAGE_NAME + " TEXT" +
                         ")";
 
         private static final String ALTER_TABLE_ADD_SOURCE_LANGUAGE_COLUMN =
@@ -161,6 +163,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             updateEmptyOrInvalidLabelAndIsoCodes(db);
         }
+        if (oldVersion < 5) {
+            updateDecksTableRowName(db);
+            updateDeckISOCodeToLanguageName(db);
+        }
+    }
+
+    private void updateDeckISOCodeToLanguageName(SQLiteDatabase db) {
+        Cursor cursor = db.query(DecksTable.TABLE_NAME, new String[]{DecksTable.ID, DecksTable.SOURCE_LANGUAGE_NAME}, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            long row = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
+            String isoCode = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_NAME));
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DecksTable.SOURCE_LANGUAGE_NAME, TranslationCardsISO.getLanguageDisplayName(isoCode));
+            db.update(DecksTable.TABLE_NAME, contentValues, DecksTable.ID + " = ?", new String[]{String.valueOf(row)});
+        }
+        cursor.close();
+    }
+
+    private void updateDecksTableRowName(SQLiteDatabase db) {
+        String temporaryTableName = "temp_decks";
+        String createTempDeckTable = "ALTER TABLE " + DecksTable.TABLE_NAME + " RENAME TO " + temporaryTableName;
+        db.execSQL(createTempDeckTable);
+
+        db.execSQL(DecksTable.INIT_DECKS_SQL);
+
+        String copyOriginalTable = "INSERT INTO " + DecksTable.TABLE_NAME + "(" +
+                DecksTable.ID + ", " +
+                DecksTable.LABEL + ", " +
+                DecksTable.PUBLISHER + ", " +
+                DecksTable.CREATION_TIMESTAMP + ", " +
+                DecksTable.EXTERNAL_ID + ", " +
+                DecksTable.HASH + ", " +
+                DecksTable.LOCKED + ", " +
+                DecksTable.SOURCE_LANGUAGE_NAME + ")" +
+                " SELECT " + DecksTable.ID + ", " +
+                DecksTable.LABEL + ", " +
+                DecksTable.PUBLISHER + ", " +
+                DecksTable.CREATION_TIMESTAMP + ", " +
+                DecksTable.EXTERNAL_ID + ", " +
+                DecksTable.HASH + ", " +
+                DecksTable.LOCKED + ", " +
+                DecksTable.SOURCE_LANGUAGE_ISO +
+                " FROM " + temporaryTableName;
+        db.execSQL(copyOriginalTable);
+
+        String dropTemporaryTable = "DROP TABLE " + temporaryTableName;
+        db.execSQL(dropTemporaryTable);
     }
 
     private void updateEmptyOrInvalidLabelAndIsoCodes(SQLiteDatabase db) {

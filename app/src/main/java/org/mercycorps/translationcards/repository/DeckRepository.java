@@ -41,8 +41,6 @@ public class DeckRepository {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while(hasNext){
-
-            String sourceLanguageIso = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO));
             long dbId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(
                     cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
@@ -51,7 +49,7 @@ public class DeckRepository {
                     dbId,
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    languageService.getLanguageDisplayName(sourceLanguageIso),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_NAME)),
                     dictionaryRepository.getAllDictionariesForDeck(dbId));
 
             decks[i] = deck;
@@ -65,7 +63,7 @@ public class DeckRepository {
 
     private long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
                         long creationTimestamp, String externalId, String hash, boolean locked,
-                        String srcLanguageIso) {
+                        String sourceLanguageName) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
@@ -73,14 +71,14 @@ public class DeckRepository {
         values.put(DecksTable.EXTERNAL_ID, externalId);
         values.put(DecksTable.HASH, hash);
         values.put(DecksTable.LOCKED, locked ? 1 : 0);
-        values.put(DecksTable.SOURCE_LANGUAGE_ISO, srcLanguageIso);
+        values.put(DecksTable.SOURCE_LANGUAGE_NAME, sourceLanguageName);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
     public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash, boolean locked, String srcLanguageIso) {
+                        String hash, boolean locked, String sourceLanguageName) {
         return addDeck(databaseHelper.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash, locked, srcLanguageIso);
+                hash, locked, sourceLanguageName);
     }
 
     public void saveDeck(Deck deck, Set<String> languages) {
@@ -91,7 +89,7 @@ public class DeckRepository {
                 deck.getExternalId(),
                 "",
                 deck.isLocked(),
-                deck.getSourceLanguageIso());
+                deck.getSourceLanguageName());
         saveDictionaries(deckID, languages);
     }
 

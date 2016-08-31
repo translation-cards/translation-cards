@@ -142,7 +142,7 @@ public class DeckTest {
         assertEquals(deck.getDbId(), fromParcel.getDbId());
         assertEquals(deck.getTimestamp(), fromParcel.getTimestamp());
         assertEquals(deck.isLocked(), fromParcel.isLocked());
-        assertEquals(deck.getSourceLanguageIso(), fromParcel.getSourceLanguageIso());
+        assertEquals(deck.getSourceLanguageName(), fromParcel.getSourceLanguageName());
         assertEquals(deck.getAudioFilePaths(), fromParcel.getAudioFilePaths());
     }
 }

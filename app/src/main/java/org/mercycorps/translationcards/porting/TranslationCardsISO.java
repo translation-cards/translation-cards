@@ -11,6 +11,7 @@ public class TranslationCardsISO {
 
     private static final Map<String, List<String>> languageMap = LanguageCodeLoader.createLanguagesImportUtility().getLanguageMap();;
     private static final String INVALID_ISO_CODE = "xx";
+    public static final String INVALID_LANGUAGE_NAME = "INVALID";
 
     public static String getISOCodeForLanguage(String language) {
         if (language != null) {
@@ -21,6 +22,13 @@ public class TranslationCardsISO {
             }
         }
         return INVALID_ISO_CODE;
+    }
+
+    public static String getLanguageDisplayName(String isoCode) {
+        if (languageMap.containsKey(isoCode)) {
+            return languageMap.get(isoCode).get(0);
+        }
+        return INVALID_LANGUAGE_NAME;
     }
 
     @NonNull
