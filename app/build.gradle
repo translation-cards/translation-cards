@@ -60,7 +60,10 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
-    testCompile "org.robolectric:shadows-support-v4:3.0"
+    testCompile 'org.robolectric:shadows-support-v4:3.0'
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
+    testCompile 'io.appium:java-client:4.1.1'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '1.7.0'
 
     testApt 'com.google.dagger:dagger-compiler:2.5'
 
