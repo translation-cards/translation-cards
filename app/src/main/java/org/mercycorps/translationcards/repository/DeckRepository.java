@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 
 import java.io.File;
 import java.util.Set;
@@ -24,12 +23,10 @@ public class DeckRepository {
     public static final int NONEXISTENT_ID = -1;
     private DatabaseHelper databaseHelper;
     private DictionaryRepository dictionaryRepository;
-    private LanguageService languageService;
 
-    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper, LanguageService languageService) {
+    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper) {
         this.dictionaryRepository = dictionaryRepository;
         this.databaseHelper = databaseHelper;
-        this.languageService = languageService;
     }
 
     public Deck[] getAllDecks() {
@@ -96,8 +93,7 @@ public class DeckRepository {
     private void saveDictionaries(Long deckId, Set<String> languages) {
         Integer itemIndex = 0;
         for (String language : languages) {
-            String isoCode = languageService.getIsoForLanguage(language);
-            dictionaryRepository.addDictionary(isoCode, language, itemIndex, deckId);
+            dictionaryRepository.addDictionary(language, itemIndex, deckId);
             itemIndex++;
         }
     }

@@ -25,13 +25,13 @@ public class RepositoryModule {
 
     @PerApplication
     @Provides
-    DictionaryRepository providesDictionaryRepository(DatabaseHelper databaseHelper, TranslationRepository translationRepository, LanguageService languageService) {
-        return new DictionaryRepository(databaseHelper, translationRepository, languageService);
+    DictionaryRepository providesDictionaryRepository(DatabaseHelper databaseHelper, TranslationRepository translationRepository) {
+        return new DictionaryRepository(databaseHelper, translationRepository);
     }
 
     @PerApplication
     @Provides
-    DeckRepository providesDeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper, LanguageService languageService) {
-        return new DeckRepository(dictionaryRepository, databaseHelper, languageService);
+    DeckRepository providesDeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper) {
+        return new DeckRepository(dictionaryRepository, databaseHelper);
     }
 }

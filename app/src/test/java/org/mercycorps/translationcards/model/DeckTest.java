@@ -64,8 +64,8 @@ public class DeckTest {
     @Test
     public void shouldReturnDestinationLanguagesAsString() throws Exception {
         Dictionary[] dictionaries = new Dictionary[]{
-                new Dictionary("en", "English", null, 1L),
-                new Dictionary("fa", "Farsi", null, 2L)
+                new Dictionary("English", null, 1L),
+                new Dictionary("Farsi", null, 2L)
         };
         Deck deck = new Deck(NO_VALUE, "author", NO_VALUE, -1, 1454946439262L, false, NO_VALUE, dictionaries);
 

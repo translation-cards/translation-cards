@@ -72,7 +72,7 @@ public class CardListAdapterTest {
 
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
-        defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);
+        defaultDictionary = new Dictionary("English", translationsArray, 0);
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);

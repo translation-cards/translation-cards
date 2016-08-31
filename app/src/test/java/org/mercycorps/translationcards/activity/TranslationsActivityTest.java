@@ -73,9 +73,7 @@ public class TranslationsActivityTest {
     public static final String TRANSLATION_LABEL = "TranslationLabel";
     public static final String DEFAULT_DECK_NAME = "Default";
     private static final String EMPTY_DECK_TITLE = "Let's make this useful";
-    private static final String DEFAULT_ISO_CODE = "en";
     private static final String DEFAULT_LANGUAGE_NAME = "English";
-    private static final String NO_ISO_CODE = "";
     private TranslationsActivity translationsActivity;
     private Deck deck;
     ActivityController<TranslationsActivity> controller;
@@ -107,9 +105,9 @@ public class TranslationsActivityTest {
         Translation translation = new Translation(TRANSLATION_LABEL, false, NO_VALUE, DEFAULT_LONG, TRANSLATED_TEXT);
         Translation nullTranslatedTextTranslation = new Translation(TRANSLATION_LABEL, false, "audio.mp3", DEFAULT_LONG, null);
         Translation[] translations = {translation, nullTranslatedTextTranslation};
-        dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG);
-        dictionaries[1] = new Dictionary(NO_ISO_CODE, DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG);
-        dictionaries[2] = new Dictionary(NO_ISO_CODE, DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG);
+        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, translations, DEFAULT_LONG);
+        dictionaries[1] = new Dictionary(DICTIONARY_ARABIC_LABEL, translations, DEFAULT_LONG);
+        dictionaries[2] = new Dictionary(DICTIONARY_FARSI_LABEL, translations, DEFAULT_LONG);
 
         deck = new Deck(DEFAULT_DECK_NAME, NO_VALUE, NO_VALUE, DEFAULT_DECK_ID, DEFAULT_LONG, false, DEFAULT_LANGUAGE_NAME, dictionaries);
         when(deckService.currentDeck()).thenReturn(deck);
@@ -194,7 +192,7 @@ public class TranslationsActivityTest {
 
     private void initializeStubsAndMocksForEmptyDeck() {
         Dictionary[] dictionaries = new Dictionary[1];
-        dictionaries[0] = new Dictionary(NO_ISO_CODE, DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG
+        dictionaries[0] = new Dictionary(DICTIONARY_TEST_LABEL, new Translation[0], DEFAULT_LONG
         );
         when(dictionaryService.currentDictionary()).thenReturn(dictionaries[0]);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(Arrays.asList(dictionaries));

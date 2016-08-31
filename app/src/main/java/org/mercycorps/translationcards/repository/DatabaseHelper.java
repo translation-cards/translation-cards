@@ -84,8 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ID + " INTEGER PRIMARY KEY," +
                         DECK_ID + " INTEGER," +
                         LABEL + " TEXT," +
-                        ITEM_INDEX + " INTEGER," +
-                        LANGUAGE_ISO + " TEXT" +
+                        ITEM_INDEX + " INTEGER" +
                         ")";
 
         private static final String ALTER_TABLE_ADD_DECK_FOREIGN_KEY =
@@ -166,6 +165,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 5) {
             updateDecksTableRowName(db);
             updateDeckISOCodeToLanguageName(db);
+            deleteLanguageIsoFromDictionariesTable(db);
         }
     }
 
@@ -211,6 +211,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String dropTemporaryTable = "DROP TABLE " + temporaryTableName;
         db.execSQL(dropTemporaryTable);
     }
+    private void deleteLanguageIsoFromDictionariesTable(SQLiteDatabase db) {
+        String temporaryTableName = "temp_dictionaries";
+        String renameDictionariesTable = "ALTER TABLE " + DictionariesTable.TABLE_NAME + " RENAME TO " + temporaryTableName;
+        db.execSQL(renameDictionariesTable);
+
+        db.execSQL(DictionariesTable.INIT_DICTIONARIES_SQL);
+
+        String copyOriginalTable = "INSERT INTO " + DictionariesTable.TABLE_NAME + "( " +
+                DictionariesTable.ID + ", " +
+                DictionariesTable.DECK_ID + ", " +
+                DictionariesTable.LABEL + ", " +
+                DictionariesTable.ITEM_INDEX +
+                ")" +
+                " SELECT " + DictionariesTable.ID + ", " +
+                DictionariesTable.DECK_ID + ", " +
+                DictionariesTable.LABEL + ", " +
+                DictionariesTable.ITEM_INDEX +
+                " FROM " + temporaryTableName;
+        db.execSQL(copyOriginalTable);
+
+        String dropTemporaryTable = "DROP TABLE " + temporaryTableName;
+        db.execSQL(dropTemporaryTable);
+    }
+
 
     private void updateEmptyOrInvalidLabelAndIsoCodes(SQLiteDatabase db) {
         String selectQuery = "SELECT " +
