@@ -43,7 +43,7 @@ public class TxcImportUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
-    private static final String DEFAULT_SOURCE_LANGUAGE = "en";
+    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     public static final String NO_AUDIO = "";
     private static final String TAG = TxcImportUtility.class.getName();
     private LanguageService languageService;
@@ -227,9 +227,9 @@ public class TxcImportUtility {
             String publisher = json.optString(JsonKeys.PUBLISHER);
             String externalId = json.optString(JsonKeys.EXTERNAL_ID);
             long timestamp = json.optLong(JsonKeys.TIMESTAMP, -1);
-            String srcLanguage = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE);
+            String srcLanguageIso = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE_ISO);
             boolean locked = json.optBoolean(JsonKeys.LOCKED, false);
-            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, srcLanguage,
+            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, TranslationCardsISO.getLanguageDisplayName(srcLanguageIso),
                     hash, dir);
             JSONArray dictionaries = json.optJSONArray(JsonKeys.DICTIONARIES);
             if (dictionaries == null) {
@@ -286,7 +286,7 @@ public class TxcImportUtility {
         String externalId = null;
         long timestamp = -1;
         ImportSpec spec = new ImportSpec(label, publisher, externalId, timestamp, false,
-                DEFAULT_SOURCE_LANGUAGE, hash, dir);
+                DEFAULT_SOURCE_LANGUAGE_ISO, hash, dir);
         Map<String, ImportSpecDictionary> dictionaryLookup = new HashMap<>();
         Scanner s;
         try {
@@ -308,7 +308,7 @@ public class TxcImportUtility {
                         externalId = metaLine[2];
                         timestamp = Long.valueOf(metaLine[3]);
                         spec = new ImportSpec(label, publisher, externalId, timestamp, false,
-                                DEFAULT_SOURCE_LANGUAGE, hash, dir);
+                                DEFAULT_SOURCE_LANGUAGE_ISO, hash, dir);
                         continue;
                     }
                 }

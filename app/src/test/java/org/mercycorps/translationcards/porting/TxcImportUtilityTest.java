@@ -19,7 +19,6 @@ import java.io.File;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mercycorps.translationcards.porting.TxcImportUtility.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,7 +75,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -94,7 +93,7 @@ public class TxcImportUtilityTest {
         assertEquals(PUBLISHER, importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -112,7 +111,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals(EXTERNAL_ID, importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -130,7 +129,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(TIMESTAMP, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -148,7 +147,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals(SOURCE_LANGUAGE, importSpec.srcLanguage);
+        assertEquals("French", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -166,7 +165,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertTrue(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -185,7 +184,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(3, importSpec.dictionaries.size());
         assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
@@ -210,7 +209,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(1, importSpec.dictionaries.size());
         assertEquals(LanguageService.INVALID_ISO_CODE, importSpec.dictionaries.get(0).isoCode);
@@ -235,7 +234,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(1, importSpec.dictionaries.size());
         assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
