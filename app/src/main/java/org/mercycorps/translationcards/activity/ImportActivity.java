@@ -54,7 +54,7 @@ public class ImportActivity extends AppCompatActivity {
 
         onDownloadComplete = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                downloadDialog.hide();
+                downloadDialog.dismiss();
                 unregisterReceiver(onDownloadComplete);
                 importDeck();
             }
@@ -62,6 +62,22 @@ public class ImportActivity extends AppCompatActivity {
         registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         requestPermissionsAndLoadData();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_EXTERNAL_WRITE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadDataAndImport();
+                } else {
+                    unregisterReceiver(onDownloadComplete);
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private TxcImportUtility createImportUtility() {
@@ -113,15 +129,6 @@ public class ImportActivity extends AppCompatActivity {
                 .setTitle(R.string.file_download_title)
                 .setMessage(filename)
                 .show();
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == PERMISSION_REQUEST_EXTERNAL_WRITE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            importDeck();
-        }
     }
 
     private boolean sourceIsURL() {
