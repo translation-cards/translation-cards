@@ -1,0 +1,28 @@
+group 'translation-cards'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
+    compile 'io.appium:java-client:4.1.1'
+    compile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
+    compile group: 'org.assertj', name: 'assertj-core', version: '1.7.0'
+}
+group 'translation-cards'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+test {
+    testLogging.showStandardStreams = true
+}
