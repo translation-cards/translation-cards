@@ -7,7 +7,7 @@ TARGET_ABI=armeabi-v7a
 
 echo no | $ANDROID_HOME/tools/android create avd -n $EMULATOR_NAME -t $TARGET_NAME --abi $TARGET_ABI
 $ANDROID_HOME/platform-tools/adb start-server
-$ANDROID_HOME/tools/emulator @$EMULATOR_NAME -no-window -no-audio &
+$ANDROID_HOME/tools/emulator @$EMULATOR_NAME -no-window -no-audio -verbose &
 $ANDROID_HOME/platform-tools/adb wait-for-device
 
 exit
