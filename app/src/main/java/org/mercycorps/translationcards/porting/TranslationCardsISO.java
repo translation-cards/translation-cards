@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.porting;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mercycorps.translationcards.service.LanguageCodeLoader;
 
@@ -24,11 +25,14 @@ public class TranslationCardsISO {
         return INVALID_ISO_CODE;
     }
 
-    public static String getLanguageDisplayName(String isoCode) {
+    public static String getLanguageDisplayName(String isoCode, String sourceLanguageName) {
+        String languageDisplayName = INVALID_LANGUAGE_NAME;
         if (languageMap.containsKey(isoCode)) {
-            return languageMap.get(isoCode).get(0);
+            List<String> sourceLanguagesForIsoCode = languageMap.get(isoCode);
+            String fallbackDisplayName = sourceLanguagesForIsoCode.get(0);
+            languageDisplayName = sourceLanguagesForIsoCode.contains(sourceLanguageName) ? sourceLanguageName : fallbackDisplayName;
         }
-        return INVALID_LANGUAGE_NAME;
+        return languageDisplayName;
     }
 
     @NonNull

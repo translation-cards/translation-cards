@@ -57,7 +57,7 @@ public class DeckTest {
         assertEquals(deck.getAuthor(), jsonObject.getString(JsonKeys.PUBLISHER));
         assertEquals(deck.getExternalId(), jsonObject.getString(JsonKeys.EXTERNAL_ID));
         assertEquals(deck.getTimestamp(), jsonObject.getLong(JsonKeys.TIMESTAMP));
-        assertEquals(deck.getSourceLanguageIso(), jsonObject.getString(JsonKeys.SOURCE_LANGUAGE));
+        assertEquals(deck.getSourceLanguageIso(), jsonObject.getString(JsonKeys.SOURCE_LANGUAGE_ISO));
         assertEquals(deck.isLocked(), jsonObject.getBoolean(JsonKeys.LOCKED));
     }
 

@@ -149,7 +149,7 @@ public class Deck implements Parcelable {
             json.put(JsonKeys.EXTERNAL_ID, externalId);
         }
         json.put(JsonKeys.TIMESTAMP, timestamp);
-        json.put(JsonKeys.SOURCE_LANGUAGE, TranslationCardsISO.getISOCodeForLanguage(sourceLanguage));
+        json.put(JsonKeys.SOURCE_LANGUAGE_ISO, TranslationCardsISO.getISOCodeForLanguage(sourceLanguage));
         json.put(JsonKeys.LOCKED, locked);
         json.put(JsonKeys.DICTIONARIES, getDictionariesJSON());
         return json;

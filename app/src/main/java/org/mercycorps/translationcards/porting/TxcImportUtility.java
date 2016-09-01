@@ -46,6 +46,7 @@ public class TxcImportUtility {
     private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     public static final String NO_AUDIO = "";
     private static final String TAG = TxcImportUtility.class.getName();
+    public static final String NO_SOURCE_LANGUAGE_NAME = "";
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private TranslationRepository translationRepository;
@@ -227,9 +228,10 @@ public class TxcImportUtility {
             String publisher = json.optString(JsonKeys.PUBLISHER);
             String externalId = json.optString(JsonKeys.EXTERNAL_ID);
             long timestamp = json.optLong(JsonKeys.TIMESTAMP, -1);
-            String srcLanguageIso = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE_ISO);
+            String srcLanguageIso = json.optString(JsonKeys.SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_ISO);
+            String sourceLanguageName = json.optString(JsonKeys.SOURCE_LANGUAGE_NAME, NO_SOURCE_LANGUAGE_NAME);
             boolean locked = json.optBoolean(JsonKeys.LOCKED, false);
-            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, TranslationCardsISO.getLanguageDisplayName(srcLanguageIso),
+            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, TranslationCardsISO.getLanguageDisplayName(srcLanguageIso, sourceLanguageName),
                     hash, dir);
             JSONArray dictionaries = json.optJSONArray(JsonKeys.DICTIONARIES);
             if (dictionaries == null) {

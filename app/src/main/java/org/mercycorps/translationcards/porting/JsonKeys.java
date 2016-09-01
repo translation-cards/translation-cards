@@ -6,7 +6,8 @@ public final class JsonKeys {
     public static final String EXTERNAL_ID = "id";
     public static final String PUBLISHER = "publisher";
     public static final String TIMESTAMP = "timestamp";
-    public static final String SOURCE_LANGUAGE = "source_language";
+    public static final String SOURCE_LANGUAGE_ISO = "source_language";
+    public static final String SOURCE_LANGUAGE_NAME = "source_language_name";
     public static final String LOCKED = "locked";
     public static final String DICTIONARIES = "languages";
     public static final String DICTIONARY_DEST_ISO_CODE = "iso_code";

@@ -31,7 +31,7 @@ public class TxcImportUtilityTest {
     private static final String PUBLISHER = "A Publisher";
     private static final String EXTERNAL_ID = "external";
     private static final long TIMESTAMP = 123456L;
-    private static final String SOURCE_LANGUAGE = "fr";
+    private static final String SOURCE_LANGUAGE_ISO = "fr";
     private static final String HASH = "someHash";
     public static final String DICTIONARIES_AS_JSON = "[{\"iso_code\":\"ar\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]},{\"iso_code\":\"ps\",\"cards\":[{\"dest_txt\":\"ps translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"ps_file7.mp3\"},{\"dest_txt\":\"ps translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"ps_file4.mp3\"}]},{\"iso_code\":\"fa\",\"cards\":[{\"dest_txt\":\"fa translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-fa.mp3\"},{\"dest_txt\":\"fa translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-fa.mp3\"}]}]";
     public static final String DICTIONARY_JSON_NO_ISO_CODE = "[{\"iso_code\":\"\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]}]";
@@ -139,7 +139,7 @@ public class TxcImportUtilityTest {
     @Test
     public void shouldBuildImportSpecWithSourceLanguageWhenPresent() throws ImportException, JSONException {
         jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
-        jsonObjectToLoad.put(JsonKeys.SOURCE_LANGUAGE, SOURCE_LANGUAGE);
+        jsonObjectToLoad.put(JsonKeys.SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_ISO);
         TxcImportUtility.ImportSpec importSpec =
                 txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
 

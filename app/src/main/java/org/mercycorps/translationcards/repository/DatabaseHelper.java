@@ -175,7 +175,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             long row = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             String isoCode = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_NAME));
             ContentValues contentValues = new ContentValues();
-            contentValues.put(DecksTable.SOURCE_LANGUAGE_NAME, TranslationCardsISO.getLanguageDisplayName(isoCode));
+            contentValues.put(DecksTable.SOURCE_LANGUAGE_NAME, TranslationCardsISO.getLanguageDisplayName(isoCode, ""));
             db.update(DecksTable.TABLE_NAME, contentValues, DecksTable.ID + " = ?", new String[]{String.valueOf(row)});
         }
         cursor.close();
