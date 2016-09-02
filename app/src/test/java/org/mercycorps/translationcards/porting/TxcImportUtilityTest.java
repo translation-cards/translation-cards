@@ -212,33 +212,7 @@ public class TxcImportUtilityTest {
         assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(1, importSpec.dictionaries.size());
-        assertEquals(LanguageService.INVALID_ISO_CODE, importSpec.dictionaries.get(0).isoCode);
         assertEquals(LanguageService.INVALID_LANGUAGE_NAME, importSpec.dictionaries.get(0).language);
-        assertEquals(mockFile, importSpec.dir);
-        assertEquals(HASH, importSpec.hash);
-
-        for (TxcImportUtility.ImportSpecDictionary specDictionary : importSpec.dictionaries) {
-            assertEquals(2, specDictionary.cards.size());
-        }
-    }
-
-    @Test
-    public void shouldBuildImportSpecForDictionariesWithExtendedIsoCodes() throws ImportException, JSONException {
-        jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
-        JSONArray currentDictionaries = new JSONArray(DICTIONARY_JSON_EXTENDED_ISO_CODE);
-        jsonObjectToLoad.put(JsonKeys.DICTIONARIES, currentDictionaries);
-        TxcImportUtility.ImportSpec importSpec =
-                txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
-
-        assertEquals(DECK_LABEL, importSpec.label);
-        assertEquals("", importSpec.publisher);
-        assertEquals("", importSpec.externalId);
-        assertEquals(-1L, importSpec.timestamp);
-        assertEquals("English", importSpec.srcLanguage);
-        assertFalse(importSpec.locked);
-        assertEquals(1, importSpec.dictionaries.size());
-        assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
-        assertEquals("Arabic", importSpec.dictionaries.get(0).language);
         assertEquals(mockFile, importSpec.dir);
         assertEquals(HASH, importSpec.hash);
 

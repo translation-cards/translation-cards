@@ -11,6 +11,7 @@ public final class JsonKeys {
     public static final String LOCKED = "locked";
     public static final String DICTIONARIES = "languages";
     public static final String DICTIONARY_DEST_ISO_CODE = "iso_code";
+    public static final String DICTIONARY_DEST_NAME = "dest_language_name";
     public static final String CARDS = "cards";
     public static final String CARD_LABEL = "card_label";
     public static final String CARD_DEST_AUDIO = "dest_audio";

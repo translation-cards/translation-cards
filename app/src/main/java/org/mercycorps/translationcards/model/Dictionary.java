@@ -103,6 +103,7 @@ public class Dictionary implements Parcelable {
     protected JSONObject toJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JsonKeys.DICTIONARY_DEST_ISO_CODE, TranslationCardsISO.getISOCodeForLanguage(language));
+        jsonObject.put(JsonKeys.DICTIONARY_DEST_NAME, language);
         jsonObject.put(JsonKeys.CARDS, createJSONTranslationsArray());
 
         return jsonObject;

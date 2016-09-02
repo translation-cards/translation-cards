@@ -247,8 +247,9 @@ public class TxcImportUtility {
     private void addDictionariesToImportSpec(ImportSpec spec, JSONArray dictionaries) throws JSONException {
         for (int i = 0; i < dictionaries.length(); i++) {
             JSONObject dictionary = dictionaries.getJSONObject(i);
-            String destIsoCode = parseIsoCodeFromJsonDictionary(dictionary);
-            String language = languageService.getLanguageDisplayName(destIsoCode);
+            String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
+            String destLanguage = dictionary.optString(JsonKeys.DICTIONARY_DEST_NAME, NO_SOURCE_LANGUAGE_NAME);
+            String language = TranslationCardsISO.getLanguageDisplayName(destIsoCode, destLanguage);
             ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
             addCardsToDictionarySpec(dictionary, dictionarySpec);
             spec.dictionaries.add(dictionarySpec);
@@ -268,17 +269,6 @@ public class TxcImportUtility {
             dictionarySpec.cards.add(new ImportSpecCard(
                     cardLabel, cardFilename, cardTranslatedText));
         }
-    }
-
-    @NonNull
-    private String parseIsoCodeFromJsonDictionary(JSONObject dictionary) throws JSONException {
-        String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
-        if(destIsoCode.length() >= 2) {
-            destIsoCode = destIsoCode.substring(0,2);
-        } else {
-            destIsoCode = LanguageService.INVALID_ISO_CODE;
-        }
-        return destIsoCode;
     }
 
     private ImportSpec getIndexFromPsv(File dir, String indexFilename, String defaultLabel,
