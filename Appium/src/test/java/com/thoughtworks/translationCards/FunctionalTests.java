@@ -1,24 +1,30 @@
 package com.thoughtworks.translationCards;
 
-import com.thoughtworks.translationCards.page.*;
+import com.thoughtworks.translationCards.page.AuthorName;
+import com.thoughtworks.translationCards.page.CardMaker;
+import com.thoughtworks.translationCards.page.DeckTitle;
+import com.thoughtworks.translationCards.page.DestinationLanguage;
+import com.thoughtworks.translationCards.page.MyDecks;
+import com.thoughtworks.translationCards.page.NewCard;
+import com.thoughtworks.translationCards.page.NewDeck;
+import com.thoughtworks.translationCards.page.RecordYourPhrase;
+import com.thoughtworks.translationCards.page.ReviewSave;
+import com.thoughtworks.translationCards.page.ReviewSaveCard;
+import com.thoughtworks.translationCards.page.SourceLanguage;
+import com.thoughtworks.translationCards.page.Translation;
+import com.thoughtworks.translationCards.page.WriteYourPhrase;
 import com.thoughtworks.translationCards.utilities.Utilities;
-import io.appium.java_client.android.AndroidDriver;
-//import io.appium.java_client.remote.MobileBrowserType;
 
-import java.io.File;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
-import io.appium.java_client.remote.MobileBrowserType;
-import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.File;
+import java.net.URL;
+
+import io.appium.java_client.android.AndroidDriver;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -39,6 +45,8 @@ public class FunctionalTests {
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("platformVersion", "6.0");
 //        capabilities.setCapability("browserName", MobileBrowserType.BROWSER);
+        capabilities.setCapability("unicodekeyboard", true);
+        capabilities.setCapability("resetkeyboard", true);
         capabilities.setCapability("app", app.getAbsolutePath());
 
 //        capabilities.setCapability("app", "Chrome");
