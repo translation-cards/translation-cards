@@ -27,6 +27,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
 
    # Specify at least one system image if you want to run emulator tests
    echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-23 --all > /dev/null
+   echo y | android update sdk --no-ui --filter sys-img-x86_64-android-23 --all > /dev/null
 
    (wget http://dl.google.com/android/android-sdk_r23-linux.tgz -O - | tar zx -C $ANDROID_HOME --strip-components 1); echo
    echo 'y' | $ANDROID_HOME/tools/android --silent update sdk --no-ui --force --all --obsolete --filter platform-tools
