@@ -54,7 +54,7 @@ public class ImportActivity extends AppCompatActivity {
 
         onDownloadComplete = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                downloadDialog.hide();
+                downloadDialog.dismiss();
                 unregisterReceiver(onDownloadComplete);
                 importDeck();
             }
@@ -62,6 +62,22 @@ public class ImportActivity extends AppCompatActivity {
         registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         requestPermissionsAndLoadData();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_EXTERNAL_WRITE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadDataAndImport();
+                } else {
+                    unregisterReceiver(onDownloadComplete);
+                    finish();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private TxcImportUtility createImportUtility() {
@@ -82,25 +98,30 @@ public class ImportActivity extends AppCompatActivity {
 
     private void loadDataAndImport() {
         if (sourceIsURL()) {
-            downloadFile(source);
+            downloadFile();
         } else {
             importDeck();
         }
     }
 
-    private void downloadFile(Uri source) {
-        String[] parsedURL = source.toString().split("/");
-        String filename = parsedURL[parsedURL.length - 1];
+    private void downloadFile() {
+        String filename = getFilenameFromURL();
         showDownloadAlertDialog(filename);
 
+        String uniqueFilename = filename + "." + System.currentTimeMillis();
         DownloadManager.Request request = new DownloadManager.Request(source);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uniqueFilename);
 
         DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         downloadManager.enqueue(request);
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename;
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + uniqueFilename;
         File downloadedDeck = new File(path);
         this.source = Uri.fromFile(downloadedDeck);
+    }
+
+    private String getFilenameFromURL() {
+        String[] parsedURL = source.toString().split("/");
+        return parsedURL[parsedURL.length - 1];
     }
 
     private void showDownloadAlertDialog(String filename) {
@@ -108,15 +129,6 @@ public class ImportActivity extends AppCompatActivity {
                 .setTitle(R.string.file_download_title)
                 .setMessage(filename)
                 .show();
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == PERMISSION_REQUEST_EXTERNAL_WRITE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            importDeck();
-        }
     }
 
     private boolean sourceIsURL() {

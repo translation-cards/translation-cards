@@ -3,8 +3,8 @@ package org.mercycorps.translationcards.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mercycorps.translationcards.model.Translation;
+import org.mercycorps.translationcards.repository.TranslationRepository;
 import org.mockito.Mock;
 
 import java.util.Arrays;

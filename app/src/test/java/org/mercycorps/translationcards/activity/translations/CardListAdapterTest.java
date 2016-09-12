@@ -57,26 +57,30 @@ public class CardListAdapterTest {
 
     @Inject DeckService mockDeckService;
     @Inject TranslationService mockTranslationService;
+    private Translation secondTranslation;
 
     @Before
     public void setUp() {
         MainApplication application = (MainApplication) RuntimeEnvironment.application;
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
-
         activity = Robolectric.buildActivity(Activity.class).create().get();
-        translations = new ArrayList<>();
-        firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
-        translations.add(firstTranslation);
-        Translation secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
-        translations.add(secondTranslation);
 
+        firstTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text");
+        translations = new ArrayList<>();
+        translations.add(firstTranslation);
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
+
         defaultDictionary = new Dictionary("English", translationsArray, 0);
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
+
+        secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
+        Dictionary secondDictionary = new Dictionary("Farsi", new Translation[] {secondTranslation}, 0);
+
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);
-        dictionaries.add(defaultDictionary);
+        dictionaries.add(secondDictionary);
+        when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
         basicDeck = new Deck("Test Deck", "", "1", 1, false, "Language");
@@ -84,7 +88,7 @@ public class CardListAdapterTest {
 
         cardListAdapter = new CardListAdapter(
                 activity.getApplicationContext(), 0, 0,
-                translations,
+                this.translations,
                 mockTranslationService,
                 mockDictionaryService,
                 mockDeckService);
@@ -180,6 +184,7 @@ public class CardListAdapterTest {
     public void shouldPassContextWithCorrectTranslationsWhenEditTriggered() {
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
         assertEquals(firstTranslation, newTranslations.get(0).getTranslation());
+        assertEquals(secondTranslation, newTranslations.get(1).getTranslation());
     }
 
     @Test
