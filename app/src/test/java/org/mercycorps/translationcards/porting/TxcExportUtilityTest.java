@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.service.LanguageService;
 import org.mockito.ArgumentCaptor;
 
 import java.io.FileInputStream;
@@ -24,6 +25,7 @@ public class TxcExportUtilityTest {
     private FileInputStream fileInputStream;
     private ZipOutputStream zipOutputStream;
     private TxcExportUtility txcExportUtility;
+    private LanguageService languageService;
 
     @Before
     public void setUp() throws Exception {

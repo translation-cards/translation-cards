@@ -43,9 +43,10 @@ public class TxcImportUtility {
     private static final String ALT_INDEX_FILENAME = "card_deck.txt";
     private static final String SPEC_FILENAME = "card_deck.json";
     private static final int BUFFER_SIZE = 2048;
-    private static final String DEFAULT_SOURCE_LANGUAGE = "en";
+    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     public static final String NO_AUDIO = "";
     private static final String TAG = TxcImportUtility.class.getName();
+    public static final String NO_SOURCE_LANGUAGE_NAME = "";
     private LanguageService languageService;
     private DeckRepository deckRepository;
     private TranslationRepository translationRepository;
@@ -227,9 +228,10 @@ public class TxcImportUtility {
             String publisher = json.optString(JsonKeys.PUBLISHER);
             String externalId = json.optString(JsonKeys.EXTERNAL_ID);
             long timestamp = json.optLong(JsonKeys.TIMESTAMP, -1);
-            String srcLanguage = json.optString(JsonKeys.SOURCE_LANGUAGE, DEFAULT_SOURCE_LANGUAGE);
+            String srcLanguageIso = json.optString(JsonKeys.SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_ISO);
+            String sourceLanguageName = json.optString(JsonKeys.SOURCE_LANGUAGE_NAME, NO_SOURCE_LANGUAGE_NAME);
             boolean locked = json.optBoolean(JsonKeys.LOCKED, false);
-            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, srcLanguage,
+            spec = new ImportSpec(deckLabel, publisher, externalId, timestamp, locked, TranslationCardsISO.getLanguageDisplayName(srcLanguageIso, sourceLanguageName),
                     hash, dir);
             JSONArray dictionaries = json.optJSONArray(JsonKeys.DICTIONARIES);
             if (dictionaries == null) {
@@ -245,8 +247,9 @@ public class TxcImportUtility {
     private void addDictionariesToImportSpec(ImportSpec spec, JSONArray dictionaries) throws JSONException {
         for (int i = 0; i < dictionaries.length(); i++) {
             JSONObject dictionary = dictionaries.getJSONObject(i);
-            String destIsoCode = parseIsoCodeFromJsonDictionary(dictionary);
-            String language = languageService.getLanguageDisplayName(destIsoCode);
+            String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
+            String destLanguage = dictionary.optString(JsonKeys.DICTIONARY_DEST_NAME, NO_SOURCE_LANGUAGE_NAME);
+            String language = TranslationCardsISO.getLanguageDisplayName(destIsoCode, destLanguage);
             ImportSpecDictionary dictionarySpec = new ImportSpecDictionary(destIsoCode, language);
             addCardsToDictionarySpec(dictionary, dictionarySpec);
             spec.dictionaries.add(dictionarySpec);
@@ -268,17 +271,6 @@ public class TxcImportUtility {
         }
     }
 
-    @NonNull
-    private String parseIsoCodeFromJsonDictionary(JSONObject dictionary) throws JSONException {
-        String destIsoCode = dictionary.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE);
-        if(destIsoCode.length() >= 2) {
-            destIsoCode = destIsoCode.substring(0,2);
-        } else {
-            destIsoCode = LanguageService.INVALID_ISO_CODE;
-        }
-        return destIsoCode;
-    }
-
     private ImportSpec getIndexFromPsv(File dir, String indexFilename, String defaultLabel,
                                        String hash) throws ImportException {
         String label = defaultLabel;
@@ -286,7 +278,7 @@ public class TxcImportUtility {
         String externalId = null;
         long timestamp = -1;
         ImportSpec spec = new ImportSpec(label, publisher, externalId, timestamp, false,
-                DEFAULT_SOURCE_LANGUAGE, hash, dir);
+                DEFAULT_SOURCE_LANGUAGE_ISO, hash, dir);
         Map<String, ImportSpecDictionary> dictionaryLookup = new HashMap<>();
         Scanner s;
         try {
@@ -308,7 +300,7 @@ public class TxcImportUtility {
                         externalId = metaLine[2];
                         timestamp = Long.valueOf(metaLine[3]);
                         spec = new ImportSpec(label, publisher, externalId, timestamp, false,
-                                DEFAULT_SOURCE_LANGUAGE, hash, dir);
+                                DEFAULT_SOURCE_LANGUAGE_ISO, hash, dir);
                         continue;
                     }
                 }
@@ -340,7 +332,7 @@ public class TxcImportUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 if(card.filename.equals(NO_AUDIO)){
@@ -361,7 +353,7 @@ public class TxcImportUtility {
                 importSpec.externalId, importSpec.hash, importSpec.locked, importSpec.srcLanguage);
         for (int i = 0; i < importSpec.dictionaries.size(); i++) {
             ImportSpecDictionary dictionary = importSpec.dictionaries.get(i);
-            long dictionaryId = dictionaryRepository.addDictionary(dictionary.isoCode, dictionary.language, i, deckId);
+            long dictionaryId = dictionaryRepository.addDictionary(dictionary.language, i, deckId);
             for (int j = dictionary.cards.size() - 1; j >= 0; j--) {
                 ImportSpecCard card = dictionary.cards.get(j);
                 translationRepository.addTranslation(dictionaryId, card.label, true, card.filename, dictionary.cards.size() - j, card.translatedText);

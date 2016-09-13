@@ -24,7 +24,6 @@ import org.mercycorps.translationcards.exception.AudioFileException;
 import org.mercycorps.translationcards.exception.AudioFileNotSetException;
 import org.mercycorps.translationcards.media.DecoratedMediaManager;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.TranslationService;
@@ -77,7 +76,7 @@ public class TranslationCardItemTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         activity = Robolectric.buildActivity(Activity.class).create().get();
-        Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, false, "Language");
         when(deckService.currentDeck()).thenReturn(basicDeck);
     }
 
@@ -277,7 +276,7 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldHideEditAndDeleteOptionsIfCardIsLocked() {
-        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, "Language");
         when(deckService.currentDeck()).thenReturn(basicDeck);
         TranslationCardItem tc = getTranslationCardItemWithEditAndDeleteButtonsConfiguredToShow();
         assertEquals(View.GONE, tc.findViewById(R.id.translation_grandchild).getVisibility());
@@ -401,7 +400,7 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldNotSetDeleteClickListenerIfCardLocked() {
-        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, "Language");
         when(deckService.currentDeck()).thenReturn(basicDeck);
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
         View.OnClickListener deleteListener = mock(View.OnClickListener.class);
@@ -421,7 +420,7 @@ public class TranslationCardItemTest {
 
     @Test
     public void shouldNotSetEditClickListenerIfCardLocked() {
-        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, new Language("eng", "Langauge"));
+        Deck basicDeck = new Deck("Test Deck", "", "1", 1, true, "Language");
         when(deckService.currentDeck()).thenReturn(basicDeck);
         TranslationCardItem translationCardItem = getDefaultTranslationCard();
         View.OnClickListener editListener = mock(View.OnClickListener.class);

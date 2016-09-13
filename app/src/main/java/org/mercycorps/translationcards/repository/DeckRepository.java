@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.model.Translation;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 
 import java.io.File;
 import java.util.Set;
@@ -24,12 +23,10 @@ public class DeckRepository {
     public static final int NONEXISTENT_ID = -1;
     private DatabaseHelper databaseHelper;
     private DictionaryRepository dictionaryRepository;
-    private LanguageService languageService;
 
-    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper, LanguageService languageService) {
+    public DeckRepository(DictionaryRepository dictionaryRepository, DatabaseHelper databaseHelper) {
         this.dictionaryRepository = dictionaryRepository;
         this.databaseHelper = databaseHelper;
-        this.languageService = languageService;
     }
 
     public Deck[] getAllDecks() {
@@ -41,8 +38,6 @@ public class DeckRepository {
         boolean hasNext = cursor.moveToFirst();
         int i = 0;
         while(hasNext){
-
-            String sourceLanguageIso = cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_ISO));
             long dbId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(
                     cursor.getString(cursor.getColumnIndex(DecksTable.LABEL)),
@@ -51,7 +46,7 @@ public class DeckRepository {
                     dbId,
                     cursor.getLong(cursor.getColumnIndex(DecksTable.CREATION_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndex(DecksTable.LOCKED)) == 1,
-                    languageService.getLanguageWithIso(sourceLanguageIso),
+                    cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_NAME)),
                     dictionaryRepository.getAllDictionariesForDeck(dbId));
 
             decks[i] = deck;
@@ -65,7 +60,7 @@ public class DeckRepository {
 
     private long addDeck(SQLiteDatabase writableDatabase, String label, String publisher,
                         long creationTimestamp, String externalId, String hash, boolean locked,
-                        String srcLanguageIso) {
+                        String sourceLanguageName) {
         ContentValues values = new ContentValues();
         values.put(DecksTable.LABEL, label);
         values.put(DecksTable.PUBLISHER, publisher);
@@ -73,14 +68,14 @@ public class DeckRepository {
         values.put(DecksTable.EXTERNAL_ID, externalId);
         values.put(DecksTable.HASH, hash);
         values.put(DecksTable.LOCKED, locked ? 1 : 0);
-        values.put(DecksTable.SOURCE_LANGUAGE_ISO, srcLanguageIso);
+        values.put(DecksTable.SOURCE_LANGUAGE_NAME, sourceLanguageName);
         return writableDatabase.insert(DecksTable.TABLE_NAME, null, values);
     }
 
     public long addDeck(String label, String publisher, long creationTimestamp, String externalId,
-                        String hash, boolean locked, String srcLanguageIso) {
+                        String hash, boolean locked, String sourceLanguageName) {
         return addDeck(databaseHelper.getWritableDatabase(), label, publisher, creationTimestamp, externalId,
-                hash, locked, srcLanguageIso);
+                hash, locked, sourceLanguageName);
     }
 
     public void saveDeck(Deck deck, Set<String> languages) {
@@ -91,15 +86,14 @@ public class DeckRepository {
                 deck.getExternalId(),
                 "",
                 deck.isLocked(),
-                deck.getSourceLanguageIso());
+                deck.getSourceLanguageName());
         saveDictionaries(deckID, languages);
     }
 
     private void saveDictionaries(Long deckId, Set<String> languages) {
         Integer itemIndex = 0;
         for (String language : languages) {
-            String isoCode = languageService.getIsoForLanguage(language);
-            dictionaryRepository.addDictionary(isoCode, language, itemIndex, deckId);
+            dictionaryRepository.addDictionary(language, itemIndex, deckId);
             itemIndex++;
         }
     }

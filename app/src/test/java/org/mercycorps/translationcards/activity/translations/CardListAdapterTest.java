@@ -18,7 +18,6 @@ import org.mercycorps.translationcards.activity.addTranslation.NewTranslation;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
@@ -71,10 +70,12 @@ public class CardListAdapterTest {
         translations.add(firstTranslation);
         DictionaryService mockDictionaryService = mock(DictionaryService.class);
         Translation[] translationsArray= translations.toArray(new Translation[translations.size()]);
-        defaultDictionary = new Dictionary("eng", "English", translationsArray, 0);
+
+        defaultDictionary = new Dictionary("English", translationsArray, 0);
+        when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
 
         secondTranslation = new Translation(TRANSLATION_LABEL, false, "", 0L, "Translated Text 2");
-        Dictionary secondDictionary = new Dictionary("fa", "Farsi", new Translation[] {secondTranslation}, 0);
+        Dictionary secondDictionary = new Dictionary("Farsi", new Translation[] {secondTranslation}, 0);
 
         List<Dictionary> dictionaries = new ArrayList<>();
         dictionaries.add(defaultDictionary);
@@ -82,7 +83,7 @@ public class CardListAdapterTest {
         when(mockDictionaryService.currentDictionary()).thenReturn(defaultDictionary);
         when(mockDictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 
-        basicDeck = new Deck("Test Deck", "", "1", 1, false, new Language("eng", "Langauge"));
+        basicDeck = new Deck("Test Deck", "", "1", 1, false, "Language");
         when(mockDeckService.currentDeck()).thenReturn(basicDeck);
 
         cardListAdapter = new CardListAdapter(

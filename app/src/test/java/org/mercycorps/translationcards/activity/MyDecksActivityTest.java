@@ -16,7 +16,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -122,9 +121,8 @@ public class MyDecksActivityTest {
 
     @Test
     public void shouldRefreshDecksOnActivityResume() throws Exception {
-        Language defaultSourceLanguage = new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME);
-        Deck firstDeck = new Deck("First Deck", "", "", 0L, false, defaultSourceLanguage);
-        Deck secondDeck = new Deck("Second Deck", "", "", 1L, false, defaultSourceLanguage);
+        Deck firstDeck = new Deck("First Deck", "", "", 0L, false, DEFAULT_LANGUAGE_NAME);
+        Deck secondDeck = new Deck("Second Deck", "", "", 1L, false, DEFAULT_LANGUAGE_NAME);
         when(deckRepository.getAllDecks())
                 .thenReturn(new Deck[]{firstDeck})
                 .thenReturn(new Deck[]{firstDeck, secondDeck});
@@ -155,7 +153,7 @@ public class MyDecksActivityTest {
     private Deck[] createStubDeckArray(boolean shouldCreateDeck){
         if(!shouldCreateDeck) return new Deck[0];
         Deck[] arrayOfDecks = new Deck[1];
-        Deck deck = new Deck("", "", "", 0L, false, new Language(DEFAULT_ISO_CODE, DEFAULT_LANGUAGE_NAME));
+        Deck deck = new Deck("", "", "", 0L, false, DEFAULT_LANGUAGE_NAME);
         arrayOfDecks[0] = deck;
         return arrayOfDecks;
     }

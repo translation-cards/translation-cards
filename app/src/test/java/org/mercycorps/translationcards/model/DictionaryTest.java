@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.porting.JsonKeys;
+import org.mercycorps.translationcards.porting.TranslationCardsISO;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -28,7 +29,7 @@ public class DictionaryTest {
     public void shouldReturnMapOfAudioPathsToAssetBoolean() {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
         Translation secondTranslation = new Translation("", true, "/filename2", 1L, "");
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
+        Dictionary dictionary = new Dictionary("", new Translation[]{firstTranslation, secondTranslation}, 1L);
 
         Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
@@ -43,7 +44,7 @@ public class DictionaryTest {
     public void shouldNotReturnTranslationPathsWithNoAudio() {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
         Translation secondTranslation = new Translation("", false, "", 1L, "");
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
+        Dictionary dictionary = new Dictionary("", new Translation[]{firstTranslation, secondTranslation}, 1L);
 
         Map<String, Boolean> audioPaths = dictionary.getAudioPaths();
 
@@ -53,18 +54,18 @@ public class DictionaryTest {
 
     @Test
     public void shouldReturnJSONObjectWithDictionaryMetadata() throws JSONException {
-        Dictionary dictionary = new Dictionary("destinationIso", "language", new Translation[]{}, 1L);
+        Dictionary dictionary = new Dictionary("language", new Translation[]{}, 1L);
 
         JSONObject json = dictionary.toJSON();
 
-        assertEquals(dictionary.getDestLanguageIso(), json.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
+        assertEquals(TranslationCardsISO.getISOCodeForLanguage(dictionary.getLanguage()), json.getString(JsonKeys.DICTIONARY_DEST_ISO_CODE));
     }
 
     @Test
     public void shouldWriteTranslationsToJSON() throws JSONException {
         Translation firstTranslation = mock(Translation.class);
         Translation secondTranslation = mock(Translation.class);
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
+        Dictionary dictionary = new Dictionary("", new Translation[]{firstTranslation, secondTranslation}, 1L);
         JSONObject firstTranslationAsJSON = new JSONObject();
         JSONObject secondTranslationAsJSON = new JSONObject();
         when(firstTranslation.toJSON()).thenReturn(firstTranslationAsJSON);
@@ -82,7 +83,7 @@ public class DictionaryTest {
     public void shouldInflateFromParcel() throws Exception {
         Translation firstTranslation = new Translation("", false, "/filename1", 1L, "");
         Translation secondTranslation = new Translation("", true, "/filename2", 1L, "");
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{firstTranslation, secondTranslation}, 1L);
+        Dictionary dictionary = new Dictionary("", new Translation[]{firstTranslation, secondTranslation}, 1L);
         Parcel parcel = Parcel.obtain();
 
         dictionary.writeToParcel(parcel, 1);
@@ -90,7 +91,6 @@ public class DictionaryTest {
         Dictionary fromParcel = Dictionary.CREATOR.createFromParcel(parcel);
 
         assertEquals(dictionary.getLanguage(), fromParcel.getLanguage());
-        assertEquals(dictionary.getDestLanguageIso(), fromParcel.getDestLanguageIso());
         assertEquals(dictionary.getAudioPaths(), fromParcel.getAudioPaths());
         assertEquals(dictionary.getTranslationCount(), fromParcel.getTranslationCount());
         assertEquals(dictionary.getDbId(), fromParcel.getDbId());

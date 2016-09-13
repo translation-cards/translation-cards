@@ -24,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mercycorps.translationcards.porting.JsonKeys;
-import org.mercycorps.translationcards.service.LanguageService;
+import org.mercycorps.translationcards.porting.TranslationCardsISO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,25 +38,22 @@ public class Dictionary implements Parcelable {
 
 
     private long dbId;
-    private String destLanguageIso;
     private String language;
     private Translation[] translations;
 
 
-    public Dictionary(@NonNull String destLanguageIso, String language, Translation[] translations, long dbId) {
-        this.destLanguageIso = destLanguageIso;
+    public Dictionary(String language, Translation[] translations, long dbId) {
         this.language = language;
         this.translations = translations;
         this.dbId = dbId;
     }
 
     public Dictionary(String language) {
-        this(LanguageService.INVALID_ISO_CODE, language, new Translation[0], -1L);
+        this(language, new Translation[0], -1L);
     }
 
     protected Dictionary(Parcel in) {
         dbId = in.readLong();
-        destLanguageIso = in.readString();
         language = in.readString();
         translations = in.createTypedArray(Translation.CREATOR);
     }
@@ -73,12 +70,8 @@ public class Dictionary implements Parcelable {
         }
     };
 
-    public String getDestLanguageIso() {
-        return destLanguageIso;
-    }
-
     public String getLanguage() {
-        return isNullOrEmpty(language) ? this.destLanguageIso : language;
+        return language;
     }
 
     public int getTranslationCount() {
@@ -102,10 +95,6 @@ public class Dictionary implements Parcelable {
         return dbId;
     }
 
-    private boolean isNullOrEmpty(String value) {
-        return (value == null) || value.isEmpty();
-    }
-
     @Override
     public String toString() {
         return language;
@@ -113,7 +102,8 @@ public class Dictionary implements Parcelable {
 
     protected JSONObject toJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(JsonKeys.DICTIONARY_DEST_ISO_CODE, destLanguageIso);
+        jsonObject.put(JsonKeys.DICTIONARY_DEST_ISO_CODE, TranslationCardsISO.getISOCodeForLanguage(language));
+        jsonObject.put(JsonKeys.DICTIONARY_DEST_NAME, language);
         jsonObject.put(JsonKeys.CARDS, createJSONTranslationsArray());
 
         return jsonObject;
@@ -147,7 +137,6 @@ public class Dictionary implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(dbId);
-        dest.writeString(destLanguageIso);
         dest.writeString(language);
         dest.writeTypedArray(translations, flags);
     }
