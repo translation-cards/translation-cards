@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.presenter;
+package org.mercycorps.translationcards.activity.addDeck.presenter;
 
 import org.junit.Before;
 import org.junit.Test;

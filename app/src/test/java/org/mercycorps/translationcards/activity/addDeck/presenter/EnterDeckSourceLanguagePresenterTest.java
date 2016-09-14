@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.presenter;
+package org.mercycorps.translationcards.activity.addDeck.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageA
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckTitleActivity;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.activity.addDeck.presenter.EnterDeckSourceLanguagePresenter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

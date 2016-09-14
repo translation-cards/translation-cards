@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.presenter.EnterDeckTitlePresenter;
+import org.mercycorps.translationcards.activity.addDeck.presenter.EnterDeckTitlePresenter;
 
 import butterknife.Bind;
 import butterknife.OnClick;

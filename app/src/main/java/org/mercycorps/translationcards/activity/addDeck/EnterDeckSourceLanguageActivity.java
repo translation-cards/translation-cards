@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.presenter.EnterDeckSourceLanguagePresenter;
+import org.mercycorps.translationcards.activity.addDeck.presenter.EnterDeckSourceLanguagePresenter;
 
 import butterknife.Bind;
 import butterknife.OnClick;
