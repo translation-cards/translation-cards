@@ -36,7 +36,7 @@ public class TranslationCardsISO {
     }
 
     @NonNull
-    private static String getTitleCaseName(String name) {
+    public static String getTitleCaseName(String name) {
         if (name == null || name.isEmpty()) {
             return "";
         }

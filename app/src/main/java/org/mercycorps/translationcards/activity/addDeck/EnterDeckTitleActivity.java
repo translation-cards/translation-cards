@@ -13,7 +13,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeckTitlePresenter.DeckPresenterView {
+public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeckTitlePresenter.EnterDeckTitleView {
     @Bind(R.id.deck_title_input)TextView deckTitleInput;
     @Bind(R.id.enter_deck_title_next_label)LinearLayout nextButton;
     @Bind(R.id.enter_deck_title_next_text)TextView nextButtonText;
@@ -26,14 +26,14 @@ public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeck
     }
 
     @Override
-    public void initStates(){
-        presenter.updateDeckTitleInput();
-    }
-
-    @Override
     public void setBitmapsForActivity() {
         presenter = new EnterDeckTitlePresenter(this, getContextFromIntent());
         presenter.inflateBitmaps();
+    }
+
+    @Override
+    public void initStates(){
+        presenter.updateDeckTitleInput();
     }
 
     @OnClick(R.id.enter_deck_title_back)
@@ -52,7 +52,7 @@ public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeck
     }
 
 
-    // DeckPresenterView Implementation
+    // EnterDeckTitleView Implementation
     @Override
     public void updateNextButton(boolean buttonClickable, int buttonTextColor, int buttonArrow) {
         nextButton.setClickable(buttonClickable);

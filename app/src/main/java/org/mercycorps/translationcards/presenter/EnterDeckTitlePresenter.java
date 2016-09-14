@@ -8,10 +8,10 @@ import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
 
 public class EnterDeckTitlePresenter {
-    private DeckPresenterView activity;
+    private EnterDeckTitleView activity;
     private NewDeckContext newDeckContext;
 
-    public EnterDeckTitlePresenter(DeckPresenterView activity, NewDeckContext newDeckContext) {
+    public EnterDeckTitlePresenter(EnterDeckTitleView activity, NewDeckContext newDeckContext) {
         this.activity = activity;
         this.newDeckContext = newDeckContext;
     }
@@ -58,7 +58,7 @@ public class EnterDeckTitlePresenter {
         return newDeckContext.getDeckTitle().isEmpty();
     }
 
-    public interface DeckPresenterView {
+    public interface EnterDeckTitleView {
         void setDeckTitleText(String deckTitle);
         void updateNextButton(boolean buttonClickable, int buttonTextColor, int buttonArrow);
         void startActivityWithClass(Class<? extends Activity> activityClass);

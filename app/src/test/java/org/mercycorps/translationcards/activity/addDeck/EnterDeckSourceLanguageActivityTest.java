@@ -1,9 +1,7 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,10 +15,8 @@ import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowActivity;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -42,64 +38,9 @@ public class EnterDeckSourceLanguageActivityTest {
     }
 
     @Test
-    public void shouldReturnToEnterDeckTitleActivityWhenBackButtonIsClicked(){
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.deck_source_language_back_arrow);
-        assertEquals(EnterDeckTitleActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
-    }
-
-    @Test
-    public void shouldStartDeckDestinationLanguagesActivityWhenNextButtonIsClicked(){
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.deck_source_language_next_label);
-        assertEquals(EnterDeckDestinationLanguagesActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
-    }
-
-    @Test
     public void shouldInflateEnterSourceLanguageImageWhenActivityIsCreated() {
         Activity activity = helper.createActivityToTest();
         ImageView imageView = findImageView(activity, R.id.deck_source_language_image);
         assertEquals(R.drawable.enter_phrase_image, shadowOf(imageView.getDrawable()).getCreatedFromResId());
-    }
-
-    @Test
-    public void shouldLaunchLanguageSelectorWhenLanguageNameIsTapped() {
-        Activity activity = helper.createActivityToTest();
-        ShadowActivity shadowActivity = shadowOf(activity);
-
-        click(activity, R.id.deck_source_language_view);
-
-        assertEquals(LanguageSelectorActivity.class.getName(), shadowActivity.getNextStartedActivity().getComponent().getClassName());
-    }
-
-    @Test
-    public void shouldSaveSourceLanguageToContextWhenLanguageSelectorReturns() {
-        NewDeckContext newDeckContext = new NewDeckContext();
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity) helper.createActivityToTestWithContext(newDeckContext);
-        Intent data = new Intent();
-        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "Spanish");
-        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_OK, data);
-        assertEquals(newDeckContext.getSourceLanguage(),"Spanish");
-        assertEquals("Spanish", ((TextView) activity.findViewById(R.id.deck_source_language_view)).getText());
-    }
-
-    @Test
-    public void shouldNotChangeSourceLanguageIfLanguageSelectorIsCancelled() {
-        NewDeckContext newDeckContext = new NewDeckContext();
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity) helper.createActivityToTestWithContext(newDeckContext);
-        CharSequence expectedValue = ((TextView) activity.findViewById(R.id.deck_source_language_view)).getText();
-        Intent data = new Intent();
-        data.putExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY, "Spanish");
-        activity.onActivityResult(EnterDeckDestinationLanguagesActivity.REQUEST_CODE, Activity.RESULT_CANCELED, data);
-        assertEquals(newDeckContext.getSourceLanguage(),expectedValue);
-        assertEquals(expectedValue, ((TextView) activity.findViewById(R.id.deck_source_language_view)).getText());
-    }
-
-    @Test
-    public void shouldDefaultLanguageToEnglishIfNotSetInNewDeckContext() {
-        NewDeckContext newDeckContext = new NewDeckContext();
-        EnterDeckSourceLanguageActivity activity = (EnterDeckSourceLanguageActivity) helper.createActivityToTestWithContext(newDeckContext);
-        assertEquals(newDeckContext.getSourceLanguage(),"English");
-        assertEquals("English", ((TextView) activity.findViewById(R.id.deck_source_language_view)).getText());
     }
 }
