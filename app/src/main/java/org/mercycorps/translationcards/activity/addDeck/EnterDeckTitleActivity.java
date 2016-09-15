@@ -1,6 +1,5 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
-import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,15 +62,5 @@ public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeck
     @Override
     public void setDeckTitleText(String deckTitle) {
         deckTitleInput.setText(deckTitle);
-    }
-
-    @Override
-    public void startActivityWithClass(Class<? extends Activity> nextActivityClass) {
-        startNextActivity(this, nextActivityClass);
-    }
-
-    @Override
-    public void setActivityBitmap(int resId, int drawableId) {
-        setBitmap(resId, drawableId);
     }
 }

@@ -72,16 +72,6 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity implements 
 
     // EnterDeckSourceLanguageView Implementation
     @Override
-    public void setActivityBitmap(int resId, int drawableId) {
-        setBitmap(resId, drawableId);
-    }
-
-    @Override
-    public void startActivityWithClass(Class<? extends Activity> activityClass) {
-        startNextActivity(this, activityClass);
-    }
-
-    @Override
     public void updateSourceLanguage(String sourceLanguage) {
         sourceLanguageView.setText(sourceLanguage);
     }

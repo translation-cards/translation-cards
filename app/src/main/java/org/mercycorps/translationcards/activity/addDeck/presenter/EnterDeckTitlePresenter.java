@@ -1,7 +1,5 @@
 package org.mercycorps.translationcards.activity.addDeck.presenter;
 
-import android.app.Activity;
-
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivity;
 import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
@@ -58,10 +56,8 @@ public class EnterDeckTitlePresenter {
         return newDeckContext.getDeckTitle().isEmpty();
     }
 
-    public interface EnterDeckTitleView {
+    public interface EnterDeckTitleView extends AddDeckView {
         void setDeckTitleText(String deckTitle);
         void updateNextButton(boolean buttonClickable, int buttonTextColor, int buttonArrow);
-        void startActivityWithClass(Class<? extends Activity> activityClass);
-        void setActivityBitmap(int resId, int drawableId);
     }
 }

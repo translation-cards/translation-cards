@@ -1,12 +1,14 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
+import org.mercycorps.translationcards.activity.addDeck.presenter.AddDeckView;
 
-public abstract class AddDeckActivity extends AbstractTranslationCardsActivity {
+public abstract class AddDeckActivity extends AbstractTranslationCardsActivity implements AddDeckView {
     public static final String INTENT_KEY_DECK = "Deck";
 
     @Override
@@ -36,5 +38,16 @@ public abstract class AddDeckActivity extends AbstractTranslationCardsActivity {
 
     protected NewDeckContext getContextFromIntent(){
         return (NewDeckContext) getObjectFromIntent(INTENT_KEY_DECK);
+    }
+
+    // AddDeckView Implementation
+    @Override
+    public void setActivityBitmap(int resId, int drawableId) {
+        setBitmap(resId, drawableId);
+    }
+
+    @Override
+    public void startActivityWithClass(Class<? extends Activity> nextActivityClass) {
+        startNextActivity(this, nextActivityClass);
     }
 }

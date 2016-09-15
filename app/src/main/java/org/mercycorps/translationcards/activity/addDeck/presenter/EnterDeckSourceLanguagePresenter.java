@@ -49,9 +49,7 @@ public class EnterDeckSourceLanguagePresenter {
         activity.startActivityForResult(LanguageSelectorActivity.class, REQUEST_CODE);
     }
 
-    public interface EnterDeckSourceLanguageView {
-        void setActivityBitmap(int resId, int drawableId);
-        void startActivityWithClass(Class<? extends Activity> activityClass);
+    public interface EnterDeckSourceLanguageView extends AddDeckView {
         void updateSourceLanguage(String sourceLanguage);
         void startActivityForResult(Class<? extends Activity> activityClass, int requestCode);
     }
