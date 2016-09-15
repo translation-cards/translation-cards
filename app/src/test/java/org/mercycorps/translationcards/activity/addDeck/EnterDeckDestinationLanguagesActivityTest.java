@@ -45,9 +45,8 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldGoToAuthorAndLockActivityWhenNextButtonClickedAndNewDeckContextHasADestinationLanguage() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck());
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
-        activity.updateNextButtonState();
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         click(activity, R.id.enter_destination_next_label);
         assertEquals(EnterAuthorActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
@@ -130,9 +129,9 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldChangeNextButtonColorWhenDestinationLanguageSetIsNotEmpty() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck());
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
-        activity.updateNextButtonState();
+
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
         assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
     }
@@ -140,9 +139,8 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @Test
     public void shouldChangeNextButtonArrowColorWhenDestinationLanguageIsNotEmpty() {
         NewDeckContext newDeckContext = new NewDeckContext(new Deck());
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         newDeckContext.addDestinationLanguage(A_LANGUAGE);
-        activity.updateNextButtonState();
+        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
         ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
         assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }

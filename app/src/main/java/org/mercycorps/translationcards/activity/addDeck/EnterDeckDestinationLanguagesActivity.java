@@ -17,13 +17,16 @@ import android.widget.TextView;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.addDeck.presenter.EnterDeckDestinationPresenter;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
+public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity implements EnterDeckDestinationPresenter.EnterDeckDestinationView {
     public static final int REQUEST_CODE = 0;
     private NewDeckContext newDeckContext;
+    private EnterDeckDestinationPresenter presenter;
+
     @Bind(R.id.enter_destination_next_label)
     LinearLayout nextButton;
     @Bind(R.id.enter_destination_next_text)
@@ -38,18 +41,20 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_deck_destination_languages);
+        newDeckContext = getContextFromIntent();
+        presenter = new EnterDeckDestinationPresenter(this, newDeckContext);
     }
 
     @Override
     public void setBitmapsForActivity() {
-        setBitmap(R.id.enter_deck_destination_image, R.drawable.enter_phrase_image);
+        presenter.setBitmaps();
     }
 
     @Override
     public void initStates() {
-        newDeckContext = getContextFromIntent();
         formatAddLanguageButton();
-        updateNextButtonState();
+        presenter.updateNextButtonState();
+        presenter.populateFlexBox();
         populateFlexBox();
     }
 
@@ -134,7 +139,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
     private void removeLanguage(String language) {
         newDeckContext.getDestinationLanguages().remove(language);
         populateFlexBox();
-        updateNextButtonState();
+        presenter.updateNextButtonState();
     }
 
     @OnClick(R.id.enter_destination_next_label)
@@ -159,7 +164,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
                 newDeckContext.addDestinationLanguage(selectedLanguage);
                 populateFlexBox();
             }
-            updateNextButtonState();
+            presenter.updateNextButtonState();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -169,11 +174,9 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity {
         startActivityForResult(new Intent(this, LanguageSelectorActivity.class), REQUEST_CODE);
     }
 
-    protected void updateNextButtonState() {
-        boolean hasLanguages = !newDeckContext.getDestinationLanguages().isEmpty();
-        int backgroundResource = hasLanguages ? R.drawable.forward_arrow : R.drawable.forward_arrow_disabled;
-        int buttonColor = hasLanguages ? R.color.primaryTextColor : R.color.textDisabled;
-        nextButton.setClickable(hasLanguages);
+    @Override
+    public void updateNextButton(boolean clickable, int buttonColor, int backgroundResource) {
+        nextButton.setClickable(clickable);
         nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
         nextButtonImage.setBackgroundResource(backgroundResource);
     }
