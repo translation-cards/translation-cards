@@ -1,11 +1,13 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.activity.addDeck.presenter.GetStartedDeckPresenter;
 
 import butterknife.OnClick;
 
 public class GetStartedDeckActivity extends AddDeckActivity {
+
+    private GetStartedDeckPresenter presenter;
 
     @Override
     public void inflateView() {
@@ -14,16 +16,17 @@ public class GetStartedDeckActivity extends AddDeckActivity {
 
     @Override
     public void setBitmapsForActivity() {
-        setBitmap(R.id.deck_get_started_image, R.drawable.get_started_image);
+        presenter = new GetStartedDeckPresenter(this);
+        presenter.inflateBitmaps();
     }
 
     @OnClick(R.id.deck_get_started_button)
     protected void getStartedButtonClicked() {
-        startNextActivity(GetStartedDeckActivity.this, EnterDeckTitleActivity.class);
+        presenter.getStartedButtonClicked();
     }
 
     @OnClick(R.id.deck_get_started_back)
     public void getStartedBackButtonClicked(){
-        startNextActivity(GetStartedDeckActivity.this, MyDecksActivity.class);
+        presenter.backButtonClicked();
     }
 }
