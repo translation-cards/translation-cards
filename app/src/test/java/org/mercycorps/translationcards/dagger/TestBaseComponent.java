@@ -6,7 +6,7 @@ import org.mercycorps.translationcards.activity.MyDecksActivityTest;
 import org.mercycorps.translationcards.activity.TranslationsActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckSourceLanguageActivityTest;
 import org.mercycorps.translationcards.activity.addDeck.LanguageSelectorActivityTest;
-import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivityTest;
+import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveDeckActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivityTest;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivityTest;
 import org.mercycorps.translationcards.activity.translations.CardListAdapterTest;
@@ -21,7 +21,7 @@ public interface TestBaseComponent extends BaseComponent {
     void inject(RecordAudioActivityTest activity);
     void inject(TranslationCardItemTest activity);
     void inject(ImportActivity importActivity);
-    void inject(ReviewAndSaveActivityTest reviewAndSaveActivity);
+    void inject(ReviewAndSaveDeckActivityTest reviewAndSaveActivity);
     void inject(EnterDeckSourceLanguageActivityTest enterDeckSourceLanguageActivity);
     void inject(LanguageSelectorActivityTest languageSelectorActivity);
     void inject(MyDecksActivityTest myDecksActivityTest);

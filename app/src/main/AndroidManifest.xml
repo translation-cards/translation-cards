@@ -43,7 +43,7 @@
             android:name=".activity.addDeck.EnterAuthorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDeck.ReviewAndSaveActivity"
+            android:name=".activity.addDeck.ReviewAndSaveDeckActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.GetStartedActivity"

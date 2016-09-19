@@ -3,7 +3,7 @@ package org.mercycorps.translationcards.activity.addDeck.presenter;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckDestinationLanguagesActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivity;
+import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveDeckActivity;
 
 public class EnterAuthorPresenter {
 
@@ -25,7 +25,7 @@ public class EnterAuthorPresenter {
 
     public void nextButtonClicked() {
         if (newDeckContext.getAuthor().isEmpty()) return;
-        activity.startActivityWithClass(ReviewAndSaveActivity.class);
+        activity.startActivityWithClass(ReviewAndSaveDeckActivity.class);
     }
 
     public void backButtonClicked() {

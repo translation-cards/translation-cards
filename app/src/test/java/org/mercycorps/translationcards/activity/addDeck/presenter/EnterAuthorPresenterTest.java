@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.addDeck.EnterDeckDestinationLanguagesActivity;
 import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveActivity;
+import org.mercycorps.translationcards.activity.addDeck.ReviewAndSaveDeckActivity;
 
 import static org.mercycorps.translationcards.activity.addDeck.presenter.EnterAuthorPresenter.EnterAuthorView;
 import static org.mockito.Mockito.mock;
@@ -50,7 +50,7 @@ public class EnterAuthorPresenterTest {
 
         presenter.nextButtonClicked();
 
-        verify(activity).startActivityWithClass(ReviewAndSaveActivity.class);
+        verify(activity).startActivityWithClass(ReviewAndSaveDeckActivity.class);
     }
 
     @Test
