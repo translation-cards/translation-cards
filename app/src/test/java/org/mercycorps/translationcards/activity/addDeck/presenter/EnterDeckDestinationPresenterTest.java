@@ -48,7 +48,7 @@ public class EnterDeckDestinationPresenterTest {
         }};
         when(newDeckContext.getDestinationLanguages()).thenReturn(destinationLanguages);
 
-        presenter.initializeView();
+        presenter.refreshView();
 
         verify(view).updateNextButton(true, R.color.primaryTextColor, R.drawable.forward_arrow);
     }
@@ -57,7 +57,7 @@ public class EnterDeckDestinationPresenterTest {
     public void shouldSetNextButtonToNotClickableWhenNoDestinationLanguagesArePresent() {
         when(newDeckContext.getDestinationLanguages()).thenReturn(new HashSet<String>());
 
-        presenter.initializeView();
+        presenter.refreshView();
 
         verify(view).updateNextButton(false, R.color.textDisabled, R.drawable.forward_arrow_disabled);
     }
@@ -70,7 +70,7 @@ public class EnterDeckDestinationPresenterTest {
         when(newDeckContext.getDestinationLanguages()).thenReturn(destinationLanguages);
 
 
-        presenter.initializeView();
+        presenter.refreshView();
 
         verify(view).removeAllLanguageChips();
         verify(view).addLanguageChip(A_LANGUAGE);
@@ -78,7 +78,7 @@ public class EnterDeckDestinationPresenterTest {
 
     @Test
     public void shouldNotAddLanguageChipsToViewWhenNoLanguagesExist() {
-        presenter.initializeView();
+        presenter.refreshView();
 
         verify(view).removeAllLanguageChips();
         verify(view, times(0)).addLanguageChip(anyString());

@@ -47,7 +47,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
     @Override
     public void initStates() {
         formatAddLanguageButton();
-        presenter.initializeView();
+        presenter.refreshView();
     }
 
     @OnClick(R.id.enter_destination_next_label)

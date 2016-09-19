@@ -38,8 +38,7 @@ public class EnterDeckDestinationPresenter {
 
     public void deleteLanguage(String language) {
         contextFromIntent.getDestinationLanguages().remove(language);
-        populateLanguageChips();
-        updateNextButtonState();
+        refreshView();
     }
 
     public void newLanguageSelected(String selectedLanguage) {
@@ -60,7 +59,7 @@ public class EnterDeckDestinationPresenter {
         view.startActivityWithClass(EnterDeckSourceLanguageActivity.class);
     }
 
-    public void initializeView() {
+    public void refreshView() {
         updateNextButtonState();
         populateLanguageChips();
     }

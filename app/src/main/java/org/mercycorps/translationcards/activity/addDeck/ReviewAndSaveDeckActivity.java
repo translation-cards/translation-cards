@@ -47,7 +47,7 @@ public class ReviewAndSaveDeckActivity extends AddDeckActivity implements Review
         presenter.backButtonClicked();
     }
 
-    // ReviewAndSaveDeckView Impl
+    // ReviewAndSaveDeckView Implementation
     @Override
     public void setBitmapsForActivity() {
         presenter.inflateBitmap();

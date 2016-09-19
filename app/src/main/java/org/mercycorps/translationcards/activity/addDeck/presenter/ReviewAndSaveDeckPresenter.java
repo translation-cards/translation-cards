@@ -44,10 +44,10 @@ public class ReviewAndSaveDeckPresenter {
     private void fillLanguagesList() {
         List<String> destinationLanguages = new ArrayList<>(contextFromIntent.getDestinationLanguages());
         Collections.sort(destinationLanguages);
-        view.fillLanguageList(formatDestinationLangauges(destinationLanguages));
+        view.fillLanguageList(formatDestinationLanguages(destinationLanguages));
     }
 
-    private String formatDestinationLangauges(List<String> destinationLanguages) {
+    private String formatDestinationLanguages(List<String> destinationLanguages) {
         boolean firstTime = true;
         StringBuilder formattedLanguages = new StringBuilder("");
         for (String destinationLanguage : destinationLanguages) {
