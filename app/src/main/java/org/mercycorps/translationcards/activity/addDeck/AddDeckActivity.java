@@ -50,4 +50,9 @@ public abstract class AddDeckActivity extends AbstractTranslationCardsActivity i
     public void startActivityWithClass(Class<? extends Activity> nextActivityClass) {
         startNextActivity(this, nextActivityClass);
     }
+
+    @Override
+    public void startActivityForResult(Class<? extends Activity> activityClass, int requestCode) {
+        startActivityForResult(new Intent(this, activityClass), requestCode);
+    }
 }

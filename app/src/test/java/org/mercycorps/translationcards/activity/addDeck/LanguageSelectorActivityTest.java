@@ -20,7 +20,6 @@ import org.robolectric.annotation.Config;
 import org.robolectric.fakes.RoboMenuItem;
 import org.robolectric.shadows.ShadowActivity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -36,7 +35,6 @@ public class LanguageSelectorActivityTest {
 
     @Inject LanguageService languageService;
 
-    private ActivityHelper<LanguageSelectorActivity> helper;
     private Activity activity;
 
     @Before
@@ -45,7 +43,7 @@ public class LanguageSelectorActivityTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         when(languageService.getLanguageNames()).thenReturn(Arrays.asList("Farsi", "Imaginary", "Persian"));
-        helper = new ActivityHelper<>(LanguageSelectorActivity.class);
+        ActivityHelper<LanguageSelectorActivity> helper = new ActivityHelper<>(LanguageSelectorActivity.class);
         activity = helper.getActivityWithIntent(new Intent());
     }
 

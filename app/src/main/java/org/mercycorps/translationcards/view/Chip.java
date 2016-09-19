@@ -57,6 +57,10 @@ public class Chip extends LinearLayout {
         chipText.setText(text);
     }
 
+    public String getChipText() {
+        return chipText.getText().toString();
+    }
+
     public void setOnDeleteListener(OnDeleteListener onDeleteListener) {
         this.onDeleteListener = onDeleteListener;
     }

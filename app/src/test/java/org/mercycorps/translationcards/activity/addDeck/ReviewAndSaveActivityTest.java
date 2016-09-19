@@ -43,7 +43,6 @@ public class ReviewAndSaveActivityTest {
     private static final String EXTERNAL_ID = "0";
     private static final long DB_ID = 0L;
     private static final long CREATION_TIMESTAMP = 753004800000L;
-    private static final String SOURCE_LANGUAGE_ISO = "en";
     private static final String SOURCE_LANGUAGE_NAME = "English";
     private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
     private NewDeckContext newDeckContext;

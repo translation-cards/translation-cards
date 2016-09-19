@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity.addDeck;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -74,11 +73,6 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity implements 
     @Override
     public void updateSourceLanguage(String sourceLanguage) {
         sourceLanguageView.setText(sourceLanguage);
-    }
-
-    @Override
-    public void startActivityForResult(Class<? extends Activity> activityClass, int requestCode) {
-        startActivityForResult(new Intent(this, activityClass), requestCode);
     }
 }
 

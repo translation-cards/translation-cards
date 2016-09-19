@@ -51,6 +51,5 @@ public class EnterDeckSourceLanguagePresenter {
 
     public interface EnterDeckSourceLanguageView extends AddDeckView {
         void updateSourceLanguage(String sourceLanguage);
-        void startActivityForResult(Class<? extends Activity> activityClass, int requestCode);
     }
 }

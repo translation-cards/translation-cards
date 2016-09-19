@@ -20,8 +20,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity implements EnterDeckDestinationPresenter.EnterDeckDestinationView {
-    public static final int REQUEST_CODE = 0;
-    private NewDeckContext newDeckContext;
     private EnterDeckDestinationPresenter presenter;
 
     @Bind(R.id.enter_destination_next_label)
@@ -38,8 +36,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
     @Override
     public void inflateView() {
         setContentView(R.layout.activity_deck_destination_languages);
-        newDeckContext = getContextFromIntent();
-        presenter = new EnterDeckDestinationPresenter(this, newDeckContext);
+        presenter = new EnterDeckDestinationPresenter(this, getContextFromIntent());
     }
 
     @Override
@@ -50,9 +47,57 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
     @Override
     public void initStates() {
         formatAddLanguageButton();
-        presenter.updateNextButtonState();
-        presenter.populateFlexBox();
-        populateFlexBox();
+        presenter.initializeView();
+    }
+
+    @OnClick(R.id.enter_destination_next_label)
+    public void nextButtonClicked() {
+        presenter.nextButtonClicked();
+    }
+
+    @OnClick(R.id.enter_destination_back_arrow)
+    public void backButtonClicked() {
+        presenter.backButtonClicked();
+    }
+
+    @OnClick(R.id.add_language_button)
+    public void showLanguageSelector() {
+        presenter.addNewDestinationLanguageClicked();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            String selectedLanguage = data.getStringExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
+            presenter.newLanguageSelected(selectedLanguage);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // EnterDeckDestinationView Implementation
+    @Override
+    public void updateNextButton(boolean clickable, int buttonColor, int backgroundResource) {
+        nextButton.setClickable(clickable);
+        nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
+        nextButtonImage.setBackgroundResource(backgroundResource);
+    }
+
+    @Override
+    public void addLanguageChip(final String language) {
+        Chip chip = new Chip(this);
+        chip.setText(language);
+        chip.setOnDeleteListener(new Chip.OnDeleteListener() {
+            @Override
+            public void delete() {
+                presenter.deleteLanguage(language);
+            }
+        });
+        flexboxLayout.addView(chip);
+    }
+
+    @Override
+    public void removeAllLanguageChips() {
+        flexboxLayout.removeAllViews();
     }
 
     private void formatAddLanguageButton() {
@@ -64,66 +109,5 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
             addLanguageButton.setCompoundDrawablesWithIntrinsicBounds(bitmapDrawable, null, null, null);
             addLanguageButton.setCompoundDrawablePadding(densityPixelsToPixels(5));
         }
-    }
-
-    private void populateFlexBox() {
-        flexboxLayout.removeAllViews();
-        Chip chip;
-        for (final String language : newDeckContext.getDestinationLanguages()) {
-            chip = new Chip(this);
-            chip.setText(language);
-            chip.setOnDeleteListener(new Chip.OnDeleteListener() {
-                @Override
-                public void delete() {
-                    removeLanguage(language);
-                }
-            });
-            flexboxLayout.addView(chip);
-        }
-    }
-
-    private void removeLanguage(String language) {
-        newDeckContext.getDestinationLanguages().remove(language);
-        populateFlexBox();
-        presenter.updateNextButtonState();
-    }
-
-    @OnClick(R.id.enter_destination_next_label)
-    public void nextButtonClicked() {
-        if (!nextButton.isClickable()) {
-            return;
-        }
-
-        startNextActivity(EnterDeckDestinationLanguagesActivity.this, EnterAuthorActivity.class);
-    }
-
-    @OnClick(R.id.enter_destination_back_arrow)
-    public void backButtonClicked() {
-        startNextActivity(this, EnterDeckSourceLanguageActivity.class);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            String selectedLanguage = data.getStringExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
-            if (selectedLanguage != null) {
-                newDeckContext.addDestinationLanguage(selectedLanguage);
-                populateFlexBox();
-            }
-            presenter.updateNextButtonState();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @OnClick(R.id.add_language_button)
-    public void showLanguageSelector() {
-        startActivityForResult(new Intent(this, LanguageSelectorActivity.class), REQUEST_CODE);
-    }
-
-    @Override
-    public void updateNextButton(boolean clickable, int buttonColor, int backgroundResource) {
-        nextButton.setClickable(clickable);
-        nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
-        nextButtonImage.setBackgroundResource(backgroundResource);
     }
 }
