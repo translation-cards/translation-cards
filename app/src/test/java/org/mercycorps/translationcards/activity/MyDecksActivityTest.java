@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
+import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;

@@ -30,26 +30,26 @@
                 android:value=".activity.MyDecksActivity" />
         </activity>
         <activity
-            android:name=".activity.addDeck.EnterDeckTitleActivity"
+            android:name=".addDeck.activity.EnterDeckTitleActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activity.addDeck.EnterDeckSourceLanguageActivity"
+            android:name=".addDeck.activity.EnterDeckSourceLanguageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDeck.EnterDeckDestinationLanguagesActivity"
+            android:name=".addDeck.activity.EnterDeckDestinationLanguagesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDeck.EnterAuthorActivity"
+            android:name=".addDeck.activity.EnterAuthorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDeck.ReviewAndSaveDeckActivity"
+            android:name=".addDeck.activity.ReviewAndSaveDeckActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.GetStartedActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDeck.GetStartedDeckActivity"
+            android:name=".addDeck.activity.GetStartedDeckActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addTranslation.EnterSourcePhraseActivity"
@@ -134,7 +134,7 @@
             -->
         </activity>
         <activity
-            android:name=".activity.addDeck.LanguageSelectorActivity"
+            android:name=".addDeck.activity.LanguageSelectorActivity"
             android:label="@string/select_language_prompt"
             android:screenOrientation="portrait">
         </activity>

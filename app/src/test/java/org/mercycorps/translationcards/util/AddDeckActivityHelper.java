@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
-import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.model.Deck;
 
 public class AddDeckActivityHelper<T extends AbstractTranslationCardsActivity> extends ActivityHelper<T> {
