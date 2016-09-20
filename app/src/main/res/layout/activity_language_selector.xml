@@ -17,11 +17,8 @@
         android:singleLine="true"
         android:id="@+id/language_filter_field"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/languages_list">
-
-    </ListView>
-
+        android:id="@+id/languages_list" />
 </LinearLayout>
