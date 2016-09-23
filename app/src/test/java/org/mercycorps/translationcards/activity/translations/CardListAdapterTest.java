@@ -30,6 +30,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlertDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +38,7 @@ import javax.inject.Inject;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
@@ -209,5 +211,25 @@ public class CardListAdapterTest {
         resultingView.findViewById(R.id.translation_card_edit).performClick();
         Deck retrievedDeck = (Deck)shadowOf(shadowOf(activity).getNextStartedActivity()).getExtras().get(DeckService.INTENT_KEY_DECK);
         assertEquals(basicDeck, retrievedDeck);
+    }
+
+    @Test
+    public void shouldNotUpdateTranslationCardStatesWhenListAdapterIsUpdatedWithSameNumberOfTranslations() {
+        when(mockTranslationService.getCurrentTranslations()).thenReturn(translations);
+
+        cardListAdapter.update();
+
+        verify(mockTranslationService, times(0)).initializeCardStates();
+    }
+
+    @Test
+    public void shouldUpdateTranslationCardStatesWhenListAdapterIsUpdatedWithDifferentNumberOfTranslations() {
+        List<Translation> longerTranslations = Arrays.asList(firstTranslation, secondTranslation);
+        when(mockTranslationService.getCurrentTranslations()).thenReturn(longerTranslations);
+
+        cardListAdapter.update();
+
+        verify(mockTranslationService).initializeCardStates();
+
     }
 }

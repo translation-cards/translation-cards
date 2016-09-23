@@ -112,8 +112,15 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
     }
 
     public void update() {
+        updateTranslationCardStates();
         clear();
         addAll(translationService.getCurrentTranslations());
         notifyDataSetChanged();
+    }
+
+    private void updateTranslationCardStates() {
+        if (getCount() != translationService.getCurrentTranslations().size()) {
+            translationService.initializeCardStates();
+        }
     }
 }

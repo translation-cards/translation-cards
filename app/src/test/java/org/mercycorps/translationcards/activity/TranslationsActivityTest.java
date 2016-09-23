@@ -290,7 +290,7 @@ public class TranslationsActivityTest {
 
     @Test
     public void shouldUpdateTranslationsListOnResume() throws Exception {
-        when(translationService.getCurrentTranslations()).thenReturn(new ArrayList<Translation>())
+        when(translationService.getCurrentTranslations()).thenReturn(new ArrayList<Translation>(), new ArrayList<Translation>())
                 .thenReturn(Collections.singletonList(new Translation()));
         ShadowActivity shadowActivity = Shadows.shadowOf(translationsActivity);
         ListView listView = (ListView)translationsActivity.findViewById(R.id.translations_list);
