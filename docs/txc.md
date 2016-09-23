@@ -12,8 +12,9 @@ A deck object has:
 - a "source_language" field, specifying the ISO code of the source language for the deck
 - a "deck_label" field, specifying the name of the deck
 - a "author" field, specifying the name of the organization or person who produced it
+- optionally, a "source_language_name" field, specifying the particular language a deck author would like to be displayed when a two letter iso code maps to multiple language names.
 - optionally, an "id" field, specifying a string that uniquely identifies the deck
-- optionally, a "timestamp" field, specifying the time the deck was created. This is in [Unix Time](https://en.wikipedia.org/wiki/Unix_time), then converted to milliseconds. 
+- optionally, a "timestamp" field, specifying the time the deck was created. This is in [Unix Time](https://en.wikipedia.org/wiki/Unix_time), then converted to milliseconds.
 - optionally, a "locked" field, set to either "true" or "false", depending on whether the deck should be locked (defaults to false)
 - optionally, a "license-url" field, pointing to a specific license that the deck is distributed under
 - optionally, a "readme" field, describing the contents of the deck
@@ -24,6 +25,7 @@ A deck object has:
 Each language object has:
 - an "iso_code" field, specifying the ISO code of the translated language
 - a "cards" field with an array of objects, each containing information about one card, as described below
+- optionally, a "dest_language_name" field, specifying the particular language a deck author would like to be displayed when a two letter iso code maps to multiple language names.
 
 ### translation Objects
 
