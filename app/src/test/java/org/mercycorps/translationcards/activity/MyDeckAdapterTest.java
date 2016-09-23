@@ -18,7 +18,6 @@ import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DatabaseHelper;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
@@ -82,7 +81,7 @@ public class MyDeckAdapterTest {
         when(databaseHelper.getReadableDatabase()).thenReturn(sqlLiteDatabase);
 
         Dictionary[] dictionaries = {new Dictionary(ALPHABETICALLY_HIGH_LANGUAGE), new Dictionary(DEFAULT_TRANSLATION_LANGUAGE)};
-        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), dictionaries);
+        deck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, false, DEFAULT_SOURCE_LANGUAGE_NAME, dictionaries);
         view = getAdapterViewForDeck(deck);
     }
 
@@ -200,7 +199,7 @@ public class MyDeckAdapterTest {
     @Test
     public void shouldDisplayLockIconWhenDeckIsLocked() {
         Deck lockedDeck = new Deck(DEFAULT_DECK_NAME, DEFAULT_PUBLISHER, "", 0L, 1135497600000L, true,
-                new Language(DEFAULT_SOURCE_LANGUAGE_ISO, DEFAULT_SOURCE_LANGUAGE_NAME), new Dictionary[0]);
+                DEFAULT_SOURCE_LANGUAGE_NAME, new Dictionary[0]);
         View view = getAdapterViewForDeck(lockedDeck);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.lock_icon);
         assertEquals(View.VISIBLE, frameLayout.getVisibility());

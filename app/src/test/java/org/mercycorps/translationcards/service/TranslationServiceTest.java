@@ -52,7 +52,7 @@ public class TranslationServiceTest {
 
     @Test
     public void deleteTranslation_shouldDeleteTranslationsBySourcePhraseFromCurrentDictionaries() {
-        Dictionary dictionary = new Dictionary("", "", new Translation[]{defaultTranslation}, 0L);
+        Dictionary dictionary = new Dictionary("", new Translation[]{defaultTranslation}, 0L);
         List<Dictionary> dictionaries = Collections.singletonList(dictionary);
         when(dictionaryService.getDictionariesForCurrentDeck()).thenReturn(dictionaries);
 

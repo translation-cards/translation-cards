@@ -1,10 +1,9 @@
-package org.mercycorps.translationcards.activity.addDeck;
+package org.mercycorps.translationcards.addDeck;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.mercycorps.translationcards.model.Deck;
-import org.mercycorps.translationcards.model.Language;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -14,13 +13,12 @@ import java.util.LinkedHashSet;
 public class NewDeckContext implements Parcelable {
     private static final String ENGLISH_NAME = "English";
     private static final String NO_VALUE = "";
-    private static final String ENGLISH_ISO = "en";
 
     private Deck deck;
     private final LinkedHashSet<String> destinationLanguages;
 
     public NewDeckContext() {
-        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, new Language(ENGLISH_ISO, ENGLISH_NAME)));
+        this(new Deck(NO_VALUE, "", NO_VALUE, new Date().getTime(), false, ENGLISH_NAME));
     }
 
     public NewDeckContext(Deck deck) {
@@ -47,7 +45,7 @@ public class NewDeckContext implements Parcelable {
         }
     };
 
-    public void setSourceLanguage(Language language) {
+    public void setSourceLanguage(String language) {
         deck.setSourceLanguage(language);
     }
 

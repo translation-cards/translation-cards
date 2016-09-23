@@ -45,7 +45,7 @@ public class ServiceModule {
 
     @Provides
     LanguagesImportUtility providesLanguagesImportUtility() {
-        return new LanguageCodeLoader().createLanguagesImportUtility();
+        return LanguageCodeLoader.createLanguagesImportUtility();
     }
 
     @PerApplication

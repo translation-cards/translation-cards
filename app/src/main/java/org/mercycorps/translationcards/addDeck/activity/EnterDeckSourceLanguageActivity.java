@@ -1,7 +1,6 @@
-package org.mercycorps.translationcards.activity.addDeck;
+package org.mercycorps.translationcards.addDeck.activity;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -9,21 +8,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
-import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.model.Language;
-import org.mercycorps.translationcards.service.LanguageService;
-
-import javax.inject.Inject;
+import org.mercycorps.translationcards.addDeck.presenter.EnterDeckSourceLanguagePresenter;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
-    public static final int REQUEST_CODE = 0;
+public class EnterDeckSourceLanguageActivity extends AddDeckActivity implements EnterDeckSourceLanguagePresenter.EnterDeckSourceLanguageView {
     @Bind(R.id.deck_source_language_view)
     TextView sourceLanguageView;
-    @Inject LanguageService languageService;
+
+    private EnterDeckSourceLanguagePresenter presenter;
+
+    @Override
+    public void setBitmapsForActivity() {
+        presenter = new EnterDeckSourceLanguagePresenter(this, getContextFromIntent());
+        presenter.inflateBitmaps();
+    }
 
     @Override
     public void inflateView() {
@@ -32,9 +33,7 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
 
     @Override
     public void initStates() {
-        MainApplication application = (MainApplication) getApplication();
-        application.getBaseComponent().inject(this);
-        fillSourceLanguageField();
+        presenter.initSourceLanguage();
         formatLanguageButton();
     }
 
@@ -49,47 +48,31 @@ public class EnterDeckSourceLanguageActivity extends AddDeckActivity {
         }
     }
 
-    private void fillSourceLanguageField() {
-        sourceLanguageView.setText(LanguageService.getTitleCaseName(getContextFromIntent().getSourceLanguage()));
-    }
-
-    @Override
-    public void setBitmapsForActivity() {
-        setBitmap(R.id.deck_source_language_image, R.drawable.enter_phrase_image);
-    }
-
     @OnClick(R.id.deck_source_language_next_label)
     protected void nextButtonClicked() {
-        updateContextWithSourceLanguage();
-        startNextActivity(this, EnterDeckDestinationLanguagesActivity.class);
+        presenter.nextButtonClicked();
     }
 
     @OnClick(R.id.deck_source_language_back_arrow)
     public void backButtonClicked() {
-        updateContextWithSourceLanguage();
-        startNextActivity(this, EnterDeckTitleActivity.class);
+        presenter.backButtonClicked();
     }
 
     @OnClick(R.id.deck_source_language_view)
     public void sourceLanguageClicked() {
-        startActivityForResult(new Intent(this, LanguageSelectorActivity.class), REQUEST_CODE);
+        presenter.sourceLanguageClicked();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            String selectedLanguage = data.getStringExtra(LanguageSelectorActivity.SELECTED_LANGUAGE_KEY);
-            if (selectedLanguage != null) {
-                sourceLanguageView.setText(selectedLanguage);
-                updateContextWithSourceLanguage();
-            }
-        }
+        presenter.newSourceLanguageSelected(resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateContextWithSourceLanguage() {
-        Language language = languageService.getLanguageWithName(sourceLanguageView.getText().toString());
-        getContextFromIntent().setSourceLanguage(language);
+    // EnterDeckSourceLanguageView Implementation
+    @Override
+    public void updateSourceLanguage(String sourceLanguage) {
+        sourceLanguageView.setText(sourceLanguage);
     }
 }
 

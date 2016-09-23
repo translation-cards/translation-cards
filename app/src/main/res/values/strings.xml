@@ -117,6 +117,7 @@
     <string name="record_audio_permission_granted">You can now record audio. Tap record again to start recording.</string>
     <string name="select_language_prompt">Please select a language</string>
     <string name="add_language_chip_label">Add Language</string>
+    <string name="delete_chip">Delete Chip</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

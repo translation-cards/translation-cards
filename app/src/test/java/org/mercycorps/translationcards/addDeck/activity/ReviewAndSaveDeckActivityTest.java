@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity.addDeck;
+package org.mercycorps.translationcards.addDeck.activity;
 
 import android.app.Activity;
 import android.view.View;
@@ -13,10 +13,12 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.addDeck.activity.ReviewAndSaveDeckActivity;
+import org.mercycorps.translationcards.addDeck.activity.EnterAuthorActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
-import org.mercycorps.translationcards.model.Language;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -37,16 +39,15 @@ import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
-public class ReviewAndSaveActivityTest {
+public class ReviewAndSaveDeckActivityTest {
 
     private static final String DECK_TITLE = "Deck Title";
     private static final String DECK_AUTHOR = "Author";
     private static final String EXTERNAL_ID = "0";
     private static final long DB_ID = 0L;
     private static final long CREATION_TIMESTAMP = 753004800000L;
-    private static final String SOURCE_LANGUAGE_ISO = "en";
     private static final String SOURCE_LANGUAGE_NAME = "English";
-    private final AddDeckActivityHelper<ReviewAndSaveActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveActivity.class);
+    private final AddDeckActivityHelper<ReviewAndSaveDeckActivity> helper = new AddDeckActivityHelper<>(ReviewAndSaveDeckActivity.class);
     private NewDeckContext newDeckContext;
     private Deck deck;
 
@@ -58,7 +59,7 @@ public class ReviewAndSaveActivityTest {
         ((TestBaseComponent) application.getBaseComponent()).inject(this);
 
         Dictionary[] dictionaries = {};
-        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, new Language(SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_NAME), dictionaries);
+        deck = new Deck(DECK_TITLE, DECK_AUTHOR, EXTERNAL_ID, DB_ID, CREATION_TIMESTAMP, false, SOURCE_LANGUAGE_NAME, dictionaries);
         newDeckContext = new NewDeckContext(deck);
     }
 

@@ -3,14 +3,13 @@ package org.mercycorps.translationcards.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.addDeck.AddDeckActivity;
-import org.mercycorps.translationcards.activity.addDeck.GetStartedDeckActivity;
-import org.mercycorps.translationcards.activity.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
+import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
+import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;

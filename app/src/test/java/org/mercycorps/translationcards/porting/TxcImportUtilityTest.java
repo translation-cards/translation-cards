@@ -19,7 +19,6 @@ import java.io.File;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mercycorps.translationcards.porting.TxcImportUtility.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +31,7 @@ public class TxcImportUtilityTest {
     private static final String PUBLISHER = "A Publisher";
     private static final String EXTERNAL_ID = "external";
     private static final long TIMESTAMP = 123456L;
-    private static final String SOURCE_LANGUAGE = "fr";
+    private static final String SOURCE_LANGUAGE_ISO = "fr";
     private static final String HASH = "someHash";
     public static final String DICTIONARIES_AS_JSON = "[{\"iso_code\":\"ar\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]},{\"iso_code\":\"ps\",\"cards\":[{\"dest_txt\":\"ps translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"ps_file7.mp3\"},{\"dest_txt\":\"ps translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"ps_file4.mp3\"}]},{\"iso_code\":\"fa\",\"cards\":[{\"dest_txt\":\"fa translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-fa.mp3\"},{\"dest_txt\":\"fa translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-fa.mp3\"}]}]";
     public static final String DICTIONARY_JSON_NO_ISO_CODE = "[{\"iso_code\":\"\",\"cards\":[{\"dest_txt\":\"ar translation 1\",\"card_label\":\"Do you understand this language?\",\"dest_audio\":\"GQ16-ar.mp3\"},{\"dest_txt\":\"ar translation 2\",\"card_label\":\"Can I talk to you, using this mobile application (App)?\",\"dest_audio\":\"BGQ1-ar.mp3\"}]}]";
@@ -76,7 +75,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -94,7 +93,7 @@ public class TxcImportUtilityTest {
         assertEquals(PUBLISHER, importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -112,7 +111,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals(EXTERNAL_ID, importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -130,7 +129,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(TIMESTAMP, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -140,7 +139,7 @@ public class TxcImportUtilityTest {
     @Test
     public void shouldBuildImportSpecWithSourceLanguageWhenPresent() throws ImportException, JSONException {
         jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
-        jsonObjectToLoad.put(JsonKeys.SOURCE_LANGUAGE, SOURCE_LANGUAGE);
+        jsonObjectToLoad.put(JsonKeys.SOURCE_LANGUAGE_ISO, SOURCE_LANGUAGE_ISO);
         TxcImportUtility.ImportSpec importSpec =
                 txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
 
@@ -148,7 +147,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals(SOURCE_LANGUAGE, importSpec.srcLanguage);
+        assertEquals("French", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -166,7 +165,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertTrue(importSpec.locked);
         assertTrue(importSpec.dictionaries.isEmpty());
         assertEquals(mockFile, importSpec.dir);
@@ -185,7 +184,7 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(3, importSpec.dictionaries.size());
         assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
@@ -210,36 +209,10 @@ public class TxcImportUtilityTest {
         assertEquals("", importSpec.publisher);
         assertEquals("", importSpec.externalId);
         assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
+        assertEquals("English", importSpec.srcLanguage);
         assertFalse(importSpec.locked);
         assertEquals(1, importSpec.dictionaries.size());
-        assertEquals(LanguageService.INVALID_ISO_CODE, importSpec.dictionaries.get(0).isoCode);
         assertEquals(LanguageService.INVALID_LANGUAGE_NAME, importSpec.dictionaries.get(0).language);
-        assertEquals(mockFile, importSpec.dir);
-        assertEquals(HASH, importSpec.hash);
-
-        for (TxcImportUtility.ImportSpecDictionary specDictionary : importSpec.dictionaries) {
-            assertEquals(2, specDictionary.cards.size());
-        }
-    }
-
-    @Test
-    public void shouldBuildImportSpecForDictionariesWithExtendedIsoCodes() throws ImportException, JSONException {
-        jsonObjectToLoad.put(JsonKeys.DECK_LABEL, DECK_LABEL);
-        JSONArray currentDictionaries = new JSONArray(DICTIONARY_JSON_EXTENDED_ISO_CODE);
-        jsonObjectToLoad.put(JsonKeys.DICTIONARIES, currentDictionaries);
-        TxcImportUtility.ImportSpec importSpec =
-                txcImportUtility.buildImportSpec(mockFile, HASH, jsonObjectToLoad);
-
-        assertEquals(DECK_LABEL, importSpec.label);
-        assertEquals("", importSpec.publisher);
-        assertEquals("", importSpec.externalId);
-        assertEquals(-1L, importSpec.timestamp);
-        assertEquals("en", importSpec.srcLanguage);
-        assertFalse(importSpec.locked);
-        assertEquals(1, importSpec.dictionaries.size());
-        assertEquals("ar", importSpec.dictionaries.get(0).isoCode);
-        assertEquals("Arabic", importSpec.dictionaries.get(0).language);
         assertEquals(mockFile, importSpec.dir);
         assertEquals(HASH, importSpec.hash);
 

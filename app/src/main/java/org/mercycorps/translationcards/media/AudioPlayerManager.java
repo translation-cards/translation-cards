@@ -19,7 +19,6 @@ public class AudioPlayerManager {
 
     public AudioPlayerManager(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
-
     }
 
     public void stop() {
