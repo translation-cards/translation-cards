@@ -179,7 +179,7 @@ public class CardListAdapterTest {
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
 
         assertEquals(true, (boolean)newTranslations.get(0).isEdit());
-        assertEquals(false, (boolean)newTranslations.get(1).isEdit());
+        assertEquals(true, (boolean)newTranslations.get(1).isEdit());
     }
 
     @Test
