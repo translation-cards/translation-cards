@@ -177,9 +177,9 @@ public class CardListAdapterTest {
     @Test
     public void shouldPassContextWithEditFlagWhenEditTriggered() {
         List<NewTranslation> newTranslations = triggerEditAndGetTranslationsSentInContext();
-        for(NewTranslation newTranslation : newTranslations) {
-            assertEquals(TranslationsActivity.IS_EDIT, (boolean)newTranslation.isEdit());
-        }
+
+        assertEquals(true, (boolean)newTranslations.get(0).isEdit());
+        assertEquals(false, (boolean)newTranslations.get(1).isEdit());
     }
 
     @Test

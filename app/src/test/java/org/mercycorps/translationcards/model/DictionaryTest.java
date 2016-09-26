@@ -95,4 +95,25 @@ public class DictionaryTest {
         assertEquals(dictionary.getTranslationCount(), fromParcel.getTranslationCount());
         assertEquals(dictionary.getDbId(), fromParcel.getDbId());
     }
+
+    @Test
+    public void shouldCreateANewTranslationWhenATranslationCannotBeFoundBySourcePhrase() {
+        Dictionary dictionary = new Dictionary("");
+
+        Translation translation = dictionary.getTranslationBySourcePhrase("Some Phrase");
+
+        assertEquals(translation.getLabel(), "Some Phrase");
+    }
+
+    @Test
+    public void shouldFindATranslationBySourcePhrase() {
+        Translation firstTranslation = mock(Translation.class);
+        when(firstTranslation.getLabel()).thenReturn("A Label");
+        Translation secondTranslation = mock(Translation.class);
+        Dictionary dictionary = new Dictionary("", new Translation[]{firstTranslation, secondTranslation}, 1L);
+
+        Translation translation = dictionary.getTranslationBySourcePhrase("A Label");
+
+        assertEquals(translation, firstTranslation);
+    }
 }

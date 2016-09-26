@@ -115,4 +115,29 @@ public class Translation implements Parcelable {
         dest.writeLong(dbId);
         dest.writeString(translatedText);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Translation that = (Translation) o;
+
+        if (isAsset != that.isAsset) return false;
+        if (dbId != that.dbId) return false;
+        if (!label.equals(that.label)) return false;
+        if (!filePath.equals(that.filePath)) return false;
+        return translatedText.equals(that.translatedText);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = label.hashCode();
+        result = 31 * result + (isAsset ? 1 : 0);
+        result = 31 * result + filePath.hashCode();
+        result = 31 * result + (int) (dbId ^ (dbId >>> 32));
+        result = 31 * result + translatedText.hashCode();
+        return result;
+    }
 }
