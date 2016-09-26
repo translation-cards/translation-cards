@@ -103,7 +103,10 @@ public class CardListAdapter extends ArrayAdapter<Translation> {
                 List<NewTranslation> newTranslations = new ArrayList<>();
                 for (Dictionary dictionary : dictionaryService.getDictionariesForCurrentDeck()) {
                     Translation translation = dictionary.getTranslationBySourcePhrase(clickedTranslation.getLabel());
-                    boolean isEdit = translation.equals(clickedTranslation);
+                    boolean isEdit = !translation.getLabel().isEmpty();
+                    if (!isEdit) {
+                        translation.setLabel(clickedTranslation.getLabel());
+                    }
                     newTranslations.add(new NewTranslation(dictionary, translation, isEdit));
                 }
 

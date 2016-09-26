@@ -88,9 +88,7 @@ public class Dictionary implements Parcelable {
                 return translation;
             }
         }
-        Translation translation = new Translation();
-        translation.setLabel(sourcePhrase);
-        return translation;
+        return new Translation();
     }
 
     public long getDbId() {

@@ -102,7 +102,7 @@ public class DictionaryTest {
 
         Translation translation = dictionary.getTranslationBySourcePhrase("Some Phrase");
 
-        assertEquals(translation.getLabel(), "Some Phrase");
+        assertEquals(translation, new Translation());
     }
 
     @Test
