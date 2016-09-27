@@ -19,11 +19,11 @@ public abstract class AddDeckActivity extends AbstractTranslationCardsActivity i
     }
 
     @Override
-    public abstract void inflateView();
-
-    @Override
     public void setBitmapsForActivity() {
     }
+
+    @Override
+    public abstract void inflateView();
 
     public void startNextActivity(Context currentContext, Class nextActivityClass) {
         finish();

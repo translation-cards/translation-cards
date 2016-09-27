@@ -50,7 +50,6 @@ public class EnterDeckTitleActivity extends AddDeckActivity implements EnterDeck
         presenter.deckTitleInputChanged(deckTitleInput.getText().toString());
     }
 
-
     // EnterDeckTitleView Implementation
     @Override
     public void updateNextButton(boolean buttonClickable, int buttonTextColor, int buttonArrow) {

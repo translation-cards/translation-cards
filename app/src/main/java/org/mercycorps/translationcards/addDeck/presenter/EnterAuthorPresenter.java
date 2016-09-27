@@ -34,13 +34,16 @@ public class EnterAuthorPresenter {
 
     public void deckAuthorInputChanged(String deckAuthor) {
         newDeckContext.setAuthor(deckAuthor);
-        Integer nextButtonColor = deckAuthor.isEmpty() ? R.color.textDisabled : R.color.primaryTextColor;
-        Integer nextButtonArrow = deckAuthor.isEmpty() ? R.drawable.forward_arrow_disabled : R.drawable.forward_arrow;
-        activity.updateNextButtonClickable(!deckAuthor.isEmpty(), nextButtonColor, nextButtonArrow);
+        if (deckAuthor.isEmpty()) {
+            activity.disableNextButton();
+        } else {
+            activity.enableNextButton();
+        }
     }
 
     public interface EnterAuthorView extends AddDeckView {
         void updateDeckAuthorInput(String deckAuthor);
-        void updateNextButtonClickable(boolean nextButtonClickable, int nextButtonColor, int nextButtonArrow);
+        void enableNextButton();
+        void disableNextButton();
     }
 }

@@ -3,10 +3,9 @@ package org.mercycorps.translationcards.addDeck.presenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.addDeck.activity.EnterDeckDestinationLanguagesActivity;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
+import org.mercycorps.translationcards.addDeck.activity.EnterDeckDestinationLanguagesActivity;
 import org.mercycorps.translationcards.addDeck.activity.ReviewAndSaveDeckActivity;
-import org.mercycorps.translationcards.addDeck.presenter.EnterAuthorPresenter;
 
 import static org.mercycorps.translationcards.addDeck.presenter.EnterAuthorPresenter.EnterAuthorView;
 import static org.mockito.Mockito.mock;
@@ -74,14 +73,14 @@ public class EnterAuthorPresenterTest {
     public void shouldDisableNextButtonWhenNoDeckAuthorEntered() {
         presenter.deckAuthorInputChanged(EMPTY_DECK_AUTHOR);
 
-        verify(activity).updateNextButtonClickable(false, R.color.textDisabled, R.drawable.forward_arrow_disabled);
+        verify(activity).disableNextButton();
     }
 
     @Test
     public void shouldEnableNextButtonWhenDeckAuthorEntered() {
         presenter.deckAuthorInputChanged(AN_AUTHOR);
 
-        verify(activity).updateNextButtonClickable(true, R.color.primaryTextColor, R.drawable.forward_arrow);
+        verify(activity).enableNextButton();
     }
 
     @Test
