@@ -35,7 +35,7 @@ public class NextButtonTest {
     public void shouldEnableNextButton() {
         nextButton.enable();
 
-        assertTrue(nextButton.findViewById(R.id.next_button_layout).isClickable());
+        assertTrue(nextButton.isClickable());
 
         TextView nextButtonLabelText = (TextView) nextButton.findViewById(R.id.next_button_text);
         assertEquals(getColor(nextButton.getContext(), R.color.primaryTextColor), nextButtonLabelText.getCurrentTextColor());
@@ -48,7 +48,7 @@ public class NextButtonTest {
     public void shouldDisableNextButton() {
         nextButton.disable();
 
-        assertFalse(nextButton.findViewById(R.id.next_button_layout).isClickable());
+        assertFalse(nextButton.isClickable());
 
         TextView nextButtonLabelText = (TextView) nextButton.findViewById(R.id.next_button_text);
         assertEquals(getColor(nextButton.getContext(), R.color.textDisabled), nextButtonLabelText.getCurrentTextColor());

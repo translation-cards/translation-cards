@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
@@ -14,6 +12,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.addDeck.presenter.EnterDeckDestinationPresenter;
 import org.mercycorps.translationcards.view.Chip;
+import org.mercycorps.translationcards.view.NextButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -21,16 +20,9 @@ import butterknife.OnClick;
 public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity implements EnterDeckDestinationPresenter.EnterDeckDestinationView {
     private EnterDeckDestinationPresenter presenter;
 
-    @Bind(R.id.enter_destination_next_label)
-    LinearLayout nextButton;
-    @Bind(R.id.enter_destination_next_text)
-    TextView nextButtonText;
-    @Bind(R.id.enter_destination_next_image)
-    ImageView nextButtonImage;
-    @Bind(R.id.language_chip_flexbox)
-    FlexboxLayout flexboxLayout;
-    @Bind(R.id.add_language_button)
-    TextView addLanguageButton;
+    @Bind(R.id.next_button)NextButton nextButton;
+    @Bind(R.id.language_chip_flexbox)FlexboxLayout flexboxLayout;
+    @Bind(R.id.add_language_button)TextView addLanguageButton;
 
     @Override
     public void inflateView() {
@@ -49,7 +41,7 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
         presenter.refreshView();
     }
 
-    @OnClick(R.id.enter_destination_next_label)
+    @OnClick(R.id.next_button)
     public void nextButtonClicked() {
         presenter.nextButtonClicked();
     }
@@ -73,12 +65,14 @@ public class EnterDeckDestinationLanguagesActivity extends AddDeckActivity imple
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // EnterDeckDestinationView Implementation
     @Override
-    public void updateNextButton(boolean clickable, int buttonColor, int backgroundResource) {
-        nextButton.setClickable(clickable);
-        nextButtonText.setTextColor(ContextCompat.getColor(this, buttonColor));
-        nextButtonImage.setBackgroundResource(backgroundResource);
+    public void enableNextButton() {
+        nextButton.enable();
+    }
+
+    @Override
+    public void disableNextButton() {
+        nextButton.disable();
     }
 
     @Override

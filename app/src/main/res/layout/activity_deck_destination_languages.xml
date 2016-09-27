@@ -3,17 +3,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/backgroundColor">
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
     <ScrollView
+        android:id="@+id/destination_languages_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/destination_languages_scrollview"
         android:layout_weight="1">
-        <RelativeLayout
+
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:background="#ffffff"
             android:orientation="vertical">
 
@@ -59,122 +60,104 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/language_chip_flexbox"
-                android:padding="8dp"
                 android:layout_margin="10dp"
+                android:padding="8dp"
                 android:text="@string/add_language_chip_label"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16.5sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"/>
+                android:textStyle="bold" />
 
-            <com.google.android.flexbox.FlexboxLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/language_chip_flexbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:flexWrap="wrap"
-                app:justifyContent="flex_start"
-                android:paddingTop="10dp"
-                android:paddingLeft="10dp"
+                android:layout_below="@id/enter_deck_destination_description"
                 android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingStart="10dp"
-                android:layout_below="@id/enter_deck_destination_description"
-                android:id="@+id/language_chip_flexbox"/>
+                android:paddingTop="10dp"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start" />
         </RelativeLayout>
     </ScrollView>
-        <!--Nav Bar-->
+    <!--Nav Bar-->
     <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="@color/navBarColor">
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/navBarColor">
 
-    <LinearLayout
-        android:id="@+id/enter_destination_back_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:paddingTop="16dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/back_arrow" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/destination_language_step_marker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
+        <LinearLayout
+            android:id="@+id/enter_destination_back_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/step_unselected" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:paddingTop="16dp">
 
-        <ImageView
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back_arrow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/destination_language_step_marker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/step_unselected" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_selected" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/step_unselected" />
+        </LinearLayout>
+
+        <org.mercycorps.translationcards.view.NextButton
+            android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/step_selected" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/step_unselected" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/step_unselected" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/enter_destination_next_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
-        android:paddingTop="16dp">
-
-        <TextView
-            android:id="@+id/enter_destination_next_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/navigation_button_next"
-            android:textColor="@color/textDisabled"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/enter_destination_next_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/forward_arrow_disabled"
-            android:contentDescription="@string/navigation_button_next" />
-    </LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingTop="16dp" />
     </RelativeLayout>
 </LinearLayout>

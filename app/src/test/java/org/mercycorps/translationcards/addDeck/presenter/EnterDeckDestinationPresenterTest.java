@@ -3,19 +3,17 @@ package org.mercycorps.translationcards.addDeck.presenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.addDeck.activity.EnterAuthorActivity;
 import org.mercycorps.translationcards.addDeck.activity.EnterDeckSourceLanguageActivity;
 import org.mercycorps.translationcards.addDeck.activity.LanguageSelectorActivity;
-import org.mercycorps.translationcards.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.addDeck.presenter.EnterDeckDestinationPresenter;
 import org.mercycorps.translationcards.addDeck.presenter.EnterDeckDestinationPresenter.EnterDeckDestinationView;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -51,7 +49,7 @@ public class EnterDeckDestinationPresenterTest {
 
         presenter.refreshView();
 
-        verify(view).updateNextButton(true, R.color.primaryTextColor, R.drawable.forward_arrow);
+        verify(view).enableNextButton();
     }
 
     @Test
@@ -60,7 +58,7 @@ public class EnterDeckDestinationPresenterTest {
 
         presenter.refreshView();
 
-        verify(view).updateNextButton(false, R.color.textDisabled, R.drawable.forward_arrow_disabled);
+        verify(view).disableNextButton();
     }
 
     @Test
@@ -110,7 +108,7 @@ public class EnterDeckDestinationPresenterTest {
 
         presenter.deleteLanguage(A_LANGUAGE);
 
-        verify(view).updateNextButton(false, R.color.textDisabled, R.drawable.forward_arrow_disabled);
+        verify(view).disableNextButton();
     }
 
     @Test
@@ -123,11 +121,13 @@ public class EnterDeckDestinationPresenterTest {
 
     @Test
     public void shouldAddNewLanguageChipToViewWhenANewLanguageIsSelected() {
+        when(newDeckContext.getDestinationLanguages()).thenReturn(new HashSet<>(Collections.singletonList("Some Language")));
+
         presenter.newLanguageSelected(A_LANGUAGE);
 
         verify(newDeckContext).addDestinationLanguage(A_LANGUAGE);
         verify(view).addLanguageChip(A_LANGUAGE);
-        view.updateNextButton(anyBoolean(), anyInt(), anyInt());
+        verify(view).enableNextButton();
     }
 
     @Test

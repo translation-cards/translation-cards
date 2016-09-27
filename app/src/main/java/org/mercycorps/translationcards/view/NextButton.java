@@ -16,7 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class NextButton extends LinearLayout {
-    @Bind(R.id.next_button_layout)LinearLayout nextButton;
     @Bind(R.id.next_button_text)TextView nextButtonText;
     @Bind(R.id.next_button_image)ImageView nextButtonImage;
 
@@ -47,13 +46,13 @@ public class NextButton extends LinearLayout {
     }
 
     public void disable() {
-        nextButton.setClickable(false);
+        this.setClickable(false);
         nextButtonText.setTextColor(ContextCompat.getColor(getContext(), R.color.textDisabled));
         nextButtonImage.setBackgroundResource(R.drawable.forward_arrow_disabled);
     }
 
     public void enable() {
-        nextButton.setClickable(true);
+        this.setClickable(true);
         nextButtonText.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryTextColor));
         nextButtonImage.setBackgroundResource(R.drawable.forward_arrow);
     }
