@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
 import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
-import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
@@ -22,6 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Created by njimenez on 3/31/16.
@@ -32,8 +35,10 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
     private static final int REQUEST_CODE_CREATE_DECK = 3;
 
-    @Bind(R.id.my_decks_list)
-    ListView myDeckListView;
+    @Bind(R.id.my_decks_list)ListView myDeckListView;
+    @Bind(R.id.empty_my_decks_title)TextView emptyMyDecksTitle;
+    @Bind(R.id.empty_my_decks_message)TextView emptyMyDecksMessage;
+    @Bind(R.id.feedback_button)RelativeLayout feedbackButton;
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
@@ -48,6 +53,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         MainApplication application = (MainApplication) getApplication();
         application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_my_decks);
+        inflateListHeader();
+        inflateListFooter();
     }
 
     @Override
@@ -55,7 +62,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         setActionBarTitle();
         List<Deck> decks = getDecks();
         initListFooter(decks);
-        initListHeader();
         updateDecksView(decks);
     }
 
@@ -65,9 +71,14 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         super.onResume();
     }
 
-    private void initListHeader() {
+    private void inflateListHeader() {
         View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
-        myDeckListView.addHeaderView(headerView);
+        ((ListView) findViewById(R.id.my_decks_list)).addHeaderView(headerView);
+    }
+
+    private void inflateListFooter() {
+        View footerView = getLayoutInflater().inflate(R.layout.my_decks_footer, myDeckListView, false);
+        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(footerView);
     }
 
     private void setActionBarTitle() {
@@ -90,49 +101,36 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private void updateFooterDisplay(List<Deck> decks) {
         int visibilityForEmptyMyDecks = decks.isEmpty() ? View.VISIBLE : View.GONE;
         int visibilityForFeedbackButton = decks.isEmpty() ? View.GONE : View.VISIBLE;
-        findViewById(R.id.empty_my_decks_title).setVisibility(visibilityForEmptyMyDecks);
-        findViewById(R.id.empty_my_decks_message).setVisibility(visibilityForEmptyMyDecks);
-        findViewById(R.id.feedback_button).setVisibility(visibilityForFeedbackButton);
+        emptyMyDecksTitle.setVisibility(visibilityForEmptyMyDecks);
+        emptyMyDecksMessage.setVisibility(visibilityForEmptyMyDecks);
+        feedbackButton.setVisibility(visibilityForFeedbackButton);
     }
 
     private void initListFooter(List<Deck> decks) {
-        inflateListFooter();
         setFooterClickListeners();
         updateFooterDisplay(decks);
         updateListViewCentered(myDeckListView, decks.isEmpty());
     }
 
-    private void inflateListFooter() {
-        View footerView = getLayoutInflater().inflate(R.layout.my_decks_footer, myDeckListView, false);
-        myDeckListView.addFooterView(footerView);
+    @OnClick(R.id.import_deck_button)
+    public void importDeckButtonClicked() {
+        importFromFile();
+    }
+
+    @OnClick(R.id.create_deck_button)
+    public void createDeckButtonClicked() {
+        Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
+        createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext());
+        startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
+    }
+
+    @OnClick(R.id.feedback_button)
+    public void feedbackButtonClicked() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
     }
 
     private void setFooterClickListeners() {
         findViewById(R.id.my_decks_footer).setOnClickListener(null);
-
-        findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                importFromFile();
-            }
-        });
-
-        findViewById(R.id.create_deck_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
-                createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext());
-                startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
-            }
-        });
-
-        findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
-
-            }
-        });
     }
 
     private void importFromFile() {
