@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,9 +27,7 @@ import javax.inject.Inject;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findAnyView;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -39,7 +36,6 @@ import static org.robolectric.Shadows.shadowOf;
 public class MyDecksActivityTest {
     public static final String URI = "https://docs.google.com/forms/d" +
             "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.1.0";
-    private static final String DEFAULT_ISO_CODE = "en";
     private static final String DEFAULT_LANGUAGE_NAME = "English";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
 
@@ -62,37 +58,13 @@ public class MyDecksActivityTest {
         Activity activity = helper.createActivityToTest();
         assertNotNull(activity);
     }
-
-    @Test
-    public void shouldShowDecksFooterTitleWhenNoDecksArePresent(){
-        setUpDeckRepositoryWithNoDecks();
-        Activity activity = helper.createActivityToTest();
-        TextView textView = findTextView(activity, R.id.empty_my_decks_title);
-        assertEquals(View.VISIBLE, textView.getVisibility());
-    }
-
+    
     @Test
     public void shouldShowDecksHeader() {
         setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         LinearLayout linearLayout = findLinearLayout(activity, R.id.my_decks_header);
         assertEquals(View.VISIBLE, linearLayout.getVisibility());
-    }
-
-    @Test
-    public void shouldNotShowDecksFooterTitleWhenDecksArePresent(){
-        setUpDeckRepositoryWithDecks();
-        Activity activity = helper.createActivityToTest();
-        TextView textView = findTextView(activity, R.id.empty_my_decks_title);
-        assertEquals(View.GONE, textView.getVisibility());
-    }
-
-    @Test
-    public void shouldNotShowDecksFooterMessageWhenDecksArePresent(){
-        setUpDeckRepositoryWithDecks();
-        Activity activity = helper.createActivityToTest();
-        TextView textView = findAnyView(activity, R.id.empty_my_decks_message);
-        assertEquals(View.GONE, textView.getVisibility());
     }
 
     @Test

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
@@ -16,6 +14,7 @@ import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.view.MyDecksFooter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,9 +35,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     private static final int REQUEST_CODE_CREATE_DECK = 3;
 
     @Bind(R.id.my_decks_list)ListView myDeckListView;
-    @Bind(R.id.empty_my_decks_title)TextView emptyMyDecksTitle;
-    @Bind(R.id.empty_my_decks_message)TextView emptyMyDecksMessage;
-    @Bind(R.id.feedback_button)RelativeLayout feedbackButton;
 
     private static final String FEEDBACK_URL =
             "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
@@ -47,6 +43,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     @Inject DeckRepository deckRepository;
     @Inject DeckService deckService;
     @Inject DictionaryService dictionaryService;
+    private MyDecksFooter myDecksFooter;
 
     @Override
     public void inflateView() {
@@ -77,8 +74,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private void inflateListFooter() {
-        View footerView = getLayoutInflater().inflate(R.layout.my_decks_footer, myDeckListView, false);
-        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(footerView);
+        myDecksFooter = new MyDecksFooter(this);
+        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(myDecksFooter);
     }
 
     private void setActionBarTitle() {
@@ -99,11 +96,11 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     }
 
     private void updateFooterDisplay(List<Deck> decks) {
-        int visibilityForEmptyMyDecks = decks.isEmpty() ? View.VISIBLE : View.GONE;
-        int visibilityForFeedbackButton = decks.isEmpty() ? View.GONE : View.VISIBLE;
-        emptyMyDecksTitle.setVisibility(visibilityForEmptyMyDecks);
-        emptyMyDecksMessage.setVisibility(visibilityForEmptyMyDecks);
-        feedbackButton.setVisibility(visibilityForFeedbackButton);
+        if (decks.isEmpty()) {
+            myDecksFooter.emptyDecksView();
+        } else {
+            myDecksFooter.nonEmptyDecksView();
+        }
     }
 
     private void initListFooter(List<Deck> decks) {
