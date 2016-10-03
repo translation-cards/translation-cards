@@ -10,6 +10,8 @@ import org.mercycorps.translationcards.model.Translation;
 import org.mercycorps.translationcards.repository.DatabaseHelper.DecksTable;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.mercycorps.translationcards.repository.DatabaseHelper.TranslationsTable.DICTIONARY_ID;
@@ -29,14 +31,13 @@ public class DeckRepository {
         this.databaseHelper = databaseHelper;
     }
 
-    public Deck[] getAllDecks() {
+    public List<Deck> getAllDecks() {
         Cursor cursor = databaseHelper.getReadableDatabase().query(
                 DecksTable.TABLE_NAME, null,
                 null, null, null, null,
                 String.format("%s DESC", DecksTable.ID));
-        Deck[] decks = new Deck[cursor.getCount()];
+        List<Deck> decks = new ArrayList<>();
         boolean hasNext = cursor.moveToFirst();
-        int i = 0;
         while(hasNext){
             long dbId = cursor.getLong(cursor.getColumnIndex(DecksTable.ID));
             Deck deck = new Deck(
@@ -49,9 +50,8 @@ public class DeckRepository {
                     cursor.getString(cursor.getColumnIndex(DecksTable.SOURCE_LANGUAGE_NAME)),
                     dictionaryRepository.getAllDictionariesForDeck(dbId));
 
-            decks[i] = deck;
+            decks.add(deck);
             hasNext = cursor.moveToNext();
-            i++;
         }
         cursor.close();
         databaseHelper.close();

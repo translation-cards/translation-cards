@@ -227,6 +227,13 @@ public class TranslationsActivity extends AbstractTranslationCardsActivity {
                 ContextCompat.getColor(this, R.color.textColor));
     }
 
+    private void updateListViewCentered(ListView view, Boolean isEmpty) {
+        int isCentered = isEmpty ? RelativeLayout.TRUE : 0;
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
+        view.setLayoutParams(params);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();

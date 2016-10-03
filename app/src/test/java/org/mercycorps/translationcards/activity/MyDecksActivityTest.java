@@ -22,6 +22,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
@@ -58,7 +63,7 @@ public class MyDecksActivityTest {
         Activity activity = helper.createActivityToTest();
         assertNotNull(activity);
     }
-    
+
     @Test
     public void shouldShowDecksHeader() {
         setUpDeckRepositoryWithDecks();
@@ -96,8 +101,8 @@ public class MyDecksActivityTest {
         Deck firstDeck = new Deck("First Deck", "", "", 0L, false, DEFAULT_LANGUAGE_NAME);
         Deck secondDeck = new Deck("Second Deck", "", "", 1L, false, DEFAULT_LANGUAGE_NAME);
         when(deckRepository.getAllDecks())
-                .thenReturn(new Deck[]{firstDeck})
-                .thenReturn(new Deck[]{firstDeck, secondDeck});
+                .thenReturn(Collections.singletonList(firstDeck))
+                .thenReturn(Arrays.asList(firstDeck, secondDeck));
         Activity activity = helper.createActivityToTest();
         ShadowActivity shadowActivity = shadowOf(activity);
         ListView decksView = (ListView) activity.findViewById(R.id.my_decks_list);
@@ -122,12 +127,12 @@ public class MyDecksActivityTest {
         when(deckRepository.getAllDecks()).thenReturn(createStubDeckArray(shouldCreateDeck));
     }
 
-    private Deck[] createStubDeckArray(boolean shouldCreateDeck){
-        if(!shouldCreateDeck) return new Deck[0];
-        Deck[] arrayOfDecks = new Deck[1];
+    private List<Deck> createStubDeckArray(boolean shouldCreateDeck){
+        List<Deck> decks = new ArrayList<>();
+        if(!shouldCreateDeck) return decks;
         Deck deck = new Deck("", "", "", 0L, false, DEFAULT_LANGUAGE_NAME);
-        arrayOfDecks[0] = deck;
-        return arrayOfDecks;
+        decks.add(deck);
+        return decks;
     }
 
 

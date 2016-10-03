@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
@@ -16,8 +17,6 @@ import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.MyDecksFooter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,10 +24,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by njimenez on 3/31/16.
- */
-public class MyDecksActivity extends AbstractTranslationCardsActivity {
+public class MyDecksActivity extends AbstractTranslationCardsActivity implements MyDecksPresenter.MyDecksView {
 
     private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
     private static final int REQUEST_CODE_IMPORT_FILE = 2;
@@ -44,6 +40,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
     @Inject DeckService deckService;
     @Inject DictionaryService dictionaryService;
     private MyDecksFooter myDecksFooter;
+    private MyDecksPresenter myDecksPresenter;
+    private MyDeckAdapter myDecksAdapter;
 
     @Override
     public void inflateView() {
@@ -52,20 +50,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         setContentView(R.layout.activity_my_decks);
         inflateListHeader();
         inflateListFooter();
-    }
-
-    @Override
-    public void initStates() {
-        setActionBarTitle();
-        List<Deck> decks = getDecks();
-        initListFooter(decks);
-        updateDecksView(decks);
-    }
-
-    @Override
-    protected void onResume() {
-        refreshMyDecksList();
-        super.onResume();
+        myDecksPresenter = new MyDecksPresenter(this, deckRepository);
     }
 
     private void inflateListHeader() {
@@ -78,35 +63,25 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         ((ListView) findViewById(R.id.my_decks_list)).addFooterView(myDecksFooter);
     }
 
+
+    @Override
+    public void initStates() {
+        setActionBarTitle();
+        myDecksPresenter.refreshListFooter();
+        myDecksAdapter = new MyDeckAdapter(MyDecksActivity.this, myDecksPresenter.getDecks(), deckService, dictionaryService, deckRepository, myDecksPresenter);
+        myDeckListView.setAdapter(myDecksAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        myDecksPresenter.refreshMyDecksList();
+        super.onResume();
+    }
+
     private void setActionBarTitle() {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.my_decks);
         }
-    }
-
-    private void updateDecksView(List<Deck> decks) {
-        MyDeckAdapter listAdapter = new MyDeckAdapter(MyDecksActivity.this, decks, deckService, dictionaryService, deckRepository);
-        ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
-        decksListView.setAdapter(listAdapter);
-    }
-
-    private void updateFooterView(List<Deck> decks) {
-        updateFooterDisplay(decks);
-        updateListViewCentered(myDeckListView, decks.isEmpty());
-    }
-
-    private void updateFooterDisplay(List<Deck> decks) {
-        if (decks.isEmpty()) {
-            myDecksFooter.emptyDecksView();
-        } else {
-            myDecksFooter.nonEmptyDecksView();
-        }
-    }
-
-    private void initListFooter(List<Deck> decks) {
-        setFooterClickListeners();
-        updateFooterDisplay(decks);
-        updateListViewCentered(myDeckListView, decks.isEmpty());
     }
 
     @OnClick(R.id.import_deck_button)
@@ -126,10 +101,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
     }
 
-    private void setFooterClickListeners() {
-        findViewById(R.id.my_decks_footer).setOnClickListener(null);
-    }
-
     private void importFromFile() {
         // First try an intent specially for the Samsung file browser, as described here:
         // http://stackoverflow.com/a/17949893
@@ -145,12 +116,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
             startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
         }
 
-    }
-
-    private List<Deck> getDecks() {
-        Deck[] decks = deckRepository.getAllDecks();
-        if (decks == null) return new ArrayList<>();
-        return Arrays.asList(decks);
     }
 
     @Override
@@ -171,21 +136,37 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
                 break;
             case REQUEST_CODE_IMPORT_FILE:
                 if (resultCode == RESULT_OK) {
-                    refreshMyDecksList();
+                    myDecksPresenter.refreshMyDecksList();
                 }
                 break;
             case REQUEST_CODE_CREATE_DECK:
                 if (resultCode == RESULT_OK) {
-                    refreshMyDecksList();
+                    myDecksPresenter.refreshMyDecksList();
                 }
                 break;
         }
     }
 
-    public void refreshMyDecksList() {
-        List<Deck> decks = getDecks();
-        updateDecksView(decks);
-        updateFooterView(decks);
+    // MyDecksView Implementation
+    @Override
+    public void emptyViewState() {
+        myDecksFooter.emptyDecksView();
     }
 
+    @Override
+    public void nonEmptyViewState() {
+        myDecksFooter.emptyDecksView();
+    }
+
+    @Override
+    public void updateMyDeckListCentered(int isCentered) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myDeckListView.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
+        myDeckListView.setLayoutParams(params);
+    }
+
+    @Override
+    public void updateMyDecksList(List<Deck> decks) {
+        myDecksAdapter.setDecks(decks);
+    }
 }

@@ -45,6 +45,7 @@ public class MyDecksFooter extends LinearLayout {
     private void init() {
         inflate(getContext(), R.layout.my_decks_footer, this);
         ButterKnife.bind(this);
+        this.setOnClickListener(null);
     }
 
     public void emptyDecksView() {

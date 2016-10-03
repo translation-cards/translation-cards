@@ -1,11 +1,11 @@
 package org.mercycorps.translationcards.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 
@@ -21,18 +21,20 @@ import org.mercycorps.translationcards.view.DeckItem;
 import java.util.List;
 
 public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListener {
-    private final MyDecksActivity activity;
+    private final Activity activity;
     private DeckRepository deckRepository;
-    private final List<Deck> decks;
+    private MyDecksPresenter presenter;
+    private List<Deck> decks;
     DeckService deckService;
     private DictionaryService dictionaryService;
 
-    public MyDeckAdapter(MyDecksActivity context, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService, DeckRepository deckRepository) {
+    public MyDeckAdapter(Activity context, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService, DeckRepository deckRepository, MyDecksPresenter presenter) {
         this.decks = decks;
         this.deckService = deckService;
         this.dictionaryService = dictionaryService;
         this.activity = context;
         this.deckRepository = deckRepository;
+        this.presenter = presenter;
     }
 
     @Override
@@ -86,7 +88,7 @@ public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListe
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 deckRepository.deleteDeck(deck.getDbId());
-                                activity.refreshMyDecksList();
+                                presenter.refreshMyDecksList();
                             }
                         })
                 .setNegativeButton(R.string.misc_cancel,
@@ -128,5 +130,10 @@ public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListe
     @Override
     public void onDeleteClicked(Deck deck) {
         optionallyDelete(deck);
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
+        notifyDataSetChanged();
     }
 }

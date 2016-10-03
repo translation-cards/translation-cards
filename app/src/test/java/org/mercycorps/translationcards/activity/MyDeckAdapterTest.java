@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -58,10 +59,11 @@ public class MyDeckAdapterTest {
     private static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
     private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     private static final String DEFAULT_SOURCE_LANGUAGE_NAME = "English";
+    private final MyDecksPresenter myDecksPresenter = mock(MyDecksPresenter.class);
     private Deck deck;
     private View view;
-    private MyDecksActivity activity;
-    private ActivityController<MyDecksActivity> controller;
+    private Activity activity;
+    private ActivityController<Activity> controller;
     private DeckService deckService = mock(DeckService.class);
     private DeckRepository deckRepository = mock(DeckRepository.class);
     private DictionaryService dictionaryService;
@@ -92,9 +94,9 @@ public class MyDeckAdapterTest {
 
     private View getAdapterViewForDeck(Deck deck) {
         Intent intent = new Intent();
-        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(intent).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
         return adapter.getView(0, null, null);
     }
 
@@ -127,7 +129,7 @@ public class MyDeckAdapterTest {
     @Test
     public void shouldOpenDeckWhenTitleClicked() {
         view.findViewById(R.id.deck_card).performClick();
-        assertEquals(TranslationsActivity.class.getName(), shadowOf((MyDecksActivity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
+        assertEquals(TranslationsActivity.class.getName(), shadowOf((Activity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
         verify(deckService).setCurrentDeck(deck);
         verify(dictionaryService).setCurrentDictionary(0);
     }
@@ -187,6 +189,7 @@ public class MyDeckAdapterTest {
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         verify(deckRepository).deleteDeck(deck.getDbId());
+        verify(myDecksPresenter).refreshMyDecksList();
     }
 
     @Test
@@ -230,9 +233,9 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldCreateNewViewWhenExistingViewIsNull() {
-        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
 
         View view = adapter.getView(0, null, null);
         TextView deckName = (TextView) view.findViewById(R.id.deck_name);
@@ -243,9 +246,9 @@ public class MyDeckAdapterTest {
 
     @Test
     public void shouldModifyExistingViewIfViewNotNull() {
-        controller = Robolectric.buildActivity(MyDecksActivity.class);
+        controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
 
         DeckItem view = new DeckItem(activity.getApplicationContext());
         adapter.getView(0, view, null);
