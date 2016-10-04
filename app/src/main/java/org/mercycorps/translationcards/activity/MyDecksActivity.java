@@ -68,7 +68,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
     public void initStates() {
         setActionBarTitle();
         myDecksPresenter.refreshListFooter();
-        myDecksAdapter = new MyDeckAdapter(MyDecksActivity.this, myDecksPresenter.getDecks(), deckService, dictionaryService, deckRepository, myDecksPresenter);
+        myDecksAdapter = new MyDeckAdapter(this, myDecksPresenter);
         myDeckListView.setAdapter(myDecksAdapter);
     }
 
@@ -91,7 +91,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
 
     @OnClick(R.id.create_deck_button)
     public void createDeckButtonClicked() {
-        Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
+        Intent createIntent = new Intent(this, GetStartedDeckActivity.class);
         createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext());
         startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
     }
@@ -116,11 +116,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
             startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
         }
 
-    }
-
-    @Override
-    public void setBitmapsForActivity() {
-        //// TODO: 3/31/16 We dont set bitmaps for decks. Refactor this to be in AddTranslationActivity
     }
 
     @Override

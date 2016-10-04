@@ -16,13 +16,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
 import org.mercycorps.translationcards.repository.DatabaseHelper;
-import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -32,7 +28,8 @@ import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowPopupMenu;
 import org.robolectric.util.ActivityController;
 
-import static java.util.Collections.singletonList;
+import java.util.Collections;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -57,20 +54,15 @@ public class MyDeckAdapterTest {
     private static final String ALPHABETICALLY_HIGH_LANGUAGE = "A";
     private static final String DELIMITER = "  ";
     private static final String NAME_FOR_SHARED_DECK = "Name for shared deck?";
-    private static final String DEFAULT_SOURCE_LANGUAGE_ISO = "en";
     private static final String DEFAULT_SOURCE_LANGUAGE_NAME = "English";
     private final MyDecksPresenter myDecksPresenter = mock(MyDecksPresenter.class);
     private Deck deck;
     private View view;
     private Activity activity;
     private ActivityController<Activity> controller;
-    private DeckService deckService = mock(DeckService.class);
-    private DeckRepository deckRepository = mock(DeckRepository.class);
-    private DictionaryService dictionaryService;
 
     @Before
     public void setUp() throws Exception {
-        dictionaryService = mock(DictionaryService.class);
         Cursor cursor = mock(Cursor.class);
         when(cursor.getCount()).thenReturn(1);
         when(cursor.moveToFirst()).thenReturn(true);
@@ -96,7 +88,8 @@ public class MyDeckAdapterTest {
         Intent intent = new Intent();
         controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(intent).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
+        when(myDecksPresenter.getDecks()).thenReturn(Collections.singletonList(deck));
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, myDecksPresenter);
         return adapter.getView(0, null, null);
     }
 
@@ -124,14 +117,6 @@ public class MyDeckAdapterTest {
 
         String expectedLanguages = ALPHABETICALLY_HIGH_LANGUAGE.toUpperCase() + DELIMITER + DEFAULT_TRANSLATION_LANGUAGE.toUpperCase();
         assertEquals(expectedLanguages, translationLanguagesTextView.getText().toString());
-    }
-
-    @Test
-    public void shouldOpenDeckWhenTitleClicked() {
-        view.findViewById(R.id.deck_card).performClick();
-        assertEquals(TranslationsActivity.class.getName(), shadowOf((Activity) view.getContext()).getNextStartedActivity().getComponent().getClassName());
-        verify(deckService).setCurrentDeck(deck);
-        verify(dictionaryService).setCurrentDictionary(0);
     }
 
     @Test
@@ -188,8 +173,7 @@ public class MyDeckAdapterTest {
 
         AlertDialog alertDialog = ((AlertDialog) ShadowDialog.getLatestDialog());
         alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
-        verify(deckRepository).deleteDeck(deck.getDbId());
-        verify(myDecksPresenter).refreshMyDecksList();
+        verify(myDecksPresenter).deleteDeck(deck);
     }
 
     @Test
@@ -235,7 +219,7 @@ public class MyDeckAdapterTest {
     public void shouldCreateNewViewWhenExistingViewIsNull() {
         controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, myDecksPresenter);
 
         View view = adapter.getView(0, null, null);
         TextView deckName = (TextView) view.findViewById(R.id.deck_name);
@@ -248,7 +232,7 @@ public class MyDeckAdapterTest {
     public void shouldModifyExistingViewIfViewNotNull() {
         controller = Robolectric.buildActivity(Activity.class);
         activity = controller.withIntent(new Intent()).create().get();
-        MyDeckAdapter adapter = new MyDeckAdapter(activity, singletonList(deck), deckService, dictionaryService, deckRepository, myDecksPresenter);
+        MyDeckAdapter adapter = new MyDeckAdapter(activity, myDecksPresenter);
 
         DeckItem view = new DeckItem(activity.getApplicationContext());
         adapter.getView(0, view, null);

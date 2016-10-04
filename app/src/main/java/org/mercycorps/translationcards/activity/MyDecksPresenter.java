@@ -40,6 +40,11 @@ public class MyDecksPresenter {
         return decks;
     }
 
+    public void deleteDeck(Deck deck) {
+        deckRepository.deleteDeck(deck.getDbId());
+        refreshMyDecksList();
+    }
+
     interface MyDecksView {
         void emptyViewState();
         void nonEmptyViewState();

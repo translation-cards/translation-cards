@@ -1,6 +1,8 @@
 package org.mercycorps.translationcards.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,11 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.service.DeckService;
+import org.mercycorps.translationcards.service.DictionaryService;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DeckItem extends LinearLayout {
     public static final String DELETE_DECK = "Delete";
@@ -33,6 +42,12 @@ public class DeckItem extends LinearLayout {
     TextView originLanguageTextView;
     @Bind(R.id.deck_card)
     View deckCard;
+
+    @Inject
+    DeckService deckService;
+    @Inject
+    DictionaryService dictionaryService;
+
     private PopupMenu popupMenu;
     private DeckMenuListener menuListener;
     private Deck deck;
@@ -55,6 +70,8 @@ public class DeckItem extends LinearLayout {
     private void init() {
         inflate(getContext(), R.layout.deck_item, this);
         ButterKnife.bind(this);
+        MainApplication application = (MainApplication)getContext().getApplicationContext();
+        application.getBaseComponent().inject(this);
     }
 
     public void setMenuListener(DeckMenuListener listener) {
@@ -69,14 +86,31 @@ public class DeckItem extends LinearLayout {
         });
     }
 
+    @OnClick(R.id.deck_card)
+    public void deckClicked() {
+        Intent decksIntent = new Intent(getContext(), TranslationsActivity.class);
+        deckService.setCurrentDeck(deck);
+        dictionaryService.setCurrentDictionary(0);
+        getContext().startActivity(decksIntent);
+    }
+
     public void setDeck(Deck deck) {
         this.deck = deck;
         deckNameTextView.setText(deck.getTitle());
         deckInformationTextView.setText(deck.getDeckInformation());
-        originLanguageTextView.setText(deck.getSourceLanguageName().toUpperCase());
+        originLanguageTextView.setText(upperCaseDeckSourceLanguageName(deck));
         showLockIconIfDeckIsLocked(deck);
         translationLanguagesTextView.setText(deck.getDestinationLanguagesForDisplay());
         deckMenu.setVisibility(View.GONE);
+    }
+
+    @NonNull
+    private String upperCaseDeckSourceLanguageName(Deck deck) {
+        String sourceLanguageName = deck.getSourceLanguageName();
+        if (sourceLanguageName != null) {
+            return sourceLanguageName.toUpperCase();
+        }
+        return "";
     }
 
     private void showLockIconIfDeckIsLocked(Deck deck) {

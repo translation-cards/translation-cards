@@ -48,7 +48,8 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
 
     public abstract void inflateView();
 
-    public abstract void setBitmapsForActivity();
+    protected void setBitmapsForActivity() {
+    }
 
     protected void initStates() {
     }

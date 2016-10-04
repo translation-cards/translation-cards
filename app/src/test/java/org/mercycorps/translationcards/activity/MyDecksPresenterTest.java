@@ -22,7 +22,6 @@ public class MyDecksPresenterTest {
     private static final int IS_CENTERED = -1;
     private MyDecksView view;
     private DeckRepository deckRepository;
-    private MyDecksPresenter myDecksPresenter;
 
     @Before
     public void setUp() throws Exception {
@@ -66,6 +65,17 @@ public class MyDecksPresenterTest {
         verify(view).updateMyDeckListCentered(IS_NOT_CENTERED);
     }
 
+    @Test
+    public void shouldDeleteADeck() {
+        Deck deck = mock(Deck.class);
+        long dbID = 10;
+        when(deck.getDbId()).thenReturn(dbID);
+        MyDecksPresenter myDecksPresenter = new MyDecksPresenter(view, deckRepository);
+
+        myDecksPresenter.deleteDeck(deck);
+
+        verify(deckRepository).deleteDeck(dbID);
+    }
 
     @NonNull
     private ArrayList<Deck> listWithOneDeck() {
