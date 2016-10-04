@@ -32,4 +32,19 @@ public class Router {
         createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, newDeckContext);
         activity.startActivityForResult(createIntent, Router.REQUEST_CODE_CREATE_DECK);
     }
+
+    public void launchFilePicker(Activity activity) {
+        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        if (activity.getPackageManager().resolveActivity(samsungIntent, 0) != null) {
+            // TODO: Which one of these do we need for samsung devices?
+            samsungIntent.setType("file/*");
+            samsungIntent.putExtra("CONTENT_TYPE", "*/*");
+            activity.startActivityForResult(samsungIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
+        } else {
+            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            fileIntent.setType("file/*");
+            activity.startActivityForResult(fileIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
+        }
+    }
 }

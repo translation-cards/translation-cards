@@ -3,7 +3,6 @@ package org.mercycorps.translationcards.activity;
 import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,20 +18,15 @@ import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
 import static org.mockito.Mockito.when;
-import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -62,39 +56,8 @@ public class MyDecksActivityTest {
         assertEquals(View.VISIBLE, linearLayout.getVisibility());
     }
 
-    @Test
-    public void shouldLaunchImportDeckWhenImportButtonIsClicked(){
-        setUpDeckRepositoryWithNoDecks();
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.import_deck_button);
-        assertEquals("file/*", shadowOf(activity).getNextStartedActivity().getType());
-    }
-
-    @Test
-    public void shouldRefreshDecksOnActivityResume() throws Exception {
-        Deck firstDeck = new Deck("First Deck", "", "", 0L, false, DEFAULT_LANGUAGE_NAME);
-        Deck secondDeck = new Deck("Second Deck", "", "", 1L, false, DEFAULT_LANGUAGE_NAME);
-        when(deckRepository.getAllDecks())
-                .thenReturn(Collections.singletonList(firstDeck))
-                .thenReturn(Arrays.asList(firstDeck, secondDeck));
-        Activity activity = helper.createActivityToTest();
-        ShadowActivity shadowActivity = shadowOf(activity);
-        ListView decksView = (ListView) activity.findViewById(R.id.my_decks_list);
-
-        //Note that the header and footer in the list view contribute to the adapter item count
-        //http://stackoverflow.com/a/11106567
-        assertEquals(3, decksView.getAdapter().getCount());
-        shadowActivity.pauseAndThenResume();
-
-        assertEquals(4, decksView.getAdapter().getCount());
-    }
-
     private void setUpDeckRepositoryWithDecks(){
         setUpDeckRepository(true);
-    }
-
-    private void setUpDeckRepositoryWithNoDecks(){
-        setUpDeckRepository(false);
     }
 
     private void setUpDeckRepository(boolean shouldCreateDeck){

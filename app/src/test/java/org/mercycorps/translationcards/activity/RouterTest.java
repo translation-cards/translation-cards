@@ -2,7 +2,9 @@ package org.mercycorps.translationcards.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +18,10 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -64,5 +68,38 @@ public class RouterTest {
         ArgumentCaptor<Intent> argument = ArgumentCaptor.forClass(Intent.class);
         verify(activity).startActivityForResult(argument.capture(), eq(Router.REQUEST_CODE_CREATE_DECK));
         assertEquals(newDeckContext, argument.getValue().getParcelableExtra(AddDeckActivity.INTENT_KEY_DECK));
+    }
+
+    @Test
+    public void shouldLaunchFilePickerForSamsungPhone() {
+        Activity activity = mock(Activity.class, RETURNS_DEEP_STUBS);
+        Intent samsungIntent = getSamsungIntent();
+        when(activity.getPackageManager().resolveActivity(samsungIntent, 0)).thenReturn(mock(ResolveInfo.class));
+
+        router.launchFilePicker(activity);
+
+        ArgumentCaptor<Intent> argument = ArgumentCaptor.forClass(Intent.class);
+        verify(activity).startActivityForResult(argument.capture(), eq(Router.REQUEST_CODE_IMPORT_FILE_PICKER));
+        assertEquals("com.sec.android.app.myfiles.PICK_DATA", argument.getValue().getAction());
+    }
+
+    @Test
+    public void shouldLaunchFilePickerForNonSamsungPhones() {
+        Activity activity = mock(Activity.class, RETURNS_DEEP_STUBS);
+        Intent samsungIntent = getSamsungIntent();
+        when(activity.getPackageManager().resolveActivity(samsungIntent, 0)).thenReturn(null);
+
+        router.launchFilePicker(activity);
+
+        ArgumentCaptor<Intent> argument = ArgumentCaptor.forClass(Intent.class);
+        verify(activity).startActivityForResult(argument.capture(), eq(Router.REQUEST_CODE_IMPORT_FILE_PICKER));
+        assertEquals(Intent.ACTION_GET_CONTENT, argument.getValue().getAction());
+    }
+
+    @NonNull
+    private Intent getSamsungIntent() {
+        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        return samsungIntent;
     }
 }

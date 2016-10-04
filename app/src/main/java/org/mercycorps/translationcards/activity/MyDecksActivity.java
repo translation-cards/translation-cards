@@ -49,7 +49,7 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
 
     @OnClick(R.id.import_deck_button)
     public void importDeckButtonClicked() {
-        importFromFile();
+        router.launchFilePicker(this);
     }
 
     @OnClick(R.id.create_deck_button)
@@ -109,23 +109,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.my_decks);
         }
-    }
-
-    private void importFromFile() {
-        // First try an intent specially for the Samsung file browser, as described here:
-        // rhttp://stackoverflow.com/a/17949893
-        // Note that this means that, if a user has the Samsung file browser and another file
-        // browser, they will not get a choice; we'll just send them to the Samsung browser.
-        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        if (getPackageManager().resolveActivity(samsungIntent, 0) != null) {
-            startActivityForResult(samsungIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
-        } else {
-            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileIntent.setType("file/*");
-            startActivityForResult(fileIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
-        }
-
     }
 
     // MyDecksView Implementation
