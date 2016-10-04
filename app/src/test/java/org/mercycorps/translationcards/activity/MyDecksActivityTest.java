@@ -33,6 +33,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -45,6 +46,7 @@ public class MyDecksActivityTest {
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
 
     @Inject DeckRepository deckRepository;
+    @Inject Router router;
 
     @Before
     public void setup() {
@@ -77,7 +79,7 @@ public class MyDecksActivityTest {
         setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.feedback_button);
-        assertEquals(URI, shadowOf(activity).getNextStartedActivity().getData().toString());
+        verify(router).launchFeedbackActivity(activity);
     }
 
     @Test

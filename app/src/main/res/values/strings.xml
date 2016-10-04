@@ -118,6 +118,7 @@
     <string name="select_language_prompt">Please select a language</string>
     <string name="add_language_chip_label">Add Language</string>
     <string name="delete_chip">Delete Chip</string>
+    <string name="feedback_url">https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=</string>
     <!-- The order of these is important! Don't move them around without updating ImportActivitity. -->
     <string-array name="version_override_options">
         <item>Cancel import</item>

@@ -1,7 +1,6 @@
 package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -13,8 +12,6 @@ import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
 import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.MyDecksFooter;
 
 import java.util.List;
@@ -32,13 +29,9 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
 
     @Bind(R.id.my_decks_list)ListView myDeckListView;
 
-    private static final String FEEDBACK_URL =
-            "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=1.1.0";
-
     @Inject DeckRepository deckRepository;
-    @Inject DeckService deckService;
-    @Inject DictionaryService dictionaryService;
+    @Inject Router router;
+
     private MyDecksFooter myDecksFooter;
     private MyDecksPresenter myDecksPresenter;
     private MyDeckAdapter myDecksAdapter;
@@ -48,21 +41,9 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
         MainApplication application = (MainApplication) getApplication();
         application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_my_decks);
-        inflateListHeader();
-        inflateListFooter();
+        inflateListHeaderAndFooter();
         myDecksPresenter = new MyDecksPresenter(this, deckRepository);
     }
-
-    private void inflateListHeader() {
-        View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
-        ((ListView) findViewById(R.id.my_decks_list)).addHeaderView(headerView);
-    }
-
-    private void inflateListFooter() {
-        myDecksFooter = new MyDecksFooter(this);
-        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(myDecksFooter);
-    }
-
 
     @Override
     public void initStates() {
@@ -70,18 +51,6 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
         myDecksPresenter.refreshListFooter();
         myDecksAdapter = new MyDeckAdapter(this, myDecksPresenter);
         myDeckListView.setAdapter(myDecksAdapter);
-    }
-
-    @Override
-    protected void onResume() {
-        myDecksPresenter.refreshMyDecksList();
-        super.onResume();
-    }
-
-    private void setActionBarTitle() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.my_decks);
-        }
     }
 
     @OnClick(R.id.import_deck_button)
@@ -98,24 +67,13 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
 
     @OnClick(R.id.feedback_button)
     public void feedbackButtonClicked() {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
+        router.launchFeedbackActivity(this);
     }
 
-    private void importFromFile() {
-        // First try an intent specially for the Samsung file browser, as described here:
-        // http://stackoverflow.com/a/17949893
-        // Note that this means that, if a user has the Samsung file browser and another file
-        // browser, they will not get a choice; we'll just send them to the Samsung browser.
-        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        if (getPackageManager().resolveActivity(samsungIntent, 0) != null) {
-            startActivityForResult(samsungIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
-        } else {
-            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileIntent.setType("file/*");
-            startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
-        }
-
+    @Override
+    protected void onResume() {
+        myDecksPresenter.refreshMyDecksList();
+        super.onResume();
     }
 
     @Override
@@ -140,6 +98,45 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
                 }
                 break;
         }
+    }
+
+
+    private void inflateListHeaderAndFooter() {
+        inflateListHeader();
+        inflateListFooter();
+    }
+
+    private void inflateListHeader() {
+        View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
+        ((ListView) findViewById(R.id.my_decks_list)).addHeaderView(headerView);
+    }
+
+    private void inflateListFooter() {
+        myDecksFooter = new MyDecksFooter(this);
+        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(myDecksFooter);
+    }
+
+    private void setActionBarTitle() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.my_decks);
+        }
+    }
+
+    private void importFromFile() {
+        // First try an intent specially for the Samsung file browser, as described here:
+        // http://stackoverflow.com/a/17949893
+        // Note that this means that, if a user has the Samsung file browser and another file
+        // browser, they will not get a choice; we'll just send them to the Samsung browser.
+        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        if (getPackageManager().resolveActivity(samsungIntent, 0) != null) {
+            startActivityForResult(samsungIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
+        } else {
+            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            fileIntent.setType("file/*");
+            startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
+        }
+
     }
 
     // MyDecksView Implementation
