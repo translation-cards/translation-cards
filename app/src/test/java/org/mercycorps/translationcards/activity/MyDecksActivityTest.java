@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
@@ -30,18 +29,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findLinearLayout;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 @Config(constants = BuildConfig.class, sdk = 21)
 @RunWith(RobolectricGradleTestRunner.class)
 public class MyDecksActivityTest {
-    public static final String URI = "https://docs.google.com/forms/d" +
-            "/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/viewform?entry.1158658650=1.1.0";
     private static final String DEFAULT_LANGUAGE_NAME = "English";
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
 
@@ -60,13 +55,6 @@ public class MyDecksActivityTest {
     }
 
     @Test
-    public void testDecksActivityCreation(){
-        setUpDeckRepositoryWithNoDecks();
-        Activity activity = helper.createActivityToTest();
-        assertNotNull(activity);
-    }
-
-    @Test
     public void shouldShowDecksHeader() {
         setUpDeckRepositoryWithDecks();
         Activity activity = helper.createActivityToTest();
@@ -75,27 +63,11 @@ public class MyDecksActivityTest {
     }
 
     @Test
-    public void shouldLaunchFeedbackFormWhenFeedbackButtonIsClicked() throws Exception {
-        setUpDeckRepositoryWithDecks();
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.feedback_button);
-        verify(router).launchFeedbackActivity(activity);
-    }
-
-    @Test
     public void shouldLaunchImportDeckWhenImportButtonIsClicked(){
         setUpDeckRepositoryWithNoDecks();
         Activity activity = helper.createActivityToTest();
         click(activity, R.id.import_deck_button);
         assertEquals("file/*", shadowOf(activity).getNextStartedActivity().getType());
-    }
-
-    @Test
-    public void shouldLaunchCreateDeckFlowWhenCreateButtonIsClicked(){
-        setUpDeckRepositoryWithNoDecks();
-        Activity activity = helper.createActivityToTest();
-        click(activity, R.id.create_deck_button);
-        assertEquals(GetStartedDeckActivity.class.getName(), shadowOf(activity).getNextStartedActivity().getComponent().getClassName());
     }
 
     @Test
