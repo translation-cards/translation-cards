@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.content.Intent;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.AbstractTranslationCardsActivity;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
@@ -25,7 +26,8 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity implements
     @Bind(R.id.my_decks_list)ListView myDeckListView;
 
     @Inject DeckRepository deckRepository;
-    @Inject Router router;
+    @Inject
+    Router router;
 
     private MyDecksFooter myDecksFooter;
     private MyDecksPresenter myDecksPresenter;

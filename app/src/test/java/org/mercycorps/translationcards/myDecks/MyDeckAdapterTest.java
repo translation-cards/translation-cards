@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +18,8 @@ import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.model.Dictionary;
+import org.mercycorps.translationcards.myDecks.MyDeckAdapter;
+import org.mercycorps.translationcards.myDecks.MyDecksPresenter;
 import org.mercycorps.translationcards.repository.DatabaseHelper;
 import org.mercycorps.translationcards.view.DeckItem;
 import org.robolectric.Robolectric;

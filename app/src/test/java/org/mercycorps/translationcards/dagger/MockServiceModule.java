@@ -1,6 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
-import org.mercycorps.translationcards.activity.Router;
+import org.mercycorps.translationcards.myDecks.Router;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.service.DeckService;
 import org.mercycorps.translationcards.service.DictionaryService;

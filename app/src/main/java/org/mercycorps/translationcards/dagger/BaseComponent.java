@@ -2,7 +2,7 @@ package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.activity.ImportActivity;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.myDecks.MyDecksActivity;
 import org.mercycorps.translationcards.activity.addTranslation.RecordAudioActivity;
 import org.mercycorps.translationcards.activity.addTranslation.SummaryActivity;
 import org.mercycorps.translationcards.activity.translations.TranslationsActivity;

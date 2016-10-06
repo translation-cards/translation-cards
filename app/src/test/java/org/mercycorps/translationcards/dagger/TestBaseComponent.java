@@ -1,8 +1,8 @@
 package org.mercycorps.translationcards.dagger;
 
 import org.mercycorps.translationcards.activity.ImportActivity;
-import org.mercycorps.translationcards.activity.MyDeckAdapterTest;
-import org.mercycorps.translationcards.activity.MyDecksActivityTest;
+import org.mercycorps.translationcards.myDecks.MyDeckAdapterTest;
+import org.mercycorps.translationcards.myDecks.MyDecksActivityTest;
 import org.mercycorps.translationcards.activity.TranslationsActivityTest;
 import org.mercycorps.translationcards.addDeck.activity.EnterDeckSourceLanguageActivityTest;
 import org.mercycorps.translationcards.addDeck.activity.LanguageSelectorActivityTest;

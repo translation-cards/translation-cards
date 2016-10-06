@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
+import org.mercycorps.translationcards.myDecks.Router;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;

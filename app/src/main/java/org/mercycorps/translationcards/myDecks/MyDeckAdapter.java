@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
 import android.app.AlertDialog;

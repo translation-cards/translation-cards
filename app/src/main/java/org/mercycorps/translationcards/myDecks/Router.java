@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
+import org.mercycorps.translationcards.activity.ImportActivity;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
 import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;

@@ -3,10 +3,8 @@ package org.mercycorps.translationcards.addDeck.presenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.myDecks.MyDecksActivity;
 import org.mercycorps.translationcards.addDeck.activity.EnterDeckTitleActivity;
-import org.mercycorps.translationcards.addDeck.presenter.AddDeckView;
-import org.mercycorps.translationcards.addDeck.presenter.GetStartedDeckPresenter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

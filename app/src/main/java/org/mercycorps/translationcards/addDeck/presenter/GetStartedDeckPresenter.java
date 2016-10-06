@@ -1,7 +1,7 @@
 package org.mercycorps.translationcards.addDeck.presenter;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.myDecks.MyDecksActivity;
 import org.mercycorps.translationcards.addDeck.activity.EnterDeckTitleActivity;
 
 public class GetStartedDeckPresenter {

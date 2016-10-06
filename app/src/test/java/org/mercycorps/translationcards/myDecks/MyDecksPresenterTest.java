@@ -1,16 +1,17 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.myDecks.MyDecksPresenter;
 import org.mercycorps.translationcards.repository.DeckRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mercycorps.translationcards.activity.MyDecksPresenter.MyDecksView;
+import static org.mercycorps.translationcards.myDecks.MyDecksPresenter.MyDecksView;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -7,7 +7,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mercycorps.translationcards.activity.MyDecksActivity;
+import org.mercycorps.translationcards.myDecks.MyDecksActivity;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onData;

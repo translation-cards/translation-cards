@@ -1,4 +1,4 @@
-package org.mercycorps.translationcards.activity;
+package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
 import android.view.View;
@@ -13,6 +13,8 @@ import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.dagger.TestBaseComponent;
 import org.mercycorps.translationcards.model.Deck;
+import org.mercycorps.translationcards.myDecks.MyDecksActivity;
+import org.mercycorps.translationcards.myDecks.Router;
 import org.mercycorps.translationcards.repository.DeckRepository;
 import org.mercycorps.translationcards.util.MyDecksActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -35,7 +37,8 @@ public class MyDecksActivityTest {
     private MyDecksActivityHelper<MyDecksActivity> helper = new MyDecksActivityHelper<>(MyDecksActivity.class);
 
     @Inject DeckRepository deckRepository;
-    @Inject Router router;
+    @Inject
+    Router router;
 
     @Before
     public void setup() {
