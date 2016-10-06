@@ -15,13 +15,13 @@
             android:id="@+id/deck_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.85"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp"
             android:textColor="@color/primaryTextColor"
-            android:textSize="24sp"
-            android:layout_weight="0.85" />
+            android:textSize="24sp" />
 
         <FrameLayout
             android:id="@+id/deck_menu"
@@ -30,9 +30,9 @@
             android:layout_weight="0.15">
 
             <ImageView
-                android:layout_gravity="center"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:src="@drawable/deck_menu" />
         </FrameLayout>
     </LinearLayout>
@@ -57,6 +57,12 @@
                 android:src="@drawable/ic_lock_gray_24dp" />
         </FrameLayout>
 
+        <View
+            android:id="@+id/no_lock_icon_padding"
+            android:layout_width="11dp"
+            android:layout_height="20dp"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/deck_information"
             android:layout_width="wrap_content"
@@ -69,8 +75,7 @@
             android:paddingRight="16dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorSecondaryLight"
-            android:textSize="15sp"
-            />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <RelativeLayout

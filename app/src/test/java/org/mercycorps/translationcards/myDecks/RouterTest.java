@@ -1,6 +1,7 @@
 package org.mercycorps.translationcards.myDecks;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -10,9 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
+import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
-import org.mercycorps.translationcards.myDecks.Router;
 import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -102,5 +103,15 @@ public class RouterTest {
         Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
         samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
         return samsungIntent;
+    }
+
+    @Test
+    public void shouldLaunchTranslationsActivity() {
+        Context context = mock(Context.class);
+        router.launchTranslationsActivity(context);
+
+        ArgumentCaptor<Intent> argument = ArgumentCaptor.forClass(Intent.class);
+        verify(context).startActivity(argument.capture());
+        assertEquals(TranslationsActivity.class.getName(), argument.getValue().getComponent().getClassName());
     }
 }
