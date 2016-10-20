@@ -24,9 +24,11 @@ public class EnterDeckDestinationPresenter {
 
     private void updateNextButtonState() {
         boolean hasDestinationLanguages = !contextFromIntent.getDestinationLanguages().isEmpty();
-        int backgroundResource = hasDestinationLanguages ? R.drawable.forward_arrow : R.drawable.forward_arrow_disabled;
-        int buttonColor = hasDestinationLanguages ? R.color.primaryTextColor : R.color.textDisabled;
-        view.updateNextButton(hasDestinationLanguages, buttonColor, backgroundResource);
+        if (hasDestinationLanguages) {
+            view.enableNextButton();
+        } else {
+            view.disableNextButton();
+        }
     }
 
     private void populateLanguageChips() {
@@ -69,7 +71,8 @@ public class EnterDeckDestinationPresenter {
     }
 
     public interface EnterDeckDestinationView extends AddDeckView {
-        void updateNextButton(boolean clickable, int buttonColor, int backgroundResource);
+        void enableNextButton();
+        void disableNextButton();
         void addLanguageChip(String language);
         void removeAllLanguageChips();
     }

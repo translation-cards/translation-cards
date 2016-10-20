@@ -3,8 +3,6 @@ package org.mercycorps.translationcards.addDeck.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
 
@@ -14,20 +12,14 @@ import org.junit.runner.RunWith;
 import org.mercycorps.translationcards.BuildConfig;
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
-import org.mercycorps.translationcards.addDeck.activity.EnterDeckDestinationLanguagesActivity;
-import org.mercycorps.translationcards.addDeck.activity.LanguageSelectorActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.util.AddDeckActivityHelper;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import static android.support.v4.content.ContextCompat.getColor;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.click;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findImageView;
-import static org.mercycorps.translationcards.util.TestAddTranslationCardActivityHelper.findTextView;
-import static org.robolectric.Shadows.shadowOf;
 
 
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -40,21 +32,6 @@ public class EnterDeckDestinationLanguagesActivityTest {
     @After
     public void teardown() {
         helper.teardown();
-    }
-
-
-    @Test
-    public void shouldChangeNextButtonColorWhenDestinationLanguageSetIsNotEmpty() {
-        NewDeckContext newDeckContext = new NewDeckContext(new Deck());
-        newDeckContext.addDestinationLanguage(A_LANGUAGE);
-
-        EnterDeckDestinationLanguagesActivity activity = (EnterDeckDestinationLanguagesActivity) helper.createActivityToTestWithContext(newDeckContext);
-
-        TextView nextButtonText = findTextView(activity, R.id.enter_destination_next_text);
-        assertEquals(getColor(activity, R.color.primaryTextColor), nextButtonText.getCurrentTextColor());
-
-        ImageView nextButtonImage = findImageView(activity, R.id.enter_destination_next_image);
-        assertEquals(R.drawable.forward_arrow, shadowOf(nextButtonImage.getBackground()).getCreatedFromResId());
     }
 
     @Test

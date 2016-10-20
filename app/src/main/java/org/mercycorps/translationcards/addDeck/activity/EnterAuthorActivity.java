@@ -1,23 +1,17 @@
 package org.mercycorps.translationcards.addDeck.activity;
 
-import android.support.v4.content.ContextCompat;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.mercycorps.translationcards.R;
 import org.mercycorps.translationcards.addDeck.presenter.EnterAuthorPresenter;
+import org.mercycorps.translationcards.view.NextButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class EnterAuthorActivity extends AddDeckActivity implements EnterAuthorPresenter.EnterAuthorView {
-
-    @Bind(R.id.deck_author_next_label)LinearLayout nextButton;
-    @Bind(R.id.deck_author_next_text)TextView nextButtonText;
-    @Bind(R.id.deck_author_next_image)ImageView nextButtonImage;
+    @Bind(R.id.next_button)NextButton nextButton;
     @Bind(R.id.deck_author_input) EditText deckAuthorInput;
     private EnterAuthorPresenter presenter;
 
@@ -38,7 +32,7 @@ public class EnterAuthorActivity extends AddDeckActivity implements EnterAuthorP
         presenter.initDeckAuthorInput();
     }
 
-    @OnClick(R.id.deck_author_next_label)
+    @OnClick(R.id.next_button)
     protected void nextButtonClicked() {
         presenter.nextButtonClicked();
     }
@@ -60,9 +54,12 @@ public class EnterAuthorActivity extends AddDeckActivity implements EnterAuthorP
     }
 
     @Override
-    public void updateNextButtonClickable(boolean nextButtonClickable, int nextButtonColor, int nextButtonArrow) {
-        nextButton.setClickable(nextButtonClickable);
-        nextButtonText.setTextColor(ContextCompat.getColor(this, nextButtonColor));
-        nextButtonImage.setBackgroundResource(nextButtonArrow);
+    public void enableNextButton() {
+        nextButton.enable();
+    }
+
+    @Override
+    public void disableNextButton() {
+        nextButton.disable();
     }
 }

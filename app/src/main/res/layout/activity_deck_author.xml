@@ -135,31 +135,17 @@
                 android:src="@drawable/step_unselected" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/deck_author_next_label"
+        <org.mercycorps.translationcards.view.NextButton
+            android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="20dp"
-            android:paddingTop="16dp">
+            android:layout_marginEnd="20dp"
+            android:paddingTop="16dp" />
 
-            <TextView
-                android:id="@+id/deck_author_next_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/navigation_button_next"
-                android:textColor="@color/textDisabled"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/deck_author_next_image"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/forward_arrow_disabled" />
-        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>
