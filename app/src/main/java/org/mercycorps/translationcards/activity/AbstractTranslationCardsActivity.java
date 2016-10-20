@@ -7,10 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import butterknife.ButterKnife;
 
@@ -51,7 +48,8 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
 
     public abstract void inflateView();
 
-    public abstract void setBitmapsForActivity();
+    protected void setBitmapsForActivity() {
+    }
 
     protected void initStates() {
     }
@@ -63,18 +61,5 @@ public abstract class AbstractTranslationCardsActivity extends AppCompatActivity
     protected void startNextActivity(Context currentContext, Class nextActivityClass) {
         Intent intent = new Intent(currentContext, nextActivityClass);
         startActivity(intent);
-    }
-
-    protected static final ButterKnife.Setter<View, Integer> VISIBILITY = new ButterKnife.Setter<View, Integer>() {
-        @Override public void set(View view, Integer visibility, int index) {
-            view.setVisibility(visibility);
-        }
-    };
-
-    protected void updateListViewCentered(ListView view, Boolean isEmpty) {
-        int isCentered = isEmpty ? RelativeLayout.TRUE : 0;
-        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
-        view.setLayoutParams(params);
     }
 }

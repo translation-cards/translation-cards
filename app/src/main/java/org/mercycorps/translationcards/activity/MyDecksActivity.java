@@ -1,73 +1,108 @@
 package org.mercycorps.translationcards.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.mercycorps.translationcards.MainApplication;
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.addDeck.activity.AddDeckActivity;
-import org.mercycorps.translationcards.addDeck.activity.GetStartedDeckActivity;
 import org.mercycorps.translationcards.addDeck.NewDeckContext;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
+import org.mercycorps.translationcards.view.MyDecksFooter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
-/**
- * Created by njimenez on 3/31/16.
- */
-public class MyDecksActivity extends AbstractTranslationCardsActivity {
+public class MyDecksActivity extends AbstractTranslationCardsActivity implements MyDecksPresenter.MyDecksView {
 
-    private static final int REQUEST_CODE_IMPORT_FILE_PICKER = 1;
-    private static final int REQUEST_CODE_IMPORT_FILE = 2;
-    private static final int REQUEST_CODE_CREATE_DECK = 3;
 
-    @Bind(R.id.my_decks_list)
-    ListView myDeckListView;
-
-    private static final String FEEDBACK_URL =
-            "https://docs.google.com/forms/d/1p8nJlpFSv03MXWf67pjh_fHyOfjbK9LJgF8hORNcvNM/" +
-                    "viewform?entry.1158658650=1.1.0";
+    @Bind(R.id.my_decks_list)ListView myDeckListView;
 
     @Inject DeckRepository deckRepository;
-    @Inject DeckService deckService;
-    @Inject DictionaryService dictionaryService;
+    @Inject Router router;
+
+    private MyDecksFooter myDecksFooter;
+    private MyDecksPresenter myDecksPresenter;
+    private MyDeckAdapter myDecksAdapter;
 
     @Override
     public void inflateView() {
         MainApplication application = (MainApplication) getApplication();
         application.getBaseComponent().inject(this);
         setContentView(R.layout.activity_my_decks);
+        inflateListHeaderAndFooter();
+        myDecksPresenter = new MyDecksPresenter(this, deckRepository);
     }
 
     @Override
     public void initStates() {
         setActionBarTitle();
-        List<Deck> decks = getDecks();
-        initListFooter(decks);
-        initListHeader();
-        updateDecksView(decks);
+        myDecksAdapter = new MyDeckAdapter(this, myDecksPresenter);
+        myDeckListView.setAdapter(myDecksAdapter);
+    }
+
+    @OnClick(R.id.import_deck_button)
+    public void importDeckButtonClicked() {
+        router.launchFilePicker(this);
+    }
+
+    @OnClick(R.id.create_deck_button)
+    public void createDeckButtonClicked() {
+        router.launchCreateDeckFlow(this, new NewDeckContext());
+    }
+
+    @OnClick(R.id.feedback_button)
+    public void feedbackButtonClicked() {
+        router.launchFeedbackActivity(this);
     }
 
     @Override
     protected void onResume() {
-        refreshMyDecksList();
+        myDecksPresenter.refreshMyDecksList();
         super.onResume();
     }
 
-    private void initListHeader() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Router.REQUEST_CODE_IMPORT_FILE_PICKER:
+                if (resultCode == RESULT_OK) {
+                    router.launchImportActivityForResult(this, data.getData());
+                }
+                break;
+            case Router.REQUEST_CODE_IMPORT_FILE:
+                if (resultCode == RESULT_OK) {
+                    myDecksPresenter.refreshMyDecksList();
+                }
+                break;
+            case Router.REQUEST_CODE_CREATE_DECK:
+                if (resultCode == RESULT_OK) {
+                    myDecksPresenter.refreshMyDecksList();
+                }
+                break;
+        }
+    }
+
+
+    private void inflateListHeaderAndFooter() {
+        inflateListHeader();
+        inflateListFooter();
+    }
+
+    private void inflateListHeader() {
         View headerView = getLayoutInflater().inflate(R.layout.my_decks_header, myDeckListView, false);
-        myDeckListView.addHeaderView(headerView);
+        ((ListView) findViewById(R.id.my_decks_list)).addHeaderView(headerView);
+    }
+
+    private void inflateListFooter() {
+        myDecksFooter = new MyDecksFooter(this);
+        ((ListView) findViewById(R.id.my_decks_list)).addFooterView(myDecksFooter);
     }
 
     private void setActionBarTitle() {
@@ -76,121 +111,26 @@ public class MyDecksActivity extends AbstractTranslationCardsActivity {
         }
     }
 
-    private void updateDecksView(List<Deck> decks) {
-        MyDeckAdapter listAdapter = new MyDeckAdapter(MyDecksActivity.this, decks, deckService, dictionaryService, deckRepository);
-        ListView decksListView = (ListView) findViewById(R.id.my_decks_list);
-        decksListView.setAdapter(listAdapter);
-    }
-
-    private void updateFooterView(List<Deck> decks) {
-        updateFooterDisplay(decks);
-        updateListViewCentered(myDeckListView, decks.isEmpty());
-    }
-
-    private void updateFooterDisplay(List<Deck> decks) {
-        int visibilityForEmptyMyDecks = decks.isEmpty() ? View.VISIBLE : View.GONE;
-        int visibilityForFeedbackButton = decks.isEmpty() ? View.GONE : View.VISIBLE;
-        findViewById(R.id.empty_my_decks_title).setVisibility(visibilityForEmptyMyDecks);
-        findViewById(R.id.empty_my_decks_message).setVisibility(visibilityForEmptyMyDecks);
-        findViewById(R.id.feedback_button).setVisibility(visibilityForFeedbackButton);
-    }
-
-    private void initListFooter(List<Deck> decks) {
-        inflateListFooter();
-        setFooterClickListeners();
-        updateFooterDisplay(decks);
-        updateListViewCentered(myDeckListView, decks.isEmpty());
-    }
-
-    private void inflateListFooter() {
-        View footerView = getLayoutInflater().inflate(R.layout.my_decks_footer, myDeckListView, false);
-        myDeckListView.addFooterView(footerView);
-    }
-
-    private void setFooterClickListeners() {
-        findViewById(R.id.my_decks_footer).setOnClickListener(null);
-
-        findViewById(R.id.import_deck_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                importFromFile();
-            }
-        });
-
-        findViewById(R.id.create_deck_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createIntent = new Intent(MyDecksActivity.this, GetStartedDeckActivity.class);
-                createIntent.putExtra(AddDeckActivity.INTENT_KEY_DECK, new NewDeckContext());
-                startActivityForResult(createIntent, REQUEST_CODE_CREATE_DECK);
-            }
-        });
-
-        findViewById(R.id.feedback_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_URL)));
-
-            }
-        });
-    }
-
-    private void importFromFile() {
-        // First try an intent specially for the Samsung file browser, as described here:
-        // http://stackoverflow.com/a/17949893
-        // Note that this means that, if a user has the Samsung file browser and another file
-        // browser, they will not get a choice; we'll just send them to the Samsung browser.
-        Intent samsungIntent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        samsungIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        if (getPackageManager().resolveActivity(samsungIntent, 0) != null) {
-            startActivityForResult(samsungIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
-        } else {
-            Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileIntent.setType("file/*");
-            startActivityForResult(fileIntent, REQUEST_CODE_IMPORT_FILE_PICKER);
-        }
-
-    }
-
-    private List<Deck> getDecks() {
-        Deck[] decks = deckRepository.getAllDecks();
-        if (decks == null) return new ArrayList<>();
-        return Arrays.asList(decks);
+    // MyDecksView Implementation
+    @Override
+    public void emptyViewState() {
+        myDecksFooter.emptyDecksView();
     }
 
     @Override
-    public void setBitmapsForActivity() {
-        //// TODO: 3/31/16 We dont set bitmaps for decks. Refactor this to be in AddTranslationActivity
+    public void nonEmptyViewState() {
+        myDecksFooter.nonEmptyDecksView();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_IMPORT_FILE_PICKER:
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-                Intent intent = new Intent(this, ImportActivity.class);
-                intent.setData(data.getData());
-                startActivityForResult(intent, REQUEST_CODE_IMPORT_FILE);
-                break;
-            case REQUEST_CODE_IMPORT_FILE:
-                if (resultCode == RESULT_OK) {
-                    refreshMyDecksList();
-                }
-                break;
-            case REQUEST_CODE_CREATE_DECK:
-                if (resultCode == RESULT_OK) {
-                    refreshMyDecksList();
-                }
-                break;
-        }
+    public void updateMyDeckListCentered(int isCentered) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) myDeckListView.getLayoutParams();
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, isCentered);
+        myDeckListView.setLayoutParams(params);
     }
 
-    public void refreshMyDecksList() {
-        List<Deck> decks = getDecks();
-        updateDecksView(decks);
-        updateFooterView(decks);
+    @Override
+    public void updateMyDecksList(List<Deck> decks) {
+        myDecksAdapter.setDecks(decks);
     }
-
 }

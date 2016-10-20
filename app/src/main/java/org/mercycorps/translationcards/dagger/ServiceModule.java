@@ -1,5 +1,6 @@
 package org.mercycorps.translationcards.dagger;
 
+import org.mercycorps.translationcards.activity.Router;
 import org.mercycorps.translationcards.porting.LanguagesImportUtility;
 import org.mercycorps.translationcards.porting.TxcImportUtility;
 import org.mercycorps.translationcards.repository.DeckRepository;
@@ -57,5 +58,10 @@ public class ServiceModule {
     @Provides
     TxcImportUtility providesTxcImportUtility(LanguageService languageService, DeckRepository deckRepository, DictionaryRepository dictionaryRepository, TranslationRepository translationRepository) {
         return new TxcImportUtility(languageService, deckRepository, translationRepository, dictionaryRepository);
+    }
+
+    @Provides
+    Router providesRouter() {
+        return new Router();
     }
 }

@@ -1,38 +1,29 @@
 package org.mercycorps.translationcards.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 
 import org.mercycorps.translationcards.R;
-import org.mercycorps.translationcards.activity.translations.TranslationsActivity;
 import org.mercycorps.translationcards.model.Deck;
 import org.mercycorps.translationcards.porting.ExportTask;
-import org.mercycorps.translationcards.repository.DeckRepository;
-import org.mercycorps.translationcards.service.DeckService;
-import org.mercycorps.translationcards.service.DictionaryService;
 import org.mercycorps.translationcards.view.DeckItem;
 
 import java.util.List;
 
 public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListener {
-    private final MyDecksActivity activity;
-    private DeckRepository deckRepository;
-    private final List<Deck> decks;
-    DeckService deckService;
-    private DictionaryService dictionaryService;
+    private final Activity activity;
+    private MyDecksPresenter presenter;
+    private List<Deck> decks;
 
-    public MyDeckAdapter(MyDecksActivity context, List<Deck> decks, DeckService deckService, DictionaryService dictionaryService, DeckRepository deckRepository) {
-        this.decks = decks;
-        this.deckService = deckService;
-        this.dictionaryService = dictionaryService;
+    public MyDeckAdapter(Activity context, MyDecksPresenter presenter) {
+        this.decks = presenter.getDecks();
         this.activity = context;
-        this.deckRepository = deckRepository;
+        this.presenter = presenter;
     }
 
     @Override
@@ -55,27 +46,14 @@ public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListe
         DeckItem deckItem;
         Deck deck = getItem(position);
         if (view == null) {
-            deckItem = new DeckItem(this.activity);
+            deckItem = new DeckItem(activity);
         } else {
             deckItem = (DeckItem) view;
         }
         deckItem.setDeck(deck);
         deckItem.setMenuListener(this);
-        deckItem.setOnClickListener(getDeckItemClickListener(deck));
 
         return deckItem;
-    }
-
-    private View.OnClickListener getDeckItemClickListener(final Deck deck) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent decksIntent = new Intent(activity, TranslationsActivity.class);
-                deckService.setCurrentDeck(deck);
-                dictionaryService.setCurrentDictionary(0);
-                activity.startActivity(decksIntent);
-            }
-        };
     }
 
     private void optionallyDelete(final Deck deck) {
@@ -85,8 +63,7 @@ public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListe
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deckRepository.deleteDeck(deck.getDbId());
-                                activity.refreshMyDecksList();
+                                presenter.deleteDeck(deck);
                             }
                         })
                 .setNegativeButton(R.string.misc_cancel,
@@ -128,5 +105,10 @@ public class MyDeckAdapter extends BaseAdapter implements DeckItem.DeckMenuListe
     @Override
     public void onDeleteClicked(Deck deck) {
         optionallyDelete(deck);
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
+        notifyDataSetChanged();
     }
 }

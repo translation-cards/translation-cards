@@ -10,7 +10,7 @@ public class DeckService {
     private Deck currentDeck;
 
     public DeckService(DeckRepository deckRepository) {
-        currentDeck = deckRepository.getAllDecks()[0];
+        currentDeck = deckRepository.getAllDecks().get(0);
     }
 
     public Deck currentDeck() {
