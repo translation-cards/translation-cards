@@ -34,7 +34,7 @@ public class DeckItemPresenter {
             view.hideLockIcon();
         }
         view.setDeckDestinationLanguages(deck.getDestinationLanguagesForDisplay());
-//        deckMenu.setVisibility(View.GONE);
+        view.hideDeckMenu();
 
     }
 
@@ -54,5 +54,6 @@ public class DeckItemPresenter {
         void displayLockIcon();
         void hideLockIcon();
         void setDeckDestinationLanguages(String destinationLanguages);
+        void hideDeckMenu();
     }
 }

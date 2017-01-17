@@ -108,4 +108,11 @@ public class DeckItemPresenterTest {
 
         verify(view).setDeckDestinationLanguages(destinationLanguages);
     }
+
+    @Test
+    public void shouldHideDeckMenuWhenDeckIsSet() throws Exception {
+        presenter.setDeck(deck);
+
+        verify(view).hideDeckMenu();
+    }
 }

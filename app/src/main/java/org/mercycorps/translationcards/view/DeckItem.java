@@ -163,4 +163,9 @@ public class DeckItem extends LinearLayout implements DeckItemPresenter.DeckItem
     public void setDeckDestinationLanguages(String destinationLanguages) {
         destinationLanguagesTextView.setText(destinationLanguages);
     }
+
+    @Override
+    public void hideDeckMenu() {
+        deckMenu.setVisibility(View.GONE);
+    }
 }
