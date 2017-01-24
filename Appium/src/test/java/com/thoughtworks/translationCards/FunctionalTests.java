@@ -32,31 +32,29 @@ import static org.junit.Assert.assertEquals;
  */
 public class FunctionalTests {
 
-    public AndroidDriver driver;
+    public WebDriver driver;
+
+
+    public static final String USERNAME = System.getenv("SAUCE_USERNAME");
+    public static final String ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
+    public static final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
+
+
 
     @Before
     public void setUp() throws Exception {
-        File appDir = new File("./");
-        File app = new File(appDir, "app-debug.apk");
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("device", "android23Emulator");
+        DesiredCapabilities capabilities = DesiredCapabilities.android();
 
-        capabilities.setCapability("deviceName", "test_device");
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("platformVersion", "6.0");
-//        capabilities.setCapability("browserName", MobileBrowserType.BROWSER);
-        capabilities.setCapability("unicodekeyboard", true);
-        capabilities.setCapability("resetkeyboard", true);
-        capabilities.setCapability("app", app.getAbsolutePath());
+        capabilities.setCapability("appiumVersion", "1.5.3");
+        capabilities.setCapability("deviceName","Samsung Galaxy S4 Emulator");
+        capabilities.setCapability("deviceOrientation", "portrait");
+        capabilities.setCapability("browserName", "");
+        capabilities.setCapability("platformVersion","4.4");
+        capabilities.setCapability("platformName","Android");
+        capabilities.setCapability("app","sauce-storage:app-debug.apk");
 
-//        capabilities.setCapability("app", "Chrome");
-//        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "test_device");
-//        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-//        capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, BrowserType.CHROME);
-//        capabilities.setCapability(MobileCapabilityType.PLATFORM, Platform.ANDROID);
-//        capabilities.setCapability(MobileCapabilityType.VERSION, "6.0");
+        driver = new AndroidDriver(new URL(URL), capabilities);
 
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
 
     @After
