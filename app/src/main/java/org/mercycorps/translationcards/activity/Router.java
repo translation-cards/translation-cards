@@ -40,7 +40,7 @@ public class Router {
             activity.startActivityForResult(samsungIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
         } else {
             Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileIntent.setType("file/*");
+            fileIntent.setType("*/*");
             activity.startActivityForResult(fileIntent, Router.REQUEST_CODE_IMPORT_FILE_PICKER);
         }
     }
