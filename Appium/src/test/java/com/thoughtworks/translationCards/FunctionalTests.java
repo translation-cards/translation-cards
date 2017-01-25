@@ -1,42 +1,69 @@
 package com.thoughtworks.translationCards;
 
+import com.saucelabs.junit.ConcurrentParameterized;
 import com.thoughtworks.translationCards.page.*;
 import com.thoughtworks.translationCards.utilities.Utilities;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
-
-import static org.junit.Assert.assertEquals;
+import java.util.LinkedList;
 
 /**
  * Created by nliao on 8/23/16.
  */
+@RunWith(ConcurrentParameterized.class)
 public class FunctionalTests {
 
-    public WebDriver driver;
+    private final String platformName;
+    private final String deviceName;
+    private final String platformVersion;
+    private final String appiumVersion;
+    private final String deviceOrientation;
 
+    public WebDriver driver;
 
     public static final String USERNAME = System.getenv("SAUCE_USERNAME");
     public static final String ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
     public static final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
 
+    public FunctionalTests(String platformName, String deviceName, String platformVersion, String appiumVersion, String deviceOrientation) {
+        super();
+        this.platformName = platformName;
+        this.deviceName = deviceName;
+        this.platformVersion = platformVersion;
+        this.appiumVersion = appiumVersion;
+        this.deviceOrientation = deviceOrientation;
+    }
 
+    @ConcurrentParameterized.Parameters
+    public static LinkedList browsersStrings() {
+        LinkedList<String[]> browsers = new LinkedList<>();
+
+        browsers.add(new String[]{"Android", "Android Emulator", "5.0", "1.5.3", "portrait"});
+        browsers.add(new String[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "1.5.3", "portrait"});
+        browsers.add(new String[]{"Android", "Google Nexus 7 HD Emulator", "4.3", "1.5.3", "portrait"});
+//        browsers.add(new String[]{"Android", "LG Nexus 4 Emulator", "4.2", "1.5.3", "portrait"});
+//        browsers.add(new String[]{"Android", "Samsung Galaxy Nexus Emulator", "4.1", "1.5.3", "portrait"});
+
+        return browsers;
+    }
 
     @Before
     public void setUp() throws Exception {
         DesiredCapabilities capabilities = DesiredCapabilities.android();
 
-        capabilities.setCapability("appiumVersion", "1.5.3");
-        capabilities.setCapability("deviceName","Samsung Galaxy S4 Emulator");
-        capabilities.setCapability("deviceOrientation", "portrait");
+        capabilities.setCapability("platformName",platformName);
+        capabilities.setCapability("deviceName",deviceName);
+        capabilities.setCapability("platformVersion",platformVersion);
+        capabilities.setCapability("appiumVersion", appiumVersion);
+        capabilities.setCapability("deviceOrientation", deviceOrientation);
         capabilities.setCapability("browserName", "");
-        capabilities.setCapability("platformVersion","4.4");
-        capabilities.setCapability("platformName","Android");
         capabilities.setCapability("app","sauce-storage:app-debug.apk");
 
         driver = new AndroidDriver(new URL(URL), capabilities);

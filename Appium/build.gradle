@@ -13,8 +13,10 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
     compile 'io.appium:java-client:4.1.1'
     compile 'junit:junit:4.12'
-    testCompile 'junit:junit:4.12'
     compile group: 'org.assertj', name: 'assertj-core', version: '1.7.0'
+    compile group: 'com.saucelabs', name: 'sauce_junit', version: '2.1.23'
+
+    testCompile 'junit:junit:4.12'
 }
 group 'translation-cards'
 version '1.0-SNAPSHOT'
