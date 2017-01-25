@@ -1,22 +1,22 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/23/16.
  */
 public class DestinationLanguage {
 
-    public AndroidDriver destinationLanguageDriver;
+    public WebDriver destinationLanguageDriver;
 
     By btn_addLanguage = By.id("org.mercycorps.translationcards:id/add_language_button");
     By fld_addLanguage = By.id("org.mercycorps.translationcards:id/language_filter_field");
     By language = By.id("android:id/text1");
-    By lnk_next = By.id("org.mercycorps.translationcards:id/enter_destination_next_text");
+    By lnk_next = By.id("org.mercycorps.translationcards:id/next_button");
     By lnk_back = By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.RelativeLayout[1]/android.widget.LinearLayout[1]/android.widget.ImageView[1]");
 
-    public DestinationLanguage(AndroidDriver driver){
+    public DestinationLanguage(WebDriver driver){
         this.destinationLanguageDriver = driver;
     }
 

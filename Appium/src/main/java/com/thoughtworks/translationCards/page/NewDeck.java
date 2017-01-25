@@ -1,17 +1,17 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/23/16.
  */
 public class NewDeck {
-    public AndroidDriver deckMakerDriver;
+    public WebDriver deckMakerDriver;
 
     By btn_getStarted = By.id("org.mercycorps.translationcards:id/deck_get_started_button");
 
-    public NewDeck(AndroidDriver driver){
+    public NewDeck(WebDriver driver){
         this.deckMakerDriver = driver;
     }
 

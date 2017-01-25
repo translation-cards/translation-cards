@@ -3,6 +3,7 @@ package com.thoughtworks.translationCards.utilities;
 import io.appium.java_client.android.AndroidDriver;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +18,8 @@ public class Utilities {
 
     public AndroidDriver utilitiesDriver;
 
-    public Utilities(AndroidDriver driver){
-        this.utilitiesDriver = driver;
+    public Utilities(WebDriver driver){
+        this.utilitiesDriver = (AndroidDriver) driver;
     }
 
     public void takeScreenshot() {

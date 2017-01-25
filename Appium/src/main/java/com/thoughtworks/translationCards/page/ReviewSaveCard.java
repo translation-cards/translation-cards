@@ -1,19 +1,19 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/24/16.
  */
 public class ReviewSaveCard {
 
-    public AndroidDriver reviewSaveCardDriver;
+    public WebDriver reviewSaveCardDriver;
 
     By lnk_save = By.id("org.mercycorps.translationcards:id/recording_done_text");
     By lnk_back = By.id("org.mercycorps.translationcards:id/summary_activity_back");
 
-    public ReviewSaveCard(AndroidDriver driver){
+    public ReviewSaveCard(WebDriver driver){
         this.reviewSaveCardDriver = driver;
     }
 

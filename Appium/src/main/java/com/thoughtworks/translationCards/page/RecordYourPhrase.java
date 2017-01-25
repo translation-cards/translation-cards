@@ -1,13 +1,13 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/24/16.
  */
 public class RecordYourPhrase {
-    public AndroidDriver recordYourPhraseDriver;
+    public WebDriver recordYourPhraseDriver;
 
     By lnk_next = By.id("org.mercycorps.translationcards:id/recording_audio_next_text");
     By lnk_back = By.id("org.mercycorps.translationcards:id/record_activity_back");
@@ -15,7 +15,7 @@ public class RecordYourPhrase {
     By btn_gotIt = By.id("android:id/button1");
     By btn_allow = By.id("com.android.packageinstaller:id/permission_allow_button");
 
-    public RecordYourPhrase(AndroidDriver driver){
+    public RecordYourPhrase(WebDriver driver){
         this.recordYourPhraseDriver = driver;
     }
 

@@ -1,13 +1,13 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/23/16.
  */
 public class MyDecks {
-    public AndroidDriver myDecksDriver;
+    public WebDriver myDecksDriver;
 
     By btn_makeDeck = By.id("org.mercycorps.translationcards:id/create_deck_button");
     By btn_importDeck = By.id("org.mercycorps.translationcards:id/import_deck_button");
@@ -18,7 +18,7 @@ public class MyDecks {
     By btn_confirmSharePopUp = By.id("android:id/button1");
     By confirmationMessage = By.id("android:id/alertTitle");
 
-    public MyDecks(AndroidDriver driver){
+    public MyDecks(WebDriver driver){
         this.myDecksDriver = driver;
     }
 

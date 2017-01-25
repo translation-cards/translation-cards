@@ -1,20 +1,20 @@
 package com.thoughtworks.translationCards.page;
 
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Created by nliao on 8/24/16.
  */
 public class WriteYourPhrase {
 
-    public AndroidDriver writeYourPhraseDriver;
+    public WebDriver writeYourPhraseDriver;
 
     By lnk_next = By.id("org.mercycorps.translationcards:id/activity_enter_source_phrase_next_text");
     By lnk_back = By.id("org.mercycorps.translationcards:id/enter_source_phrase_activity_back_label");
     By fld_yourPhrase = By.id("org.mercycorps.translationcards:id/source_phrase_field");
 
-    public WriteYourPhrase(AndroidDriver driver){
+    public WriteYourPhrase(WebDriver driver){
         this.writeYourPhraseDriver = driver;
     }
 

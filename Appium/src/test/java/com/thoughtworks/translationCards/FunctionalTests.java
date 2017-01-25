@@ -1,29 +1,15 @@
 package com.thoughtworks.translationCards;
 
-import com.thoughtworks.translationCards.page.AuthorName;
-import com.thoughtworks.translationCards.page.CardMaker;
-import com.thoughtworks.translationCards.page.DeckTitle;
-import com.thoughtworks.translationCards.page.DestinationLanguage;
-import com.thoughtworks.translationCards.page.MyDecks;
-import com.thoughtworks.translationCards.page.NewCard;
-import com.thoughtworks.translationCards.page.NewDeck;
-import com.thoughtworks.translationCards.page.RecordYourPhrase;
-import com.thoughtworks.translationCards.page.ReviewSave;
-import com.thoughtworks.translationCards.page.ReviewSaveCard;
-import com.thoughtworks.translationCards.page.SourceLanguage;
-import com.thoughtworks.translationCards.page.Translation;
-import com.thoughtworks.translationCards.page.WriteYourPhrase;
+import com.thoughtworks.translationCards.page.*;
 import com.thoughtworks.translationCards.utilities.Utilities;
-
+import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
 import java.net.URL;
-
-import io.appium.java_client.android.AndroidDriver;
 
 import static org.junit.Assert.assertEquals;
 
@@ -54,7 +40,6 @@ public class FunctionalTests {
         capabilities.setCapability("app","sauce-storage:app-debug.apk");
 
         driver = new AndroidDriver(new URL(URL), capabilities);
-
     }
 
     @After
@@ -95,40 +80,41 @@ public class FunctionalTests {
         ReviewSave rsp = new ReviewSave(driver);
         rsp.clickSave();
 
-        mdp.clickDeckNameButton();
-
-        NewCard ncp = new NewCard(driver);
-        ncp.clickAddNewCardButton();
-
-        CardMaker cmp = new CardMaker(driver);
-        cmp.clickGetStartedButton();
-
-        WriteYourPhrase wyp = new WriteYourPhrase(driver);
-        wyp.setYourPhrase("Hello");
-//        ut.wait(1000);
-        wyp.clickNext();
-
-        Translation tp = new Translation(driver);
-        tp.setYourTranslation("Marhabaan");
-        tp.clickNext();
-
-        RecordYourPhrase ryp = new RecordYourPhrase(driver);
-        ryp.clickRecord();
-        ryp.clickGotIt();
-        ryp.clickAllow();
-        ryp.clickRecord();
-        ryp.clickRecord();
-        ryp.clickNext();
-
-        ReviewSaveCard rsc = new ReviewSaveCard(driver);
-        rsc.clickSave();
-
-        ncp.clickBackButton();
-
-        mdp.clickDeckOptions();
-        mdp.clickSharePopUp();
-        mdp.clickConfirmSharePopUp();
-        assertEquals(str_assert,mdp.getConfirmationMessage());
+//        mdp.clickDeckNameButton(); // CREATE A CARD
+//
+//        NewCard ncp = new NewCard(driver);
+//        ncp.clickAddNewCardButton();
+//
+//        CardMaker cmp = new CardMaker(driver);
+//        cmp.clickGetStartedButton();
+//
+//        WriteYourPhrase wyp = new WriteYourPhrase(driver);
+//        wyp.setYourPhrase("Hello");
+////        ut.wait(1000);
+//        wyp.clickNext();
+//
+//        Translation tp = new Translation(driver);
+//        tp.setYourTranslation("Marhabaan");
+//        tp.clickNext();
+//
+//        RecordYourPhrase ryp = new RecordYourPhrase(driver);
+//        ryp.clickRecord(); // API Level 23 +
+//        ryp.clickGotIt();
+//        ryp.clickAllow(); // END API 23
+//        ryp.clickRecord();
+//        ut.wait(5000); // Maybe?
+//        ryp.clickRecord();
+//        ryp.clickNext();
+//
+//        ReviewSaveCard rsc = new ReviewSaveCard(driver);
+//        rsc.clickSave();
+//
+//        ncp.clickBackButton();
+//
+//        mdp.clickDeckOptions();
+//        mdp.clickSharePopUp();
+//        mdp.clickConfirmSharePopUp();
+//        assertEquals(str_assert,mdp.getConfirmationMessage());
     }
 
 //    @Test

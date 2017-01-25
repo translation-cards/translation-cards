@@ -11,9 +11,14 @@ build/
 # Audio
 /app/src/main/assets/recordings/*.m4a
 
-#Release Binaries
+# Release Binaries
 app/app-release.apk
 *.apk
 
-#Keystore
+# Keystore
 keystore.jks
+
+# Appium
+Appium/gradle/
+Appium/gradlew
+Appium/gradlew.bat
