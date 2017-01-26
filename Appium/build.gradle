@@ -3,8 +3,6 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
-
 repositories {
     mavenCentral()
 }
@@ -22,8 +20,6 @@ group 'translation-cards'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-
-sourceCompatibility = 1.5
 
 test {
     testLogging.showStandardStreams = true
